@@ -1,0 +1,109 @@
+project_id: olympus
+title: OLYMPUS Cognitive Architecture
+description: Local-first research platform for cognitive runtime, behavior compilation, and evaluation.
+hypothesis: Typed latent workspaces, interpretive branching, and behavior-graph execution improve agentic research reliability.
+root_path: /Users/ryan/Documents/Olympus
+domain: agentic-ml-systems
+language: python
+manifest_source: declared
+entry_points:
+  - name: smoke-demos
+    command: .venv/bin/python -m olympus.cli demo run-all
+    profile: smoke
+    expected_outputs:
+      - demo-summary
+  - name: backend-tests
+    command: .venv/bin/python -m pytest
+    profile: development
+    expected_outputs:
+      - pytest-report
+  - name: portfolio-discovery
+    command: .venv/bin/python -m olympus.cli labos discover --workspace ..
+    profile: development
+    expected_outputs:
+      - portfolio-table
+datasets:
+  - name: olympus-synthetic
+    required: true
+    notes: Synthetic local datasets bundled in the repository.
+    blocked_by_user_action: false
+expected_outputs:
+  - artifacts/labos_runs.sqlite3
+  - portfolio_status.json
+  - PORTFOLIO_COMPLETION_REPORT.md
+validation_commands:
+  - test -f pyproject.toml
+  - test -f README.md
+  - test -d tests
+  - .venv/bin/python -m ruff check .
+  - .venv/bin/python -m mypy olympus tests
+tags:
+  - agentic-ml
+  - cognitive-architecture
+  - behavior-graphs
+classification: flagship_company
+target_user: Research engineer, AI infrastructure builder, or technical founder managing multiple local research projects.
+current_alternative: Manual repo inspection, disconnected test commands, ad hoc status docs, and untracked benchmark claims.
+proposed_solution: A local-first research operating layer that discovers projects, validates manifests, executes bounded runs, records run history, and emits release reports.
+differentiation: Combines cognitive runtime primitives with manifest-driven portfolio orchestration, honest blocked-action tracking, and reproducible command history.
+market: AI research operations, internal R&D tooling, agent evaluation infrastructure, and founder portfolio management.
+business_model: Internal platform first; later open-core or enterprise research-operations tooling if external users validate the workflow.
+distribution_strategy: Demonstrate on the local portfolio, publish reproducible status reports, and use technical writeups to attract design partners.
+technical_requirements:
+  - Python virtualenv with Olympus dependencies
+  - Typer CLI
+  - pytest suite
+  - SQLite run database
+  - JSON and Markdown report generation
+data_requirements:
+  - repository metadata
+  - local synthetic Olympus fixtures
+  - optional external project datasets tracked as blocked actions
+regulatory_considerations:
+  - LabOS does not certify legal, scientific, or production compliance.
+  - Fintech projects discovered by LabOS require qualified legal review before regulated use.
+security_risks:
+  - Run logs can expose command output and must avoid secrets.
+  - Project execution should remain bounded by explicit resource profiles.
+  - External credentials and private data must be supplied only through reviewed project-specific flows.
+capital_intensity: Low for local orchestration; medium if expanded to hosted multi-user research operations.
+time_to_mvp: Already smoke-testable locally; 2-4 weeks for a polished external pilot.
+evidence_available:
+  - Olympus pytest suite passes.
+  - LabOS CLI discovers, runs, records, and reports the local portfolio.
+  - portfolio_status.json, PORTFOLIO_COMPLETION_REPORT.md, and REMAINING_EXTERNAL_ACTIONS.md are generated.
+fatal_assumptions:
+  - Users value a local research operating layer more than manual scripts.
+  - Project manifests can remain lightweight enough to be maintained.
+  - Honest blocked-action reporting is preferred over inflated completion claims.
+validation_experiments:
+  - Re-run discovery and report generation after every portfolio change.
+  - Run smoke commands for each writable project.
+  - Interview technical users about whether the report changes launch decisions.
+go_no_go_criteria:
+  - Go if discovery, smoke run, report generation, lint, and tests pass.
+  - Go if reports clearly distinguish smoke, benchmark, blocked, and external-review states.
+  - No-go if project execution requires hidden credentials or unbounded compute.
+benchmark_plan:
+  - CLI discovery benchmark on the local portfolio.
+  - Smoke-run benchmark for writable projects.
+  - Timeout and blocked-dependency classification checks.
+ablation_plan:
+  - Disable manifest declarations and compare inferred-only report quality.
+  - Disable run-history attachment and compare auditability.
+  - Disable external-action reporting and compare release readiness decisions.
+release_gates:
+  - Olympus tests pass.
+  - LabOS lint passes.
+  - Portfolio reports regenerate from live workspace state.
+  - No fabricated scientific or legal readiness claims appear in reports.
+scientific_caveat: LabOS is an execution and evidence operating layer; it does not prove the scientific claims of discovered projects.
+resource_requirements:
+  profile: smoke
+  cpu_only: true
+  gpu_optional: true
+  memory_gb: 4
+  notes: Smoke workflows run on CPU; PyTorch can use GPU optionally.
+metadata:
+  owner: local
+  report_style: evidence-first

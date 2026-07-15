@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DataSourceRecord",
+  "type": "object",
+  "required": [
+    "name",
+    "source_url",
+    "organization",
+    "license",
+    "permitted_uses",
+    "retrieval_date",
+    "sha256",
+    "provenance",
+    "quality_score",
+    "language",
+    "domain",
+    "personal_data",
+    "training_eligible"
+  ],
+  "properties": {
+    "name": { "type": "string" },
+    "source_url": { "type": "string" },
+    "organization": { "type": "string" },
+    "license": { "type": "string" },
+    "permitted_uses": { "type": "array", "items": { "type": "string" } },
+    "retrieval_date": { "type": "string" },
+    "sha256": { "type": "string" },
+    "provenance": { "type": "string" },
+    "quality_score": { "type": "number" },
+    "language": { "type": "string" },
+    "domain": { "type": "string" },
+    "personal_data": { "type": "boolean" },
+    "training_eligible": { "type": "boolean" }
+  }
+}
+

@@ -1,0 +1,34 @@
+{
+  "name": "olympus-synthetic",
+  "version": "0.1.0",
+  "split": {
+    "train": 0.7,
+    "validation": 0.15,
+    "test": 0.15
+  },
+  "sources": [
+    "synthetic-ambiguity",
+    "synthetic-retrodiction",
+    "synthetic-transform"
+  ],
+  "filters": [
+    "ascii-cleaning"
+  ],
+  "deduplication": [
+    "exact-hash"
+  ],
+  "weights": {
+    "synthetic-ambiguity": 1.0
+  },
+  "licenses": [
+    "internal-synthetic"
+  ],
+  "contamination_rules": [
+    "keep benchmark prompts out of train"
+  ],
+  "transformations": [
+    "whitespace-normalization",
+    "chunking"
+  ]
+}
+

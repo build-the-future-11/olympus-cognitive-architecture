@@ -1,0 +1,89 @@
+:root {
+  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  color: #f4efe7;
+  background:
+    radial-gradient(circle at top left, rgba(245, 176, 65, 0.2), transparent 30%),
+    radial-gradient(circle at top right, rgba(102, 153, 204, 0.22), transparent 32%),
+    linear-gradient(180deg, #0c1622 0%, #1f2433 100%);
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+.app-shell {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 4rem;
+}
+
+.hero {
+  margin-bottom: 2rem;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #f0c987;
+  font-size: 0.8rem;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  line-height: 0.95;
+  margin: 0.25rem 0 1rem;
+  max-width: 12ch;
+}
+
+.summary,
+.notice {
+  max-width: 60ch;
+  color: #d8dded;
+}
+
+.notice {
+  color: #f9d49b;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.card {
+  background: rgba(15, 26, 37, 0.72);
+  border: 1px solid rgba(240, 201, 135, 0.15);
+  border-radius: 20px;
+  padding: 1.2rem;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+  text-transform: capitalize;
+}
+
+[data-status="passed"] {
+  color: #92e6a7;
+}
+
+[data-status="failed"] {
+  color: #ff9f9f;
+}
+
+small {
+  color: #c1cbdd;
+}
+

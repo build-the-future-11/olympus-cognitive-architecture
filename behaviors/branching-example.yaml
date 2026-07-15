@@ -1,0 +1,28 @@
+version: "1.0"
+name: branching-example
+description: Maintain interpretations, verify them, and merge surviving conclusions.
+objective: Analyze ambiguous text responsibly.
+nodes:
+  - id: interpret
+    kind: interpret
+    description: Generate candidate readings.
+    config: {}
+    depends_on: []
+  - id: verify
+    kind: verify
+    description: Score support and contradictions.
+    config: {}
+    depends_on: [interpret]
+  - id: merge
+    kind: merge
+    description: Merge surviving branches.
+    config: {}
+    depends_on: [verify]
+  - id: output
+    kind: output
+    description: Return the final answer.
+    config: {}
+    depends_on: [merge]
+outputs:
+  - output
+

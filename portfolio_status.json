@@ -1,0 +1,1145 @@
+{
+  "schema_version": "2.0",
+  "generated_at": "2026-07-15T13:44:13.233476+00:00",
+  "summary": {
+    "total_projects": 9,
+    "by_status": {
+      "discovered_only": 3,
+      "smoke_tested": 4,
+      "full_benchmark_pending_compute": 2
+    },
+    "by_final_status": {
+      "Blocked by a precisely documented technical reason": 3,
+      "Complete and smoke-tested": 4,
+      "Complete except external dataset access": 2
+    },
+    "all_ready": false
+  },
+  "projects": [
+    {
+      "project_id": "free-claude-code",
+      "title": "\ud83e\udd16 Free Claude Code",
+      "description": "<div align=\"center\">",
+      "hypothesis": "Use Claude Code CLI, Codex CLI, their VS Code extensions, JetBrains ACP, or chat bots through your own provider-backed proxy.",
+      "domain": "developer-tooling",
+      "classification": "flagship_company",
+      "root_path": "/Users/ryan/Documents/free-claude-code",
+      "manifest_source": "inferred",
+      "status": "discovered_only",
+      "final_status": "Blocked by a precisely documented technical reason",
+      "summary": "Last run `.venv/bin/python -m pytest tests -q -o addopts='' -p no:cacheprovider` completed with status `discovered_only`.",
+      "blocked_reason": "tests/api/test_app_lifespan_and_errors.py::test_create_app_writes_server_log_under_fcc_home: assert canonical_log.is_file()",
+      "target_user": "AI developer who needs local provider routing and workflow continuity.",
+      "current_alternative": "Manual provider switching, brittle shell scripts, or direct single-provider clients.",
+      "proposed_solution": "<div align=\"center\">",
+      "differentiation": "Local-first reproducibility, manifest-driven execution, and evidence-linked reporting.",
+      "market": "AI developer tools and local model-provider orchestration.",
+      "business_model": "Open-core developer tool with paid team governance, hosted relay, or support tiers.",
+      "distribution_strategy": "GitHub demos, developer tutorials, integration guides, and community-led adoption.",
+      "technical_requirements": [
+        "README and machine-readable project metadata",
+        "Python runtime with project dependencies installed",
+        "Automated test suite"
+      ],
+      "data_requirements": [
+        "local synthetic or repository-bundled data"
+      ],
+      "regulatory_considerations": [
+        "No regulated-production claim is made; project-specific legal review is required before deployment."
+      ],
+      "security_risks": [
+        "Secrets must not be committed or logged.",
+        "Experiment outputs need provenance and tamper-evident run records.",
+        "Provider credentials and local proxy traffic require careful redaction and permission boundaries."
+      ],
+      "capital_intensity": "medium before full benchmark campaigns; GPU or larger datasets may increase cost",
+      "time_to_mvp": "1-2 weeks to package a narrow validated MVP",
+      "evidence_available": [
+        "README/product thesis is present",
+        "test directory exists"
+      ],
+      "fatal_assumptions": [
+        "Target users experience the stated problem often enough to adopt a new workflow."
+      ],
+      "validation_experiments": [
+        "Run smoke tests and record artifacts through LabOS.",
+        "Run at least three seeds or scenario variants for benchmark claims.",
+        "Run a real provider-compatibility matrix with credentials supplied by the user."
+      ],
+      "go_no_go_criteria": [
+        "Go: deterministic smoke workflow passes locally.",
+        "Go: benchmark output is reproducible and stored with provenance.",
+        "No-go: core claim depends on unavailable private data or unstated manual steps."
+      ],
+      "benchmark_plan": [
+        "Smoke benchmark on bundled or synthetic fixtures.",
+        "Baseline comparison with simple heuristic/model.",
+        "Multi-seed run with stored metrics before claiming scientific improvement."
+      ],
+      "ablation_plan": [
+        "Remove the main proposed mechanism.",
+        "Compare against a simple baseline.",
+        "Vary data scale, random seed, and failure/noise conditions."
+      ],
+      "release_gates": [
+        "All tests pass in a clean local run.",
+        "LabOS portfolio status and completion report are regenerated.",
+        "No placeholders, pseudocode, or fabricated metrics are presented as results."
+      ],
+      "scientific_caveat": "Smoke tests establish executable engineering behavior only; full scientific claims require documented baselines, ablations, external data rights, and multi-seed benchmarks.",
+      "entry_points": [
+        {
+          "name": "smoke-test",
+          "command": ".venv/bin/python -m pytest tests -q -o addopts='' -p no:cacheprovider",
+          "profile": "smoke",
+          "expected_outputs": [
+            "test-report"
+          ]
+        }
+      ],
+      "datasets": [],
+      "validation": []
+    },
+    {
+      "project_id": "genesis-econ",
+      "title": "Project Genesis: Economics Edition",
+      "description": "Executable research lab for adaptive economic intelligence, market simulation, venture evaluation, benchmarks, and ablations.",
+      "hypothesis": "Synthetic economic worlds can stress-test market memory, regimes, agents, causality, co-evolution, and venture theses before any real-data or regulated fintech claim.",
+      "domain": "economics-finance",
+      "classification": "flagship_company",
+      "root_path": "/Users/ryan/Documents/GenesisE",
+      "manifest_source": "declared",
+      "status": "smoke_tested",
+      "final_status": "Complete and smoke-tested",
+      "summary": "Last run `env PYTHONPATH=src python3 -m unittest discover -s tests -v` completed with status `smoke_tested`.",
+      "blocked_reason": "",
+      "target_user": "Fintech founder, quant researcher, or economic-intelligence builder who needs executable pre-product validation.",
+      "current_alternative": "Spreadsheets, notebooks, disconnected market simulators, or strategy decks without reproducible experiments.",
+      "proposed_solution": "A deterministic research and venture lab that runs every Genesis-Econ program, emits portfolio artifacts, validates release readiness, and records benchmark/ablation evidence.",
+      "differentiation": "Combines economic simulation, adaptive agents, release validation, venture classification, benchmark suites, and ablation analysis in one dependency-light package.",
+      "market": "Fintech analytics, economic intelligence, quant prototyping, policy simulation, and founder-led venture validation.",
+      "business_model": "Start with design-partner pilots and internal research licensing; graduate to governed SaaS only after data-rights and legal review.",
+      "distribution_strategy": "Publish reproducible demos, release packets, benchmark writeups, and targeted founder/fintech design-partner outreach.",
+      "technical_requirements": [
+        "Python runtime",
+        "PYTHONPATH=src for local execution without installation",
+        "unittest suite",
+        "deterministic JSON artifact writing"
+      ],
+      "data_requirements": [
+        "synthetic economic simulation fixtures",
+        "future licensed market or customer data only after review"
+      ],
+      "regulatory_considerations": [
+        "Financial-data licensing and permitted use require review before real-data use.",
+        "Outputs are research artifacts, not investment, tax, legal, credit, custody, payment, or suitability advice.",
+        "Qualified legal review is required before regulated production deployment."
+      ],
+      "security_risks": [
+        "Future customer or market data would require access controls, audit trails, retention policy, and redaction.",
+        "Benchmark artifacts must not be represented as live financial performance.",
+        "Model outputs require human review boundaries for regulated contexts."
+      ],
+      "capital_intensity": "Low for synthetic validation; medium once licensed data, compliance, and production controls are introduced.",
+      "time_to_mvp": "1-2 weeks for a narrow synthetic-demo MVP; 4-8 weeks for a governed pilot with external data rights.",
+      "evidence_available": [
+        "47 local tests pass with PYTHONPATH=src.",
+        "Portfolio, validation, benchmark, ablation, and venture modules are implemented.",
+        "Existing release and venture documentation is present in docs/."
+      ],
+      "fatal_assumptions": [
+        "Synthetic behaviors transfer enough insight to justify real-data pilots.",
+        "Target users trust bounded simulation evidence as a pre-production screen.",
+        "Real financial-data rights can be obtained on acceptable terms."
+      ],
+      "validation_experiments": [
+        "Re-run all unit tests and portfolio artifacts through LabOS.",
+        "Run multi-seed benchmark and ablation matrix.",
+        "Conduct five design-partner interviews around one flagship fintech workflow."
+      ],
+      "go_no_go_criteria": [
+        "Go if all tests and synthetic benchmark artifacts reproduce.",
+        "Go if target users identify a painful workflow and agree to a pilot.",
+        "No-go for production if legal/data-rights review is unresolved."
+      ],
+      "benchmark_plan": [
+        "Smoke unit-test suite.",
+        "Synthetic multi-seed benchmark suite.",
+        "Ablation matrix comparing each proposed mechanism against weakened variants.",
+        "Future replay on licensed market/economic data before external claims."
+      ],
+      "ablation_plan": [
+        "Disable adaptive memory.",
+        "Disable regime feedback.",
+        "Replace agents with simple heuristics.",
+        "Compare all flagship programs against baseline synthetic controls."
+      ],
+      "release_gates": [
+        "Unit tests pass.",
+        "Portfolio and benchmark artifacts regenerate.",
+        "Reports clearly label synthetic evidence and non-claims.",
+        "Legal/security review completed before regulated use."
+      ],
+      "scientific_caveat": "Synthetic economic experiments are engineering evidence only and do not establish trading, credit, investment, macroeconomic, or regulated fintech validity.",
+      "entry_points": [
+        {
+          "name": "unit-tests",
+          "command": "env PYTHONPATH=src python3 -m unittest discover -s tests -v",
+          "profile": "smoke",
+          "expected_outputs": [
+            "unittest report"
+          ]
+        },
+        {
+          "name": "portfolio-artifacts",
+          "command": "env PYTHONPATH=src python3 -m genesis_econ portfolio --steps 120 --output artifacts/labos-portfolio.json",
+          "profile": "development",
+          "expected_outputs": [
+            "artifacts/labos-portfolio.json"
+          ]
+        },
+        {
+          "name": "benchmark-ablations",
+          "command": "env PYTHONPATH=src python3 -m genesis_econ benchmark --steps 120 --seeds 1,2 --output artifacts/labos-benchmark.json",
+          "profile": "benchmark",
+          "expected_outputs": [
+            "artifacts/labos-benchmark.json"
+          ]
+        }
+      ],
+      "datasets": [
+        {
+          "name": "synthetic economic simulation fixtures",
+          "required": true,
+          "notes": "Local deterministic simulations; no external financial data is required for smoke validation.",
+          "blocked_by_user_action": false
+        }
+      ],
+      "validation": []
+    },
+    {
+      "project_id": "labos",
+      "title": "LabOS For Research And Startup Ideas",
+      "description": "This repository is a from-scratch portfolio operating system for organizing research ideas, startup ideas, and the evidence around them. The workspace started empty, so the first completion pass focuses on building a durable system instead of pretending undocumented projects already existed.",
+      "hypothesis": "- `src/labos/`: portfolio discovery, validation, and reporting CLI",
+      "domain": "general-ml-research",
+      "classification": "flagship_company",
+      "root_path": "/Users/ryan/Documents/RestandMore",
+      "manifest_source": "inferred",
+      "status": "discovered_only",
+      "final_status": "Blocked by a precisely documented technical reason",
+      "summary": "This repository is a from-scratch portfolio operating system for organizing research ideas, startup ideas, and the evidence around them. The workspace started empty, so the first completion pass focuses on building a durable system instead of pretending undocumented projects already existed.",
+      "blocked_reason": "",
+      "target_user": "Research engineer validating a narrow technical thesis.",
+      "current_alternative": "One-off notebooks, isolated benchmark scripts, and manually curated experiment notes.",
+      "proposed_solution": "This repository is a from-scratch portfolio operating system for organizing research ideas, startup ideas, and the evidence around them. The workspace started empty, so the first completion pass focuses on building a durable system instead of pretending undocumented projects already existed.",
+      "differentiation": "Benchmark-first implementation with reproducible experiment outputs.",
+      "market": "Applied ML research tooling and technical validation services.",
+      "business_model": "Research platform licensing, consulting-backed pilots, or internal-product incubation.",
+      "distribution_strategy": "Research writeups, reproducible demos, conference-style artifacts, and targeted technical pilots.",
+      "technical_requirements": [
+        "README and machine-readable project metadata",
+        "Python runtime with project dependencies installed",
+        "Automated test suite"
+      ],
+      "data_requirements": [
+        "local synthetic or repository-bundled data"
+      ],
+      "regulatory_considerations": [
+        "No regulated-production claim is made; project-specific legal review is required before deployment."
+      ],
+      "security_risks": [
+        "Secrets must not be committed or logged.",
+        "Experiment outputs need provenance and tamper-evident run records."
+      ],
+      "capital_intensity": "low for smoke validation; medium for full multi-seed benchmark campaigns",
+      "time_to_mvp": "2-4 weeks to add runnable entry points and MVP surface",
+      "evidence_available": [
+        "README/product thesis is present",
+        "test directory exists",
+        "README references benchmarks"
+      ],
+      "fatal_assumptions": [
+        "Target users experience the stated problem often enough to adopt a new workflow."
+      ],
+      "validation_experiments": [
+        "Run smoke tests and record artifacts through LabOS.",
+        "Run at least three seeds or scenario variants for benchmark claims.",
+        "Compare against a simple baseline and document failure cases."
+      ],
+      "go_no_go_criteria": [
+        "Go: deterministic smoke workflow passes locally.",
+        "Go: benchmark output is reproducible and stored with provenance.",
+        "No-go: core claim depends on unavailable private data or unstated manual steps."
+      ],
+      "benchmark_plan": [
+        "Smoke benchmark on bundled or synthetic fixtures.",
+        "Baseline comparison with simple heuristic/model.",
+        "Multi-seed run with stored metrics before claiming scientific improvement."
+      ],
+      "ablation_plan": [
+        "Remove the main proposed mechanism.",
+        "Compare against a simple baseline.",
+        "Vary data scale, random seed, and failure/noise conditions."
+      ],
+      "release_gates": [
+        "All tests pass in a clean local run.",
+        "LabOS portfolio status and completion report are regenerated.",
+        "No placeholders, pseudocode, or fabricated metrics are presented as results."
+      ],
+      "scientific_caveat": "Smoke tests establish executable engineering behavior only; full scientific claims require documented baselines, ablations, external data rights, and multi-seed benchmarks.",
+      "entry_points": [],
+      "datasets": [],
+      "validation": [
+        {
+          "severity": "warning",
+          "message": "No runnable entry points detected."
+        }
+      ]
+    },
+    {
+      "project_id": "ledger",
+      "title": "Project Ledger Foundry",
+      "description": "Project Ledger Foundry 3.1 is an executable multi-tenant platform for all 25 ventures in the Project Ledger portfolio. Each product has a real input validator and decision engine, a defined safety boundary, an authenticated API operation, a durable evaluation lifecycle, human approval handling, tenant analytics, and tamper-evident audit events.",
+      "hypothesis": "The service uses only the Node.js standard library. There are no runtime packages, generated stubs, unimplemented handlers, or external services hidden behind the local workflow.",
+      "domain": "governed-fintech-systems",
+      "classification": "flagship_company",
+      "root_path": "/Users/ryan/Documents/Ledger",
+      "manifest_source": "inferred",
+      "status": "smoke_tested",
+      "final_status": "Complete and smoke-tested",
+      "summary": "Last run `npm test` completed with status `smoke_tested`.",
+      "blocked_reason": "",
+      "target_user": "Fintech operator needing auditable human-approved decision support.",
+      "current_alternative": "Spreadsheets, ad hoc notebooks, vendor dashboards, or un-audited decision scripts.",
+      "proposed_solution": "Project Ledger Foundry 3.1 is an executable multi-tenant platform for all 25 ventures in the Project Ledger portfolio. Each product has a real input validator and decision engine, a defined safety boundary, an authenticated API operation, a durable evaluation lifecycle, human approval handling, tenant analytics, and tamper-evident audit events.",
+      "differentiation": "Auditability, governance boundaries, and explicit release/compliance gates.",
+      "market": "Regulated fintech operations, audit tooling, and decision-support infrastructure.",
+      "business_model": "Design-partner pilots, enterprise SaaS, usage-based analytics, or licensed internal tooling after legal review.",
+      "distribution_strategy": "Founder-led outreach to fintech teams, compliance-friendly pilots, and benchmark case studies.",
+      "technical_requirements": [
+        "README and machine-readable project metadata",
+        "Node.js package manager and test script",
+        "Automated test suite",
+        "Documentation or release notes"
+      ],
+      "data_requirements": [
+        "local synthetic or repository-bundled data"
+      ],
+      "regulatory_considerations": [
+        "Financial-data licensing and permitted use must be reviewed.",
+        "Suitability, disclosures, payment/custody boundaries, and jurisdiction limits require qualified legal review.",
+        "Do not claim legal compliance without counsel-approved production controls."
+      ],
+      "security_risks": [
+        "Secrets must not be committed or logged.",
+        "Experiment outputs need provenance and tamper-evident run records.",
+        "Financial or identity data requires least-privilege access control and audit trails.",
+        "Fraud, abuse, and model-output misuse need explicit human review boundaries."
+      ],
+      "capital_intensity": "medium once licensed data, compliance review, and production security are included",
+      "time_to_mvp": "1-2 weeks to package a narrow validated MVP",
+      "evidence_available": [
+        "README/product thesis is present",
+        "test directory exists",
+        "documentation directory exists",
+        "README references benchmarks"
+      ],
+      "fatal_assumptions": [
+        "Target users experience the stated problem often enough to adopt a new workflow.",
+        "Regulated use can be bounded to decision support with acceptable legal and compliance controls."
+      ],
+      "validation_experiments": [
+        "Run smoke tests and record artifacts through LabOS.",
+        "Run at least three seeds or scenario variants for benchmark claims.",
+        "Interview five target users and validate willingness to run a governed pilot."
+      ],
+      "go_no_go_criteria": [
+        "Go: deterministic smoke workflow passes locally.",
+        "Go: benchmark output is reproducible and stored with provenance.",
+        "No-go: core claim depends on unavailable private data or unstated manual steps.",
+        "No-go: legal/compliance review rejects the proposed operating boundary."
+      ],
+      "benchmark_plan": [
+        "Synthetic smoke benchmark for correctness.",
+        "Licensed/consented historical-data replay before any real-world claim.",
+        "Stress tests for fraud, missing data, outliers, and audit-log integrity."
+      ],
+      "ablation_plan": [
+        "Remove the main proposed mechanism.",
+        "Compare against a simple baseline.",
+        "Vary data scale, random seed, and failure/noise conditions."
+      ],
+      "release_gates": [
+        "All tests pass in a clean local run.",
+        "LabOS portfolio status and completion report are regenerated.",
+        "No placeholders, pseudocode, or fabricated metrics are presented as results.",
+        "Qualified legal/security review completed before regulated production use."
+      ],
+      "scientific_caveat": "Synthetic or smoke-tested fintech outputs are not investment, credit, legal, tax, custody, payment, or suitability advice.",
+      "entry_points": [
+        {
+          "name": "node-test",
+          "command": "npm test",
+          "profile": "smoke",
+          "expected_outputs": [
+            "test-report"
+          ]
+        }
+      ],
+      "datasets": [],
+      "validation": []
+    },
+    {
+      "project_id": "olympus",
+      "title": "OLYMPUS Cognitive Architecture",
+      "description": "Local-first research platform for cognitive runtime, behavior compilation, and evaluation.",
+      "hypothesis": "Typed latent workspaces, interpretive branching, and behavior-graph execution improve agentic research reliability.",
+      "domain": "agentic-ml-systems",
+      "classification": "flagship_company",
+      "root_path": "/Users/ryan/Documents/Olympus",
+      "manifest_source": "declared",
+      "status": "smoke_tested",
+      "final_status": "Complete and smoke-tested",
+      "summary": "Last run `.venv/bin/python -m olympus.cli demo run-all` completed with status `smoke_tested`.",
+      "blocked_reason": "",
+      "target_user": "Research engineer, AI infrastructure builder, or technical founder managing multiple local research projects.",
+      "current_alternative": "Manual repo inspection, disconnected test commands, ad hoc status docs, and untracked benchmark claims.",
+      "proposed_solution": "A local-first research operating layer that discovers projects, validates manifests, executes bounded runs, records run history, and emits release reports.",
+      "differentiation": "Combines cognitive runtime primitives with manifest-driven portfolio orchestration, honest blocked-action tracking, and reproducible command history.",
+      "market": "AI research operations, internal R&D tooling, agent evaluation infrastructure, and founder portfolio management.",
+      "business_model": "Internal platform first; later open-core or enterprise research-operations tooling if external users validate the workflow.",
+      "distribution_strategy": "Demonstrate on the local portfolio, publish reproducible status reports, and use technical writeups to attract design partners.",
+      "technical_requirements": [
+        "Python virtualenv with Olympus dependencies",
+        "Typer CLI",
+        "pytest suite",
+        "SQLite run database",
+        "JSON and Markdown report generation"
+      ],
+      "data_requirements": [
+        "repository metadata",
+        "local synthetic Olympus fixtures",
+        "optional external project datasets tracked as blocked actions"
+      ],
+      "regulatory_considerations": [
+        "LabOS does not certify legal, scientific, or production compliance.",
+        "Fintech projects discovered by LabOS require qualified legal review before regulated use."
+      ],
+      "security_risks": [
+        "Run logs can expose command output and must avoid secrets.",
+        "Project execution should remain bounded by explicit resource profiles.",
+        "External credentials and private data must be supplied only through reviewed project-specific flows."
+      ],
+      "capital_intensity": "Low for local orchestration; medium if expanded to hosted multi-user research operations.",
+      "time_to_mvp": "Already smoke-testable locally; 2-4 weeks for a polished external pilot.",
+      "evidence_available": [
+        "Olympus pytest suite passes.",
+        "LabOS CLI discovers, runs, records, and reports the local portfolio.",
+        "portfolio_status.json, PORTFOLIO_COMPLETION_REPORT.md, and REMAINING_EXTERNAL_ACTIONS.md are generated."
+      ],
+      "fatal_assumptions": [
+        "Users value a local research operating layer more than manual scripts.",
+        "Project manifests can remain lightweight enough to be maintained.",
+        "Honest blocked-action reporting is preferred over inflated completion claims."
+      ],
+      "validation_experiments": [
+        "Re-run discovery and report generation after every portfolio change.",
+        "Run smoke commands for each writable project.",
+        "Interview technical users about whether the report changes launch decisions."
+      ],
+      "go_no_go_criteria": [
+        "Go if discovery, smoke run, report generation, lint, and tests pass.",
+        "Go if reports clearly distinguish smoke, benchmark, blocked, and external-review states.",
+        "No-go if project execution requires hidden credentials or unbounded compute."
+      ],
+      "benchmark_plan": [
+        "CLI discovery benchmark on the local portfolio.",
+        "Smoke-run benchmark for writable projects.",
+        "Timeout and blocked-dependency classification checks."
+      ],
+      "ablation_plan": [
+        "Disable manifest declarations and compare inferred-only report quality.",
+        "Disable run-history attachment and compare auditability.",
+        "Disable external-action reporting and compare release readiness decisions."
+      ],
+      "release_gates": [
+        "Olympus tests pass.",
+        "LabOS lint passes.",
+        "Portfolio reports regenerate from live workspace state.",
+        "No fabricated scientific or legal readiness claims appear in reports."
+      ],
+      "scientific_caveat": "LabOS is an execution and evidence operating layer; it does not prove the scientific claims of discovered projects.",
+      "entry_points": [
+        {
+          "name": "smoke-demos",
+          "command": ".venv/bin/python -m olympus.cli demo run-all",
+          "profile": "smoke",
+          "expected_outputs": [
+            "demo-summary"
+          ]
+        },
+        {
+          "name": "backend-tests",
+          "command": ".venv/bin/python -m pytest",
+          "profile": "development",
+          "expected_outputs": [
+            "pytest-report"
+          ]
+        },
+        {
+          "name": "portfolio-discovery",
+          "command": ".venv/bin/python -m olympus.cli labos discover --workspace ..",
+          "profile": "development",
+          "expected_outputs": [
+            "portfolio-table"
+          ]
+        }
+      ],
+      "datasets": [
+        {
+          "name": "olympus-synthetic",
+          "required": true,
+          "notes": "Synthetic local datasets bundled in the repository.",
+          "blocked_by_user_action": false
+        }
+      ],
+      "validation": []
+    },
+    {
+      "project_id": "project-ascension",
+      "title": "Project Ascension",
+      "description": "Bounded mathematical and scientific-computing research infrastructure with executable kernels, verification, benchmarks, and release artifacts.",
+      "hypothesis": "Typed mathematical interfaces, reproducible kernels, and explicit evidence contracts can improve scientific-computing workflows under bounded synthetic protocols.",
+      "domain": "mathematical-scientific-research",
+      "classification": "research_project",
+      "root_path": "/Users/ryan/Documents/Ascension",
+      "manifest_source": "declared",
+      "status": "smoke_tested",
+      "final_status": "Complete and smoke-tested",
+      "summary": "Last run `env PYTHONPATH=src /Users/ryan/Documents/Olympus/.venv/bin/python -m pytest -q` completed with status `smoke_tested`.",
+      "blocked_reason": "",
+      "target_user": "Scientific-computing researcher, ML scientist, or technical founder validating rigorous bounded kernels.",
+      "current_alternative": "One-off mathematical scripts, notebooks, and undocumented benchmark artifacts.",
+      "proposed_solution": "A tested package of mathematical kernels, experiments, dataset cards, verification helpers, and release evidence.",
+      "differentiation": "Pairs executable kernels with artifact hashing, evidence contracts, bounded claims, and explicit non-claims.",
+      "market": "Scientific-computing tooling, research infrastructure, technical education, and specialized R&D validation.",
+      "business_model": "Research infrastructure licensing, consulting-backed pilots, or internal incubation after a focused user workflow is selected.",
+      "distribution_strategy": "Reproducible research packet, technical writeups, demos, and targeted outreach to scientific-computing teams.",
+      "technical_requirements": [
+        "Python runtime",
+        "pytest runtime",
+        "PYTHONPATH=src for local execution",
+        "deterministic artifact generation"
+      ],
+      "data_requirements": [
+        "synthetic mathematical protocols",
+        "future domain datasets only after provenance review"
+      ],
+      "regulatory_considerations": [
+        "No regulated-production claim is made.",
+        "Domain-specific legal or safety review is required before applied deployment."
+      ],
+      "security_risks": [
+        "Artifact integrity must be preserved before claims are quoted.",
+        "Future external datasets require provenance, licensing, and privacy review."
+      ],
+      "capital_intensity": "Low for local synthetic protocols; medium for larger external-domain validation campaigns.",
+      "time_to_mvp": "1-2 weeks for a narrow educational or research-demo MVP.",
+      "evidence_available": [
+        "Pytest suite passes under the available Olympus virtualenv runtime.",
+        "README documents scope, modules, status, and non-claims.",
+        "Release audit and research packet documentation are present."
+      ],
+      "fatal_assumptions": [
+        "Users value bounded formal/scientific infrastructure enough to adopt it.",
+        "Synthetic protocols are accepted as a valid pre-real-data screen.",
+        "A narrow product wedge can be selected from the broad research surface."
+      ],
+      "validation_experiments": [
+        "Re-run pytest and full portfolio artifacts through LabOS.",
+        "Select one scientific-computing workflow and test against a simple baseline.",
+        "Ask five researchers which artifact/evidence formats would change adoption."
+      ],
+      "go_no_go_criteria": [
+        "Go if smoke tests and portfolio artifacts regenerate cleanly.",
+        "Go if a narrow user workflow beats notebook status quo.",
+        "No-go if users only value it as a broad research archive."
+      ],
+      "benchmark_plan": [
+        "Smoke pytest suite.",
+        "Full portfolio benchmark.",
+        "Model benchmark with OOD and ablation cases.",
+        "Future external-domain replication before broader claims."
+      ],
+      "ablation_plan": [
+        "Remove verification checks.",
+        "Remove typed/unit constraints.",
+        "Compare simple baselines against each mathematical kernel."
+      ],
+      "release_gates": [
+        "Pytest suite passes.",
+        "Benchmark artifacts regenerate with hashes.",
+        "Claims remain bounded to synthetic protocols."
+      ],
+      "scientific_caveat": "Ascension is bounded scientific-computing infrastructure; it does not prove a universal scientific reasoner, novel physics, or external-domain performance.",
+      "entry_points": [
+        {
+          "name": "pytest-suite",
+          "command": "env PYTHONPATH=src /Users/ryan/Documents/Olympus/.venv/bin/python -m pytest -q",
+          "profile": "smoke",
+          "expected_outputs": [
+            "pytest report"
+          ]
+        },
+        {
+          "name": "full-portfolio",
+          "command": "env PYTHONPATH=src python3 -m ascension.experiments.full_portfolio --output results/labos-full-portfolio.json",
+          "profile": "benchmark",
+          "expected_outputs": [
+            "results/labos-full-portfolio.json"
+          ]
+        },
+        {
+          "name": "model-benchmark",
+          "command": "env PYTHONPATH=src python3 -m ascension.experiments.model_benchmark --output results/labos-model-benchmark.json",
+          "profile": "benchmark",
+          "expected_outputs": [
+            "results/labos-model-benchmark.json"
+          ]
+        }
+      ],
+      "datasets": [
+        {
+          "name": "synthetic mathematical protocols",
+          "required": true,
+          "notes": "Repository-local deterministic and synthetic tasks.",
+          "blocked_by_user_action": false
+        }
+      ],
+      "validation": []
+    },
+    {
+      "project_id": "project-atlas-portfolio",
+      "title": "Project Atlas \u2014 High-Impact Machine Learning Portfolio",
+      "description": "> Portfolio update: the repository now also contains the independently executable",
+      "hypothesis": "> [Extreme Weather Forecasting application](docs/weather/README.md), Project Atlas candidate #1.",
+      "domain": "climate-forecasting",
+      "classification": "flagship_company",
+      "root_path": "/Users/ryan/Documents/ATLAS",
+      "manifest_source": "inferred",
+      "status": "full_benchmark_pending_compute",
+      "final_status": "Complete except external dataset access",
+      "summary": "Last run `.venv/bin/python -m pytest -q -p no:cacheprovider` completed with status `full_benchmark_pending_compute`.",
+      "blocked_reason": "One or more datasets require manual download or acceptance.",
+      "target_user": "Applied ML researcher or climate-risk operator validating forecasting models.",
+      "current_alternative": "One-off notebooks, isolated benchmark scripts, and manually curated experiment notes.",
+      "proposed_solution": "> Portfolio update: the repository now also contains the independently executable",
+      "differentiation": "Auditability, governance boundaries, and explicit release/compliance gates.",
+      "market": "Climate risk, industrial forecasting, and applied scientific ML.",
+      "business_model": "Research platform licensing, consulting-backed pilots, or internal-product incubation.",
+      "distribution_strategy": "Research writeups, reproducible demos, conference-style artifacts, and targeted technical pilots.",
+      "technical_requirements": [
+        "README and machine-readable project metadata",
+        "Python runtime with project dependencies installed",
+        "Automated test suite",
+        "Documentation or release notes"
+      ],
+      "data_requirements": [
+        "NASA data"
+      ],
+      "regulatory_considerations": [
+        "No regulated-production claim is made; project-specific legal review is required before deployment."
+      ],
+      "security_risks": [
+        "Secrets must not be committed or logged.",
+        "Experiment outputs need provenance and tamper-evident run records."
+      ],
+      "capital_intensity": "medium before full benchmark campaigns; GPU or larger datasets may increase cost",
+      "time_to_mvp": "2-6 weeks after external data access is approved",
+      "evidence_available": [
+        "README/product thesis is present",
+        "test directory exists",
+        "documentation directory exists",
+        "README references benchmarks"
+      ],
+      "fatal_assumptions": [
+        "Target users experience the stated problem often enough to adopt a new workflow.",
+        "Required datasets can be licensed, downloaded, and reproduced."
+      ],
+      "validation_experiments": [
+        "Run smoke tests and record artifacts through LabOS.",
+        "Run at least three seeds or scenario variants for benchmark claims.",
+        "Compare against a simple baseline and document failure cases."
+      ],
+      "go_no_go_criteria": [
+        "Go: deterministic smoke workflow passes locally.",
+        "Go: benchmark output is reproducible and stored with provenance.",
+        "No-go: core claim depends on unavailable private data or unstated manual steps."
+      ],
+      "benchmark_plan": [
+        "Smoke benchmark on bundled or synthetic fixtures.",
+        "Baseline comparison with simple heuristic/model.",
+        "Multi-seed run with stored metrics before claiming scientific improvement."
+      ],
+      "ablation_plan": [
+        "Remove the main proposed mechanism.",
+        "Compare against a simple baseline.",
+        "Vary data scale, random seed, and failure/noise conditions."
+      ],
+      "release_gates": [
+        "All tests pass in a clean local run.",
+        "LabOS portfolio status and completion report are regenerated.",
+        "No placeholders, pseudocode, or fabricated metrics are presented as results."
+      ],
+      "scientific_caveat": "Smoke tests establish executable engineering behavior only; full scientific claims require documented baselines, ablations, external data rights, and multi-seed benchmarks.",
+      "entry_points": [
+        {
+          "name": "smoke-test",
+          "command": ".venv/bin/python -m pytest -q -p no:cacheprovider",
+          "profile": "smoke",
+          "expected_outputs": [
+            "test-report"
+          ]
+        }
+      ],
+      "datasets": [
+        {
+          "name": "NASA data",
+          "required": true,
+          "notes": "Mentioned in README; may require manual download.",
+          "blocked_by_user_action": true
+        }
+      ],
+      "validation": [
+        {
+          "severity": "info",
+          "message": "Dataset 'NASA data' may require manual download or acceptance."
+        }
+      ]
+    },
+    {
+      "project_id": "project-genesis",
+      "title": "Project Genesis",
+      "description": "Project Genesis is an executable research implementation for **bounded developmental modular learning**. It implements conditional sparse routing, controlled capacity activation, continual-learning task streams, EWC, Synaptic Intelligence, reservoir replay, calibration/routing diagnostics, task matrices, paired statistics, and dependency-free SVG plots. It is not evidence that self-developing intelligence has been achieved.",
+      "hypothesis": "The formalization, literature positioning, protocol, and limitations are in [paper/PROJECT_GENESIS.md](paper/PROJECT_GENESIS.md). No public benchmark conclusion is presented until its declared multi-seed campaign has completed.",
+      "domain": "developmental-learning",
+      "classification": "flagship_company",
+      "root_path": "/Users/ryan/Documents/Genesis",
+      "manifest_source": "inferred",
+      "status": "full_benchmark_pending_compute",
+      "final_status": "Complete except external dataset access",
+      "summary": "Last run `.venv/bin/python -m pytest -q -p no:cacheprovider` completed with status `full_benchmark_pending_compute`.",
+      "blocked_reason": "One or more datasets require manual download or acceptance.",
+      "target_user": "ML researcher testing continual, modular, or developmental-learning methods.",
+      "current_alternative": "One-off notebooks, isolated benchmark scripts, and manually curated experiment notes.",
+      "proposed_solution": "Project Genesis is an executable research implementation for **bounded developmental modular learning**. It implements conditional sparse routing, controlled capacity activation, continual-learning task streams, EWC, Synaptic Intelligence, reservoir replay, calibration/routing diagnostics, task matrices, paired statistics, and dependency-free SVG plots. It is not evidence that self-developing intelligence has been achieved.",
+      "differentiation": "Auditability, governance boundaries, and explicit release/compliance gates.",
+      "market": "Continual-learning research infrastructure and evaluation tooling.",
+      "business_model": "Research platform licensing, consulting-backed pilots, or internal-product incubation.",
+      "distribution_strategy": "Research writeups, reproducible demos, conference-style artifacts, and targeted technical pilots.",
+      "technical_requirements": [
+        "README and machine-readable project metadata",
+        "Python runtime with project dependencies installed",
+        "Automated test suite",
+        "Documentation or release notes"
+      ],
+      "data_requirements": [
+        "MNIST-family dataset"
+      ],
+      "regulatory_considerations": [
+        "No regulated-production claim is made; project-specific legal review is required before deployment."
+      ],
+      "security_risks": [
+        "Secrets must not be committed or logged.",
+        "Experiment outputs need provenance and tamper-evident run records."
+      ],
+      "capital_intensity": "low for smoke validation; medium for full multi-seed benchmark campaigns",
+      "time_to_mvp": "2-6 weeks after external data access is approved",
+      "evidence_available": [
+        "README/product thesis is present",
+        "test directory exists",
+        "documentation directory exists",
+        "README references benchmarks"
+      ],
+      "fatal_assumptions": [
+        "Target users experience the stated problem often enough to adopt a new workflow.",
+        "Required datasets can be licensed, downloaded, and reproduced."
+      ],
+      "validation_experiments": [
+        "Run smoke tests and record artifacts through LabOS.",
+        "Run at least three seeds or scenario variants for benchmark claims.",
+        "Compare against a simple baseline and document failure cases."
+      ],
+      "go_no_go_criteria": [
+        "Go: deterministic smoke workflow passes locally.",
+        "Go: benchmark output is reproducible and stored with provenance.",
+        "No-go: core claim depends on unavailable private data or unstated manual steps."
+      ],
+      "benchmark_plan": [
+        "Smoke benchmark on bundled or synthetic fixtures.",
+        "Baseline comparison with simple heuristic/model.",
+        "Multi-seed run with stored metrics before claiming scientific improvement."
+      ],
+      "ablation_plan": [
+        "Remove the main proposed mechanism.",
+        "Compare against a simple baseline.",
+        "Vary data scale, random seed, and failure/noise conditions."
+      ],
+      "release_gates": [
+        "All tests pass in a clean local run.",
+        "LabOS portfolio status and completion report are regenerated.",
+        "No placeholders, pseudocode, or fabricated metrics are presented as results."
+      ],
+      "scientific_caveat": "Smoke tests establish executable engineering behavior only; full scientific claims require documented baselines, ablations, external data rights, and multi-seed benchmarks.",
+      "entry_points": [
+        {
+          "name": "smoke-test",
+          "command": ".venv/bin/python -m pytest -q -p no:cacheprovider",
+          "profile": "smoke",
+          "expected_outputs": [
+            "test-report"
+          ]
+        }
+      ],
+      "datasets": [
+        {
+          "name": "MNIST-family dataset",
+          "required": true,
+          "notes": "README references optional benchmark download.",
+          "blocked_by_user_action": true
+        }
+      ],
+      "validation": [
+        {
+          "severity": "info",
+          "message": "Dataset 'MNIST-family dataset' may require manual download or acceptance."
+        }
+      ]
+    },
+    {
+      "project_id": "tracecompression",
+      "title": "TraceCompression",
+      "description": "TraceCompression research project.",
+      "hypothesis": "TraceCompression research project.",
+      "domain": "representation-learning",
+      "classification": "requires_validation",
+      "root_path": "/Users/ryan/Documents/TraceCompression",
+      "manifest_source": "inferred",
+      "status": "discovered_only",
+      "final_status": "Blocked by a precisely documented technical reason",
+      "summary": "TraceCompression research project.",
+      "blocked_reason": "",
+      "target_user": "Research engineer validating a narrow technical thesis.",
+      "current_alternative": "One-off notebooks, isolated benchmark scripts, and manually curated experiment notes.",
+      "proposed_solution": "TraceCompression research project.",
+      "differentiation": "Local-first reproducibility, manifest-driven execution, and evidence-linked reporting.",
+      "market": "Applied ML research tooling and technical validation services.",
+      "business_model": "Research platform licensing, consulting-backed pilots, or internal-product incubation.",
+      "distribution_strategy": "Research writeups, reproducible demos, conference-style artifacts, and targeted technical pilots.",
+      "technical_requirements": [
+        "README and machine-readable project metadata"
+      ],
+      "data_requirements": [
+        "local synthetic or repository-bundled data"
+      ],
+      "regulatory_considerations": [
+        "No regulated-production claim is made; project-specific legal review is required before deployment."
+      ],
+      "security_risks": [
+        "Secrets must not be committed or logged.",
+        "Experiment outputs need provenance and tamper-evident run records."
+      ],
+      "capital_intensity": "low for smoke validation; medium for full multi-seed benchmark campaigns",
+      "time_to_mvp": "2-4 weeks to add runnable entry points and MVP surface",
+      "evidence_available": [
+        "repository discovered; deeper evidence still required"
+      ],
+      "fatal_assumptions": [
+        "Target users experience the stated problem often enough to adopt a new workflow."
+      ],
+      "validation_experiments": [
+        "Run smoke tests and record artifacts through LabOS.",
+        "Run at least three seeds or scenario variants for benchmark claims.",
+        "Compare against a simple baseline and document failure cases."
+      ],
+      "go_no_go_criteria": [
+        "Go: deterministic smoke workflow passes locally.",
+        "Go: benchmark output is reproducible and stored with provenance.",
+        "No-go: core claim depends on unavailable private data or unstated manual steps."
+      ],
+      "benchmark_plan": [
+        "Smoke benchmark on bundled or synthetic fixtures.",
+        "Baseline comparison with simple heuristic/model.",
+        "Multi-seed run with stored metrics before claiming scientific improvement."
+      ],
+      "ablation_plan": [
+        "Remove the main proposed mechanism.",
+        "Compare against a simple baseline.",
+        "Vary data scale, random seed, and failure/noise conditions."
+      ],
+      "release_gates": [
+        "All tests pass in a clean local run.",
+        "LabOS portfolio status and completion report are regenerated.",
+        "No placeholders, pseudocode, or fabricated metrics are presented as results."
+      ],
+      "scientific_caveat": "Smoke tests establish executable engineering behavior only; full scientific claims require documented baselines, ablations, external data rights, and multi-seed benchmarks.",
+      "entry_points": [],
+      "datasets": [],
+      "validation": [
+        {
+          "severity": "warning",
+          "message": "README is missing."
+        },
+        {
+          "severity": "warning",
+          "message": "No runnable entry points detected."
+        }
+      ]
+    }
+  ],
+  "run_history": [
+    {
+      "project_id": "free-claude-code",
+      "command": ".venv/bin/python -m pytest -q -p no:cacheprovider",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/free-claude-code",
+      "return_code": 1,
+      "status": "discovered_only",
+      "classification": "failed_command",
+      "started_at": "2026-07-15T13:17:29.640326+00:00",
+      "finished_at": "2026-07-15T13:18:55.141976+00:00"
+    },
+    {
+      "project_id": "ledger",
+      "command": "npm test",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/Ledger",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:18:55.149777+00:00",
+      "finished_at": "2026-07-15T13:19:49.718899+00:00"
+    },
+    {
+      "project_id": "olympus",
+      "command": ".venv/bin/python -m olympus.cli demo run-all",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/Olympus",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:19:49.722431+00:00",
+      "finished_at": "2026-07-15T13:19:57.243525+00:00"
+    },
+    {
+      "project_id": "project-atlas-portfolio",
+      "command": ".venv/bin/python -m pytest -q -p no:cacheprovider",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/ATLAS",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:19:57.246123+00:00",
+      "finished_at": "2026-07-15T13:20:06.087594+00:00"
+    },
+    {
+      "project_id": "project-genesis",
+      "command": ".venv/bin/python -m pytest -q -p no:cacheprovider",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/Genesis",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:20:06.089973+00:00",
+      "finished_at": "2026-07-15T13:20:12.817038+00:00"
+    },
+    {
+      "project_id": "olympus",
+      "command": ".venv/bin/python -m olympus.cli demo run-all",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/Olympus",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:21:00.708556+00:00",
+      "finished_at": "2026-07-15T13:21:06.542814+00:00"
+    },
+    {
+      "project_id": "genesis-econ",
+      "command": "env PYTHONPATH=src python3 -m unittest discover -s tests -v",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/GenesisE",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:25:31.051071+00:00",
+      "finished_at": "2026-07-15T13:25:39.328161+00:00"
+    },
+    {
+      "project_id": "project-ascension",
+      "command": "env PYTHONPATH=src /Users/ryan/Documents/Olympus/.venv/bin/python -m pytest -q",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/Ascension",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:25:31.051071+00:00",
+      "finished_at": "2026-07-15T13:25:50.840527+00:00"
+    },
+    {
+      "project_id": "free-claude-code",
+      "command": ".venv/bin/python -m pytest -q -p no:cacheprovider",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/free-claude-code",
+      "return_code": 1,
+      "status": "discovered_only",
+      "classification": "failed_command",
+      "started_at": "2026-07-15T13:29:52.507454+00:00",
+      "finished_at": "2026-07-15T13:31:32.475793+00:00"
+    },
+    {
+      "project_id": "genesis-econ",
+      "command": "env PYTHONPATH=src python3 -m unittest discover -s tests -v",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/GenesisE",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:31:32.482217+00:00",
+      "finished_at": "2026-07-15T13:31:36.371840+00:00"
+    },
+    {
+      "project_id": "ledger",
+      "command": "npm test",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/Ledger",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:31:36.373212+00:00",
+      "finished_at": "2026-07-15T13:32:03.628159+00:00"
+    },
+    {
+      "project_id": "olympus",
+      "command": ".venv/bin/python -m olympus.cli demo run-all",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/Olympus",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:32:03.631323+00:00",
+      "finished_at": "2026-07-15T13:32:09.950805+00:00"
+    },
+    {
+      "project_id": "project-ascension",
+      "command": "env PYTHONPATH=src /Users/ryan/Documents/Olympus/.venv/bin/python -m pytest -q",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/Ascension",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:32:09.952539+00:00",
+      "finished_at": "2026-07-15T13:32:15.257794+00:00"
+    },
+    {
+      "project_id": "project-atlas-portfolio",
+      "command": ".venv/bin/python -m pytest -q -p no:cacheprovider",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/ATLAS",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:32:15.259868+00:00",
+      "finished_at": "2026-07-15T13:32:26.467096+00:00"
+    },
+    {
+      "project_id": "project-genesis",
+      "command": ".venv/bin/python -m pytest -q -p no:cacheprovider",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/Genesis",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:32:26.470743+00:00",
+      "finished_at": "2026-07-15T13:32:37.482741+00:00"
+    },
+    {
+      "project_id": "free-claude-code",
+      "command": ".venv/bin/python -m pytest tests -q -o addopts='' -p no:cacheprovider",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/free-claude-code",
+      "return_code": 1,
+      "status": "discovered_only",
+      "classification": "failed_command",
+      "started_at": "2026-07-15T13:38:18.480901+00:00",
+      "finished_at": "2026-07-15T13:41:08.465853+00:00"
+    },
+    {
+      "project_id": "genesis-econ",
+      "command": "env PYTHONPATH=src python3 -m unittest discover -s tests -v",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/GenesisE",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:41:08.498858+00:00",
+      "finished_at": "2026-07-15T13:41:13.467534+00:00"
+    },
+    {
+      "project_id": "ledger",
+      "command": "npm test",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/Ledger",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:41:13.470601+00:00",
+      "finished_at": "2026-07-15T13:41:38.920750+00:00"
+    },
+    {
+      "project_id": "olympus",
+      "command": ".venv/bin/python -m olympus.cli demo run-all",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/Olympus",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:41:38.924249+00:00",
+      "finished_at": "2026-07-15T13:41:42.086419+00:00"
+    },
+    {
+      "project_id": "project-ascension",
+      "command": "env PYTHONPATH=src /Users/ryan/Documents/Olympus/.venv/bin/python -m pytest -q",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/Ascension",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:41:42.088149+00:00",
+      "finished_at": "2026-07-15T13:41:47.509879+00:00"
+    },
+    {
+      "project_id": "project-atlas-portfolio",
+      "command": ".venv/bin/python -m pytest -q -p no:cacheprovider",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/ATLAS",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:41:47.511358+00:00",
+      "finished_at": "2026-07-15T13:41:54.118001+00:00"
+    },
+    {
+      "project_id": "project-genesis",
+      "command": ".venv/bin/python -m pytest -q -p no:cacheprovider",
+      "profile": "smoke",
+      "cwd": "/Users/ryan/Documents/Genesis",
+      "return_code": 0,
+      "status": "smoke_tested",
+      "classification": "ok",
+      "started_at": "2026-07-15T13:41:54.119909+00:00",
+      "finished_at": "2026-07-15T13:41:58.779677+00:00"
+    }
+  ]
+}

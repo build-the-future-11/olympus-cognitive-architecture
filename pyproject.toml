@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "olympus-cognitive-architecture"
+version = "0.1.0"
+description = "A research-grade cognitive architecture, behavior compiler, and experimentation platform."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+  "fastapi>=0.139.0",
+  "httpx>=0.28.1",
+  "pydantic>=2.13.4",
+  "PyYAML>=6.0.3",
+  "rich>=15.0.0",
+  "torch>=2.11.0",
+  "typer>=0.26.8",
+  "uvicorn>=0.51.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "mypy>=2.3.0",
+  "pytest>=9.1.1",
+  "ruff>=0.15.21",
+]
+
+[project.scripts]
+olympus = "olympus.cli:app"
+
+[tool.setuptools.packages.find]
+include = ["olympus*"]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.mypy]
+python_version = "3.14"
+strict = true
+warn_unused_configs = true
+disallow_any_generics = false
+exclude = ["apps/forge-web"]
