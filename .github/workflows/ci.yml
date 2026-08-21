@@ -2,7 +2,13 @@ name: release-gate
 
 on:
   push:
+    branches:
+      - main
   pull_request:
+
+concurrency:
+  group: release-gate-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -55,7 +61,7 @@ jobs:
         run: npm ci
       - name: Test
         run: npm test
-      - name: Audit production dependencies
-        run: npm audit --omit=dev --audit-level=high
+      - name: Audit dependency graph
+        run: npm audit --audit-level=moderate
       - name: Build production assets
         run: npm run build

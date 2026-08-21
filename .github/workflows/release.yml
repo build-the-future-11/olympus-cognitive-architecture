@@ -52,7 +52,7 @@ jobs:
         working-directory: apps/forge-web
         run: |
           npm test
-          npm audit --omit=dev --audit-level=high
+          npm audit --audit-level=moderate
           npm run build
 
       - name: Build Python distributions
