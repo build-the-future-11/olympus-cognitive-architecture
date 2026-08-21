@@ -33,6 +33,7 @@ classifiers = [
 dependencies = [
   "fastapi>=0.139.0",
   "httpx>=0.28.1",
+  "numpy>=2.5.1",
   "pydantic>=2.13.4",
   "PyYAML>=6.0.3",
   "rich>=15.0.0",
@@ -56,6 +57,7 @@ dev = [
   "pytest-cov>=7.1.0,<8",
   "ruff>=0.15.21",
   "twine>=6.2.0,<7",
+  "types-PyYAML>=6.0.12.20250915",
 ]
 
 [project.scripts]
