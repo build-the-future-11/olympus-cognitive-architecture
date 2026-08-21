@@ -48,12 +48,32 @@ and report Ollama health without fabricating provider state.
 To inspect an already-installed Ollama model through the provider adapter:
 
 ```bash
-.venv/bin/python -m olympus.cli foundry ollama-smoke qwen3:8b
+.venv/bin/python -m olympus.cli foundry ollama-smoke qwen3:0.6b \
+  --context-tokens 256 --max-tokens 16
 ```
 
 Model discovery and successful generation are reported separately. A model
 being installed does not prove that it can load or generate on the current
 machine.
+
+The publication-grade Foundry controls can prepare an immutable instruction
+dataset and run full SFT, LoRA, or genuine 4-bit QLoRA smoke jobs:
+
+```bash
+.venv/bin/olympus foundry prepare-dataset \
+  --source datasets/hermes-smoke/source.jsonl \
+  --output artifacts/foundry/deep/dataset
+.venv/bin/olympus foundry train-sft \
+  artifacts/foundry/deep/dataset/manifest.json \
+  --output artifacts/foundry/deep/training --mode full
+```
+
+Held-out evaluation, int4/int8 quantization, checkpoint resume, RAM/swap
+governance, and fail-closed promotion are implemented and tested. The current
+tiny transformer is an infrastructure smoke checkpoint and failed task-quality
+gates; no Hermes model is promoted. See
+[`OLYMPUS_MODEL_FOUNDRY_LEDGER.md`](OLYMPUS_MODEL_FOUNDRY_LEDGER.md) for exact
+measurements and blockers.
 
 For the optional local Postgres/Redis services, create an untracked `.env` with
 a real random password before starting Compose:
@@ -120,4 +140,5 @@ and the remaining owner-controlled publication decisions are documented in
 The Foundry lifecycle, registry invariants, API contract, artifact layout, and
 truth boundaries are documented in [docs/foundry.md](docs/foundry.md). The
 current factual model-program state is recorded in
-[research/REALITY_LEDGER.md](research/REALITY_LEDGER.md).
+[research/REALITY_LEDGER.md](research/REALITY_LEDGER.md) and the detailed
+[model Foundry ledger](OLYMPUS_MODEL_FOUNDRY_LEDGER.md).

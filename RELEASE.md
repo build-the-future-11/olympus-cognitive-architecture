@@ -14,6 +14,8 @@ python3.14 -m venv .venv
 .venv/bin/python -m olympus.cli demo run-all
 .venv/bin/python -m olympus.cli foundry verify-pipeline
 .venv/bin/python -m olympus.cli foundry status
+.venv/bin/python -m olympus.cli foundry prepare-dataset \
+  --output artifacts/release-deep-dataset
 .venv/bin/python -m build
 .venv/bin/python -m twine check dist/*
 cd apps/forge-web
@@ -29,24 +31,20 @@ are `dist/*.whl` and `dist/*.tar.gz`; the generated web assets are
 
 ## Source-publication gate
 
-The proprietary license, author name, canonical repository path, dependency
-audits, CI gate, SBOM generation, artifact attestations, and release workflow
-are implemented. PyPI and GitHub returned `404` for the intended package and
-repository paths on 2026-07-23, so they appeared unregistered at verification
-time; only successful publication reserves them.
+The proprietary license, author name, canonical public GitHub repository,
+dependency audits, CI gate, SBOM generation, artifact attestations, and release
+workflow are implemented. The source repository exists at the canonical URL.
+PyPI publication still depends on its owner-controlled Trusted Publisher.
 
 The repository owner must complete these account-controlled actions:
 
-1. Authenticate the `build-the-future-11` GitHub account and create the public
-   `olympus-cognitive-architecture` repository at the canonical URL declared in
-   `pyproject.toml`.
-2. Configure GitHub private vulnerability reporting and require the
+1. Configure GitHub private vulnerability reporting and require the
    `release-gate` workflow on the `main` branch.
-3. Configure a PyPI Trusted Publisher for the `publish-release` workflow,
+2. Configure a PyPI Trusted Publisher for the `publish-release` workflow,
    environment `pypi`, and package `olympus-cognitive-architecture`.
-4. Push the verified `main` revision and create and push the signed or annotated
-   `v0.1.0` tag.
-5. Confirm the tag-triggered workflow publishes the wheel, source archive,
+3. Merge the verified pull request and create and push the signed or annotated
+   `v0.2.0` tag.
+4. Confirm the tag-triggered workflow publishes the wheel, source archive,
    CycloneDX SBOMs, build attestations, GitHub release, and PyPI release.
 
 ## Scientific-publication gate

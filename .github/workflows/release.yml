@@ -47,6 +47,7 @@ jobs:
           python -m pytest --cov=olympus --cov-branch --cov-report=term-missing -q
           python -m olympus.cli foundry verify-pipeline --root artifacts/release-foundry
           python -m olympus.cli foundry status --root artifacts/release-foundry
+          python -m olympus.cli foundry prepare-dataset --output artifacts/release-deep-dataset
           python -m pip_audit --strict .
       - name: Verify web release gate
         working-directory: apps/forge-web
@@ -60,7 +61,9 @@ jobs:
       - name: Validate distribution metadata
         run: python -m twine check dist/*
       - name: Verify bundled Foundry corpus
-        run: unzip -l dist/*.whl | grep 'olympus/foundry/foundry_verification.txt'
+        run: |
+          unzip -l dist/*.whl | grep 'olympus/foundry/foundry_verification.txt'
+          unzip -l dist/*.whl | grep 'share/olympus/datasets/source.jsonl'
       - name: Generate CycloneDX SBOMs
         run: |
           mkdir -p sbom

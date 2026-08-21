@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "olympus-cognitive-architecture"
-version = "0.1.0"
+version = "0.2.0"
 description = "A local research platform for cognitive behaviors, compilation, and evaluation."
 readme = "README.md"
 requires-python = ">=3.14"
@@ -25,7 +25,8 @@ classifiers = [
   "Framework :: FastAPI",
   "Intended Audience :: Developers",
   "Intended Audience :: Science/Research",
-  "Operating System :: OS Independent",
+  "Operating System :: MacOS",
+  "Operating System :: POSIX :: Linux",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.14",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
@@ -69,6 +70,9 @@ where = ["."]
 
 [tool.setuptools.package-data]
 "olympus.foundry" = ["*.txt"]
+
+[tool.setuptools.data-files]
+"share/olympus/datasets" = ["datasets/hermes-smoke/source.jsonl"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

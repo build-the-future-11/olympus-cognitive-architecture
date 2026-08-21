@@ -92,7 +92,55 @@ class FoundryStore:
             "INSERT OR IGNORE INTO schema_migrations(version, applied_at) VALUES (?, ?)",
             (1, datetime.now(UTC).isoformat()),
         )
+        self._migrate_verification_dataset_source()
         self._connection.commit()
+
+    def _migrate_verification_dataset_source(self) -> None:
+        version = self._connection.execute(
+            "SELECT 1 FROM schema_migrations WHERE version = 2"
+        ).fetchone()
+        if version is not None:
+            return
+        legacy_source = "repository://datasets/samples/foundry_verification.txt"
+        canonical_source = "repository://olympus/foundry/foundry_verification.txt"
+        row = self._connection.execute(
+            """SELECT record_json FROM datasets
+            WHERE dataset_id = ? AND version = ? AND sha256 = ?""",
+            (
+                "foundry-verification-corpus",
+                "1.0.0",
+                "6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab",
+            ),
+        ).fetchone()
+        if row is not None:
+            record = DatasetRecord.model_validate_json(row["record_json"])
+            if record.source == legacy_source:
+                record.source = canonical_source
+                self._connection.execute(
+                    """UPDATE datasets SET record_json = ?
+                    WHERE dataset_id = ? AND version = ?""",
+                    (self._json(record), record.dataset_id, record.version),
+                )
+                self._connection.execute(
+                    """INSERT INTO evidence(
+                        timestamp, entity_type, entity_id, action, payload_json
+                    ) VALUES (?, ?, ?, ?, ?)""",
+                    (
+                        datetime.now(UTC).isoformat(),
+                        "dataset",
+                        "foundry-verification-corpus@1.0.0",
+                        "metadata_migrated",
+                        json.dumps(
+                            {"field": "source", "from": legacy_source, "to": canonical_source},
+                            sort_keys=True,
+                            separators=(",", ":"),
+                        ),
+                    ),
+                )
+        self._connection.execute(
+            "INSERT INTO schema_migrations(version, applied_at) VALUES (?, ?)",
+            (2, datetime.now(UTC).isoformat()),
+        )
 
     @contextmanager
     def transaction(self) -> Iterator[sqlite3.Connection]:

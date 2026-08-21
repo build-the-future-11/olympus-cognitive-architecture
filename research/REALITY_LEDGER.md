@@ -16,6 +16,11 @@ literal; no model-family capability is inferred from architecture code.
 - Local provider discovery: Ollama is installed and reports `qwen3:8b`, GGUF
   Q4_K_M, 8.2B parameters, with completion/tool/thinking capabilities in its
   local manifest.
+- Deep Foundry controls: licensed instruction-record schema, immutable
+  split/manifest hashes, deduplication, contamination and PII rejection,
+  exclusive RAM/swap governor, real tiny causal SFT, LoRA, nibble-packed 4-bit
+  QLoRA, checkpoint resume, held-out category evaluation, int4/int8
+  quantization, and fail-closed hash-bound promotion gates.
 
 ## Implemented but not a trained Olympus model
 
@@ -33,15 +38,22 @@ literal; no model-family capability is inferred from architecture code.
   task evaluation.
 - A paid or distributed large-scale training run.
 
-## Current external-runtime finding
+## Current external-runtime findings
 
-The installed `qwen3:8b` artifact is discoverable, but discovery alone is not a
-generation pass. On 2026-08-21, a bounded request using a 1,024-token context and
-16-token output allowance received zero response bytes before its 600-second
-timeout. Ollama's server log shows the 8.2B Q4_K_M GGUF entering tensor loading,
-then aborting when the bounded client closed. Therefore local model discovery is
-verified and local generation is failed under the measured environment. This is
-an external-runtime failure, not an Olympus checkpoint claim.
+The installed `qwen3:8b` artifact is discoverable, but a minimal 256-context,
+one-output-token request returned zero bytes before its 120-second bound.
+Ollama's log shows swap exhaustion during tensor loading and abort when the
+bounded client closed. The 8B configuration therefore fails the local RAM gate.
+
+The separately installed `qwen3:0.6b` Q4_K_M artifact loaded in 15.743 seconds
+and returned exact output through the real Olympus adapter in 0.118 seconds of
+model-reported time. It was unloaded before training. It is a verified local
+provider baseline, not an Olympus-trained checkpoint.
+
+The deep smoke transformer reduced held-out loss with no category regressions,
+and its int4/int8 artifacts preserved loss within 2%. It nevertheless scored
+0% exact task completion and 0% tool exact match. The promotion engine returned
+`NOT_PROMOTED`. Exact measurements are in `OLYMPUS_MODEL_FOUNDRY_LEDGER.md`.
 
 ## Naming rule
 
