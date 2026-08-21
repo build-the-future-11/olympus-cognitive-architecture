@@ -1,0 +1,12 @@
+request inspect repository evidence verify result
+response inspect repository evidence verify result
+request register dataset train model evaluate checkpoint
+response register dataset train model evaluate checkpoint
+request preserve provenance compare baseline record failure
+response preserve provenance compare baseline record failure
+request inspect repository evidence verify result
+response inspect repository evidence verify result
+request register dataset train model evaluate checkpoint
+response register dataset train model evaluate checkpoint
+request preserve provenance compare baseline record failure
+response preserve provenance compare baseline record failure

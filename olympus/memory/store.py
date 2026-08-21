@@ -33,6 +33,15 @@ class MemoryStore:
         )
         self.connection.commit()
 
+    def close(self) -> None:
+        self.connection.close()
+
+    def __enter__(self) -> MemoryStore:
+        return self
+
+    def __exit__(self, *args: object) -> None:
+        self.close()
+
     def put(self, record: MemoryRecord) -> None:
         self.connection.execute(
             "REPLACE INTO memory (kind, key, value, salience, tags) VALUES (?, ?, ?, ?, ?)",

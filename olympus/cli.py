@@ -12,6 +12,8 @@ from olympus.api import demos
 from olympus.core.workspace import LatentWorkspace
 from olympus.forge.compiler import NaturalLanguageBehaviorCompiler
 from olympus.forge.runtime import ForgeRuntime
+from olympus.foundry.ollama import OllamaClient
+from olympus.foundry.service import FoundryService
 from olympus.labos.manifest import ProjectRecord, ResourceProfile
 from olympus.labos.portfolio import PortfolioService
 
@@ -19,9 +21,11 @@ app = typer.Typer(help="Olympus command line interface.")
 demo_app = typer.Typer(help="Run built-in Olympus demos.")
 forge_app = typer.Typer(help="Compile and execute behaviors.")
 labos_app = typer.Typer(help="Discover, validate, and run portfolio projects.")
+foundry_app = typer.Typer(help="Operate the durable Olympus Model Foundry.")
 app.add_typer(demo_app, name="demo")
 app.add_typer(forge_app, name="forge")
 app.add_typer(labos_app, name="labos")
+app.add_typer(foundry_app, name="foundry")
 console = Console()
 
 
@@ -66,6 +70,80 @@ def workspace(objective: str, prompt: str, output: Path | None = None) -> None:
         console.print(f"Saved workspace to {output}")
         return
     console.print_json(workspace_model.serialize())
+
+
+def _foundry_service(root: Path) -> FoundryService:
+    return FoundryService(root.resolve())
+
+
+@foundry_app.command("verify-pipeline")
+def verify_foundry_pipeline(
+    root: Path = Path("artifacts/foundry"),
+    sample: Path | None = None,
+) -> None:
+    sample_path = sample or Path(__file__).resolve().parent / "foundry/foundry_verification.txt"
+    with _foundry_service(root) as service:
+        result = service.run_verification_pipeline(sample_path.resolve())
+        console.print_json(result.model_dump_json())
+
+
+@foundry_app.command("status")
+def foundry_status(root: Path = Path("artifacts/foundry")) -> None:
+    with _foundry_service(root) as service:
+        console.print_json(json.dumps(service.status()))
+
+
+@foundry_app.command("list-models")
+def list_foundry_models(root: Path = Path("artifacts/foundry")) -> None:
+    with _foundry_service(root) as service:
+        console.print_json(
+            json.dumps([model.model_dump(mode="json") for model in service.list_models()])
+        )
+
+
+@foundry_app.command("generate")
+def foundry_generate(
+    model: str,
+    prompt: str,
+    root: Path = Path("artifacts/foundry"),
+    max_characters: int = 160,
+    temperature: float = 0.7,
+    seed: int | None = None,
+) -> None:
+    with _foundry_service(root) as service:
+        result = service.generate(
+            model,
+            prompt,
+            max_characters=max_characters,
+            temperature=temperature,
+            seed=seed,
+        )
+        console.print_json(result.model_dump_json())
+
+
+@foundry_app.command("ollama-smoke")
+def ollama_smoke(
+    model: str,
+    prompt: str = "Reply with exactly: OLYMPUS_LOCAL_MODEL_OK",
+    base_url: str = "http://127.0.0.1:11434",
+    max_tokens: int = 16,
+    context_tokens: int = 1_024,
+) -> None:
+    client = OllamaClient(base_url=base_url)
+    available = client.list_models()
+    if model not in available:
+        raise typer.BadParameter(
+            f"model {model!r} is not installed; available models: {', '.join(available) or 'none'}"
+        )
+    result = client.generate(
+        model=model,
+        prompt=prompt,
+        system="Follow the user's formatting instruction exactly and do not add commentary.",
+        max_tokens=max_tokens,
+        context_tokens=context_tokens,
+        temperature=0,
+    )
+    console.print_json(result.model_dump_json())
 
 
 def _portfolio_service(workspace: Path, artifacts: Path) -> PortfolioService:
@@ -268,7 +346,7 @@ def compare_runs(
 def generate_report(
     workspace: Path = Path(".."),
     artifacts: Path = Path("artifacts"),
-    output_root: Path = Path("."),
+    output_root: Path = Path("artifacts/reports"),
 ) -> None:
     service = _portfolio_service(workspace, artifacts)
     records = service.discover()

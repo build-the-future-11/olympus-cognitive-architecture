@@ -11,6 +11,16 @@ Olympus is a local-first research platform for building and evaluating cognitive
 - synthetic training/evaluation demos,
 - API, CLI, and a lightweight web console.
 
+The repository now also includes a durable Model Foundry that performs a real,
+bounded dataset → experiment → checkpoint → held-out evaluation → export →
+serving lifecycle. Its built-in character-bigram run exists to verify the
+infrastructure cheaply; it is explicitly not Hermes and carries no assistant or
+reasoning capability claim.
+
+Olympus is currently an alpha research system. Its tests establish executable
+engineering behavior; they do not establish broad scientific superiority or
+regulated-production fitness.
+
 ## Quick Start
 
 ```bash
@@ -18,8 +28,32 @@ python3 -m venv --system-site-packages .venv
 .venv/bin/pip install -e .[dev]
 .venv/bin/pytest
 .venv/bin/python -m olympus.cli demo run-all
+.venv/bin/python -m olympus.cli foundry verify-pipeline
 .venv/bin/uvicorn olympus.api:app --reload
 ```
+
+To run the real web console against that API:
+
+```bash
+cd apps/forge-web
+npm ci
+npm run dev
+```
+
+Open `http://127.0.0.1:5173`. The console displays only live API results and
+reports API failures explicitly. It can run the Foundry verification pipeline,
+inspect promoted models, generate through the OpenAI-compatible local contract,
+and report Ollama health without fabricating provider state.
+
+To inspect an already-installed Ollama model through the provider adapter:
+
+```bash
+.venv/bin/python -m olympus.cli foundry ollama-smoke qwen3:8b
+```
+
+Model discovery and successful generation are reported separately. A model
+being installed does not prove that it can load or generate on the current
+machine.
 
 For the optional local Postgres/Redis services, create an untracked `.env` with
 a real random password before starting Compose:
@@ -38,12 +72,10 @@ already occupied; do not commit `.env`.
 
 ```text
 apps/               API, CLI entrypoints, and Forge web console
-benchmarks/         Benchmark definitions and demo harnesses
 behaviors/          Example behavior specifications
-datasets/           Schemas, manifests, recipes, and local samples
+datasets/           Schemas, manifests, and local samples
 docs/               Architecture and API documentation
 examples/           End-to-end usage examples
-experiments/        Experiment configurations and reports
 infrastructure/     Local infrastructure configuration
 olympus/            Core Python implementation
 research/           Design notes and model cards
@@ -62,6 +94,7 @@ The implemented demos correspond to the attached research brief:
 5. Dynamic representation selection.
 6. Neural division and reassembly.
 7. Olympus Forge natural-language behavior compilation and execution.
+8. Hermes Nano interpretation and SQLite memory integration.
 
 ## LabOS Portfolio Commands
 
@@ -72,7 +105,19 @@ workspace:
 .venv/bin/python -m olympus.cli labos discover --workspace ..
 .venv/bin/python -m olympus.cli labos validate --workspace ..
 .venv/bin/python -m olympus.cli labos run-smoke --workspace .. --project olympus
-.venv/bin/python -m olympus.cli labos generate-report --workspace .. --output-root .
+.venv/bin/python -m olympus.cli labos generate-report --workspace ..
 ```
 
-The LabOS documentation lives in [docs/labos.md](/Users/ryan/Documents/Olympus/docs/labos.md:1).
+The LabOS documentation lives in [docs/labos.md](docs/labos.md).
+
+## Release verification
+
+The automated release gate runs the Python tests, lint, strict type check,
+distribution build, web tests, and production web build. Exact local commands
+and the remaining owner-controlled publication decisions are documented in
+`RELEASE.md`.
+
+The Foundry lifecycle, registry invariants, API contract, artifact layout, and
+truth boundaries are documented in [docs/foundry.md](docs/foundry.md). The
+current factual model-program state is recorded in
+[research/REALITY_LEDGER.md](research/REALITY_LEDGER.md).

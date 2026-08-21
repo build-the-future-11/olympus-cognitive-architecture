@@ -1,0 +1,61 @@
+name: release-gate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+      - name: Install package and release tooling
+        run: python -m pip install --upgrade pip && python -m pip install -e ".[dev]"
+      - name: Lint
+        run: python -m ruff check .
+      - name: Type check
+        run: python -m mypy olympus tests
+      - name: Test with branch coverage
+        run: python -m pytest --cov=olympus --cov-branch --cov-report=term-missing -q
+      - name: Verify Foundry golden path
+        run: |
+          python -m olympus.cli foundry verify-pipeline --root artifacts/ci-foundry
+          python -m olympus.cli foundry status --root artifacts/ci-foundry
+      - name: Audit Python dependencies
+        run: python -m pip_audit --strict .
+      - name: Build distributions
+        run: python -m build
+      - name: Validate distribution metadata
+        run: python -m twine check dist/*
+      - name: Verify bundled Foundry corpus
+        run: unzip -l dist/*.whl | grep 'olympus/foundry/foundry_verification.txt'
+
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: apps/forge-web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/forge-web/package-lock.json
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Test
+        run: npm test
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+      - name: Build production assets
+        run: npm run build

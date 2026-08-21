@@ -52,6 +52,21 @@ class RunDatabase:
         )
         self.connection.commit()
 
+    def close(self) -> None:
+        self.connection.close()
+
+    def __enter__(self) -> RunDatabase:
+        return self
+
+    def __exit__(self, *args: object) -> None:
+        self.close()
+
+    def __del__(self) -> None:
+        try:
+            self.close()
+        except Exception:  # noqa: BLE001
+            pass
+
     def insert(self, result: RunResult) -> None:
         self.connection.execute(
             """
@@ -121,6 +136,9 @@ class PortfolioRunner:
         self.run_db = RunDatabase(artifact_root / "labos_runs.sqlite3")
         self.event_logger = EventLogger(artifact_root / "labos_events.jsonl")
 
+    def close(self) -> None:
+        self.run_db.close()
+
     def run_manifest(
         self,
         manifest: ProjectManifest,
@@ -149,7 +167,7 @@ class PortfolioRunner:
         command: str,
         cwd: Path,
         profile: ResourceProfile,
-        timeout_seconds: int = 120,
+        timeout_seconds: float = 120,
         extra_env: dict[str, str] | None = None,
     ) -> RunResult:
         started_at = datetime.now(UTC).isoformat()

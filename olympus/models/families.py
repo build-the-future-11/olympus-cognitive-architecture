@@ -1,24 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import TypedDict
 
 from olympus.core.interpretation import InterpretiveSuperpositionNetwork
 from olympus.memory.store import MemoryRecord, MemoryStore
-
-
-@dataclass(slots=True)
-class ModelFamily:
-    name: str
-    active_parameters_billion: float
-    capability_summary: str
-
-
-HERMES = ModelFamily("Hermes", 1.2, "Local-first assistant with memory and tools")
-PROMETHEUS = ModelFamily("Prometheus", 8.0, "Specialist routing and expert adaptation")
-PERSEUS = ModelFamily("Perseus", 16.0, "Sparse global generalist")
-ATLAS = ModelFamily("Atlas", 24.0, "Persistent world model and simulation")
-KRONOS = ModelFamily("Kronos", 32.0, "Autonomous research and continual improvement")
 
 
 class HermesResponse(TypedDict):

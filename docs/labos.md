@@ -34,7 +34,11 @@ LabOS writes:
 
 - `artifacts/labos_runs.sqlite3`
 - `artifacts/labos_events.jsonl`
-- `portfolio_status.json`
-- `PORTFOLIO_COMPLETION_REPORT.md`
-- `REMAINING_EXTERNAL_ACTIONS.md`
+- `artifacts/reports/portfolio_status.json`
+- `artifacts/reports/PORTFOLIO_COMPLETION_REPORT.md`
+- `artifacts/reports/REMAINING_EXTERNAL_ACTIONS.md`
 
+LabOS reports contain local project paths and may contain captured command
+output. The `artifacts/` directory is intentionally ignored by Git. Review and
+redact generated reports before sharing them outside the machine where they
+were produced.

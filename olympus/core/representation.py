@@ -73,6 +73,8 @@ class DynamicRepresentationTheory:
         )
 
     def project(self, values: list[float], descriptor: RepresentationDescriptor) -> list[float]:
+        if not values:
+            return []
         if descriptor.family == RepresentationFamily.SPHERICAL:
             total = sum(abs(value) for value in values) or 1.0
             return [round(value / total, 6) for value in values]

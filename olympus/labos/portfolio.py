@@ -19,7 +19,17 @@ class PortfolioService:
         self.workspace_root = workspace_root
         self.artifact_root = artifact_root
         self.runner = PortfolioRunner(artifact_root)
-        self.reporter = PortfolioReporter(artifact_root)
+        self.reporter = PortfolioReporter(artifact_root, workspace_root)
+
+    def close(self) -> None:
+        self.reporter.close()
+        self.runner.close()
+
+    def __enter__(self) -> PortfolioService:
+        return self
+
+    def __exit__(self, *args: object) -> None:
+        self.close()
 
     def discover(self) -> list[ProjectRecord]:
         manifests = discover_projects(self.workspace_root)
@@ -73,6 +83,7 @@ class PortfolioService:
         records: list[ProjectRecord],
         output_root: Path,
     ) -> None:
+        output_root.mkdir(parents=True, exist_ok=True)
         self.reporter.write_status_json(records, output_root / "portfolio_status.json")
         self.reporter.write_completion_report(
             records,

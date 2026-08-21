@@ -61,6 +61,24 @@ def test_infer_manifest_for_src_only_repo_adds_pythonpath_smoke_command(tmp_path
     assert "pytest" in manifest.entry_points[0].command
 
 
+def test_infer_manifest_for_generic_src_repo_adds_pytest_smoke_command(
+    tmp_path: Path,
+) -> None:
+    repo = tmp_path / "RestandMore"
+    repo.mkdir()
+    (repo / ".git").mkdir()
+    (repo / "README.md").write_text("# LabOS\n\nPortfolio system.\n", encoding="utf-8")
+    (repo / "pyproject.toml").write_text("[project]\nname='labos'\n", encoding="utf-8")
+    (repo / "src").mkdir()
+    (repo / "tests").mkdir()
+
+    manifest = infer_manifest(repo)
+
+    assert manifest.entry_points
+    assert manifest.entry_points[0].env["PYTHONPATH"] == "src"
+    assert "pytest tests" in manifest.entry_points[0].command
+
+
 def test_discover_projects_reads_declared_manifest(tmp_path: Path) -> None:
     workspace = tmp_path / "workspace"
     workspace.mkdir()
@@ -162,10 +180,14 @@ def test_reporter_writes_files(tmp_path: Path) -> None:
     )
     reporter.write_status_json([record], tmp_path / "portfolio_status.json")
     reporter.write_completion_report([record], tmp_path / "PORTFOLIO_COMPLETION_REPORT.md")
+    reporter.write_reproducibility_report([record], tmp_path / "REPRODUCIBILITY.md")
     reporter.write_remaining_actions([record], tmp_path / "REMAINING_EXTERNAL_ACTIONS.md")
     assert (tmp_path / "portfolio_status.json").exists()
     assert (tmp_path / "PORTFOLIO_COMPLETION_REPORT.md").exists()
     assert (tmp_path / "REMAINING_EXTERNAL_ACTIONS.md").exists()
+    reproducibility = (tmp_path / "REPRODUCIBILITY.md").read_text(encoding="utf-8")
+    assert str(tmp_path.resolve()) in reproducibility
+    assert str(Path.home()) not in reproducibility
 
 
 def test_portfolio_service_discovers_and_reports(tmp_path: Path) -> None:

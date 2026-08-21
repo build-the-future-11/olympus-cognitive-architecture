@@ -5,9 +5,31 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "olympus-cognitive-architecture"
 version = "0.1.0"
-description = "A research-grade cognitive architecture, behavior compiler, and experimentation platform."
+description = "A local research platform for cognitive behaviors, compilation, and evaluation."
 readme = "README.md"
 requires-python = ">=3.14"
+authors = [
+  { name = "Ryan" },
+]
+license = "LicenseRef-Proprietary"
+license-files = ["LICENSE"]
+keywords = [
+  "agent evaluation",
+  "behavior graphs",
+  "cognitive architecture",
+  "research tooling",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Framework :: FastAPI",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
   "fastapi>=0.139.0",
   "httpx>=0.28.1",
@@ -19,11 +41,21 @@ dependencies = [
   "uvicorn>=0.51.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/build-the-future-11/olympus-cognitive-architecture"
+Documentation = "https://github.com/build-the-future-11/olympus-cognitive-architecture/tree/main/docs"
+Issues = "https://github.com/build-the-future-11/olympus-cognitive-architecture/issues"
+Source = "https://github.com/build-the-future-11/olympus-cognitive-architecture"
+
 [project.optional-dependencies]
 dev = [
+  "build>=1.3.0",
   "mypy>=2.3.0",
+  "pip-audit>=2.10.1,<3",
   "pytest>=9.1.1",
+  "pytest-cov>=7.1.0,<8",
   "ruff>=0.15.21",
+  "twine>=6.2.0,<7",
 ]
 
 [project.scripts]
@@ -33,8 +65,12 @@ olympus = "olympus.cli:app"
 include = ["olympus*"]
 where = ["."]
 
+[tool.setuptools.package-data]
+"olympus.foundry" = ["*.txt"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+filterwarnings = ["error"]
 
 [tool.ruff]
 line-length = 100
@@ -49,3 +85,12 @@ strict = true
 warn_unused_configs = true
 disallow_any_generics = false
 exclude = ["apps/forge-web"]
+
+[tool.coverage.run]
+branch = true
+source = ["olympus"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+skip_covered = true

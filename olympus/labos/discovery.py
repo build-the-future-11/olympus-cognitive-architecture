@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 import tomllib
 from pathlib import Path
 from typing import cast
@@ -158,7 +159,7 @@ def _infer_entry_points(
     language: ProjectLanguage,
 ) -> list[EntryPoint]:
     entry_points: list[EntryPoint] = []
-    olympus_python = str((Path.cwd() / ".venv" / "bin" / "python").resolve())
+    olympus_python = sys.executable
     if (
         language in {ProjectLanguage.PYTHON, ProjectLanguage.MIXED}
         and (project_root / ".venv").exists()
@@ -166,14 +167,6 @@ def _infer_entry_points(
         command = ".venv/bin/python -m pytest -q -p no:cacheprovider"
         env: dict[str, str] = {}
         timeout_seconds = 120
-        if project_root.name == "free-claude-code":
-            command = ".venv/bin/python -m pytest tests -q -o addopts='' -p no:cacheprovider"
-            env = {
-                "HOME": "/private/tmp/fcc-home",
-                "USERPROFILE": "/private/tmp/fcc-home",
-                "LOG_FILE": "/private/tmp/fcc-home/server.log",
-            }
-            timeout_seconds = 240
         entry_points.append(
             EntryPoint(
                 name="smoke-test",
@@ -186,22 +179,11 @@ def _infer_entry_points(
         )
     elif language == ProjectLanguage.PYTHON and (project_root / "src").exists():
         env = {"PYTHONPATH": "src"}
-        if project_root.name == "Ascension":
+        if (project_root / "tests").exists():
             entry_points.append(
                 EntryPoint(
                     name="smoke-test",
                     command=f"{olympus_python} -m pytest tests -q -p no:cacheprovider",
-                    profile=ResourceProfile.SMOKE,
-                    expected_outputs=["test-report"],
-                    env=env,
-                    timeout_seconds=180,
-                )
-            )
-        elif project_root.name == "GenesisE":
-            entry_points.append(
-                EntryPoint(
-                    name="smoke-test",
-                    command=f"{olympus_python} -m unittest discover -s tests -v",
                     profile=ResourceProfile.SMOKE,
                     expected_outputs=["test-report"],
                     env=env,
@@ -220,25 +202,6 @@ def _infer_entry_points(
                 expected_outputs=["test-report"],
                 timeout_seconds=180,
             )
-        )
-    if project_root.name.lower() == "olympus":
-        entry_points.extend(
-            [
-                EntryPoint(
-                    name="portfolio-smoke",
-                    command=".venv/bin/python -m olympus.cli demo run-all",
-                    profile=ResourceProfile.SMOKE,
-                    expected_outputs=["demo-summary"],
-                    timeout_seconds=120,
-                ),
-                EntryPoint(
-                    name="portfolio-validation",
-                    command=".venv/bin/python -m pytest",
-                    profile=ResourceProfile.DEVELOPMENT,
-                    expected_outputs=["pytest-report"],
-                    timeout_seconds=180,
-                ),
-            ]
         )
     return entry_points
 

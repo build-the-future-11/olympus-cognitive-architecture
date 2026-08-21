@@ -41,6 +41,10 @@ class JEPATrainingResult:
 
 
 def synthetic_sequence_batch(batch_size: int = 32, sequence_dim: int = 4) -> tuple[Tensor, Tensor]:
+    if batch_size < 2:
+        raise ValueError("batch_size must be at least 2")
+    if sequence_dim < 1:
+        raise ValueError("sequence_dim must be positive")
     base = torch.linspace(0.0, 1.0, steps=batch_size).unsqueeze(1)
     context = torch.cat(
         [base + offset for offset in torch.linspace(0.0, 0.3, steps=sequence_dim)],
@@ -50,7 +54,12 @@ def synthetic_sequence_batch(batch_size: int = 32, sequence_dim: int = 4) -> tup
     return context, target
 
 
-def train_jepa(epochs: int = 160, latent_dim: int = 8) -> JEPATrainingResult:
+def train_jepa(epochs: int = 160, latent_dim: int = 8, seed: int = 7) -> JEPATrainingResult:
+    if epochs < 1:
+        raise ValueError("epochs must be positive")
+    if latent_dim < 1:
+        raise ValueError("latent_dim must be positive")
+    torch.manual_seed(seed)
     context, target = synthetic_sequence_batch()
     model = TinyJEPA(input_dim=context.shape[1], latent_dim=latent_dim)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.02)

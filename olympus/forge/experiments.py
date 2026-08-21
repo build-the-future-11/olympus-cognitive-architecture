@@ -20,6 +20,8 @@ class ExperimentController:
         self.runtime = ForgeRuntime()
 
     def run_trials(self, behavior_text: str, prompt: str, trials: int = 3) -> ExperimentSummary:
+        if trials < 1:
+            raise ValueError("trials must be positive")
         compilation = self.compiler.compile(behavior_text)
         confidences: list[float] = []
         survivors: list[int] = []

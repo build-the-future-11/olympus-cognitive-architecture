@@ -108,6 +108,6 @@ def run_forge_demo() -> dict[str, dict[str, object]]:
 
 
 def run_hermes_demo(memory_path: Path) -> HermesResponse:
-    memory = MemoryStore(memory_path)
-    hermes = HermesNano(memory)
-    return hermes.respond("Summarize the project status and keep it private.")
+    with MemoryStore(memory_path) as memory:
+        hermes = HermesNano(memory)
+        return hermes.respond("Summarize the project status and keep it private.")

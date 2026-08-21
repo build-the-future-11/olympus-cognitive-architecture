@@ -31,7 +31,13 @@ def train_learned_transform(
     latent_dim: int = 3,
     epochs: int = 120,
     learning_rate: float = 0.03,
+    seed: int = 7,
 ) -> TransformMetrics:
+    if signals.ndim != 2 or signals.shape[0] < 2 or signals.shape[1] < 1:
+        raise ValueError("signals must be a two-dimensional batch with at least two rows")
+    if latent_dim < 1 or epochs < 1 or learning_rate <= 0:
+        raise ValueError("latent_dim, epochs, and learning_rate must be positive")
+    torch.manual_seed(seed)
     model = LearnedTransformNetwork(signals.shape[1], latent_dim)
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     loss_fn = nn.MSELoss()

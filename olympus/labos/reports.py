@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shlex
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -16,9 +17,13 @@ class PortfolioSummary:
 
 
 class PortfolioReporter:
-    def __init__(self, artifact_root: Path) -> None:
+    def __init__(self, artifact_root: Path, workspace_root: Path | None = None) -> None:
         self.artifact_root = artifact_root
+        self.workspace_root = workspace_root or artifact_root.parent
         self.run_db = RunDatabase(artifact_root / "labos_runs.sqlite3")
+
+    def close(self) -> None:
+        self.run_db.close()
 
     def summarize(self, records: list[ProjectRecord]) -> PortfolioSummary:
         counts: dict[str, int] = {}
@@ -232,6 +237,16 @@ class PortfolioReporter:
         records: list[ProjectRecord],
         output_path: Path,
     ) -> None:
+        workspace = str(self.workspace_root.resolve())
+        artifacts = str(self.artifact_root.resolve())
+        output_root = str(output_path.parent.resolve())
+        generate_command = _labos_command(
+            "generate-report",
+            workspace,
+            artifacts,
+            "--output-root",
+            output_root,
+        )
         lines = [
             "# Reproducibility",
             "",
@@ -239,23 +254,15 @@ class PortfolioReporter:
             "",
             "## LabOS commands",
             "",
+            f"- Discover: `{_labos_command('discover', workspace, artifacts)}`",
+            f"- Validate: `{_labos_command('validate', workspace, artifacts)}`",
             (
-                "- Discover: `.venv/bin/python -m olympus.cli labos discover "
-                "--workspace /Users/ryan/Documents --artifacts artifacts`"
+                "- Run all smoke tests: "
+                f"`{_labos_command('run-all', workspace, artifacts, '--profile', 'smoke')}`"
             ),
             (
-                "- Validate: `.venv/bin/python -m olympus.cli labos validate "
-                "--workspace /Users/ryan/Documents --artifacts artifacts`"
-            ),
-            (
-                "- Run all smoke tests: `.venv/bin/python -m olympus.cli labos "
-                "run-all --workspace /Users/ryan/Documents --artifacts artifacts "
-                "--profile smoke`"
-            ),
-            (
-                "- Generate reports: `.venv/bin/python -m olympus.cli labos "
-                "generate-report --workspace /Users/ryan/Documents --artifacts "
-                "artifacts --output-root /Users/ryan/Documents/Olympus`"
+                "- Generate reports: "
+                f"`{generate_command}`"
             ),
             "",
             "## Project commands",
@@ -322,7 +329,11 @@ class PortfolioReporter:
                             f"{_join_items(record.manifest.regulatory_considerations)}"
                         ),
                         f"- Go/no-go criteria: {_join_items(record.manifest.go_no_go_criteria)}",
-                        *_external_action_details(record),
+                        *_external_action_details(
+                            record,
+                            str(self.workspace_root.resolve()),
+                            str(self.artifact_root.resolve()),
+                        ),
                         "",
                     ]
                 )
@@ -338,6 +349,26 @@ def _join_items(items: list[str]) -> str:
     if not items:
         return "none recorded"
     return "; ".join(items)
+
+
+def _labos_command(
+    action: str,
+    workspace: str,
+    artifacts: str,
+    *extra: str,
+) -> str:
+    return shlex.join(
+        [
+            "olympus",
+            "labos",
+            action,
+            "--workspace",
+            workspace,
+            "--artifacts",
+            artifacts,
+            *extra,
+        ]
+    )
 
 
 def _all_ready(records: list[ProjectRecord]) -> bool:
@@ -395,31 +426,40 @@ def _benchmark_status(record: ProjectRecord) -> str:
 
 
 def _precise_data_action(record: ProjectRecord) -> str:
+    root = record.manifest.root_path
     if record.manifest.project_id == "project-atlas-portfolio":
         return (
             "Place `train_FD00*.txt`, `test_FD00*.txt`, and `RUL_FD00*.txt` in "
-            "`/Users/ryan/Documents/ATLAS/data/raw`, then run "
+            f"`{root}/data/raw`, then run "
             "`atlas-preprocess --data-dir data/raw --output-dir data/processed` "
-            "from `/Users/ryan/Documents/ATLAS`. Verify with "
-            "`test -d /Users/ryan/Documents/ATLAS/data/processed`."
+            f"from `{root}`. Verify with "
+            f"`test -d {shlex.quote(str(Path(root) / 'data/processed'))}`."
         )
     if record.manifest.project_id == "project-genesis":
         return (
-            "From `/Users/ryan/Documents/Genesis`, run "
+            f"From `{root}`, run "
             "`python -m genesis.train --config configs/split_mnist.json --download-data` "
             "after approving the benchmark dataset download. Verify with "
-            "`test -d /Users/ryan/Documents/Genesis/runs`."
+            f"`test -d {shlex.quote(str(Path(root) / 'runs'))}`."
         )
     return _join_items(record.manifest.data_requirements)
 
 
-def _external_action_details(record: ProjectRecord) -> list[str]:
+def _external_action_details(
+    record: ProjectRecord,
+    workspace: str,
+    artifacts: str,
+) -> list[str]:
     root = record.manifest.root_path
-    labos_prefix = (
-        "cd /Users/ryan/Documents/Olympus && .venv/bin/python -m olympus.cli labos "
-        "run-project"
-    )
     if record.manifest.project_id == "project-atlas-portfolio":
+        verification_command = _labos_command(
+            "run-project",
+            workspace,
+            artifacts,
+            "project-atlas-portfolio",
+            "--profile",
+            "benchmark",
+        )
         return [
             (
                 "- Exact external action: download NASA C-MAPSS from the NASA "
@@ -438,12 +478,19 @@ def _external_action_details(record: ProjectRecord) -> list[str]:
             ),
             "- Expected output: processed C-MAPSS artifacts under `data/processed/`.",
             (
-                f"- LabOS verification: `{labos_prefix} project-atlas-portfolio "
-                "--workspace /Users/ryan/Documents --artifacts artifacts "
-                "--profile benchmark`."
+                "- LabOS verification: "
+                f"`{verification_command}`."
             ),
         ]
     if record.manifest.project_id == "project-genesis":
+        verification_command = _labos_command(
+            "run-project",
+            workspace,
+            artifacts,
+            "project-genesis",
+            "--profile",
+            "benchmark",
+        )
         return [
             (
                 "- Exact external action: permit the first public benchmark dataset "
@@ -460,12 +507,19 @@ def _external_action_details(record: ProjectRecord) -> list[str]:
                 "directory and a training run artifact under `runs/`."
             ),
             (
-                f"- LabOS verification: `{labos_prefix} project-genesis "
-                "--workspace /Users/ryan/Documents --artifacts artifacts "
-                "--profile benchmark`."
+                "- LabOS verification: "
+                f"`{verification_command}`."
             ),
         ]
     if record.manifest.domain in {"economics-finance", "governed-fintech-systems"}:
+        verification_command = _labos_command(
+            "run-project",
+            workspace,
+            artifacts,
+            record.manifest.project_id,
+            "--profile",
+            "smoke",
+        )
         return [
             (
                 "- Exact external action: obtain qualified legal/security review "
@@ -477,9 +531,8 @@ def _external_action_details(record: ProjectRecord) -> list[str]:
             ),
             "- SQL: none required by the current local smoke workflow.",
             (
-                f"- Smoke verification: `{labos_prefix} {record.manifest.project_id} "
-                "--workspace /Users/ryan/Documents --artifacts artifacts "
-                "--profile smoke`."
+                "- Smoke verification: "
+                f"`{verification_command}`."
             ),
             (
                 "- Expected output: LabOS run status remains smoke-tested; "

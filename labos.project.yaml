@@ -2,7 +2,7 @@ project_id: olympus
 title: OLYMPUS Cognitive Architecture
 description: Local-first research platform for cognitive runtime, behavior compilation, and evaluation.
 hypothesis: Typed latent workspaces, interpretive branching, and behavior-graph execution improve agentic research reliability.
-root_path: /Users/ryan/Documents/Olympus
+root_path: .
 domain: agentic-ml-systems
 language: python
 manifest_source: declared
@@ -29,8 +29,8 @@ datasets:
     blocked_by_user_action: false
 expected_outputs:
   - artifacts/labos_runs.sqlite3
-  - portfolio_status.json
-  - PORTFOLIO_COMPLETION_REPORT.md
+  - artifacts/reports/portfolio_status.json
+  - artifacts/reports/PORTFOLIO_COMPLETION_REPORT.md
 validation_commands:
   - test -f pyproject.toml
   - test -f README.md
@@ -71,7 +71,7 @@ time_to_mvp: Already smoke-testable locally; 2-4 weeks for a polished external p
 evidence_available:
   - Olympus pytest suite passes.
   - LabOS CLI discovers, runs, records, and reports the local portfolio.
-  - portfolio_status.json, PORTFOLIO_COMPLETION_REPORT.md, and REMAINING_EXTERNAL_ACTIONS.md are generated.
+  - LabOS portfolio reports are generated under the ignored artifacts/reports directory.
 fatal_assumptions:
   - Users value a local research operating layer more than manual scripts.
   - Project manifests can remain lightweight enough to be maintained.
