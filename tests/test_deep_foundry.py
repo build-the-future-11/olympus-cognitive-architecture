@@ -7,7 +7,7 @@ import pytest
 import torch
 from pydantic import ValidationError
 
-from olympus.foundry import resources
+from olympus.foundry import promotion, resources
 from olympus.foundry.data_pipeline import (
     InstructionExample,
     prepare_instruction_dataset,
@@ -62,18 +62,30 @@ def test_dataset_preparation_is_content_addressed_and_rejects_tampering(
     tmp_path: Path,
 ) -> None:
     manifest = prepare_instruction_dataset(_source(), tmp_path / "prepared")
+    manifest_path = tmp_path / "prepared/manifest.json"
     assert manifest.quality.accepted_records == 36
     assert manifest.quality.missing_category_split_pairs == []
     assert {split.records for split in manifest.splits} == {12}
     assert all(len(split.categories) == 12 for split in manifest.splits)
-    assert verify_dataset_manifest(tmp_path / "prepared/manifest.json") == manifest
+    assert verify_dataset_manifest(manifest_path) == manifest
     second = prepare_instruction_dataset(_source(), tmp_path / "second-root")
     assert second.manifest_sha256 == manifest.manifest_sha256
+
+    forged_splits = [
+        split.model_copy(update={"records": 10_000}) if split.name == "train" else split
+        for split in manifest.splits
+    ]
+    forged = manifest.model_copy(update={"splits": forged_splits, "manifest_sha256": None})
+    forged.manifest_sha256 = sha256_bytes(forged.canonical_bytes(include_hash=False))
+    forged_path = tmp_path / "prepared/forged-manifest.json"
+    forged_path.write_bytes(forged.canonical_bytes())
+    with pytest.raises(ValueError, match="split record count mismatch"):
+        verify_dataset_manifest(forged_path)
 
     split = tmp_path / "prepared" / manifest.splits[0].path
     split.write_text(split.read_text(encoding="utf-8") + " ", encoding="utf-8")
     with pytest.raises(ValueError, match="split hash mismatch"):
-        verify_dataset_manifest(tmp_path / "prepared/manifest.json")
+        verify_dataset_manifest(manifest_path)
 
 
 def test_dataset_rejects_duplicate_pii_license_leakage_and_missing_coverage(
@@ -141,6 +153,23 @@ def test_resource_governor_enforces_exclusivity_and_preflight(
     governor.min_available_bytes = 1_000
     with pytest.raises(RuntimeError, match="safety ceiling"):
         governor.acquire()
+
+    def snapshot_failure() -> MemorySnapshot:
+        raise RuntimeError("snapshot failed")
+
+    lock_path = tmp_path / "snapshot-error.lock"
+    monkeypatch.setattr(resources, "memory_snapshot", snapshot_failure)
+    failing = ResourceGovernor(lock_path, min_available_bytes=256 * 1024**2)
+    failing.min_available_bytes = 1_000
+    with pytest.raises(RuntimeError, match="snapshot failed"):
+        failing.acquire()
+
+    monkeypatch.setattr(resources, "memory_snapshot", lambda: safe)
+    retry = ResourceGovernor(lock_path, min_available_bytes=256 * 1024**2)
+    retry.min_available_bytes = 1_000
+    retry.acquire()
+    retry.release()
+
     with pytest.raises(ValueError, match="at least 256 MiB"):
         ResourceGovernor(tmp_path / "invalid.lock", min_available_bytes=1)
 
@@ -272,7 +301,7 @@ def test_held_out_evaluation_quantization_and_negative_promotion(
 
 
 def test_promotion_gate_can_emit_a_hash_bound_release_manifest(
-    trained_foundry: dict[str, Path], tmp_path: Path
+    trained_foundry: dict[str, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     checkpoint = trained_foundry["full"]
     checkpoint_sha = sha256_bytes(checkpoint.read_bytes())
@@ -296,6 +325,7 @@ def test_promotion_gate_can_emit_a_hash_bound_release_manifest(
     manifest.manifest_sha256 = sha256_bytes(manifest.canonical_bytes(include_hash=False))
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_bytes(manifest.canonical_bytes())
+    monkeypatch.setattr(promotion, "verify_dataset_manifest", lambda _: manifest)
 
     category_results = [
         CategoryEvaluation(
