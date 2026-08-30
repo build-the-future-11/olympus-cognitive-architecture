@@ -287,10 +287,57 @@ def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
     expected = sha256_bytes(manifest.canonical_bytes(include_hash=False))
     if manifest.manifest_sha256 != expected:
         raise ValueError("dataset manifest hash mismatch")
+
+    split_names = [split.name for split in manifest.splits]
+    if len(split_names) != len(set(split_names)):
+        raise ValueError("dataset manifest contains duplicate split descriptors")
+
+    verified_records = 0
     for split in manifest.splits:
         path = Path(split.path)
         if not path.is_absolute():
             path = manifest_path.parent / path
-        if not path.is_file() or sha256_bytes(path.read_bytes()) != split.sha256:
+        if not path.is_file():
+            raise ValueError(f"dataset split missing: {split.name}")
+        payload = path.read_bytes()
+        if sha256_bytes(payload) != split.sha256:
             raise ValueError(f"dataset split hash mismatch: {split.name}")
+
+        examples: list[InstructionExample] = []
+        for line_number, line in enumerate(payload.decode("utf-8").splitlines(), 1):
+            if not line.strip():
+                continue
+            try:
+                example = InstructionExample.model_validate_json(line)
+            except Exception as error:
+                raise ValueError(
+                    f"invalid dataset split record {split.name}:{line_number}: {error}"
+                ) from error
+            if example.split != split.name:
+                raise ValueError(
+                    f"dataset split label mismatch: descriptor={split.name}, record={example.split}"
+                )
+            examples.append(example)
+
+        actual_records = len(examples)
+        actual_categories = dict(sorted(Counter(item.category for item in examples).items()))
+        if actual_records != split.records:
+            raise ValueError(
+                f"dataset split record count mismatch: {split.name} "
+                f"manifest={split.records} actual={actual_records}"
+            )
+        if actual_categories != dict(sorted(split.categories.items())):
+            raise ValueError(f"dataset split category counts mismatch: {split.name}")
+        verified_records += actual_records
+
+    if verified_records != manifest.source.record_count:
+        raise ValueError(
+            "dataset source record count mismatch: "
+            f"manifest={manifest.source.record_count} actual={verified_records}"
+        )
+    if manifest.quality.accepted_records != verified_records:
+        raise ValueError(
+            "dataset quality accepted-record count mismatch: "
+            f"manifest={manifest.quality.accepted_records} actual={verified_records}"
+        )
     return manifest
