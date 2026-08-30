@@ -126,26 +126,31 @@ class ResourceGovernor:
             raise RuntimeError(
                 "another model-loading or training workload holds the lock"
             ) from error
-        snapshot = memory_snapshot()
-        if snapshot.available_bytes < self.min_available_bytes:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
-            handle.close()
-            raise RuntimeError(
-                f"available memory {snapshot.available_bytes} is below the "
-                f"{self.min_available_bytes}-byte safety floor"
-            )
-        if snapshot.swap_fraction > self.max_swap_fraction:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
-            handle.close()
-            raise RuntimeError(
-                f"swap utilization {snapshot.swap_fraction:.1%} exceeds the "
-                f"{self.max_swap_fraction:.1%} safety ceiling"
-            )
-        handle.seek(0)
-        handle.truncate()
-        handle.write(f"pid={os.getpid()}\n")
-        handle.flush()
-        os.fsync(handle.fileno())
+
+        try:
+            snapshot = memory_snapshot()
+            if snapshot.available_bytes < self.min_available_bytes:
+                raise RuntimeError(
+                    f"available memory {snapshot.available_bytes} is below the "
+                    f"{self.min_available_bytes}-byte safety floor"
+                )
+            if snapshot.swap_fraction > self.max_swap_fraction:
+                raise RuntimeError(
+                    f"swap utilization {snapshot.swap_fraction:.1%} exceeds the "
+                    f"{self.max_swap_fraction:.1%} safety ceiling"
+                )
+            handle.seek(0)
+            handle.truncate()
+            handle.write(f"pid={os.getpid()}\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        except Exception:
+            try:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+            finally:
+                handle.close()
+            raise
+
         self._handle = handle
         self.preflight = snapshot
         return snapshot
