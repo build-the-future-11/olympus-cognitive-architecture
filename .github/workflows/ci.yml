@@ -35,6 +35,7 @@ jobs:
         run: |
           python -m olympus.cli foundry verify-pipeline --root artifacts/ci-foundry
           python -m olympus.cli foundry status --root artifacts/ci-foundry
+          python -m olympus.cli foundry prepare-dataset --output artifacts/ci-deep-dataset
       - name: Audit Python dependencies
         run: python -m pip_audit --strict .
       - name: Build distributions
@@ -42,7 +43,9 @@ jobs:
       - name: Validate distribution metadata
         run: python -m twine check dist/*
       - name: Verify bundled Foundry corpus
-        run: unzip -l dist/*.whl | grep 'olympus/foundry/foundry_verification.txt'
+        run: |
+          unzip -l dist/*.whl | grep 'olympus/foundry/foundry_verification.txt'
+          unzip -l dist/*.whl | grep 'share/olympus/datasets/source.jsonl'
 
   web:
     runs-on: ubuntu-latest

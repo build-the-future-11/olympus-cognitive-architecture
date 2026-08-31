@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from collections.abc import Sequence
 from pathlib import Path
 
@@ -12,8 +13,14 @@ from olympus.api import demos
 from olympus.core.workspace import LatentWorkspace
 from olympus.forge.compiler import NaturalLanguageBehaviorCompiler
 from olympus.forge.runtime import ForgeRuntime
+from olympus.foundry.data_pipeline import prepare_instruction_dataset
+from olympus.foundry.eval_suite import evaluate_checkpoint
 from olympus.foundry.ollama import OllamaClient
+from olympus.foundry.promotion import evaluate_promotion
+from olympus.foundry.quantization import quantize_checkpoint
+from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.service import FoundryService
+from olympus.foundry.sft import SFTConfig, TinyModelConfig, run_sft
 from olympus.labos.manifest import ProjectRecord, ResourceProfile
 from olympus.labos.portfolio import PortfolioService
 
@@ -27,6 +34,18 @@ app.add_typer(forge_app, name="forge")
 app.add_typer(labos_app, name="labos")
 app.add_typer(foundry_app, name="foundry")
 console = Console()
+
+
+def _default_instruction_source() -> Path:
+    repository_source = (
+        Path(__file__).resolve().parents[1] / "datasets/hermes-smoke/source.jsonl"
+    )
+    if repository_source.is_file():
+        return repository_source
+    return Path(sys.prefix) / "share/olympus/datasets/source.jsonl"
+
+
+_DEFAULT_INSTRUCTION_SOURCE = _default_instruction_source()
 
 
 @demo_app.command("run-all")
@@ -144,6 +163,131 @@ def ollama_smoke(
         temperature=0,
     )
     console.print_json(result.model_dump_json())
+
+
+@foundry_app.command("resource-status")
+def foundry_resource_status() -> None:
+    console.print_json(json.dumps(memory_snapshot().as_dict()))
+
+
+@foundry_app.command("prepare-dataset")
+def foundry_prepare_dataset(
+    source: Path = _DEFAULT_INSTRUCTION_SOURCE,
+    output: Path = Path("artifacts/foundry/deep/dataset"),
+    dataset_id: str = "olympus-foundry-instructions",
+    version: str = "1.0.0",
+    source_uri: str = "repository://datasets/hermes-smoke/source.jsonl",
+) -> None:
+    manifest = prepare_instruction_dataset(
+        source.resolve(),
+        output.resolve(),
+        dataset_id=dataset_id,
+        version=version,
+        source_uri=source_uri,
+    )
+    console.print_json(manifest.model_dump_json())
+
+
+@foundry_app.command("train-sft")
+def foundry_train_sft(
+    manifest: Path,
+    output: Path = Path("artifacts/foundry/deep/training"),
+    mode: str = "full",
+    base_checkpoint: Path | None = None,
+    resume_checkpoint: Path | None = None,
+    seed: int = 7,
+    epochs: int = 2,
+    width: int = 64,
+    layers: int = 2,
+    heads: int = 4,
+    sequence_tokens: int = 192,
+    batch_size: int = 4,
+    gradient_accumulation_steps: int = 2,
+) -> None:
+    if mode not in {"full", "lora", "qlora"}:
+        raise typer.BadParameter("mode must be full, lora, or qlora")
+    model = TinyModelConfig(
+        width=width,
+        layers=layers,
+        heads=heads,
+        max_sequence_tokens=sequence_tokens,
+    )
+    config = SFTConfig(
+        mode=mode,  # type: ignore[arg-type]
+        seed=seed,
+        epochs=epochs,
+        batch_size=batch_size,
+        gradient_accumulation_steps=gradient_accumulation_steps,
+        model=model,
+    )
+    summary = run_sft(
+        manifest.resolve(),
+        output.resolve(),
+        config=config,
+        base_checkpoint=base_checkpoint.resolve() if base_checkpoint else None,
+        resume_checkpoint=resume_checkpoint.resolve() if resume_checkpoint else None,
+    )
+    console.print_json(summary.model_dump_json())
+
+
+@foundry_app.command("evaluate-checkpoint")
+def foundry_evaluate_checkpoint(
+    checkpoint: Path,
+    manifest: Path,
+    output: Path,
+    base_checkpoint: Path | None = None,
+    max_generation_tokens: int = 48,
+) -> None:
+    report = evaluate_checkpoint(
+        checkpoint.resolve(),
+        manifest.resolve(),
+        output.resolve(),
+        base_checkpoint=base_checkpoint.resolve() if base_checkpoint else None,
+        max_generation_tokens=max_generation_tokens,
+    )
+    console.print_json(report.model_dump_json())
+
+
+@foundry_app.command("quantize-checkpoint")
+def foundry_quantize_checkpoint(
+    checkpoint: Path,
+    manifest: Path,
+    output: Path,
+    bits: int = 8,
+) -> None:
+    if bits not in {4, 8}:
+        raise typer.BadParameter("bits must be 4 or 8")
+    report = quantize_checkpoint(
+        checkpoint.resolve(),
+        manifest.resolve(),
+        output.resolve(),
+        bits=bits,  # type: ignore[arg-type]
+    )
+    console.print_json(report.model_dump_json())
+
+
+@foundry_app.command("promotion-check")
+def foundry_promotion_check(
+    requested_model_id: str,
+    checkpoint: Path,
+    manifest: Path,
+    evaluation: Path,
+    quantization: Path,
+    model_card: Path,
+    output: Path,
+    approved_base_license: str,
+) -> None:
+    report = evaluate_promotion(
+        requested_model_id=requested_model_id,
+        checkpoint_path=checkpoint.resolve(),
+        dataset_manifest_path=manifest.resolve(),
+        evaluation_path=evaluation.resolve(),
+        quantization_report_path=quantization.resolve(),
+        model_card_path=model_card.resolve(),
+        output_path=output.resolve(),
+        approved_base_license=approved_base_license,
+    )
+    console.print_json(report.model_dump_json())
 
 
 def _portfolio_service(workspace: Path, artifacts: Path) -> PortfolioService:

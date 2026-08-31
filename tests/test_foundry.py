@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import sqlite3
 from pathlib import Path
 
 import httpx
@@ -85,6 +86,39 @@ def test_store_rejects_dataset_identity_rewrite(tmp_path: Path) -> None:
         with pytest.raises(ValueError, match="different metadata"):
             store.register_dataset(changed_license)
         assert store.integrity_check() == "ok"
+
+
+def test_store_migrates_the_exact_legacy_verification_source(tmp_path: Path) -> None:
+    database = tmp_path / "registry.sqlite3"
+    record = DatasetRecord(
+        dataset_id="foundry-verification-corpus",
+        version="1.0.0",
+        sha256="6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab",
+        materialized_path=str(tmp_path / "verification.txt"),
+        source="repository://datasets/samples/foundry_verification.txt",
+        owner="BU1LD Olympus",
+        license="LicenseRef-Proprietary",
+        provenance="legacy registry fixture",
+        privacy_classification="internal",
+        synthetic=True,
+        generator="legacy fixture",
+        byte_count=674,
+        character_count=674,
+        created_at="2026-08-21T00:00:00+00:00",
+    )
+    with FoundryStore(database) as store:
+        store.register_dataset(record)
+    connection = sqlite3.connect(database)
+    try:
+        connection.execute("DELETE FROM schema_migrations WHERE version = 2")
+        connection.commit()
+    finally:
+        connection.close()
+    with FoundryStore(database) as migrated:
+        assert migrated.datasets()[0].source == (
+            "repository://olympus/foundry/foundry_verification.txt"
+        )
+        assert migrated.evidence()[-1].action == "metadata_migrated"
 
 
 def test_foundry_golden_path_persists_provenance_and_serves(tmp_path: Path) -> None:

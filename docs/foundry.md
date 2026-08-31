@@ -86,3 +86,56 @@ stored in the registry:
 Hermes will require a licensed base decision, baseline suite, actual
 post-training evidence, quantization measurements, stable local serving, and
 Percy integration before promotion under a Hermes name.
+
+## Deep model-development commands
+
+The second Foundry path is a real, bounded transformer-development pipeline. It
+exists to validate data, training, adapter, evaluation, quantization, and
+promotion controls on hardware that cannot safely train a large model.
+
+```bash
+.venv/bin/olympus foundry resource-status
+.venv/bin/olympus foundry prepare-dataset \
+  --source datasets/hermes-smoke/source.jsonl \
+  --output artifacts/foundry/deep/dataset
+.venv/bin/olympus foundry train-sft \
+  artifacts/foundry/deep/dataset/manifest.json \
+  --output artifacts/foundry/deep/training \
+  --mode full --epochs 4 --width 48 --layers 2 --heads 4
+```
+
+`train-sft` also accepts `--mode lora` and `--mode qlora` with an exact
+`--base-checkpoint`. QLoRA uses frozen symmetric 4-bit bases stored as packed
+nibbles, not an int8 substitute. `--resume-checkpoint` restores model,
+optimizer, completed epoch/step counters, and deterministic generator state.
+
+```bash
+.venv/bin/olympus foundry evaluate-checkpoint CHECKPOINT MANIFEST REPORT
+.venv/bin/olympus foundry quantize-checkpoint CHECKPOINT MANIFEST OUTPUT --bits 4
+.venv/bin/olympus foundry promotion-check hermes-alpha \
+  CHECKPOINT MANIFEST EVALUATION QUANTIZATION MODEL_CARD OUTPUT \
+  APPROVED_BASE_LICENSE
+```
+
+These commands do not promote by naming. The promotion check emits a release
+manifest only when checkpoint/dataset identities, rights, data scale, held-out
+quality, category regressions, quantized tool reliability, fresh-process
+serving, and model-card gates all pass.
+
+## Deep dataset and resource invariants
+
+- Every JSONL record carries an ID, category, prompt, response, license, source,
+  and explicit split.
+- Every capability category must occur in train, validation, and untouched test.
+- Exact IDs, normalized examples, and shared eight-token cross-split sequences
+  are rejected.
+- Email, phone-like, API-key, password, secret, and token patterns are rejected.
+- Split and manifest hashes are verified before training, resume, or evaluation.
+- Only one model-loading or training workload can hold the exclusive Foundry
+  lock. Preflight requires 2 GiB available memory and less than 90% swap use.
+- CPU mixed precision requests are recorded as ineffective; the pipeline never
+  claims an optimization the backend did not apply.
+
+The measured run and its negative capability result are recorded in
+`OLYMPUS_MODEL_FOUNDRY_LEDGER.md`. Base selection, post-training admission, and
+future-family plans live under `research/`.
