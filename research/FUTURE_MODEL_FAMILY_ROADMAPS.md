@@ -3,6 +3,13 @@
 These are planned programs, not instantiated models. Reserved names remain
 unavailable until a real checkpoint passes its own family gates.
 
+Detailed 2026-09-06 designs are in [`research/architectures/`](architectures/README.md).
+They replace the earlier assumption of separate model programs with a shared
+backbone, typed evidence/action substrate, specialized adapters and services,
+and family-specific falsification gates. External artifacts use
+**Olympus-Atlas** because `Atlas` already names a retrieval-augmented model in
+arXiv:2208.03299. The accompanying proposal paper is in `research/paper/`.
+
 ## Prometheus — reasoning and scientific synthesis
 
 - Capability justification: multi-source scientific synthesis, explicit
