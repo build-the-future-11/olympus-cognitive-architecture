@@ -1,6 +1,6 @@
 # Olympus Reality Ledger
 
-Observed on 2026-09-01 from the repository and local runtime. Status terms are
+Observed on 2026-09-06 from the repository and local runtime. Status terms are
 literal; no model-family capability is inferred from architecture code.
 
 ## Real and verified
@@ -25,6 +25,14 @@ literal; no model-family capability is inferred from architecture code.
   demote unsupported mechanisms, and resource admission with cancellation.
 - A locally built Forge API/web control surface with provenance, live admission,
   job lifecycle, start, cancel, and retry. It is not deployed.
+- Shared family contracts and adapter-decoder code plus executable Hermes,
+  Olympus-Atlas, Prometheus, Perseus, Kronos, and Aion reference components.
+  Focused tests exercise real PyTorch gradient paths and scoped deterministic
+  validation/gating failures; most state, trust, and receipt stores are
+  process-local. The bounded release-facing record is
+  `evidence/model_family_smoke_20260906.json`; it marks every checkpoint
+  non-qualifying and unpromoted. This is software evidence, not family-level
+  empirical evidence.
 
 ## Implemented but not a trained Olympus model
 
@@ -32,10 +40,16 @@ literal; no model-family capability is inferred from architecture code.
   has no trained weights and must not be represented as Hermes Alpha.
 - JEPA and transform demos: small synthetic training routines for testing
   research mechanisms, not general-purpose model checkpoints.
+- The family modules under `olympus/models/`: source-level components initialized
+  and optimized from scratch on synthetic fixtures for contract and
+  training-path verification. None is a rights-cleared, benchmark-qualified,
+  or serving-promoted family model. Hermes has a shared-workspace output bridge
+  and Prometheus resolves authorized trusted-receipt evidence, but the six roles
+  are not composed as one end-to-end runtime.
 
 ## Not present
 
-- A trained Hermes Alpha checkpoint.
+- A qualifying trained Hermes checkpoint.
 - A promoted Prometheus, Perseus, Atlas, Kronos, or Aion checkpoint.
 - A completed Hermes base-model comparison and licensing decision.
 - Hermes-specific SFT, tool-use post-training, quantization comparison, or Percy
@@ -64,6 +78,7 @@ so its mechanism claim is explicitly demoted. Exact measurements are in
 
 ## Naming rule
 
-No artifact may use Hermes, Prometheus, Perseus, Atlas, Kronos, or Aion as its model
-identity until a real immutable checkpoint exists and passes the family-specific
-evaluation and deployment gates.
+Source modules may use Hermes, Prometheus, Perseus, Olympus-Atlas, Kronos, or
+Aion as architecture-role codenames. No external model, checkpoint, or serving
+identity may use one until a real immutable checkpoint passes the
+family-specific evaluation and deployment gates.

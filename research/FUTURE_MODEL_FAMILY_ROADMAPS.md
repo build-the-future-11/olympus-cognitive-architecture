@@ -1,7 +1,10 @@
 # Future Olympus Model-Family Roadmaps
 
-These are planned programs, not instantiated models. Reserved names remain
-unavailable until a real checkpoint passes its own family gates.
+These are planned empirical programs, not qualified models. Bounded reference
+components are now instantiated under `olympus/models/`, but no family has a
+qualifying dataset, checkpoint, comparison, or promotion. Reserved names remain
+unavailable as external model identities until a real checkpoint passes its own
+family gates.
 
 Detailed 2026-09-06 designs are in [`research/architectures/`](architectures/README.md).
 They replace the earlier assumption of separate model programs with a shared
@@ -39,7 +42,7 @@ arXiv:2208.03299. The accompanying proposal paper is in `research/paper/`.
   and distinguishing language success from actual task success.
 - Dependency: stable Percy-compatible task harness and model identity binding.
 
-## Atlas — long-context knowledge and retrieval
+## Olympus-Atlas — long-context knowledge and retrieval
 
 - Capability justification: grounded analysis over large private corpora with
   citations and memory boundaries.

@@ -7,7 +7,7 @@ model. It coordinates Hermes, Prometheus, Perseus, Olympus-Atlas, Kronos, and
 Pantheon while keeping authorization and scientific promotion outside learned
 components. A learned router is added only if it beats deterministic routing.
 
-## Protocol state machine
+## Target protocol state machine
 
 ```text
 QUESTION -> EVIDENCE_MAP -> HYPOTHESES -> PREREGISTERED_PROTOCOL
@@ -15,11 +15,12 @@ QUESTION -> EVIDENCE_MAP -> HYPOTHESES -> PREREGISTERED_PROTOCOL
          -> PROMOTION_CANDIDATE -> EXTERNAL_REPLICATION
 ```
 
-Every transition has a typed input, deterministic admission predicate, budget,
-authorized actor, and immutable receipt. Outcome data cannot alter a frozen
-protocol without creating a new version visibly marked post hoc.
+In the target durable system, every transition has a typed input, deterministic
+admission predicate, budget, authenticated actor, and immutable receipt. Outcome
+data cannot alter a frozen protocol without creating a new version visibly
+marked post hoc.
 
-## Architecture
+## Target architecture
 
 1. **Deterministic controller baseline:** explicit state machine, routing table,
    resource quotas, and admission checks.
@@ -34,7 +35,7 @@ protocol without creating a new version visibly marked post hoc.
    environments, and claims. A model cannot waive a failed audit.
 7. **Learned router, optional:** predicts the next permitted service and budget;
    deterministic masks make illegal transitions impossible.
-8. **Promotion board:** rule-based gates plus mandatory human authorization for
+8. **Promotion board:** target rule-based gates plus mandatory human authorization for
    external writes, publication, high-cost runs, or evidence promotion.
 
 ## Data, evaluation, and falsification
@@ -52,5 +53,17 @@ control matches its valid-experiment rate with equal or lower false-promotion
 rate.** Stop immediately on self-approval, protocol rewriting after outcome
 inspection, hidden test access, unbounded recursion, or unauthorized effects.
 
-Current state: **deterministic architecture specified; no learned Aion model or
-autonomous-research result**.
+Current state: **deterministic controller and optional-router reference
+implemented; no qualifying Aion checkpoint or autonomous-research result**.
+`olympus/models/aion.py` enforces scoped non-model approval, protocol/audit
+binding, legal transitions, frozen-protocol evidence membership, and
+step/tool-call budgets against controller-owned in-memory run/protocol heads.
+Host-registered approvals bind actor, authority, scope, run, protocol, expected
+head, and optional expiry; registered audits bind run, protocol, audited head,
+and evidence-artifact hashes. Model authority is rejected for promotion even
+when an approval object is supplied. These records are defensively copied but
+remain process-local and unsigned; “trusted” means accepted by the host, not
+cryptographically verified. Receipts are structurally validated and hash-linked
+in memory; they are not durable, append-only storage, signed, or externally
+anchored. The learned router can rank only controller-permitted transitions and
+remains subject to the deterministic-baseline kill rule.

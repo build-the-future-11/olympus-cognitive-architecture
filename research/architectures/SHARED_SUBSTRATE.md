@@ -13,9 +13,10 @@ ablations possible, and lets serving reuse one quantized backbone. A larger base
 is justified only after the 0.6B experiment establishes that data, interfaces,
 and evaluations work.
 
-## Common learned interface
+## Target learned interface
 
-The backbone consumes a serialized `WorkspaceState` and emits exactly one of
+The proposed family backbone consumes a serialized authorized workspace view
+and emits exactly one of
 four grammar-constrained envelopes:
 
 ```text
@@ -24,6 +25,11 @@ Proposal {hypotheses[], tests[], assumptions[], confidence}
 Action   {tool_id, schema_version, arguments, preconditions[], idempotency_key}
 Stop     {reason, unresolved[], required_authority?}
 ```
+
+This is the target decoding protocol. The current reference code instead
+defines post-generation Pydantic variants named `TextOutput`, `ClaimOutput`,
+`ActionOutput`, and `AbstainOutput`; it does not implement constrained token
+generation.
 
 The shared token sequence is:
 
@@ -39,9 +45,9 @@ bidirectional encoder is permitted for retrieval; family decoders receive
 evidence as prefix tokens so the first implementation does not require invasive
 cross-attention changes.
 
-## Typed state and evidence contracts
+## Target typed state and evidence contracts
 
-`WorkspaceState` is an event-sourced object with:
+The target durable `WorkspaceState` is an event-sourced object with:
 
 - objective, constraints, resource budget, and monotonic step counter;
 - evidence references containing content hash, source URI, acquisition time,
@@ -51,10 +57,11 @@ cross-attention changes.
 - tool schemas, permission scopes, and outstanding approvals;
 - immutable observation history and model/checkpoint identity.
 
-Models never write directly to storage or external systems. They emit an
-envelope; deterministic validators parse it, apply access controls, execute an
-authorized transition, and append the result. Confidence is metadata, never an
-authorization signal.
+The design invariant is that models never write directly to storage or external
+systems. They emit an envelope; trusted services validate it and, where a
+separate executor exists, may execute and record an authorized transition.
+Confidence is metadata, never an authorization signal. The current substrate
+validator neither executes actions nor appends durable events.
 
 ## Shared training objectives
 
@@ -105,3 +112,17 @@ Pantheon audit ----------------------------------^
 Aion does not wait on every capability to begin as a deterministic controller,
 but learned autonomous behavior cannot be promoted before upstream interfaces
 and rollback controls are real.
+
+## Reference implementation status
+
+`olympus/models/substrate.py` now implements the typed workspace/evidence/claim/
+plan/tool contracts, discriminated and hash-bound output envelopes,
+deterministic ACL/capability validation, workspace-supplied action-hash approval
+bindings, a deliberately restricted recursive schema subset, and a compact
+decoder-only network with independently selectable bottleneck adapters and a
+next-token loss. `AuthorizedWorkspaceView` deeply revalidates a workspace and
+removes inaccessible evidence and unavailable tools before model input. The
+hash-linked workspace event list remains a process-local object, not a durable,
+append-only, signed, or externally anchored log. This verifies interface and
+gradient paths only. It is not the revision-pinned Qwen3 base proposed for the
+family experiment, and no shared or family checkpoint has passed promotion.

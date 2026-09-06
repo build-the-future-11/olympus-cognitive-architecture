@@ -9,7 +9,7 @@
 }
 \newcommand{\system}{\textbf{Olympus}}
 \newcommand{\atlas}{\textbf{Olympus-Atlas}}
-\newcommand{\planned}{\textcolor{red!65!black}{\textbf{PROPOSED}}}
+\newcommand{\implemented}{\textcolor{blue!60!black}{\textbf{REFERENCE IMPLEMENTED}}}
 \title{Olympus: An Evidence-Bounded Architecture\\for Specialized Research-Agent Models}
 \author{Olympus Research Project}
 \date{Architecture proposal --- 6 September 2026}
@@ -20,21 +20,26 @@
 \begin{abstract}
 Research-agent projects often accumulate branded ``models'' before they have
 datasets, checkpoints, interfaces, or falsifiable evaluations. We present a
-counterproposal for six planned Olympus families: Hermes for grounded response,
+counterproposal for six Olympus family roles: Hermes for grounded response,
 Prometheus for scientific synthesis, Perseus for tool execution,
 \atlas{} for retrieval over governed corpora, Kronos for temporal planning and
-guarded adaptation, and Aion for governed research loops. The families share a
-revision-pinned decoder, typed workspace, immutable evidence graph, and
-grammar-constrained output envelopes; they differ through adapters, auxiliary
-heads, services, and promotion criteria. Deterministic systems retain access
-control, permission checks, transactions, protocol freezing, audit, rollback,
-and promotion. We specify module boundaries, objectives, data requirements,
-threat models, matched-budget baselines, ablations, and rejection rules for each
-family. We also argue that Aion should begin as a deterministic controller, not
-a monolithic autonomous-scientist model, and that its learned router should be
+guarded adaptation, and Aion for governed research loops. In the target system,
+the families would share a revision-pinned decoder, typed authorized workspace
+view, durable evidence graph, and constrained output protocol; adapters,
+auxiliary heads, services, and promotion criteria would differ. We specify
+module boundaries, objectives, data requirements, threat models, matched-budget
+baselines, ablations, and rejection rules. Executable references accompany all
+six roles and the shared substrate, but they do not yet form that composed
+system. They instantiate typed contracts, post-generation output validation,
+selected process-local validation and gating paths, and differentiable losses
+without claiming trained capability. We also argue
+that Aion should begin as a deterministic controller, not a monolithic
+autonomous-scientist model, and that its learned router should be
 removed unless it beats that controller at equal budget and false-promotion
-rate. This manuscript is an architecture and evaluation protocol. It reports
-\emph{no trained family checkpoint and no family-level experimental result}.
+rate. This manuscript is an architecture, reference implementation, and
+evaluation protocol. It reports
+\emph{no qualifying trained family checkpoint and no family-level experimental
+result}.
 Its contribution is therefore a falsifiable research plan rather than a claim
 of model capability.
 \end{abstract}
@@ -49,14 +54,15 @@ valid tool calls can be semantically wrong; multiple reasoning traces can agree
 on the same defect; online adaptation can erase prior capabilities; and a model
 that proposes a protocol cannot be allowed to approve its own deviations.
 
-The Olympus repository contains real lifecycle infrastructure and small
-verification models, but its named model families remain specifications. In
-particular, the planned Hermes base experiment has not produced a qualifying
-checkpoint, and Prometheus, Perseus, Atlas, Kronos, and Aion have no qualifying
-datasets or evaluations. We preserve that boundary. The question addressed by
-this paper is not ``how capable are these models?'' but ``what is the smallest
-coherent architecture that could test whether the proposed specializations add
-value?''
+The Olympus repository contains real lifecycle infrastructure, small
+verification models, and bounded reference implementations for each named
+family role. The references are initialized component code, not qualifying
+family models. In particular, the planned Hermes base experiment has not
+produced a qualifying checkpoint, and Prometheus, Perseus, Olympus-Atlas,
+Kronos, and Aion have no qualifying datasets or comparative evaluations. We
+preserve that boundary. The question addressed by this paper is not ``how
+capable are these models?'' but ``what is the smallest coherent architecture
+that could test whether the proposed specializations add value?''
 
 Our central decision is that six roles do not justify six foundation-model
 pretraining programs. We instead propose one shared substrate with independently
@@ -65,12 +71,14 @@ versioned adapters and services. This yields four contributions:
 \begin{enumerate}
 \item a typed contract separating language proposals from authorized state
 transitions;
-\item concrete architectures for six roles, including family-specific data,
-losses, interfaces, baselines, failure modes, and stop rules;
+\item concrete architectures and bounded reference implementations for six
+roles, including family-specific losses, interfaces, deterministic boundaries,
+baselines, failure modes, and stop rules;
 \item a dependency and promotion protocol that prevents downstream branding
 from substituting for upstream evidence; and
-\item a paper-level claim ledger that labels every design as proposed and every
-future numerical claim as inadmissible without immutable run evidence.
+\item a paper-level claim ledger that separates design, reference
+implementation, component execution, and family-level outcome evidence, and
+rejects numerical claims without immutable run evidence.
 \end{enumerate}
 
 The proposal is deliberately scale-skeptical. The first compatible base is the
@@ -83,8 +91,10 @@ evaluation are demonstrated at the cheapest credible scale.
 \section{Status and claim boundary}
 
 Table~\ref{tab:status} is part of the methodology. It prevents architectural
-intent from being read as completion. ``Proposed'' means a written, testable
-design; it does not mean instantiated weights or a functioning service.
+intent from being read as completion. ``Reference implemented'' means the
+typed contracts, deterministic services, neural modules, and loss paths exist;
+it does not mean trained weights, a qualifying checkpoint, a benchmark result,
+or a functioning production service.
 
 \begin{table}[h]
 \centering
@@ -93,19 +103,51 @@ design; it does not mean instantiated weights or a functioning service.
 \toprule
 Artifact & Status & Evidence allowed in this paper \\
 \midrule
-Shared substrate & \planned & interfaces, losses, promotion rules \\
-Hermes & \planned & base-candidate decision; no family checkpoint \\
-Prometheus & \planned & proposer/verifier architecture only \\
-Perseus & \planned & action protocol and safety boundary only \\
-\atlas & \planned & retrieval/index architecture only \\
-Kronos & \planned & offline temporal/adaptation protocol only \\
-Aion & \planned & deterministic state machine and optional router \\
+Shared substrate & \implemented & authorized view, restricted schema/output validation, compact decoder; no pretrained base \\
+Hermes & \implemented & filtered workspace-to-output bridge and separate trainable heads; no family checkpoint \\
+Prometheus & \implemented & receipt-bound selector and separate proposer/verifier; no family result \\
+Perseus & \implemented & host-approved, process-local transaction reference; no sandbox or durable recovery \\
+\atlas & \implemented & opaque process-local hybrid index and separate scorer; no qualifying index study \\
+Kronos & \implemented & temporal planner and local checkpoint gate; no parsed evidence reports or family result \\
+Aion & \implemented & host-trusted, process-local state machine and masked router; no research-loop result \\
 \bottomrule
 \end{tabularx}
-\caption{Truth boundary at manuscript freeze. No row contains a family-level
-experimental result.}
+\caption{Truth boundary at manuscript revision. Reference code is implementation
+evidence only; no row contains a family-level experimental result.}
 \label{tab:status}
 \end{table}
+
+\subsection{Current reference boundary}
+
+The shared module deeply revalidates mutable workspace snapshots and constructs
+an \texttt{AuthorizedWorkspaceView} before model tokenization or scoring. That
+view omits unauthorized evidence, unavailable tools, policy state, event
+history, and any commitment over hidden evidence. The action validator supports
+a deliberately restricted recursive schema subset rather than full JSON Schema.
+Its approval check compares an action hash with a binding supplied by the
+trusted workspace; it neither authenticates an issuer nor executes an action.
+The implemented \texttt{TextOutput}, \texttt{ClaimOutput},
+\texttt{ActionOutput}, and \texttt{AbstainOutput} variants are parsed after
+generation; constrained token decoding remains target work.
+
+Integration is partial. Hermes filters the authorized view and returns a
+source-workspace-bound text or abstention output. Prometheus accepts canonical
+transition receipts only when a host-allowlisted content hash binds the
+workspace, model, branch, claim, and compared values. \atlas{} uses opaque keyed
+versions and ACL-filtered inspection inside one process. Its learned scorer is
+separate from retrieval. Perseus defensively snapshots prepared actions and
+authority context, reauthorizes at commit, and removes tool-controlled exception
+text from receipts. Its state is in memory, its executor interface is not a
+sandbox, and it cannot roll back committed or failed material effects.
+
+Kronos binds each host-allowlisted evidence identifier to an exact local
+candidate and metric tuple, but does not parse evaluation, rollback, or deletion
+reports or perform those operations. Aion binds host-registered approvals and
+audits to the run, protocol, and current chain head. Approvals additionally bind
+actor, authority, and scope; transition evidence IDs must belong to the frozen
+protocol, and model authority cannot promote. Its receipt chain and trust stores
+are process-local and unsigned. None of these
+``trusted'' inputs is a cryptographic identity or durable authority service.
 
 We use \atlas{} externally because ``Atlas'' already denotes a retrieval-
 augmented language model \citep{izacard2022atlas}. All future checkpoint IDs
@@ -171,14 +213,15 @@ read final hidden states for evidence entailment, confidence, outcome value, or
 policy-violation prediction. Retrieval encoders and process verifiers may be
 separate small bidirectional models where independence or latency matters.
 
-The first implementation supplies retrieved evidence as prefix tokens rather
+The first target family experiment supplies retrieved evidence as prefix tokens rather
 than adding cross-attention. This choice minimizes surgery to the base and makes
 ``retrieval quality'' separable from ``decoder use of retrieved evidence.'' A
 cross-attention variant is eligible only if the prefix baseline saturates.
 
 \subsection{Workspace state}
 
-Every family reads a serialized \texttt{WorkspaceState}:
+In the target composed system, every family reads a serialized authorized view
+derived from \texttt{WorkspaceState}:
 \begin{equation}
 W=(o,c,b,E,C,G,T,P,H,M),
 \end{equation}
@@ -198,10 +241,12 @@ The model emits exactly one grammar-constrained envelope:
 \texttt{Stop\{reason,unresolved,required\_authority?\}}.
 \end{quote}
 
-No family writes directly to external state. A deterministic validator parses
-the envelope, checks access and permissions, executes a permitted transition,
-and appends an observation. Untrusted tool text cannot modify policy fields.
-Confidence is an evaluated prediction, never an authorization mechanism.
+No family may write directly to external state. A trusted service parses the
+envelope, checks access and permissions, and may hand a permitted transition to
+a separate executor and recorder. The current substrate validator performs only
+validation; it does not execute or append durable observations. Untrusted tool
+text cannot be treated as policy fields. Confidence is an evaluated prediction,
+never an authorization mechanism.
 
 \subsection{Learning objective and evidence protocol}
 
@@ -226,6 +271,11 @@ the unadapted base, a deterministic non-LLM system, a single shared adapter, and
 the proposed specialization under matched budgets.
 
 \section{Family architectures}
+
+The following subsections specify target family experiments and production
+boundaries. Present-tense component names describe the proposed design, not a
+claim that datasets, trained adapters, deployed services, or end-to-end
+composition already exist. The bounded current APIs are summarized above.
 
 \subsection{Hermes: grounded interpretation and response}
 
@@ -396,12 +446,14 @@ immediately as a deterministic state machine, but no learned autonomous behavior
 can be promoted before the relevant upstream services and rollback controls are
 real.
 
-Serving loads one quantized backbone and switches signed adapter bundles.
-Retrieval, capability, transaction, temporal, and audit services are separate
-processes with narrow schemas. This separation costs some latency but preserves
-ownership: a neural decoder cannot become the de facto security boundary. Each
-request records base and adapter hashes, service versions, corpus version,
-policy version, token/tool budget, and every state transition.
+The target serving design loads one quantized backbone and switches signed
+adapter bundles. Retrieval, capability, transaction, temporal, and audit
+services would be separate processes with narrow schemas. This separation costs
+some latency but preserves ownership: a neural decoder cannot become the de
+facto security boundary. A production request would record base and adapter
+hashes, service versions, corpus version, policy version, token/tool budget, and
+every state transition. None of these deployment properties is established by
+the family-reference smoke.
 
 \begin{table}[t]
 \centering
@@ -426,12 +478,15 @@ Aion & optional router & protocol, audit, approval, promotion & learned vs deter
 
 \subsection{Phase 0: contracts and deterministic baselines}
 
-Implement schema definitions, event logging, validators, ACL filtering,
-capability checks, transactions, rollback, and the Aion state machine before
-training. Construct deterministic BM25, workflow, static replanning, and routing
-baselines. Freeze test generators and failure injections. Exit only when a
-fresh process can replay a run from hashes and rejects malformed, unauthorized,
-or post-hoc transitions.
+The reference implementation now supplies schema definitions, an authorized
+pre-model workspace projection, validators, ACL filtering, host-allowlisted
+receipt/approval checks, process-local transactions, guarded local checkpoint
+staging, and the Aion state machine before family training. Unit tests cover
+malformed, unauthorized, stale-authority, and post-hoc transitions. Phase 0
+remains incomplete: there is no constrained decoder, deployed sandbox, durable
+transaction or Aion store, parsed rollback/deletion evidence service, end-to-end
+event log, frozen static baselines, versioned failure generator, or fresh-process
+replay of a complete family run from hashes.
 
 \subsection{Phase 1: Hermes at 0.6B}
 
@@ -479,13 +534,19 @@ membership leakage, stale evidence, fabricated citation spans, schema-valid but
 dangerous arguments, duplicate side effects, reward hacking, protocol drift,
 held-out-answer access, checkpoint substitution, and self-promotion.
 
-The principal controls are pre-retrieval ACL filtering, content-addressed
-evidence, constrained decoding, deterministic semantic validation, least-
-privilege tools, sandboxing, idempotency keys, two-phase material writes,
-immutable logs, versioned protocols, separated proposer/verifier data,
-sequestered tests, offline updates, atomic rollback, and human approval. These
-controls do not prove security. They create inspectable failure points and
-prevent the learned model from being the sole enforcement layer.
+The implemented reference controls are pre-scoring ACL projection,
+content-hash checks, post-generation typed validation, a restricted recursive
+action-schema subset, host-allowlisted receipt and approval bindings,
+process-local idempotency-key replay, offline checkpoint staging, and
+run/protocol/head-bound Aion receipts. These controls do not prove security.
+They create inspectable failure points and keep selected decisions outside
+learned components.
+
+Constrained decoding, deployed least-privilege sandboxes, durable two-phase
+material writes, immutable externally anchored logs, signed authority records,
+separated training datasets, sequestered family tests, parsed rollback/deletion
+evidence, atomic committed-effect rollback, and human-only approval policy are
+target controls, not current implementation facts.
 
 Reliability is defined over final states and receipts. An answer can be fluent
 and wrong; an action can be valid JSON and unsafe; a run can succeed once and
@@ -515,20 +576,25 @@ Olympus is most defensible as an evidence-bounded architecture program, not a
 collection of prematurely named models. One shared decoder supports economical
 specialization; explicit services preserve retrieval, action, time, and audit
 boundaries; deterministic systems keep authority outside learned policies. Each
-family has a primary hypothesis and an explicit rejection rule. The immediate
-research direction is therefore contracts and baselines, followed by one
-Hermes 0.6B adapter experiment. Prometheus and Perseus come next, \atlas{} and
-Kronos only after their prerequisites, and Aion remains a governed controller
-until learning demonstrates value. The proposal becomes a model paper only
-after those experiments exist. Until then, its scientifically correct output is
-the protocol itself.
+family has a primary hypothesis and an explicit rejection rule. The reference
+contracts and components now exist. The immediate research direction
+is to integrate and freeze those baselines, then run one Hermes 0.6B adapter
+experiment. Prometheus and Perseus come next, \atlas{} and Kronos only after
+their prerequisites, and Aion remains a governed controller until learning
+demonstrates value. The proposal becomes a model paper only after those
+experiments exist. Until then, its scientifically correct outputs are the
+reference implementation and protocol, not a capability claim.
 
 \section*{Artifact statement}
 
-The repository accompanies this manuscript with one shared-substrate
-specification, six family architecture files, a claim--source ledger, a
-canonical research report, BibTeX references, and this source. No generated
-number in a later revision is valid unless linked to an immutable run manifest.
+The repository accompanies this manuscript with one executable shared
+substrate, six executable family-role modules, their focused tests, six family
+architecture files, a claim--source ledger, a canonical research report,
+BibTeX references, this source, and the bounded release-facing record
+\texttt{evidence/model\_family\_smoke\_20260906.json}. That record uses synthetic
+contract fixtures and marks every emitted checkpoint non-qualifying and
+unpromoted. No generated number in a later revision is valid unless linked to
+an immutable run manifest.
 
 \bibliographystyle{plainnat}
 \bibliography{references}

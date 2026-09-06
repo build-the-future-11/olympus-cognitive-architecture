@@ -21,6 +21,20 @@ Olympus is currently an alpha research system. Its tests establish executable
 engineering behavior; they do not establish broad scientific superiority or
 regulated-production fitness.
 
+The shared model substrate and the Hermes, Olympus-Atlas, Prometheus, Perseus,
+Kronos, and Aion role architectures now have executable reference
+implementations under `olympus/models/`. They include typed contracts,
+an access-filtered model view, scoped deterministic validation/gating paths,
+trainable PyTorch components, and focused tests. Hermes and Prometheus have
+partial shared-workspace integration; the remaining family services retain
+local contracts, and the process-local guards are not durable authority or
+rollback services.
+Their status is `EXPERIMENTAL_SMOKE_NOT_PROMOTED`: a bounded synthetic component
+run established executable optimizer/check paths, but no qualifying family
+checkpoint or family-level result exists. See
+[`docs/model-families.md`](docs/model-families.md) for the exact implemented
+surface and claim boundary.
+
 ## Quick Start
 
 ```bash

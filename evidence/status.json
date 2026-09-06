@@ -2,8 +2,10 @@
   "schema_version": 1,
   "current_release_gate": "REQUIRES_CI_AND_HUMAN_REVIEW",
   "historical_evidence_attests_current_tree": false,
-  "generated_on": "2026-09-01",
+  "stage_history_note": "Stage records preserve their point-in-time state; current family-component evidence is tracked separately.",
+  "generated_on": "2026-09-06",
   "final_verification": "evidence/final_verification.json",
+  "family_component_evidence": "evidence/model_family_smoke_20260906.json",
   "canonical_root": "/Volumes/PRO-BLADE/GitHub-Every-Repo/Olympus",
   "revision": {
     "kind": "git_working_tree",
@@ -25,13 +27,13 @@
     {"stage": 12, "name": "skeptical-final-audit-next-experiment", "state": "OUTCOME_VERIFIED", "evidence": "evidence/stage_12.md"}
   ],
   "families": {
-    "Hermes": "NOT_PROMOTED",
-    "Prometheus": "SPECIFIED",
-    "Perseus": "SPECIFIED",
-    "Atlas": "SPECIFIED",
-    "Kronos": "SPECIFIED",
-    "Aion": "SPECIFIED"
+    "Hermes": "EXPERIMENTAL_SMOKE_NOT_PROMOTED",
+    "Prometheus": "EXPERIMENTAL_SMOKE_NOT_PROMOTED",
+    "Perseus": "EXPERIMENTAL_SMOKE_NOT_PROMOTED",
+    "Olympus-Atlas": "EXPERIMENTAL_SMOKE_NOT_PROMOTED",
+    "Kronos": "EXPERIMENTAL_SMOKE_NOT_PROMOTED",
+    "Aion": "EXPERIMENTAL_SMOKE_NOT_PROMOTED"
   },
-  "verified_test_floor": 64,
+  "verified_test_floor": 150,
   "promotion": "NOT_PROMOTED"
 }

@@ -8,7 +8,7 @@ facts, and abstain when support is inadequate. The initial claim is narrow:
 adapter specialization improves grounded-response utility and calibration over
 the same frozen base and retrieval context.
 
-## Architecture
+## Target architecture
 
 1. **Request interpreter:** a LoRA adapter on the shared decoder classifies
    intent, decomposes compound requests, and produces retrieval queries.
@@ -45,7 +45,15 @@ claim support.
 
 ## Interfaces and promotion
 
-Input: `WorkspaceState + UserRequest`. Output: `Answer | Proposal | Stop`.
-Hermes cannot execute tools. Promotion additionally requires the repository's
+Target input: `AuthorizedWorkspaceView + UserRequest`. Target output:
+`Answer | Proposal | Stop`. Hermes cannot execute tools. Promotion additionally requires the repository's
 existing dataset-size, quantization, safety, serving, license, and model-card
-gates. Current state: **specified, no qualifying checkpoint**.
+gates. Current state: **reference implementation exists, no qualifying
+checkpoint**. `olympus/models/hermes.py` provides an ACL-first deterministic
+grounding/abstention service, `HermesWorkspaceRuntime`, and trainable attribution,
+confidence, and memory-proposal heads. The runtime deeply revalidates the source
+workspace, filters it through `AuthorizedWorkspaceView` before scoring, and
+returns a source-workspace-bound `TextOutput` or `AbstainOutput`. Memory writes
+are only proposals marked `requires_approval`; no persistence or approval
+service is implemented. The learned heads are not wired into the deterministic
+runtime, and there is no trained Hermes generator.

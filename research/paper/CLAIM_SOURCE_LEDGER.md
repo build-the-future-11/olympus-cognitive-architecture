@@ -14,7 +14,7 @@
 | C10 | Catastrophic forgetting requires direct measurement under continual adaptation. | arXiv:1612.00796 | EWC is only one baseline and not assumed sufficient. |
 | C11 | Stateful tool agents require interactive evaluation. | arXiv:2308.03688; 2406.12045; 2408.04682 | Benchmarks do not certify production safety. |
 | C12 | Automated research loops exist as a research direction. | arXiv:2408.06292 | Olympus/Aion has no automated-research result. |
-| C13 | All six Olympus families are currently specifications, not promoted models. | `TRUTH_MAP.md`, `research/SOURCE_OF_TRUTH.md`, repository artifacts | Direct local fact as of 2026-09-06. |
+| C13 | All six Olympus roles have executable reference components but no qualifying or promoted family checkpoint. | `olympus/models/`, focused model tests, `evidence/model_family_smoke_20260906.json`, `TRUTH_MAP.md`, `research/SOURCE_OF_TRUTH.md` | Direct local implementation fact as of 2026-09-06; Hermes and Prometheus are only partially integrated, most trust/state stores are process-local, and this is not a capability result. |
 | C14 | The first planned external-base experiment uses Qwen3-0.6B-Base. | `research/HERMES_BASE_CANDIDATES.md`; arXiv:2505.09388 | Planned; snapshot/download/training not executed here. |
 | C15 | `Atlas` collides with an existing retrieval-augmented model name. | arXiv:2208.03299 | Therefore the proposal uses `Olympus-Atlas`. |
 

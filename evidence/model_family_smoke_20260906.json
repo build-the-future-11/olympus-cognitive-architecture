@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "run_id": "models-smoke-a39b5df00347-s20260906-n24",
+  "created_at": "2026-09-06T12:27:25.749116Z",
+  "seed": 20260906,
+  "optimization_steps": 24,
+  "source_sha256": "a39b5df00347f56aef45c8f7b0604b93166c76225e1ce168b6a3e439511c94cf",
+  "python_version": "3.14.7",
+  "torch_version": "2.14.0",
+  "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "data_scope": "deterministic_synthetic_contract_fixtures",
+  "substrate": {
+    "initial_loss": 3.6767506996790567,
+    "final_loss": 2.0567392110824585,
+    "learned_parameters": 774,
+    "gradient_update_observed": true,
+    "loss_decreased": true,
+    "finite": true
+  },
+  "substrate_checkpoint": {
+    "relative_path": "shared-substrate.pt",
+    "sha256": "9eccb2508d13137fdce943ccc915c9a980c564e4a3bdd15da4a4fa8a70c5d8a4",
+    "bytes": 10533,
+    "qualifying_checkpoint": false,
+    "promoted": false
+  },
+  "families": [
+    {
+      "family": "Hermes",
+      "implementation_classes": [
+        "HermesGroundingModule",
+        "HermesGroundedService",
+        "HermesWorkspaceRuntime"
+      ],
+      "training": {
+        "initial_loss": 2.4557366371154785,
+        "final_loss": 0.021340280771255493,
+        "learned_parameters": 1413,
+        "gradient_update_observed": true,
+        "loss_decreased": true,
+        "finite": true
+      },
+      "deterministic_checks": {
+        "citation_span_integrity": true,
+        "memory_is_proposal_only": true,
+        "unauthorized_evidence_abstains": true
+      },
+      "checkpoint": {
+        "relative_path": "hermes.pt",
+        "sha256": "fb264771c522d496e6c3a52aeb09d2d0a9894ee3d5b31a718eb872c45cb4320e",
+        "bytes": 10230,
+        "qualifying_checkpoint": false,
+        "promoted": false
+      },
+      "status": "EXPERIMENTAL_SMOKE_NOT_PROMOTED",
+      "passed": true,
+      "limitations": [
+        "Synthetic token IDs do not establish grounded-response quality, and the learned heads are not yet wired into the deterministic service."
+      ]
+    },
+    {
+      "family": "Prometheus",
+      "implementation_classes": [
+        "TrainableBranchProposer",
+        "TrainableProcessVerifier",
+        "PrometheusSelector"
+      ],
+      "training": {
+        "initial_loss": 1.7528210878372192,
+        "final_loss": 0.07178781926631927,
+        "learned_parameters": 290,
+        "gradient_update_observed": true,
+        "loss_decreased": true,
+        "finite": true
+      },
+      "deterministic_checks": {
+        "checked_branch_selected": true,
+        "failed_check_abstains": true
+      },
+      "checkpoint": {
+        "relative_path": "prometheus.pt",
+        "sha256": "7802fce45ed9ff85fd079dc839d8513e9a81480d7ea06631f2207a2576f4a5ef",
+        "bytes": 6069,
+        "qualifying_checkpoint": false,
+        "promoted": false
+      },
+      "status": "EXPERIMENTAL_SMOKE_NOT_PROMOTED",
+      "passed": true,
+      "limitations": [
+        "Synthetic branches and host-trusted receipts do not establish scientific reasoning accuracy."
+      ]
+    },
+    {
+      "family": "Perseus",
+      "implementation_classes": [
+        "TrainableActionPolicy",
+        "TrainableRecoveryPolicy",
+        "TransactionManager"
+      ],
+      "training": {
+        "initial_loss": 3.79972505569458,
+        "final_loss": 0.34720301628112793,
+        "learned_parameters": 380,
+        "gradient_update_observed": true,
+        "loss_decreased": true,
+        "finite": true
+      },
+      "deterministic_checks": {
+        "unauthorized_action_rejected": true,
+        "authorized_transaction_committed": true,
+        "idempotent_replay_executes_once": true
+      },
+      "checkpoint": {
+        "relative_path": "perseus.pt",
+        "sha256": "33f2fe6faf3cb21ef81de774396a71074441f12edade774d77d5782ed42cd798",
+        "bytes": 6919,
+        "qualifying_checkpoint": false,
+        "promoted": false
+      },
+      "status": "EXPERIMENTAL_SMOKE_NOT_PROMOTED",
+      "passed": true,
+      "limitations": [
+        "The injected executor protocol and process-local transactions do not establish sandboxing, durable recovery, or real-environment success."
+      ]
+    },
+    {
+      "family": "Olympus-Atlas",
+      "implementation_classes": [
+        "OlympusAtlasRetriever",
+        "OlympusAtlasService"
+      ],
+      "training": {
+        "initial_loss": 0.07937823235988617,
+        "final_loss": 0.0012155422009527683,
+        "learned_parameters": 898,
+        "gradient_update_observed": true,
+        "loss_decreased": true,
+        "finite": true
+      },
+      "deterministic_checks": {
+        "version_is_replayable": true,
+        "provenance_is_complete": true,
+        "acl_filtered_before_results": true
+      },
+      "checkpoint": {
+        "relative_path": "atlas.pt",
+        "sha256": "2aec6c9fad1880f7c9df387e81a5ac492152b150cea12c08d1167fa80984aa95",
+        "bytes": 6323,
+        "qualifying_checkpoint": false,
+        "promoted": false
+      },
+      "status": "EXPERIMENTAL_SMOKE_NOT_PROMOTED",
+      "passed": true,
+      "limitations": [
+        "A two-document, process-local index does not establish retrieval benchmark quality or durable serving behavior."
+      ]
+    },
+    {
+      "family": "Kronos",
+      "implementation_classes": [
+        "KronosTemporalPlanner",
+        "TemporalAdapterManager"
+      ],
+      "training": {
+        "initial_loss": 1.857471227645874,
+        "final_loss": -1.0868386030197144,
+        "learned_parameters": 3303,
+        "gradient_update_observed": true,
+        "loss_decreased": true,
+        "finite": true
+      },
+      "deterministic_checks": {
+        "forecast_shape_valid": true,
+        "promotion_gate_fails_closed": true
+      },
+      "checkpoint": {
+        "relative_path": "kronos.pt",
+        "sha256": "e18b69b2b263bab0a96ebd10884e7f29bceea5d1fc2b4b8168cc360982a44cbd",
+        "bytes": 22389,
+        "qualifying_checkpoint": false,
+        "promoted": false
+      },
+      "status": "EXPERIMENTAL_SMOKE_NOT_PROMOTED",
+      "passed": true,
+      "limitations": [
+        "Synthetic sequences and a local full-planner checkpoint gate do not establish forecasting or continual-learning value."
+      ]
+    },
+    {
+      "family": "Aion",
+      "implementation_classes": [
+        "AionRouter",
+        "AionController"
+      ],
+      "training": {
+        "initial_loss": 1.3689266443252563,
+        "final_loss": 0.0015308159636333585,
+        "learned_parameters": 380,
+        "gradient_update_observed": true,
+        "loss_decreased": true,
+        "finite": true
+      },
+      "deterministic_checks": {
+        "receipt_chain_valid": true,
+        "router_masks_illegal_targets": true,
+        "illegal_promotion_transition_rejected": true
+      },
+      "checkpoint": {
+        "relative_path": "aion.pt",
+        "sha256": "545a15c15a893bdfbebfb70d7c0c0994f3ee3ecd1f47c06e4c092a76dc275e02",
+        "bytes": 5659,
+        "qualifying_checkpoint": false,
+        "promoted": false
+      },
+      "status": "EXPERIMENTAL_SMOKE_NOT_PROMOTED",
+      "passed": true,
+      "limitations": [
+        "Process-local, unsigned protocol execution does not establish autonomous-research value or durable governance."
+      ]
+    }
+  ],
+  "passed": true,
+  "promotion_authorized": false,
+  "scientific_claim": "execution_smoke_only"
+}

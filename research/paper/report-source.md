@@ -3,20 +3,31 @@
 **Research date:** 2026-09-06
 **Scope:** architecture synthesis for Hermes, Prometheus, Perseus,
 Olympus-Atlas, Kronos, and Aion.
-**Evidence class:** primary arXiv papers plus repository-local status records.
-**Not in scope:** claiming trained checkpoints, reporting unrun experiments, or
-endorsing cited systems beyond what their papers establish.
+**Evidence class:** primary arXiv papers, repository-local implementation, and
+repository-local status records.
+**Not in scope:** claiming qualifying family checkpoints, reporting unrun
+experiments, or endorsing cited systems beyond what their papers establish.
 
 ## Executive finding
 
-The program is technically coherent only as a modular system on one shared
-decoder/evidence/action substrate. Six independent foundation-model efforts
+The proposed program is technically coherent only as a modular system on one
+shared decoder/evidence/action substrate. Six independent foundation-model efforts
 would multiply data, compute, serving, and evaluation risk without a current
 empirical basis. Hermes should be the first learned specialization; Prometheus
 and Perseus become orthogonal reasoning and action adapters; Olympus-Atlas is a
 retrieval service with learned components; Kronos adds offline temporal state
 and guarded adaptation; Aion is primarily a deterministic governed controller
 whose learned router must earn inclusion against a rule-based baseline.
+
+The repository now accompanies this design with executable reference
+components for the shared substrate and each role. Those components establish
+typed contracts, an authorized pre-model workspace view, selected process-local
+validation/gating paths, and differentiable losses. Hermes and Prometheus have
+partial shared-workspace bridges; the six roles are not composed. These
+components do not establish a trained family model or comparative advantage.
+The bounded release-facing execution record is
+`evidence/model_family_smoke_20260906.json`; it uses deterministic synthetic
+contract fixtures and explicitly authorizes no promotion.
 
 ## Literature synthesis and design consequences
 
@@ -47,8 +58,10 @@ whose learned router must earn inclusion against a rule-based baseline.
    heads; independent services where security or falsifiability requires them.
 2. Prefix evidence in version one; no custom cross-attention before a retrieval
    baseline exists.
-3. Deterministic parsing, access control, permissions, transactions, protocol
-   freezing, audit, and promotion remain outside neural components.
+3. In the target system, deterministic parsing, access control, permissions,
+   transactions, protocol freezing, audit, and promotion remain outside neural
+   components. Current references implement only the bounded subset recorded in
+   the truth ledger.
 4. Aion begins as a rule-based controller. A learned router is optional and is
    removed if it cannot beat the deterministic controller at equal budget and
    false-promotion rate.
@@ -63,9 +76,16 @@ whose learned router must earn inclusion against a rule-based baseline.
 
 - No family-specific dataset satisfying provenance and held-out requirements.
 - No revision-pinned external base snapshot in this repository.
-- No completed 0.6B QLoRA comparison, trained adapter, calibrated head, hybrid
-  index, stateful tool benchmark, temporal benchmark, or Aion study.
+- No completed 0.6B QLoRA comparison, qualifying trained adapter, calibrated
+  held-out head evaluation, corpus-scale hybrid index study, stateful tool
+  benchmark, temporal benchmark, or Aion study. Reference modules and synthetic
+  unit-gradient paths do not close these gaps.
 - No evidence that specialization beats prompting or deterministic baselines.
+- No end-to-end composition of all six references through the shared workspace
+  and output protocol.
+- No constrained token decoder, deployed sandbox, durable family transaction or
+  Aion authority store, cryptographically signed approvals/audits, parsed
+  rollback/deletion evidence service, or committed-effect rollback.
 - No scale law or compute estimate supports training six separate bases.
 
 ## Primary-source links

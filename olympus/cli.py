@@ -23,16 +23,19 @@ from olympus.foundry.service import FoundryService
 from olympus.foundry.sft import SFTConfig, TinyModelConfig, run_sft
 from olympus.labos.manifest import ProjectRecord, ResourceProfile
 from olympus.labos.portfolio import PortfolioService
+from olympus.models.registry import model_family_status
 
 app = typer.Typer(help="Olympus command line interface.")
 demo_app = typer.Typer(help="Run built-in Olympus demos.")
 forge_app = typer.Typer(help="Compile and execute behaviors.")
 labos_app = typer.Typer(help="Discover, validate, and run portfolio projects.")
 foundry_app = typer.Typer(help="Operate the durable Olympus Model Foundry.")
+models_app = typer.Typer(help="Inspect and smoke-test executable model-family components.")
 app.add_typer(demo_app, name="demo")
 app.add_typer(forge_app, name="forge")
 app.add_typer(labos_app, name="labos")
 app.add_typer(foundry_app, name="foundry")
+app.add_typer(models_app, name="models")
 console = Console()
 
 
@@ -89,6 +92,29 @@ def workspace(objective: str, prompt: str, output: Path | None = None) -> None:
         console.print(f"Saved workspace to {output}")
         return
     console.print_json(workspace_model.serialize())
+
+
+@models_app.command("status")
+def models_status() -> None:
+    """Report implementation evidence separately from checkpoint promotion."""
+
+    console.print_json(json.dumps(model_family_status()))
+
+
+@models_app.command("smoke")
+def models_smoke(
+    output_dir: Path = Path("artifacts/family-model-smoke/smoke"),
+    seed: int = 20_260_906,
+    steps: int = typer.Option(24, min=1, max=10_000),
+) -> None:
+    """Run bounded component training smokes; this never promotes a model."""
+
+    from olympus.models.smoke import run_family_smoke
+
+    manifest = run_family_smoke(output_dir.resolve(), seed=seed, steps=steps)
+    console.print_json(json.dumps(manifest.model_dump(mode="json")))
+    if not manifest.passed:
+        raise typer.Exit(code=1)
 
 
 def _foundry_service(root: Path) -> FoundryService:

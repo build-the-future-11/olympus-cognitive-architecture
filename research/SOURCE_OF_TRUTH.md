@@ -23,15 +23,23 @@ and the Foundry CLI/API. Generated evidence lives under
 | Family | State | Claim boundary |
 | --- | --- | --- |
 | FoundryVerificationBigram | OUTCOME_VERIFIED | Lifecycle verifier only; not a family model. |
-| Hermes | SMOKE_TESTED, NOT_PROMOTED | Tiny infrastructure checkpoint; 0% exact task/tool score. |
-| Prometheus | SPECIFIED | Roadmap only; no qualifying checkpoint. |
-| Perseus | SPECIFIED | Roadmap only; no qualifying checkpoint. |
-| Atlas | SPECIFIED | Roadmap only; no qualifying checkpoint. |
-| Kronos | SPECIFIED | Roadmap only; no qualifying checkpoint. |
-| Aion | SPECIFIED | Governed autonomous-research roadmap only. |
+| Hermes | EXPERIMENTAL_SMOKE_NOT_PROMOTED | An authorized-workspace grounding/output bridge and separate head optimization execute on synthetic fixtures. The historical tiny infrastructure checkpoint scored 0% exact task/tool; neither artifact is a qualifying Hermes checkpoint. |
+| Prometheus | EXPERIMENTAL_SMOKE_NOT_PROMOTED | Canonical allowlisted receipts are bound to workspace/model/branch/claim during deterministic selection; proposer/verifier optimization remains separate. No qualifying checkpoint or synthesis result exists. |
+| Perseus | EXPERIMENTAL_SMOKE_NOT_PROMOTED | Host-registered action approval, defensive transaction, commit-time reauthorization, and action/recovery optimization paths execute. There is no sandbox, durable recovery, committed-effect rollback, qualifying checkpoint, or stateful benchmark result. |
+| Olympus-Atlas | EXPERIMENTAL_SMOKE_NOT_PROMOTED | ACL-first hybrid retrieval uses opaque keyed process-local versions and ACL-filtered index views; retriever optimization is separate. No qualifying checkpoint, durable index, corpus study, or comparative result exists. |
+| Kronos | EXPERIMENTAL_SMOKE_NOT_PROMOTED | Temporal optimization and local staging checks require candidate/metric-bound allowlisted evidence identifiers, but reports are not parsed and rollback/deletion replay are not performed. No qualifying checkpoint or temporal result exists. |
+| Aion | EXPERIMENTAL_SMOKE_NOT_PROMOTED | Host-registered approvals and audits bind the run, protocol, and current head; transition evidence IDs are restricted to the frozen protocol, and model authority cannot promote. Governed transitions and masked-router optimization execute in process-local code. No signed/durable controller, qualifying checkpoint, or autonomous-research result exists. |
 
-These names cannot become model identities until immutable checkpoints pass the
-family-specific, hash-bound promotion constitution.
+The bounded component-run record is
+`evidence/model_family_smoke_20260906.json`. It covers independent synthetic
+component execution paths, not an integrated family system or capability
+benchmark. Partial Hermes/Prometheus shared-workspace bridges do not change that
+boundary.
+
+These names identify source-level architecture roles only. They cannot become
+external model or checkpoint identities until immutable checkpoints pass the
+family-specific, hash-bound promotion constitution. Focused unit-gradient tests
+establish differentiability, not trained capability.
 
 The research priority and claim boundaries are maintained in
 `research/RESEARCH_PROGRAM.md`.

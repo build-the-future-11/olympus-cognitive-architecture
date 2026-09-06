@@ -7,7 +7,7 @@ retrieval-augmented model in arXiv:2208.03299. Olympus-Atlas grounds other
 families over large, changing, private corpora with inspectable provenance. It
 does not equate nominal context length with usable knowledge access.
 
-## Architecture
+## Target architecture
 
 1. **Ingestion:** parse documents into overlapping semantic passages; preserve
    document/version hashes, timestamps, licenses, ACL labels, and span offsets.
@@ -22,8 +22,8 @@ does not equate nominal context length with usable knowledge access.
    train against lost-in-the-middle effects.
 6. **Attribution adapter:** a shared decoder adapter answers or produces an
    evidence graph; a separate entailment head validates claim/source edges.
-7. **Version manager:** atomically swaps immutable indexes and allows exact
-   replay against prior versions.
+7. **Version manager:** the target durable service atomically swaps immutable
+   indexes and allows exact replay against prior versions.
 
 ## Data and losses
 
@@ -41,6 +41,12 @@ reranking, and the full system. Reject architectural expansion if hybrid search
 does not beat BM25 at matched latency, or if longer contexts merely hide poor
 retrieval.
 
-Input: `AuthorizedQuery + CorpusVersion`. Output: immutable `EvidenceSet` or
-`InsufficientEvidence`. Current state: **specified, no qualifying checkpoint or
-index**.
+Target input: `AuthorizedQuery + CorpusVersion`. Target output: immutable `EvidenceSet` or
+`InsufficientEvidence`. Current state: **reference implementation exists, no
+qualifying checkpoint or production index**. `olympus/models/atlas.py` provides
+process-local indexes identified by opaque keyed versions, ACL-before-ranking
+hybrid retrieval, ACL-filtered `get_index` projections, and a trainable
+bi-encoder/late-interaction scorer. Version replay and locking apply only within
+one service process; no durable or cross-process atomic index store exists. The
+learned scorer is not wired into the deterministic service, and no corpus-scale
+comparative retrieval result exists.

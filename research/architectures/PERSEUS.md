@@ -7,21 +7,23 @@ checkpoint/resume. It proposes actions; a deterministic capability kernel owns
 permissions and side effects. Its claim is higher valid task completion at an
 equal unsafe-action rate and tool budget.
 
-## Architecture
+## Target architecture
 
 1. **State encoder:** serializes goal, observations, remaining budget, tool
    schemas, and transaction status into the shared workspace format.
 2. **Action decoder:** a Perseus adapter emits only grammar-constrained `Action`
    envelopes. Incremental parsing masks tokens that cannot complete the schema.
-3. **Capability kernel:** resolves tool/version, validates types and preconditions,
-   checks ACL and user approval, generates an idempotency key, and executes in a
-   sandbox. The model cannot bypass this kernel.
+3. **Capability kernel:** in the target system, resolves tool/version, validates
+   types and preconditions, checks ACL and approval, generates an idempotency key,
+   and hands execution to a deployed sandbox. The model cannot bypass this
+   boundary.
 4. **Observation normalizer:** records structured outputs, hashes large blobs,
    marks partial execution, and strips untrusted tool text from policy fields.
 5. **Recovery critic:** classifies retryable, compensatable, fatal, or
    authority-required failures and proposes the next bounded action.
-6. **Transaction manager:** checkpoints before writes and requires explicit
-   commit for material external effects; retries reuse idempotency keys.
+6. **Transaction manager:** the target durable service checkpoints before writes
+   and requires explicit commit for material external effects; retries reuse
+   idempotency keys and committed effects require compensating actions.
 
 ## Data and losses
 
@@ -40,5 +42,16 @@ deterministic workflow, ReAct prompting, unconstrained function calling, and
 Perseus without the recovery critic. Reject promotion on any unauthorized write
 or if improvements vanish after resetting environments between episodes.
 
-Input: `WorkspaceState + ToolRegistry`. Output: `Action | Stop`; never `Answer`
-as proof of execution. Current state: **specified, no qualifying checkpoint**.
+Target input: `AuthorizedWorkspaceView + ToolRegistry`. Target output:
+`Action | Stop`; never `Answer`
+as proof of execution. Current state: **reference implementation exists, no
+qualifying checkpoint**. `olympus/models/perseus.py` implements versioned action
+validation, definition-owned preconditions, host-registered action-bound
+approvals, defensive snapshots, commit-time reauthorization, sanitized
+exception-type receipts, trainable action/recovery policies, and process-local
+idempotency-key replay around an explicitly injected executor. The executor
+protocol advertises idempotency but is not a sandbox implementation or an
+independent proof of that property. Transaction state is in memory; committed or
+failed material effects cannot be rolled back by this manager and require an
+unimplemented explicit compensation action. This does not establish safe
+general tool use.

@@ -50,12 +50,16 @@ engineering demonstrations. They have no frozen external benchmark, competitive
 baseline, ablation matrix, or independent replication. They form one demo
 collection, not separate paper claims.
 
-## 5. Future family names: parked specifications
+## 5. Family reference implementations: hypotheses remain parked
 
-Prometheus, Perseus, Atlas, Kronos, and Aion are roadmap specifications. They
-have no qualifying datasets, checkpoints, evaluations, or promoted artifacts.
-They remain inactive names until a frozen admission and promotion protocol is
-satisfied.
+The shared substrate and Hermes, Prometheus, Perseus, Olympus-Atlas, Kronos,
+and Aion roles now have executable reference components. They establish typed
+interfaces, selected deterministic validation/gating paths, and differentiable
+training paths. Hermes and Prometheus have partial shared-workspace integration;
+the complete six-role runtime does not exist. The families still have no
+qualifying datasets, checkpoints, comparative evaluations, or promoted
+artifacts. The research hypotheses remain inactive until frozen admission,
+baseline, evaluation, and promotion protocols are satisfied.
 
 ## Priority order
 
@@ -63,7 +67,8 @@ satisfied.
 2. Make Foundry a reproducible, externally compared software artifact.
 3. Split or explicitly integrate LabOS based on actual users and ownership.
 4. Keep cognitive primitives only as honestly named educational fixtures.
-5. Do not spend research budget on future model-family branding.
+5. Do not confuse executable reference code with evidence for model-family
+   branding or capability.
 
 Portfolio and outreach files under `docs/` that describe sibling projects are
 external planning records. Their claims are not verified by this repository and

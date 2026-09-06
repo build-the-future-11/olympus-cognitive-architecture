@@ -3,6 +3,7 @@
 ## Olympus runtime documentation
 
 - `architecture.md`
+- `model-families.md`
 - `api.md`
 - `demos.md`
 - `foundry.md`

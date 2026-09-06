@@ -23,9 +23,16 @@ Olympus is organized around six collaborating layers:
    integration. The registry uses SQLite foreign keys, WAL journaling, full
    synchronization, explicit transactions, and integrity checks.
 5. Model-family references.
-   The `olympus.models` package contains a deterministic Hermes Nano integration
-   fixture. Despite its historical name, it is not a trained language model and
-   is not a Hermes checkpoint.
+   The `olympus.models` package contains the historical Hermes Nano fixture plus
+   executable references for a shared typed/adapter substrate and the Hermes,
+   Olympus-Atlas, Prometheus, Perseus, Kronos, and Aion roles. Learned
+   components have real PyTorch losses. Deterministic references provide scoped
+   ACL, schema/capability, process-local transaction/checkpoint, protocol, and
+   approval validation or gating paths; they do not collectively implement a
+   sandbox, durable rollback, or a production authority service.
+   These references are not trained family checkpoints and have not passed
+   family evaluation or promotion gates. The exact class map is in
+   `docs/model-families.md`.
 6. Interfaces.
    FastAPI lives in `olympus.api`, Typer CLI lives in `olympus.cli`, and the React dashboard lives in `apps/forge-web`.
 
@@ -35,8 +42,11 @@ tool whose parent-workspace reports are not Olympus scientific evidence. See
 `research/RESEARCH_PROGRAM.md` for the maintained paper and claim boundaries.
 
 The current implementation is intentionally small-scale but real. The Foundry
-verification model proves infrastructure behavior only; future Olympus family
-names are not registered until a real checkpoint passes its declared gates.
+verification model proves infrastructure behavior only. Family codenames may
+identify source-level roles, but no external model or checkpoint may take a
+family identity until an immutable checkpoint passes its declared gates.
+Hermes and Prometheus have partial shared-workspace bridges; the other family
+services retain local contracts, and Aion does not yet compose the six roles.
 
 ## Canonical experimental contract
 

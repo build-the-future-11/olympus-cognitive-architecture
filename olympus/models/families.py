@@ -1,3 +1,10 @@
+"""Legacy deterministic demo fixture; not a registered Olympus model family.
+
+``HermesNano`` predates the governed family contracts and writes directly to
+the supplied in-memory store. New model/runtime work must use
+``HermesWorkspaceRuntime`` and proposal-only memory behavior instead.
+"""
+
 from __future__ import annotations
 
 import hashlib
@@ -14,6 +21,7 @@ class HermesResponse(TypedDict):
 
 
 class HermesNano:
+    """Backward-compatible demo helper, intentionally excluded from the registry."""
     def __init__(self, memory: MemoryStore) -> None:
         self.memory = memory
         self.interpreter = InterpretiveSuperpositionNetwork()

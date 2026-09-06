@@ -6,7 +6,7 @@ Prometheus performs multi-source scientific synthesis and checkable reasoning.
 Its testable contribution is a proposer/verifier separation that improves valid
 conclusions per unit of inference compute—not longer hidden reasoning text.
 
-## Architecture
+## Target architecture
 
 1. **Problem formalizer:** emits variables, assumptions, candidate hypotheses,
    evidence gaps, and falsification tests as a `Proposal` envelope.
@@ -43,5 +43,14 @@ calibration, abstention, compute, and verifier/proposer error correlation.
 Prometheus is rejected if equal-compute sampling matches it or if verifier score
 selects persuasive but invalid branches more often than an outcome checker.
 
-Input: `WorkspaceState + ResearchQuestion`. Output: `Proposal | Answer | Stop`.
-Current state: **specified, no qualifying checkpoint**.
+Target input: `AuthorizedWorkspaceView + ResearchQuestion`. Target output:
+`Proposal | Answer | Stop`.
+Current state: **reference implementation exists, no qualifying checkpoint**.
+`olympus/models/prometheus.py` implements bounded typed branches, objective
+comparisons, canonical transition receipts, trainable proposer/verifier losses,
+and deterministic selection/abstention. The selector uses an authorized
+workspace view and counts only host-allowlisted receipt hashes whose canonical
+receipt binds the workspace ID, model identity, branch, claim, and compared
+values. The host trust decision is not a receipt signature or issuer-validation
+service, and the learned scorers are not composed with the selector. This code
+does not establish scientific-synthesis capability.

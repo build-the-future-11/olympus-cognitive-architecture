@@ -12,8 +12,13 @@
 | LabOS per-project scientific execution | PARTIAL | Only projects with truthful entry points can be run; 34 are discovery-only. |
 | Local `qwen3:0.6b` adapter | IMPLEMENTED + VERIFIED | Real local response observed through Olympus adapter. |
 | Local `qwen3:8b` adapter | BLOCKED | Swap exhaustion violates the local resource gate. |
-| Hermes Alpha | PLANNED | No qualifying immutable checkpoint. |
-| Prometheus / Perseus / Atlas / Kronos / Aion | PLANNED | Roadmaps only; names cannot identify models before gate-passing checkpoints exist. |
+| Shared family substrate | EXPERIMENTAL SMOKE + UNPROMOTED | Typed workspace/output contracts, pre-model authorized views, a restricted schema validator, hash-linked in-memory events, and compact adapter-decoder optimization execute; this is not a pretrained backbone or durable authority/event service. |
+| Hermes | EXPERIMENTAL SMOKE + UNPROMOTED | The deterministic runtime filters authorized workspace evidence and returns bound text/abstain outputs; separate trainable heads execute on synthetic fixtures. No learned end-to-end generator, memory approval service, qualifying checkpoint, or family result exists. |
+| Olympus-Atlas | EXPERIMENTAL SMOKE + UNPROMOTED | ACL-first hybrid retrieval uses opaque keyed versions and ACL-filtered index inspection inside one process; the trainable scorer executes separately. No durable index, learned-service integration, comparative study, or qualifying checkpoint exists. |
+| Prometheus | EXPERIMENTAL SMOKE + UNPROMOTED | Selection requires canonical host-allowlisted receipts bound to workspace/model/branch/claim, while proposer/verifier optimization executes separately. No signed receipt authority, integrated synthesis system, or scientific-synthesis result exists. |
+| Perseus | EXPERIMENTAL SMOKE + UNPROMOTED | Host-registered action approvals, defensive snapshots, commit-time reauthorization, sanitized failures, and process-local idempotency checks execute. No sandbox, durable recovery, committed-effect rollback, stateful benchmark, or qualifying checkpoint exists. |
+| Kronos | EXPERIMENTAL SMOKE + UNPROMOTED | Temporal optimization and local checkpoint gating require candidate/metric-bound allowlisted evidence identifiers. Reports are not parsed and rollback/deletion replay are not performed; no temporal benchmark or family promotion exists. |
+| Aion | EXPERIMENTAL SMOKE + UNPROMOTED | Host-registered approvals and audits bind the run, protocol, and current head; transition evidence IDs must belong to the frozen protocol, and model authority cannot promote. Receipts and heads remain process-local and unsigned. No integrated research loop, autonomous-research result, or family promotion exists. |
 | ICLR/preprint-quality Olympus claim | PARTIAL | Infrastructure is reproducible; novel model claims lack full frozen multi-seed evidence. |
 | Package publication | BLOCKED | Clean artifacts verified locally; publishing requires owner credentials and authorization. |
 

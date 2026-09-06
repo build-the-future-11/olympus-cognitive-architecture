@@ -1,6 +1,6 @@
 # Project Status
 
-Evidence refreshed on 2026-09-02. This file distinguishes verified engineering
+Evidence refreshed on 2026-09-06. This file distinguishes verified engineering
 capability from unrun research claims.
 
 ## Current objective
@@ -19,6 +19,11 @@ portfolio-execution platform whose claims are bounded by immutable evidence.
   promotion.
 - LabOS bounded discovery, validation, scheduling, run history, event logging,
   and portfolio reports across Git and marker-based project roots.
+- Executable reference implementations for the shared model substrate and all
+  six family roles, including typed state/evidence/action contracts,
+  an access-filtered model view, differentiable component losses, and selected
+  deterministic validation/gating paths. Most family state and authority stores
+  remain process-local.
 
 ## Implemented this run
 
@@ -34,13 +39,17 @@ portfolio-execution platform whose claims are bounded by immutable evidence.
   release instructions, and CI/release workflows.
 - Patched the web dependency lock to remove the Browserslist advisory.
 - Excluded internal outreach and tiering documents from source distributions.
+- Added source-level Hermes, Olympus-Atlas, Prometheus, Perseus, Kronos, and
+  Aion component architectures. These are reference implementations, not
+  qualifying family checkpoints or benchmark results.
 
 ## Tested
 
 - `ruff check .`: passed.
-- `mypy --strict olympus tests`: passed for 78 source files.
-- `pytest --cov=olympus --cov-branch`: 88 passed; 88.31% total coverage;
-  required gate 85%.
+- `mypy --strict olympus tests`: passed for 95 source files in the isolated
+  staged tree.
+- `pytest --cov=olympus --cov-branch`: 150 passed; 86.00% total branch-aware
+  coverage in the isolated staged tree; required gate 85%.
 - Forge web: 7 tests passed; production Vite build passed; 208.89 kB JS,
   64.83 kB gzip.
 - `pip-audit --strict .` and `npm audit --audit-level=moderate`: no known
@@ -53,10 +62,20 @@ portfolio-execution platform whose claims are bounded by immutable evidence.
   checkpoint, and persisted one dataset, experiment, checkpoint, evaluation,
   and model plus five evidence events. A new process reopened the registry with
   SQLite integrity `ok`.
+- The bounded 2026-09-06 family-component run passed for the shared substrate
+  and all six roles using deterministic synthetic contract fixtures. Every
+  emitted checkpoint is explicitly non-qualifying and unpromoted; this is
+  execution evidence only. The release-facing record is
+  `evidence/model_family_smoke_20260906.json`.
 
 ## Partially working
 
 - The local Forge UI/API are production-buildable but not deployed.
+- The component smoke executes the six family references independently. Hermes
+  now bridges an authorized `WorkspaceState` view to shared text/abstain outputs,
+  and Prometheus resolves trusted receipts from authorized workspace evidence;
+  the other services retain local contracts and there is no end-to-end Aion
+  service graph.
 - Deep Foundry training is scientifically useful as infrastructure validation;
   its tiny smoke model is not an assistant and did not pass task/tool promotion
   gates.
@@ -71,8 +90,9 @@ portfolio-execution platform whose claims are bounded by immutable evidence.
 
 ## Blockers
 
-- No trained or promoted Hermes, Prometheus, Perseus, Atlas, Kronos, or Aion
-  checkpoint exists.
+- No qualifying or promoted Hermes, Prometheus, Perseus, Olympus-Atlas, Kronos,
+  or Aion checkpoint exists. Trainable reference modules and synthetic gradient
+  tests do not satisfy family training, evaluation, or promotion gates.
 - Publication-quality claims still require frozen baselines, multi-seed
   experiments, ablations, confidence intervals, compute accounting, and
   independent review per research repository.
