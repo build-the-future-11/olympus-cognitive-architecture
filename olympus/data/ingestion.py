@@ -37,15 +37,28 @@ class IngestionPipeline:
         policy: PermissionPolicy | None = None,
         *,
         max_response_bytes: int = 1_000_000,
+        max_file_bytes: int = 1_000_000,
     ) -> None:
-        if max_response_bytes < 1:
-            raise ValueError("max_response_bytes must be positive")
+        if max_response_bytes < 1 or max_file_bytes < 1:
+            raise ValueError("ingestion byte limits must be positive")
         self.policy = policy or PermissionPolicy()
         self.max_response_bytes = max_response_bytes
+        self.max_file_bytes = max_file_bytes
 
     def ingest_file(self, path: Path, chunk_size: int = 120) -> IngestedDocument:
-        text = path.read_text(encoding="utf-8")
-        return self._normalize(path.name, text, chunk_size)
+        if not self.policy.allow_filesystem_read:
+            raise PermissionError("filesystem ingestion is disabled")
+        resolved = path.resolve(strict=True)
+        self._enforce_roots(resolved, self.policy.allowed_read_roots, "read")
+        if not resolved.is_file():
+            raise ValueError("ingestion source must be a regular file")
+        if resolved.stat().st_size > self.max_file_bytes:
+            raise ValueError("file exceeds the configured byte limit")
+        payload = resolved.read_bytes()
+        if len(payload) > self.max_file_bytes:
+            raise ValueError("file exceeds the configured byte limit")
+        text = payload.decode("utf-8")
+        return self._normalize(resolved.name, text, chunk_size)
 
     def ingest_http(self, url: str, chunk_size: int = 120) -> IngestedDocument:
         if not self.policy.allow_network:
@@ -106,7 +119,19 @@ class IngestionPipeline:
         )
 
     def shard(self, documents: list[IngestedDocument], output_path: Path) -> None:
-        output_path.write_text(
+        if not self.policy.allow_filesystem_write:
+            raise PermissionError("filesystem writes are disabled")
+        resolved = output_path.resolve()
+        self._enforce_roots(resolved, self.policy.allowed_write_roots, "write")
+        resolved.write_text(
             json.dumps([document.model_dump(mode="json") for document in documents], indent=2),
             encoding="utf-8",
         )
+
+    @staticmethod
+    def _enforce_roots(path: Path, roots: tuple[str, ...], operation: str) -> None:
+        if not roots:
+            return
+        allowed = [Path(root).resolve() for root in roots]
+        if not any(path == root or path.is_relative_to(root) for root in allowed):
+            raise PermissionError(f"filesystem {operation} is outside the allowed roots")

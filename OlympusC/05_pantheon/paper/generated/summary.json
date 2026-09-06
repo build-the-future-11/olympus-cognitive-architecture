@@ -1,0 +1,93 @@
+{
+  "fault_localization": [
+    {
+      "method": "numeric_only",
+      "count": 160,
+      "localization_accuracy": 0.125
+    },
+    {
+      "method": "pairwise_artifact",
+      "count": 160,
+      "localization_accuracy": 0.625
+    },
+    {
+      "method": "pantheon",
+      "count": 160,
+      "localization_accuracy": 1.0
+    }
+  ],
+  "public_case": {
+    "proposer": {
+      "effect": {
+        "mean": 0.34335664335664334,
+        "sd": 0.013370284754965043
+      },
+      "accuracy": {
+        "mean": 0.9727272727272729,
+        "sd": 0.013370284754965043
+      },
+      "roc_auc": {
+        "mean": 0.9872117400419287,
+        "sd": 0.010104058203550105
+      },
+      "runtime_sec": {
+        "mean": 0.0041291834999583445,
+        "sd": 0.0011354904700729398
+      }
+    },
+    "replicator": {
+      "effect": {
+        "mean": 0.3489510489510489,
+        "sd": 0.010133829892440193
+      },
+      "accuracy": {
+        "mean": 0.9783216783216784,
+        "sd": 0.010133829892440193
+      },
+      "roc_auc": {
+        "mean": 0.9948218029350105,
+        "sd": 0.0050237245658760685
+      },
+      "runtime_sec": {
+        "mean": 0.15180062900001304,
+        "sd": 0.016165486801689128
+      }
+    },
+    "paired": {
+      "mean_abs_effect_difference": 0.006993006993007001,
+      "direction_agreement_rate": 1.0
+    },
+    "dataset": {
+      "name": "Breast Cancer Wisconsin (Diagnostic), sklearn bundled copy",
+      "rows": 569,
+      "features": 30,
+      "class_counts": {
+        "0": 212,
+        "1": 357
+      },
+      "sha256_semantic": "aed4d90353a2cd2d1c1c69e013e22871c0bebe79c36adec92d0cfa6ebb8a5ddf",
+      "source_description": "A) of a breast mass.  They describe\ncharacteristics of the cell nuclei present in the image.\n\nSeparating plane described above was obtained using\nMultisurface Method-Tree (MSM-T) [K. P. Bennett, \"Decision Tree\nConstruction Via Linear Programming.\" Proceedings of the 4th\nMidwest Artificial Intelligence and Cognitive Science Society,\npp. 97-101, 1992], a classification method which uses linear\nprogramming to construct a decision tree.  Relevant features\nwere selected using an exhaustive search in the space of 1-4\nfeatures and 1-3 separating planes.\n\nThe actual linear program used to obtain the separating plane\nin the 3-dimensional space is that described in:\n[K. P. Bennett and O. L. Mangasarian: \"Robust Linear\nProgramming Discrimination of Two Linearly Inseparable Sets\",\nOptimization Methods and Software 1, 1992, 23-34].\n\nThis database is also available through the UW CS ftp server:\n\nftp ftp.cs.wisc.edu\ncd math-prog/cpo-dataset/machine-learn/WDBC/\n\n.. dropdown:: References\n\n  - W.N. Street, W.H. Wolberg and O.L. Mangasarian. Nuclear feature extraction\n    for breast tumor diagnosis. IS&T/SPIE 1993 International Symposium on\n    Electronic Imaging: Science and Technology, volume 1905, pages 861-870,\n    San Jose, CA, 1993.\n  - O.L. Mangasarian, W.N. Street and W.H. Wolberg. Breast cancer diagnosis and\n    prognosis via linear programming. Operations Research, 43(4), pages 570-577,\n    July-August 1995.\n  - W.H. Wolberg, W.N. Street, and O.L. Mangasarian. Machine learning techniques\n    to diagnose breast cancer from fine-needle aspirates. Cancer Letters 77 (1994)\n    163-171.\n"
+    },
+    "environment": {
+      "python": "3.13.5",
+      "platform": "Linux-6.18.35-x86_64-with-glibc2.41"
+    }
+  },
+  "ablations": [
+    {
+      "ablation": "No artifact hashes",
+      "localization_accuracy": 0.125,
+      "n": 160
+    },
+    {
+      "ablation": "No canonical manifest",
+      "localization_accuracy": 0.625,
+      "n": 160
+    },
+    {
+      "ablation": "Full Pantheon",
+      "localization_accuracy": 1.0,
+      "n": 160
+    }
+  ]
+}

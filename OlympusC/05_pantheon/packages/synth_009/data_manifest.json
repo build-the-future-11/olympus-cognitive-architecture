@@ -1,0 +1,12 @@
+{
+  "data.csv": {
+    "sha256": "0830c3972c816e4781d22f353e1c60fe943e2cb78fe941f453d8f685f70268b6",
+    "rows": 320,
+    "columns": [
+      "x",
+      "treatment",
+      "y"
+    ],
+    "synthetic": true
+  }
+}

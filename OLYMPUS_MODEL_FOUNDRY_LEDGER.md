@@ -1,14 +1,16 @@
 # Olympus Model Foundry Ledger
 
-Run date: 2026-08-21. Host: Apple M4, 10 CPU cores, 8 GPU cores, 16 GB unified
+Run date: 2026-09-01. Host: Apple M4, 10 CPU cores, 8 GPU cores, 16 GB unified
 memory, macOS 26.5.2. Status words are literal: **REAL**, **PLANNED**,
 **BLOCKED**, and **FAILED**.
 
 ## FOUNDATION
 
-**REAL.** Fresh-root validation passed: Ruff; strict MyPy across 65 source files;
-72 tests; branch coverage 87.90%; Python dependency audit with no known
-vulnerabilities; six web tests; zero npm audit findings; production web build.
+**REAL.** Fresh-root validation passed: Ruff; strict MyPy; more than the required
+64 Python tests with branch coverage above 85%; Python dependency audit with no
+known vulnerabilities; seven web tests; zero npm audit findings; production web
+build; sdist/wheel build; and Twine metadata validation. A clean wheel install
+outside the repository reproduced the golden path and restart integrity.
 
 The pre-existing durable Foundry golden path was re-run from an empty root. It
 registered corpus SHA-256
@@ -74,20 +76,23 @@ and 12 with one held-out record per category.
 prompt loss, sequence packing, category mixing controls, deterministic seeds,
 gradient accumulation, clipping, AdamW, validation logging, atomic checkpoints,
 optimizer/generator resume state, and checkpoint hashing was trained locally.
-The full-SFT run used 90,816 parameters, four epochs, eight optimizer steps, and
-0.767 seconds. Validation loss improved 5.69029 → 4.45411. Checkpoint SHA-256:
-`59d0fed6ac4938428c967f227545cd271d3eed77449e76781786745fa2936f7d`.
+The full-SFT run used 145,664 parameters, four epochs, eight optimizer steps.
+Validation loss improved 5.81517 → 3.80487. Checkpoint SHA-256:
+`e483df22322345a985507944fc81d1ad1bcc81a620cb112f5e7cdd37bf4e375a`.
+Resume rejects architecture, optimizer, and data-contract mismatches rather than
+silently relabeling loaded weights with caller configuration.
 
-LoRA trained 7,376 of 98,192 parameters for three epochs; validation loss
-improved 4.45411 → 4.18589. QLoRA trained 7,376 parameters over genuinely
-nibble-packed symmetric 4-bit bases; validation loss improved 4.44891 →
-4.18467. Both emitted adapter-only artifacts bound to the exact base and dataset
+LoRA trained 9,488 of 155,152 parameters for two epochs; validation loss
+improved 3.80487 → 3.72659. QLoRA trained 9,488 of 39,056 parameters over
+genuinely nibble-packed symmetric 4-bit bases; validation loss improved 3.78839
+→ 3.71108. Both emitted adapter-only artifacts bound to the exact base and dataset
 hashes. Mixed precision was requested, safely unavailable on CPU, and recorded
 as ineffective rather than claimed.
 
 The RAM governor held an exclusive model/training lock, required at least 2 GiB
-available memory, rejected swap above 90%, and recorded pre/final memory. Full
-SFT peak RSS was 339,263,488 bytes; swap did not increase during the run.
+available memory, rejected swap above 90%, and recorded pre/final memory. The
+resumed full-SFT process recorded peak RSS of 323,911,680 bytes. A stricter
+medium tier requires 8 GiB available and <=50% swap and was correctly refused.
 
 ## POST-TRAINING
 
@@ -100,21 +105,21 @@ admission and exit gates are in `research/POST_TRAINING_STAGES.md`.
 ## EVAL
 
 **REAL negative result.** Twelve untouched test tasks cover every category and
-three Percy-compatible workflow groups: tool workflow, result comparison, and
-multi-step planning. Full SFT held-out loss improved 5.73703 → 4.50894 with zero
-category regressions. LoRA improved 4.50894 → 4.23669; QLoRA improved 4.50894 →
-4.23407. However, exact-match, structured-format compliance, and every workflow
-exact score were 0%. All three failed the capability smoke gate. Loss reduction
-is not treated as assistant competence.
+three Percy-compatible workflow groups. Full SFT held-out loss improved 5.78961
+→ 3.90434 with zero category regressions. Exact match was 0%, format compliance
+was 83.33%, and every workflow exact score was 0%. The typed harness separately
+scores answers, tool names and arguments, refusals, uncertainty, and Percy
+workflows, and separates model, orchestration, and tool failures. The candidate
+failed the bounded capability gate. Loss reduction is not competence.
 
 ## QUANTIZATION
 
-**REAL.** Weight-only symmetric int8 reduced model storage 373,802 → 115,061
-bytes (69.22%) with loss change −0.00645%. Nibble-packed int4 reduced it to
-69,813 bytes (81.32%) with loss change −0.25035%. Both round-tripped into the
+**REAL.** Weight-only symmetric int8 reduced model storage 593,194 → 171,765
+bytes (71.04%) with loss change −0.01360%. Nibble-packed int4 reduced it to
+98,357 bytes (83.42%) with loss change −0.76061%. Both round-tripped into the
 runtime, enforced the 192-token context boundary, and stayed within the 2% loss
-gate. Int4 startup was 6.25 ms in the measured process. Tool exact match was
-0%, so quantized promotion remains blocked regardless of numerical fidelity.
+gate. Int4 startup was 15.81 ms in the measured process. Tool exact match was
+0%, so both quality gates are false and promotion remains blocked.
 
 ## PROMOTED MODELS
 
@@ -125,8 +130,17 @@ quantized tool reliability, fresh-process serving for this exact checkpoint,
 and hash-bound model card. No release manifest was emitted.
 
 The existing `FoundryVerificationBigram` registry entry is a lifecycle verifier
-and is not part of the reserved model family. Prometheus, Perseus, Atlas, and
-Kronos are **PLANNED ONLY** in `research/FUTURE_MODEL_FAMILY_ROADMAPS.md`.
+and is not part of the reserved model family. Prometheus, Perseus, Atlas,
+Kronos, and Aion are **SPECIFIED ONLY** in
+`research/FUTURE_MODEL_FAMILY_ROADMAPS.md`.
+
+## MATCHED ABLATION
+
+**REAL negative result.** Seeds 17, 31, and 47 compared the reference, simple
+SFT, and no-packing conditions at an equal 138,112 parameter-step budget. Every
+condition obtained validation mean 5.5031697 (stdev 0.0947228). The packing
+mechanism is demoted as `mechanism_not_supported`: this bounded corpus did not
+create a distinct condition, so no mechanism claim is made.
 
 ## BLOCKERS
 

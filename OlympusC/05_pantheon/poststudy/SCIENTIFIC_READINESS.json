@@ -1,0 +1,29 @@
+{
+  "artifact_complete": true,
+  "capability_checks": {
+    "agent_a_answered_floor": false,
+    "agent_a_authored_report_floor": false,
+    "agent_b_answered_floor": false,
+    "agent_b_authored_report_floor": false,
+    "joint_answered_floor": false
+  },
+  "capability_floor_passed": false,
+  "gate_timing": "Post-study reporting safeguard; thresholds are not presented as preregistered hypothesis tests.",
+  "interpretation": "The complete artifact supports a bounded negative capability result. It does not identify false-consensus prevalence among capable agents.",
+  "observed": {
+    "agent_a_answered": 0,
+    "agent_a_authored_reports": 0,
+    "agent_b_answered": 0,
+    "agent_b_authored_reports": 0,
+    "joint_answered": 0,
+    "questions": 20,
+    "tasks": 17
+  },
+  "schema_version": 1,
+  "thresholds": {
+    "minimum_answered_per_agent": 5,
+    "minimum_authored_reports_per_agent": 5,
+    "minimum_joint_answered": 5
+  },
+  "verdict": "NEGATIVE_RESULT_ARTIFACT_COMPLETE_CAPABILITY_FLOOR_FAILED"
+}

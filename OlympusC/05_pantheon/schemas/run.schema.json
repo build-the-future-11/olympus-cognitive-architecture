@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Pantheon Run Provenance",
+  "type": "object",
+  "required": ["role", "seed", "status", "runtime_sec", "canonical_hashes", "observed_hashes", "independence_vector"],
+  "properties": {
+    "role": {"enum": ["proposer", "replicator"]},
+    "seed": {"type": "integer"},
+    "status": {"enum": ["SUCCEEDED", "FAILED"]},
+    "runtime_sec": {"type": "number", "minimum": 0},
+    "canonical_hashes": {"type": "object"},
+    "observed_hashes": {"type": "object"},
+    "independence_vector": {"type": "object"}
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,281 @@
+{
+  "agent_report_exists": false,
+  "answers": {
+    "Report the max gain % of planar IRS.": null
+  },
+  "model": "llama3.2:1b",
+  "provider": "ollama",
+  "provider_error": null,
+  "report_exists": true,
+  "report_origin": "harness_failure_normalization",
+  "role": "agent_b",
+  "runtime_sec": 29.745041707999917,
+  "source": "external/corebench/capsules/capsule-0571975.tar.gz",
+  "source_sha256": "09504b29fdea223da87ea2ef9067cc534ec2c59babe2afa91a0a1b21f6bb9466",
+  "task_id": "capsule-0571975",
+  "transcript": [
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "pwd; find . -maxdepth 2 -type f | head -100"
+          },
+          "id": "call_duwvy4e4",
+          "name": "shell"
+        }
+      ],
+      "turn": 0
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_8rvmyojb",
+          "name": "shell"
+        }
+      ],
+      "turn": 1
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_3xegr32m",
+          "name": "shell"
+        }
+      ],
+      "turn": 2
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_74ya9zk7",
+          "name": "shell"
+        }
+      ],
+      "turn": 3
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_v4h6f05c",
+          "name": "shell"
+        }
+      ],
+      "turn": 4
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_c79ugxkh",
+          "name": "shell"
+        }
+      ],
+      "turn": 5
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_mv0ueeny",
+          "name": "shell"
+        }
+      ],
+      "turn": 6
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_5cnhkjuq",
+          "name": "shell"
+        }
+      ],
+      "turn": 7
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_u7cqx6gn",
+          "name": "shell"
+        }
+      ],
+      "turn": 8
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_5z39y30x",
+          "name": "shell"
+        }
+      ],
+      "turn": 9
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_sa2q6u1u",
+          "name": "shell"
+        }
+      ],
+      "turn": 10
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_20zo10el",
+          "name": "shell"
+        }
+      ],
+      "turn": 11
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_dwm7akti",
+          "name": "shell"
+        }
+      ],
+      "turn": 12
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_0p1luu36",
+          "name": "shell"
+        }
+      ],
+      "turn": 13
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_vja02ij9",
+          "name": "shell"
+        }
+      ],
+      "turn": 14
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_q9ej5zlh",
+          "name": "shell"
+        }
+      ],
+      "turn": 15
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_aalk41mw",
+          "name": "shell"
+        }
+      ],
+      "turn": 16
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_yshe5ha6",
+          "name": "shell"
+        }
+      ],
+      "turn": 17
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_h7ct5gka",
+          "name": "shell"
+        }
+      ],
+      "turn": 18
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "satcom.py"
+          },
+          "id": "call_5wwk58nn",
+          "name": "shell"
+        }
+      ],
+      "turn": 19
+    }
+  ],
+  "turns": 20,
+  "workspace_ephemeral": true,
+  "workspace_isolation": "macos sandbox-exec; repository and user home denied; network denied"
+}

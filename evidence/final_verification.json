@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "evidence_class": "HISTORICAL_RUN_RECORD",
+  "attests_current_source_or_dist": false,
+  "superseded_reason": "The workspace changed after this run and has no Git metadata tying the record to the current tree.",
+  "verified_on": "2026-09-01",
+  "implementation_tree_sha256": "5d01a4edfa5ccae3790d0f586e92a1b3dd38388b55f43fe3f930e196d5daf99c",
+  "implementation_tree_scope": ["olympus", "apps/forge-web/src", "tests", "scripts", "datasets"],
+  "release_hashes": "artifacts/stage-execution/release-hashes.json",
+  "artifacts": {
+    "evaluation_sha256": "f77e42ce6b742be37818e8a09fdf32bf15eaf6ca6ec883b1dd2dabbaae58ebd0",
+    "int4_report_sha256": "b6b537cd48356bf1f89604227faf10f2e05bd6563430424cf2c2625ab5a1a7e1",
+    "promotion_sha256": "3b6b395e1c34eef8c0205f53e930ed599ffb6c7bdc92eccdc486a4594ea3030f",
+    "comparison_sha256": "c55eb7db0fa1d3285ccbb153a88d0a6f20452a010aea8bb8d26f55ce345daa72"
+  },
+  "checks": {
+    "ruff": "PASS",
+    "mypy_files": 78,
+    "python_tests": 83,
+    "branch_coverage_percent": 87.58,
+    "web_tests": 7,
+    "python_dependency_audit": "PASS_NO_KNOWN_VULNERABILITIES",
+    "npm_runtime_audit": "PASS_ZERO_VULNERABILITIES",
+    "web_production_build": "PASS",
+    "twine": "PASS",
+    "matched_ablation_integrity": "PASS",
+    "clean_wheel_install": "PASS",
+    "clean_wheel_restart_integrity": "ok"
+  },
+  "clean_install": {
+    "python": "3.14.0",
+    "installer": "uv",
+    "reason": "The host Python 3.14 ensurepip bootstrap is broken by global environment state; uv created an isolated ordinary virtual environment.",
+    "dataset_sha256": "6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab",
+    "candidate_perplexity": 6.686948029017607,
+    "baseline_perplexity": 24.0,
+    "registry_counts": {"datasets": 1, "experiments": 1, "checkpoints": 1, "evaluations": 1, "models": 1, "evidence_events": 5}
+  },
+  "scientific_outcome": {
+    "hermes": "NOT_PROMOTED",
+    "exact_match_rate": 0.0,
+    "tool_exact_match_rate": 0.0,
+    "quantization_quality_gate": false,
+    "demoted_mechanisms": ["without_sequence_packing"]
+  }
+}

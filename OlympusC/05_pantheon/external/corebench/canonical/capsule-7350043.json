@@ -1,0 +1,7 @@
+{
+  "Report the final accuracy of the E2E-FS method on the mnist dataset.": [
+    0.9726999998092651,
+    0.970600009,
+    0.975600004196167
+  ]
+}

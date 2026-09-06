@@ -1,0 +1,2 @@
+task_id,agent_a_accuracy,agent_b_accuracy,pairwise_agreement_rate,false_consensus_count,false_consensus_rate,question_count,agent_a_provider,agent_a_model,agent_b_provider,agent_b_model,agent_a_report_exists,agent_b_report_exists,agent_a_submitted_report,agent_b_submitted_report,agent_a_report_origin,agent_b_report_origin,agent_a_provider_error,agent_b_provider_error
+capsule-0571975,0.0,0.0,0.0,0,0.0,1,ollama,qwen3:0.6b,ollama,llama3.2:1b,True,True,False,False,harness_failure_normalization,harness_failure_normalization,,

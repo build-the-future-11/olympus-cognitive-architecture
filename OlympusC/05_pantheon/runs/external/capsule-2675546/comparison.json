@@ -1,0 +1,53 @@
+{
+  "agent_a": {
+    "accuracy": 0.0,
+    "all_correct": false,
+    "correct": 0,
+    "extra": [],
+    "missing": [],
+    "per_question": {
+      "What is the original (baseline) handover success rate for UE #74? Report the value as a percentage. Do not include the percentage sign.": false,
+      "fig From the UE #74 Handover Executions plot, report the Proposed decision at time 25 m/s.": false
+    },
+    "total": 2
+  },
+  "agent_a_model": "qwen3:0.6b",
+  "agent_a_provider": "ollama",
+  "agent_a_provider_error": null,
+  "agent_a_report_exists": true,
+  "agent_a_report_origin": "harness_failure_normalization",
+  "agent_a_submitted_report": false,
+  "agent_b": {
+    "accuracy": 0.0,
+    "all_correct": false,
+    "correct": 0,
+    "extra": [],
+    "missing": [],
+    "per_question": {
+      "What is the original (baseline) handover success rate for UE #74? Report the value as a percentage. Do not include the percentage sign.": false,
+      "fig From the UE #74 Handover Executions plot, report the Proposed decision at time 25 m/s.": false
+    },
+    "total": 2
+  },
+  "agent_b_model": "llama3.2:1b",
+  "agent_b_provider": "ollama",
+  "agent_b_provider_error": null,
+  "agent_b_report_exists": true,
+  "agent_b_report_origin": "harness_failure_normalization",
+  "agent_b_submitted_report": false,
+  "agreement": {
+    "What is the original (baseline) handover success rate for UE #74? Report the value as a percentage. Do not include the percentage sign.": false,
+    "fig From the UE #74 Handover Executions plot, report the Proposed decision at time 25 m/s.": false
+  },
+  "canonical_answers_sha256": "19696326a143b2cb4ccc5087bbf5f69c680a3ae21260a6a128bb82e55a121c41",
+  "false_consensus": {
+    "What is the original (baseline) handover success rate for UE #74? Report the value as a percentage. Do not include the percentage sign.": false,
+    "fig From the UE #74 Handover Executions plot, report the Proposed decision at time 25 m/s.": false
+  },
+  "false_consensus_count": 0,
+  "false_consensus_rate": 0.0,
+  "pairwise_agreement_count": 0,
+  "pairwise_agreement_rate": 0.0,
+  "question_count": 2,
+  "task_id": "capsule-2675546"
+}

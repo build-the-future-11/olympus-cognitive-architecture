@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# Downloaded CORE-Bench capsules are large external inputs. The manifest and
+# hashes remain versioned; the archives are reacquired by the setup script.
+external/corebench/capsules/

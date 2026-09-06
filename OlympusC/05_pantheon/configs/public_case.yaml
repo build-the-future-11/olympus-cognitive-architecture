@@ -1,0 +1,7 @@
+dataset: sklearn.datasets.load_breast_cancer
+split_seed: 31415
+test_size: 0.25
+proposer: sklearn_logistic_regression
+replicator: numpy_batch_gradient_descent
+primary_metric: accuracy_minus_majority
+secondary_metrics: [accuracy, roc_auc]

@@ -1,0 +1,182 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.82in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,graphicx,microtype,natbib,tabularx,xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage[T1]{fontenc}
+\newcommand{\pantheon}{\textsc{Pantheon}}
+\newcommand{\ind}{\mathbb{I}}
+\title{Beyond Pairwise Agreement: Canonical Artifact Auditing\\for Computational Replication Agents}
+\author{Anonymous authors}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Two computational research agents can agree because both are correct, because both inherit the same defect, or because neither completed the task. Pairwise agreement alone cannot distinguish these cases. We present \pantheon, an executable auditing protocol that triangulates two independently executed research workspaces against a frozen canonical package and preserves data, code, protocol, metric, environment, and hidden-state evidence. The protocol treats missing and null answers as joint abstention rather than agreement, rejects unsafe archives, withholds canonical answers from agent workspaces, and records exact source and model identities. In a controlled 20-seed, eight-condition fault benchmark, full canonical auditing localizes 160/160 outcomes, versus 100/160 for pairwise artifact comparison and 20/160 for numerical comparison alone. In a public-data cross-implementation check, independently implemented logistic regressions agree on effect direction in 10/10 prespecified splits, with mean absolute effect difference 0.00699. Finally, we execute 34 isolated local-agent trajectories on 17 official CORE-Bench v1.1 out-of-distribution capsules spanning 20 questions and four fields. Both small models answer 0/20 questions and author 0/34 valid reports; the 95\% Wilson upper bound on each zero rate is 0.161. This negative result does not estimate frontier-agent performance or real-world false-consensus prevalence. It establishes a sharper methodological boundary: agreement auditing is meaningful only after task completion, answer validity, and abstention are separated. The released artifact contains all trajectories, hashes, tests, and exact reproduction commands.
+\end{abstract}
+
+\section{Introduction}
+Autonomous research systems increasingly propose hypotheses, edit code, run experiments, and draft claims \citep{lu2024aiscientist,schmidgall2025agentlaboratory}. CORE-Bench, PaperBench, and AutoExperiment measure whether agents can reproduce or replicate computational results \citep{siegel2024corebench,starace2025paperbench,kim2026autoexperiment}. A separate problem arises when multiple agents are used as mutual checks: what does their agreement establish?
+
+Agreement is not correctness. Two executions can share a defective implementation, a contaminated hidden state, an ambiguous protocol, or a common environment deviation. Conversely, two correct implementations can disagree numerically because accepted outputs are stochastic or tolerance-dependent. A verifier therefore needs a third reference point and an explicit distinction between answer agreement, canonical validity, and execution completeness.
+
+We study canonical artifact auditing: a frozen research package and accepted answer set are used to adjudicate two isolated executions. Our contribution is deliberately narrower than an autonomous scientist or a new replication benchmark. We provide (i) an executable provenance representation and rule-based adjudicator; (ii) a controlled benchmark that isolates which evidence channels are necessary for eight failure modes; (iii) a public-data cross-implementation case; and (iv) a preregistered, resource-bounded OOD agent study with safe extraction, workspace isolation, exact model digests, bounded decoding, and failure-preserving outputs.
+
+The OOD study is a negative result. Neither evaluated small model produced a valid scientific answer or an exact-key report. This failure is informative because a naive equality test would classify two null values as agreement. \pantheon{} instead records joint abstention and declines to infer false consensus. We thus make no claim that \pantheon{} has measured the prevalence of false consensus among capable research agents.
+
+\section{Problem formulation}
+Let a replication task contain questions $q\in Q$. The frozen canonical artifact defines a nonempty accepted set $C_q$, possibly containing several valid stochastic realizations. Agent outputs are partial maps $A,B:Q\rightharpoonup\mathcal{Y}$; $\bot$ denotes missing, unparsable, or explicit null output. Let $m(x,y)$ be a type-aware equality predicate: finite numeric values use fixed absolute and relative tolerances, normalized strings use exact normalized equality, and structured values use equality after parsing.
+
+We define substantive agreement and canonical correctness as
+\begin{align}
+G_q &= \ind[A_q\neq\bot\land B_q\neq\bot\land m(A_q,B_q)],\\
+K_q^A &= \ind[A_q\neq\bot\land \exists c\in C_q:m(A_q,c)],
+\end{align}
+with $K_q^B$ analogously. False consensus is
+\begin{equation}
+F_q=G_q(1-K_q^A)(1-K_q^B).
+\end{equation}
+This definition excludes joint abstention. The false-consensus rate $|Q|^{-1}\sum_qF_q$ is reported together with its numerator and denominator; it is not defined over only answered questions because selective abstention is itself relevant.
+
+Numerical agreement is only one layer. A claim package is represented as
+\begin{equation}
+c=(H,P,D,M,E,K),
+\end{equation}
+where $H$ is the hypothesis, $P$ the protocol, $D$ the data identity, $M$ the metric specification, $E$ the execution environment, and $K$ the code identity. A run stores these fields with content hashes, outputs, status, runtime, and canary evidence. For scalar proposer and replicator estimates $\hat\delta_P,\hat\delta_R$ with uncertainties $s_P,s_R$, the diagnostic numerical disagreement is
+\begin{equation}
+D_z=\frac{|\hat\delta_P-\hat\delta_R|}{\sqrt{s_P^2+s_R^2+\epsilon}}.
+\end{equation}
+It is a diagnostic, not a substitute for artifact comparison.
+
+\section{Pantheon protocol}
+\subsection{Canonical triangulation}
+Before either evaluated run, the auditor freezes the task archive, accepted canonical answers, protocol, and source identities. Proposer and replicator workspaces are extracted separately. The adjudicator first checks completion and hidden-state canaries, then canonical artifact divergence, then pairwise artifact divergence, and finally numeric discrepancies. This ordering prevents a shared corrupted artifact from being exonerated by matching outputs.
+
+Canonical answers can contain multiple accepted values. CORE-Bench metadata includes several successful result sets for some tasks; \pantheon retains their union per exact question key and applies fixed tolerances (absolute $10^{-4}$, relative $10^{-3}$ in the OOD study). Accepted-set construction occurs before model execution.
+
+\subsection{Failure semantics}
+Execution failure, answer abstention, report noncompliance, substantive agreement, and correctness are distinct observables. A missing or invalid report receives a harness-generated exact-key record with null values, while the original transcript and report origin are preserved. The generated record is bookkeeping, never evidence that the agent answered. One corrective turn is allowed after a no-tool response without a report. Provider errors remain separate from agent-level failures.
+
+This design closes two common evaluation bugs. First, dictionary lookup with missing keys can make $m(\bot,\bot)$ appear true. Second, dropping failed runs conditions the analysis on success and can inflate both accuracy and agreement. \pantheon retains all preregistered tasks and scores nulls as incorrect and non-agreeing.
+
+\subsection{Threat model and isolation}
+The external runner rejects archive path traversal, symbolic links, hard links, and device members. Each agent receives a different ephemeral directory under \texttt{/private/tmp}. On macOS, \texttt{sandbox-exec} denies shell network access and all reads or writes under the user home and source volume, where canonical answers reside. The shell environment contains no API keys and uses a task-local home, temporary directory, and cache. Only the local inference server is contacted by the harness, not by shell commands. Every model turn, tool call, tool result, retained report, source hash, model name, provider, and runtime is persisted.
+
+The two models share an Ollama runtime and host. They are independent only in model weights and workspaces, not in provider, hardware, prompt, or evaluator implementation. We avoid the stronger term ``independent providers.''
+
+\section{Experimental design}
+\subsection{Controlled fault localization}
+For seeds 0--19, we generate 320-row packages from
+\begin{equation}
+y=0.8x+1.25t+\varepsilon,\qquad \varepsilon\sim\mathcal{N}(0,1),
+\end{equation}
+where $t$ is binary. Each seed is evaluated under eight conditions: clean execution; data, metric, implementation, or environment mismatch; protocol ambiguity; hidden-state contamination; and a correlated shared implementation bug. The benchmark compares numeric-only adjudication, pairwise artifact evidence without a canonical manifest, and full canonical auditing. The unit is a seed--condition pair ($160$ total). Because faults and labels are deterministically injected, we report exact counts rather than sampling-based significance tests.
+
+The study contains 200 actual package executions and 480 method-level classification records. The distinction matters: the three adjudicators reuse the same executions rather than claiming 480 independent experiments.
+
+\subsection{Public-data cross-implementation check}
+We use the 569-row, 30-feature Breast Cancer Wisconsin Diagnostic dataset bundled with scikit-learn. Ten stratified 75/25 splits are fixed in advance; scaling is fit on training data only. The proposer is scikit-learn L-BFGS logistic regression. The replicator is an independent numpy batch-gradient-descent implementation. The measured effect is improvement in test accuracy over the training-set majority baseline. Because the ten test splits overlap, split summaries are descriptive and are not treated as independent replications.
+
+\subsection{CORE-Bench OOD agent study}
+We select 17 official CORE-Bench v1.1 OOD capsules: nine Engineering, five Physics, two Computer Science, and one Economics task. They contain 20 exact questions (10, 5, 3, and 2 respectively) and Python or R artifacts. This is a resource-bounded convenience subset chosen to reach prespecified gates while excluding two 400--800 MB capsules; it is not a random sample of CORE-Bench.
+
+Agent A is \texttt{qwen3:0.6b} (digest prefix \texttt{7df6b6e09427}); Agent B is \texttt{llama3.2:1b} (\texttt{baf6a787fdff}). Both run locally with temperature zero, at most 768 completion tokens per turn, at most 20 turns, and a 900-second provider timeout. The frozen manifest SHA-256 begins \texttt{1c08bcb4def5}; the executable source identity begins \texttt{8b4a68f22616}. The protocol was frozen before the definitive trajectories.
+
+Primary outcomes are question-weighted canonical accuracy, substantive agreement, false consensus, non-null answer rate, report compliance, and execution completion. Wilson intervals accompany Bernoulli rates. A deterministic 10,000-repetition bootstrap resamples tasks as clusters to preserve dependence among questions within a capsule. Agent accuracy is compared with exact McNemar testing over paired questions. These intervals describe the observed subset; they do not license population-wide model claims.
+
+\section{Results}
+\subsection{Controlled evidence channels}
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrr}
+\toprule
+Adjudicator & Correct / 160 & Accuracy \\
+\midrule
+Numerical comparison only & 20 & 0.125 \\
+Pairwise artifacts, no canonical manifest & 100 & 0.625 \\
+Full canonical auditing & 160 & 1.000 \\
+\bottomrule
+\end{tabular}
+\caption{Exact controlled fault-localization counts. These are mechanism checks on engineered faults, not estimates of deployment accuracy.}
+\label{tab:controlled}
+\end{table}
+
+Numerical comparison succeeds only in the clean condition. Pairwise artifact comparison resolves ordinary data, implementation, environment, and protocol mismatches, but fails when the evidence channel itself needs a third reference: hidden contamination, metric ambiguity, and the shared bug. In the shared-bug condition, proposer and replicator use the same corrupted implementation and agree numerically for all 20 seeds. Only their joint divergence from the frozen canonical code identifies the defect. Table~\ref{tab:controlled} therefore verifies the intended information structure, not a learned classifier's generalization.
+
+\subsection{Public cross-implementation concordance}
+Both implementations improve on the majority baseline on all 10 splits. The proposer mean effect is 0.34336 and the replicator mean effect is 0.34895. The mean absolute paired effect difference is 0.006993, with maximum 0.020979; direction agreement is 10/10. This is a useful integration test showing that canonical packaging does not require byte-identical implementations. It is not an independent reproduction of a published claim.
+
+\subsection{External OOD negative result}
+\begin{table}[t]
+\centering
+\scriptsize
+\input{../results/external/table_external_rigorous.tex}
+\caption{Question-level OOD outcomes. Task-bootstrap intervals are conditional on the 17 observed task clusters and degenerate at zero because every observed outcome is zero. Wilson intervals show the binomial uncertainty from 0/20 events.}
+\label{tab:external}
+\end{table}
+
+Both models score 0/20 and return 0/20 non-null answers (Table~\ref{tab:external}). Neither authors a valid exact-key report on any task (0/17 per model; 0/34 trajectories). The harness retains a null-valued report for every failed trajectory, so structural completeness is 34/34 without converting noncompliance into success. There are no provider errors.
+
+Qwen uses 41 turns and 12 tool calls across tasks (median 2 turns; zero 20-turn saturations), consuming 666.3 seconds. Llama uses 184 turns and 284 tool calls (median 9 turns; seven 20-turn saturations), consuming 1112.6 seconds. The qualitative failure modes differ: Qwen often terminates without a valid tool-mediated report, whereas Llama frequently repeats invalid or unproductive commands. These are model-capability observations, not evidence about the scientific truth of capsule answers.
+
+There are no discordant correct outcomes, so exact McNemar $p=1$. Substantive agreement and false consensus are both 0/20; their Wilson 95\% intervals are $[0,0.161]$. The result does \emph{not} show that false consensus is rare. With no substantive answers, the experiment never enters the regime in which false consensus can be observed. Its defensible conclusion is that completion and abstention gates are prerequisites for agreement analysis at this model scale.
+
+\section{What the evidence establishes}
+The three studies answer different questions. The controlled benchmark establishes construct validity under known mechanisms: a canonical reference contains information unavailable to pairwise comparison when both runs share a defect. The public-data case establishes cross-implementation tolerance on a real dataset. The OOD run establishes operational integrity and a capability floor: the harness can execute, isolate, retain, and score genuine task trajectories without treating paired failures as agreement.
+
+None establishes that canonical auditing detects naturally occurring false consensus among capable frontier agents. That claim requires agents with nontrivial task completion and enough answered questions to estimate $F_q$. A future confirmatory study should retain the V4 task manifest and isolation policy, replace only the frozen model identities, and prespecify a minimum non-null completion rate before interpreting agreement.
+
+\section{Related work}
+CORE-Bench evaluates computational reproducibility agents on research capsules and motivates artifact-grounded execution \citep{siegel2024corebench}. PaperBench evaluates replication of AI papers, while AutoExperiment studies progressively masked replication settings \citep{starace2025paperbench,kim2026autoexperiment}. AI Scientist and Agent Laboratory demonstrate increasingly complete automated research workflows \citep{lu2024aiscientist,schmidgall2025agentlaboratory}. Reproducibility checklists and reporting standards emphasize transparent data, code, environment, and uncertainty disclosure \citep{pineau2021reproducibility}.
+
+\pantheon is complementary. It does not introduce a stronger task-solving agent and does not replace expert adjudication. It formalizes what evidence is needed when two executions are compared and makes shared failure, hidden contamination, abstention, and accepted stochastic outputs explicit.
+
+\section{Limitations and risks}
+The controlled benchmark is engineered around observable provenance channels and makes the full rule system perfectly specified; 160/160 therefore should not be read as external predictive accuracy. The public case uses one dataset, two logistic-regression implementations, and overlapping splits. The OOD sample is small, convenience-selected, field-imbalanced, and excludes the largest capsules. Both agents are small local models sharing a runtime and prompt, far below contemporary frontier research agents. Zero completed answers prevents empirical estimation of false consensus conditional on successful task completion.
+
+Byte hashes detect identity changes but do not determine semantic equivalence. Canonical artifacts can themselves be incorrect. Accepted numeric tolerances encode judgment and may omit valid stochastic outcomes. The macOS sandbox blocks the scoped paths and shell network, but it is not equivalent to hardware virtualization or a separately administered host. Agent-generated shell commands remain untrusted; although path traversal, archive links, user paths, source volumes, network access, and credentials are restricted, deployment should add container or VM boundaries.
+
+The principal societal risk is false assurance: a green audit can be mistaken for scientific truth. We therefore separate structural gate completion from scientific readiness. The repository's legacy gate string \texttt{PUBLICATION-READY} means that preregistered artifacts exist and validators pass; it does not override the 0/20 capability result or imply venue readiness.
+
+\section{Reproducibility}
+The definitive protocol identifier is \texttt{PANTHEON-COREBENCH-OOD-LOCAL-20260903-V4}. Its JSON file records all source-file hashes, the complete manifest hash, model digests, platform, decoding limits, isolation policy, failure semantics, and claim boundary. The archive manifest records a SHA-256 for every source capsule and canonical answer file. Twenty-two tests cover hashing, package execution, statistics, external scoring, provider normalization, failure semantics, and safe extraction. Controlled evidence validation checks all 480 classifier records, 200 executions, 20 public-case runs, and required figures.
+
+The local evidence is reproduced with \texttt{bash scripts/reproduce\_all.sh}. Given the downloaded OOD capsules and installed model digests, the external matrix is reproduced with \texttt{bash scripts/run\_local\_ood\_study.sh}. The rigorous post-run analysis is \texttt{python3 analysis/analyze\_external\_rigor.py}. All reported values are read from persisted CSV or JSON artifacts; no result in this paper is manually substituted.
+
+\section{Conclusion}
+Pairwise agreement is not self-authenticating. A frozen canonical reference distinguishes ordinary disagreement from shared artifact drift in a controlled setting, while explicit failure semantics prevent two missing answers from becoming false evidence of consensus. Our OOD study is a stringent negative result: the evaluated small agents do not clear the completion threshold needed to study false consensus. The next decisive experiment is therefore not a larger claim from these data, but a preregistered evaluation with capable, separately hosted agents and human review of naturally occurring disagreement cases.
+
+\begin{thebibliography}{9}
+\bibitem[Kim et al.(2026)]{kim2026autoexperiment} Gyeongwon James Kim, Alex Wilf, Louis-Philippe Morency, and Daniel Fried. From Reproduction to Replication: Evaluating Research Agents with Progressive Code Masking. ICLR, 2026.
+\bibitem[Lu et al.(2024)]{lu2024aiscientist} Chris Lu, Cong Lu, Robert Tjarko Lange, Jakob Foerster, Jeff Clune, and David Ha. The AI Scientist: Towards Fully Automated Open-Ended Scientific Discovery. arXiv:2408.06292, 2024.
+\bibitem[Pineau et al.(2021)]{pineau2021reproducibility} Joelle Pineau et al. Improving Reproducibility in Machine Learning Research: A Report from the NeurIPS 2019 Reproducibility Program. Journal of Machine Learning Research, 22(164):1--20, 2021.
+\bibitem[Schmidgall et al.(2025)]{schmidgall2025agentlaboratory} Samuel Schmidgall et al. Agent Laboratory: Using LLM Agents as Research Assistants. Findings of EMNLP, 2025.
+\bibitem[Siegel et al.(2024)]{siegel2024corebench} Zachary S. Siegel, Sayash Kapoor, Nitya Nadgir, Benedikt Stroebl, and Arvind Narayanan. CORE-Bench: Fostering the Credibility of Published Research Through a Computational Reproducibility Agent Benchmark. arXiv:2409.11363, 2024.
+\bibitem[Starace et al.(2025)]{starace2025paperbench} Giulio Starace et al. PaperBench: Evaluating AI's Ability to Replicate AI Research. Proceedings of ICML, PMLR 267:56843--56873, 2025.
+\end{thebibliography}
+
+\appendix
+\section{External task composition}
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\toprule
+Field & Tasks & Questions \\
+\midrule
+Computer Science & 2 & 3 \\
+Economics & 1 & 2 \\
+Engineering & 9 & 10 \\
+Physics & 5 & 5 \\
+\midrule
+Total & 17 & 20 \\
+\bottomrule
+\end{tabular}
+\caption{Composition of the resource-bounded OOD subset.}
+\end{table}
+
+\section{Interpretation checklist}
+Before using \pantheon\ evidence to support a scientific claim, a reader should verify: (1) all preregistered tasks are retained; (2) non-null completion is high enough for agreement analysis; (3) canonical answers and tolerances were fixed before execution; (4) canonical data were inaccessible to agents; (5) model and source identities are exact; (6) shared provider, prompt, and environment dependencies are disclosed; (7) canonical divergence is interpreted by a domain expert; and (8) a structural gate is not reported as scientific correctness.
+
+\end{document}

@@ -2,18 +2,25 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import type { ReactElement } from "react";
 
 import {
+  cancelFoundryJob,
   ChatCompletion,
   DemoRecord,
   fetchDemos,
+  fetchFoundryJob,
   fetchFoundryModels,
+  fetchFoundryOverview,
   fetchFoundryStatus,
   fetchOllamaHealth,
+  FoundryJob,
   FoundryModel,
+  FoundryOverview,
   FoundryStatus,
   FoundryVerification,
   generateWithFoundry,
   OllamaHealth,
-  runFoundryVerification
+  runFoundryVerification,
+  retryFoundryJob,
+  startFoundryJob
 } from "./api";
 import "./styles.css";
 
@@ -27,6 +34,9 @@ const initialLoadState: LoadState = { error: "", loading: true };
 export function App(): ReactElement {
   const [demos, setDemos] = useState<Record<string, DemoRecord>>({});
   const [foundryStatus, setFoundryStatus] = useState<FoundryStatus | null>(null);
+  const [overview, setOverview] = useState<FoundryOverview | null>(null);
+  const [job, setJob] = useState<FoundryJob | null>(null);
+  const [jobError, setJobError] = useState<string>("");
   const [models, setModels] = useState<FoundryModel[]>([]);
   const [ollama, setOllama] = useState<OllamaHealth | null>(null);
   const [demoState, setDemoState] = useState<LoadState>(initialLoadState);
@@ -71,12 +81,16 @@ export function App(): ReactElement {
 
     void Promise.all([
       fetchFoundryStatus(controller.signal),
-      fetchFoundryModels(controller.signal)
+      fetchFoundryModels(controller.signal),
+      fetchFoundryOverview(controller.signal),
+      fetchFoundryJob(controller.signal)
     ])
-      .then(([status, registeredModels]) => {
+      .then(([status, registeredModels, currentOverview, currentJob]) => {
         if (!controller.signal.aborted) {
           setFoundryStatus(status);
           setModels(registeredModels);
+          setOverview(currentOverview);
+          setJob(currentJob);
           setSelectedModel((current) => current || registeredModels[0]?.id || "");
         }
       })
@@ -84,6 +98,8 @@ export function App(): ReactElement {
         if (!controller.signal.aborted) {
           setFoundryStatus(null);
           setModels([]);
+          setOverview(null);
+          setJob(null);
           setFoundryState({
             error: caught instanceof Error ? caught.message : "Unable to load Foundry state",
             loading: false
@@ -111,6 +127,27 @@ export function App(): ReactElement {
 
     return () => controller.abort();
   }, [reloadToken]);
+
+  useEffect(() => {
+    if (job?.status !== "RUNNING" && job?.status !== "CANCEL_REQUESTED") return;
+    const timer = window.setTimeout(reload, 500);
+    return () => window.clearTimeout(timer);
+  }, [job?.status, reload]);
+
+  const updateJob = async (action: "start" | "cancel" | "retry"): Promise<void> => {
+    setJobError("");
+    try {
+      const next =
+        action === "start"
+          ? await startFoundryJob()
+          : action === "cancel"
+            ? await cancelFoundryJob()
+            : await retryFoundryJob();
+      setJob(next);
+    } catch (caught: unknown) {
+      setJobError(caught instanceof Error ? caught.message : "Foundry job control failed");
+    }
+  };
 
   const verify = async (): Promise<void> => {
     setVerifying(true);
@@ -207,6 +244,67 @@ export function App(): ReactElement {
             run. It creates a verification model, never a fake Hermes checkpoint.
           </p>
         </div>
+        <article className="receipt" aria-label="Foundry workload control">
+          <div className="card-header">
+            <h3>Bounded workload control</h3>
+            <span data-status={job?.status === "SUCCEEDED" ? "passed" : "failed"}>
+              {job?.status ?? "Unavailable"}
+            </span>
+          </div>
+          <p>
+            Small tier: {overview?.resources.small ? "admitted" : "refused"} · Medium tier:{" "}
+            {overview?.resources.medium ? "admitted" : "refused"} · Available memory:{" "}
+            {overview ? `${(overview.resources.snapshot.available_bytes / 1024 ** 3).toFixed(2)} GiB` : "unknown"}
+          </p>
+          <div className="action-row">
+            <button
+              disabled={job?.status === "RUNNING" || job?.status === "CANCEL_REQUESTED"}
+              onClick={() => void updateJob("start")}
+              type="button"
+            >
+              Start bounded run
+            </button>
+            <button
+              disabled={job?.status !== "RUNNING"}
+              onClick={() => void updateJob("cancel")}
+              type="button"
+            >
+              Cancel safely
+            </button>
+            <button
+              disabled={job?.status !== "FAILED" && job?.status !== "CANCELLED"}
+              onClick={() => void updateJob("retry")}
+              type="button"
+            >
+              Retry failed run
+            </button>
+          </div>
+          {jobError ? <p className="inline-error" role="alert">{jobError}</p> : null}
+        </article>
+        <article className="receipt" aria-label="Foundry provenance">
+          <div className="card-header">
+            <h3>Live provenance and promotion boundary</h3>
+            <span>{overview?.promotion_boundary ?? "Unknown"}</span>
+          </div>
+          <dl className="receipt-details">
+            <div>
+              <dt>Dataset</dt>
+              <dd>{overview?.latest_dataset?.dataset_id ?? "none"}</dd>
+            </div>
+            <div>
+              <dt>Dataset SHA-256</dt>
+              <dd>{overview?.latest_dataset?.sha256 ?? "none"}</dd>
+            </div>
+            <div>
+              <dt>Checkpoint</dt>
+              <dd>{overview?.latest_checkpoint?.checkpoint_id ?? "none"}</dd>
+            </div>
+            <div>
+              <dt>Evaluation verdict</dt>
+              <dd>{overview?.latest_evaluation?.decision ?? "not evaluated"}</dd>
+            </div>
+          </dl>
+        </article>
         {verificationError ? (
           <p className="inline-error" role="alert">
             {verificationError}

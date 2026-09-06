@@ -72,6 +72,12 @@ class InterpretiveSuperpositionNetwork:
                 evidence,
             ),
             self._make_branch(
+                InterpretationCategory.TEMPORAL,
+                f"Temporal reading: {prompt}",
+                counts,
+                evidence,
+            ),
+            self._make_branch(
                 InterpretationCategory.SYMBOLIC,
                 f"Symbolic reading: {prompt}",
                 counts,

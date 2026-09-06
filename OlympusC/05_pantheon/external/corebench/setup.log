@@ -1,0 +1,18 @@
+downloading https://huggingface.co/datasets/agent-evals/core-bench-v1.1-ood/resolve/main/capsules/capsule-6562149.tar.gz
+downloading https://huggingface.co/datasets/agent-evals/core-bench-v1.1-ood/resolve/main/capsules/capsule-6724161.tar.gz
+downloading https://huggingface.co/datasets/agent-evals/core-bench-v1.1-ood/resolve/main/capsules/capsule-8185407.tar.gz
+downloading https://huggingface.co/datasets/agent-evals/core-bench-v1.1-ood/resolve/main/capsules/capsule-8353473.tar.gz
+downloading https://huggingface.co/datasets/agent-evals/core-bench-v1.1-ood/resolve/main/capsules/capsule-8467067.tar.gz
+downloading https://huggingface.co/datasets/agent-evals/core-bench-v1.1-ood/resolve/main/capsules/capsule-8610546.tar.gz
+downloading https://huggingface.co/datasets/agent-evals/core-bench-v1.1-ood/resolve/main/capsules/capsule-9026204.tar.gz
+{
+  "tasks": 15,
+  "manifest": "external/corebench/manifest.jsonl",
+  "downloaded": true,
+  "visibility": "ood"
+}
+EXTERNAL READY CHECK: BLOCKED
+- OPENAI_API_KEY is not set
+- ANTHROPIC_API_KEY is not set
+
+SETUP_EXIT=2 time=2026-09-03T04:14:38Z

@@ -24,26 +24,33 @@ regulated-production fitness.
 ## Quick Start
 
 ```bash
-python3 -m venv --system-site-packages .venv
-.venv/bin/pip install -e .[dev]
-.venv/bin/pytest
-.venv/bin/python -m olympus.cli demo run-all
-.venv/bin/python -m olympus.cli foundry verify-pipeline
-.venv/bin/uvicorn olympus.api:app --reload
+python3.14 -m pip install --user uv==0.12.5
+uv sync --locked --all-extras
+uv run pytest
+uv run python -m olympus.cli demo run-all
+uv run python -m olympus.cli foundry verify-pipeline
+uv run uvicorn olympus.api:app --host 127.0.0.1 --reload
 ```
 
 To run the real web console against that API:
 
 ```bash
 cd apps/forge-web
-npm ci
-npm run dev
+corepack npm ci
+corepack npm run dev
 ```
 
 Open `http://127.0.0.1:5173`. The console displays only live API results and
-reports API failures explicitly. It can run the Foundry verification pipeline,
-inspect promoted models, generate through the OpenAI-compatible local contract,
-and report Ollama health without fabricating provider state.
+reports API failures explicitly. It shows hash-bound provenance and resource
+admission, runs one bounded Foundry job at a time, and supports cooperative
+cancel/retry. It can also inspect promoted models, generate through the
+OpenAI-compatible local contract, and report Ollama health without fabricating
+provider state.
+
+Mutating and generation endpoints are loopback-only by default. Before putting
+the API behind any proxy or binding it to a non-loopback address, set a strong
+`OLYMPUS_API_TOKEN` and send it as a bearer token. The development Vite proxy is
+intended only for the local loopback workflow above.
 
 To inspect an already-installed Ollama model through the provider adapter:
 
@@ -75,18 +82,15 @@ gates; no Hermes model is promoted. See
 [`OLYMPUS_MODEL_FOUNDRY_LEDGER.md`](OLYMPUS_MODEL_FOUNDRY_LEDGER.md) for exact
 measurements and blockers.
 
-For the optional local Postgres/Redis services, create an untracked `.env` with
-a real random password before starting Compose:
+The complete twelve-stage execution index is machine-readable at
+[`evidence/status.json`](evidence/status.json). Canonical-source decisions and
+model-family truth are in
+[`research/SOURCE_OF_TRUTH.md`](research/SOURCE_OF_TRUTH.md); the one highest
+value next experiment and its frozen stop rules are in [`NEXT.md`](NEXT.md).
 
-```bash
-printf 'OLYMPUS_POSTGRES_PASSWORD=%s\n' "$(openssl rand -hex 32)" > .env
-docker compose up -d
-docker compose config --quiet
-```
-
-Compose binds both service ports to loopback by default. Override
-`OLYMPUS_POSTGRES_PORT` or `OLYMPUS_REDIS_PORT` only when the local ports are
-already occupied; do not commit `.env`.
+The former PostgreSQL/pgvector and Redis Compose scaffold is archived under
+`archive/unused-infrastructure/`. It is not used by the implementation and is
+not part of the supported runtime.
 
 ## Repository Layout
 
@@ -96,24 +100,28 @@ behaviors/          Example behavior specifications
 datasets/           Schemas, manifests, and local samples
 docs/               Architecture and API documentation
 examples/           End-to-end usage examples
-infrastructure/     Local infrastructure configuration
+archive/            Inactive scaffolds retained only for provenance
 olympus/            Core Python implementation
 research/           Design notes and model cards
 scripts/            Utility scripts, including LOC accounting
 tests/              Unit and integration coverage
+evidence/           Twelve-stage execution records and machine-readable status
 ```
 
-## Core Demonstrations
+## Heuristic and Synthetic Demonstrations
 
-The implemented demos correspond to the attached research brief:
+These executable demonstrations are engineering fixtures, not validated
+cognitive or neural mechanisms. Their historical names are retained only for
+API compatibility:
 
 1. Ambiguous interpretation analysis.
 2. Code-state retrodiction.
-3. JEPA forward prediction on synthetic sequences.
+3. JEPA-inspired forward prediction on synthetic sequences.
 4. Learned transform decomposition.
-5. Dynamic representation selection.
-6. Neural division and reassembly.
-7. Olympus Forge natural-language behavior compilation and execution.
+5. Rule-based representation selection.
+6. Dependency-aware specialist scheduling and reassembly.
+7. Olympus Forge keyword-to-graph compilation and execution with optional,
+   explicitly injected tool and memory effects.
 8. Hermes Nano interpretation and SQLite memory integration.
 
 ## LabOS Portfolio Commands

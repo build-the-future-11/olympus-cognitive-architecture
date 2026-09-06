@@ -1,0 +1,10 @@
+{
+  "required": [
+    "effect",
+    "se",
+    "ci95",
+    "n",
+    "seed",
+    "metric"
+  ]
+}

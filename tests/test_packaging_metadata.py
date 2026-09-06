@@ -20,3 +20,11 @@ def test_pyproject_declares_complete_release_metadata() -> None:
     assert any(dependency.startswith("numpy>=") for dependency in project["dependencies"])
     assert project["urls"]["Source"].endswith("/olympus-cognitive-architecture")
     assert (root / "LICENSE").is_file()
+
+
+def test_release_manifest_excludes_internal_outreach_material() -> None:
+    root = Path(__file__).resolve().parents[1]
+    manifest = (root / "MANIFEST.in").read_text(encoding="utf-8")
+
+    assert "recursive-include docs *.md" in manifest
+    assert "recursive-exclude docs *OUTREACH*.md" in manifest

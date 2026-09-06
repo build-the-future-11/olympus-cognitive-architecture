@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Security fixes are applied to the current `0.1.x` alpha line.
+Security fixes are applied to the current `0.2.x` alpha line.
 
 ## Reporting a vulnerability
 
@@ -20,6 +20,10 @@ channel is a publication gate recorded in `RELEASE.md`.
 
 Olympus defaults network ingestion to denied. HTTP ingestion requires an
 explicit domain allowlist and accepts only credential-free HTTPS URLs resolving
-to public addresses. Run logs, datasets, and external credentials must be
+to public addresses. Local files are byte-bounded and can be restricted to
+explicit read roots; filesystem writes are denied by default. Mutating API
+operations are loopback-only unless `OLYMPUS_API_TOKEN` is configured, in which
+case clients must send `Authorization: Bearer <token>`. Do not expose Olympus
+through a reverse proxy without configuring that token. Run logs, datasets, and external credentials must be
 reviewed before sharing. The alpha release is not a certification for
 regulated, safety-critical, or multi-tenant production use.

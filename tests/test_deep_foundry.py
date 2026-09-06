@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
+from subprocess import CalledProcessError
 
 import pytest
 import torch
@@ -174,6 +176,35 @@ def test_resource_governor_enforces_exclusivity_and_preflight(
         ResourceGovernor(tmp_path / "invalid.lock", min_available_bytes=1)
 
 
+def test_macos_memory_falls_back_when_sysctl_is_denied(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    vm_stat = """Mach Virtual Memory Statistics: (page size of 4096 bytes)
+Pages free: 100.
+Pages inactive: 200.
+Pages speculative: 10.
+Pages purgeable: 5.
+"""
+
+    def run(command: list[str]) -> str:
+        if command == ["vm_stat"]:
+            return vm_stat
+        raise CalledProcessError(1, command)
+
+    monkeypatch.setattr(resources, "_run", run)
+    monkeypatch.setattr(
+        os,
+        "sysconf",
+        lambda name: {"SC_PHYS_PAGES": 1_000, "SC_PAGE_SIZE": 4_096}[name],
+    )
+
+    snapshot = resources._macos_memory()
+    assert snapshot.total_bytes == 4_096_000
+    assert snapshot.available_bytes == 315 * 4_096
+    assert snapshot.swap_total_bytes == 0
+    assert snapshot.swap_used_bytes == 0
+
+
 def test_tokenizer_model_and_nibble_quantization_are_real() -> None:
     text = "Olympus ✓"
     assert ByteTokenizer.decode(ByteTokenizer.encode(text, bos=True, eos=True)) == text
@@ -254,6 +285,45 @@ def test_sft_full_lora_qlora_checkpoint_resume_and_generation(
         )
 
 
+def test_resume_rejects_caller_configuration_mismatch(tmp_path: Path) -> None:
+    prepare_instruction_dataset(_source(), tmp_path / "dataset")
+    manifest = tmp_path / "dataset/manifest.json"
+    initial = run_sft(manifest, tmp_path / "training", config=_small_config())
+    checkpoint = Path(initial.checkpoint_path)
+
+    mismatched_model = _small_config(epochs=2).model_copy(
+        update={"model": TinyModelConfig(width=48, layers=1, heads=4, max_sequence_tokens=160)}
+    )
+    with pytest.raises(ValueError, match="only the epoch target may change"):
+        run_sft(
+            manifest,
+            tmp_path / "training",
+            config=mismatched_model,
+            resume_checkpoint=checkpoint,
+        )
+
+    mismatched_optimizer = _small_config(epochs=2).model_copy(
+        update={"learning_rate": 0.004}
+    )
+    with pytest.raises(ValueError, match="only the epoch target may change"):
+        run_sft(
+            manifest,
+            tmp_path / "training",
+            config=mismatched_optimizer,
+            resume_checkpoint=checkpoint,
+        )
+
+    resumed = run_sft(
+        manifest,
+        tmp_path / "training",
+        config=_small_config(epochs=2),
+        resume_checkpoint=checkpoint,
+    )
+    payload = torch.load(resumed.checkpoint_path, map_location="cpu", weights_only=True)
+    assert payload["model_config"] == _small_config().model.model_dump(mode="json")
+    assert payload["training_config"]["epochs"] == 2
+
+
 def test_held_out_evaluation_quantization_and_negative_promotion(
     trained_foundry: dict[str, Path], tmp_path: Path
 ) -> None:
@@ -267,6 +337,7 @@ def test_held_out_evaluation_quantization_and_negative_promotion(
     assert len(evaluation.category_results) == 12
     assert evaluation.test_records == 12
     assert evaluation.checkpoint_sha256 == sha256_bytes(trained_foundry["full"].read_bytes())
+    assert evaluation.passed_smoke_quality_gate is False
 
     int8 = quantize_checkpoint(
         trained_foundry["full"], trained_foundry["manifest"], tmp_path / "int8", bits=8
@@ -276,6 +347,7 @@ def test_held_out_evaluation_quantization_and_negative_promotion(
     )
     assert int8.quantized_bytes < int8.float_weights_bytes
     assert int4.quantized_bytes < int8.quantized_bytes
+    assert int4.passed_quality_gate is False
     assert load_quantized_model(Path(int4.artifact_path))
     with pytest.raises(ValueError, match="merged full checkpoint"):
         quantize_checkpoint(

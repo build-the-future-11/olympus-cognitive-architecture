@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   publish:
+    needs: pantheon-boundary
     runs-on: ubuntu-latest
     timeout-minutes: 45
     environment:
@@ -35,31 +36,34 @@ jobs:
           version="$(python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
           test "${GITHUB_REF_NAME}" = "v${version}"
 
-      - name: Install Python release dependencies
-        run: python -m pip install --upgrade pip && python -m pip install -e ".[dev]"
+      - name: Install locked Python release environment
+        run: python -m pip install uv==0.12.5 && uv sync --locked --all-extras
       - name: Install locked web dependencies
         working-directory: apps/forge-web
-        run: npm ci
+        run: corepack npm ci
       - name: Verify Python release gate
         run: |
-          python -m ruff check .
-          python -m mypy olympus tests
-          python -m pytest --cov=olympus --cov-branch --cov-report=term-missing -q
-          python -m olympus.cli foundry verify-pipeline --root artifacts/release-foundry
-          python -m olympus.cli foundry status --root artifacts/release-foundry
-          python -m olympus.cli foundry prepare-dataset --output artifacts/release-deep-dataset
-          python -m pip_audit --strict .
+          uv run ruff check .
+          uv run mypy olympus tests
+          uv run pytest --cov=olympus --cov-branch --cov-report=term-missing -q
+          uv run python -m olympus.cli foundry verify-pipeline --root artifacts/release-foundry
+          uv run python -m olympus.cli foundry status --root artifacts/release-foundry
+          uv run python -m olympus.cli foundry prepare-dataset --output artifacts/release-deep-dataset
+          uv run python -m pip_audit --strict .
       - name: Verify web release gate
         working-directory: apps/forge-web
         run: |
-          npm test
-          npm audit --audit-level=moderate
-          npm run build
+          corepack npm test
+          corepack npm audit --audit-level=moderate
+          corepack npm run build
 
       - name: Build Python distributions
-        run: python -m build
+        run: |
+          test -z "$(git status --porcelain --untracked-files=no)"
+          uv run python -m build
+          sha256sum dist/*.whl dist/*.tar.gz > dist/SHA256SUMS
       - name: Validate distribution metadata
-        run: python -m twine check dist/*
+        run: uv run python -m twine check dist/*
       - name: Verify bundled Foundry corpus
         run: |
           unzip -l dist/*.whl | grep 'olympus/foundry/foundry_verification.txt'
@@ -67,9 +71,9 @@ jobs:
       - name: Generate CycloneDX SBOMs
         run: |
           mkdir -p sbom
-          python -m pip_audit --strict --format cyclonedx-json --output sbom/olympus-python.cdx.json .
+          uv run python -m pip_audit --strict --format cyclonedx-json --output sbom/olympus-python.cdx.json .
           cd apps/forge-web
-          npm sbom --sbom-format cyclonedx > ../../sbom/olympus-web.cdx.json
+          corepack npm sbom --sbom-format cyclonedx > ../../sbom/olympus-web.cdx.json
       - name: Attest release artifacts
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
@@ -83,3 +87,22 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "${GITHUB_REF_NAME}" dist/* sbom/* --generate-notes --verify-tag
+
+  pantheon-boundary:
+    runs-on: macos-15
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: OlympusC/05_pantheon
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+          cache: pip
+      - name: Install locked Pantheon environment
+        run: python -m pip install uv==0.12.5 && uv sync --locked --all-extras
+      - name: Verify Pantheon boundary
+        run: |
+          uv run pytest -q
+          uv run python scripts/validate_evidence.py

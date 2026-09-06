@@ -2,6 +2,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   fetchDemos,
+  fetchFoundryJob,
+  fetchFoundryOverview,
   fetchFoundryStatus,
   generateWithFoundry,
   runFoundryVerification
@@ -57,6 +59,44 @@ describe("fetchDemos", () => {
     );
 
     await expect(fetchFoundryStatus()).rejects.toThrow("invalid Foundry status");
+  });
+
+  it("validates overview and job state instead of trusting control-plane payloads", async () => {
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            promotion_boundary: "NO_PROMOTED_ARTIFACT",
+            latest_dataset: null,
+            latest_experiment: null,
+            latest_checkpoint: null,
+            latest_evaluation: null,
+            resources: {
+              small: true,
+              medium: false,
+              snapshot: { available_bytes: 3_000_000_000, swap_fraction: 0.4 }
+            }
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } }
+        )
+      )
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            job_id: null,
+            status: "IDLE",
+            started_at: null,
+            finished_at: null,
+            error: null
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } }
+        )
+      );
+
+    await expect(fetchFoundryOverview()).resolves.toMatchObject({
+      promotion_boundary: "NO_PROMOTED_ARTIFACT"
+    });
+    await expect(fetchFoundryJob()).resolves.toMatchObject({ status: "IDLE" });
   });
 
   it("uses concrete POST endpoints for verification and generation", async () => {

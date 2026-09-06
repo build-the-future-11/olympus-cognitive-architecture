@@ -21,6 +21,15 @@ from olympus.labos.manifest import (
 )
 
 README_NAMES = ("README.md", "README.MD", "readme.md")
+PROJECT_MARKERS = (
+    ".git",
+    "labos.project.yaml",
+    "labos.project.yml",
+    "labos.project.json",
+    "pyproject.toml",
+    "package.json",
+    *README_NAMES,
+)
 
 
 def discover_projects(workspace_root: Path) -> list[ProjectManifest]:
@@ -28,24 +37,39 @@ def discover_projects(workspace_root: Path) -> list[ProjectManifest]:
     for candidate in sorted(path for path in workspace_root.iterdir() if path.is_dir()):
         if candidate.name.startswith("."):
             continue
-        if not (candidate / ".git").exists():
+        if not _is_project_directory(candidate):
             continue
         projects.append(load_or_infer_manifest(candidate))
-    if (workspace_root / ".git").exists():
+    if _is_project_directory(workspace_root):
         root_manifest = load_or_infer_manifest(workspace_root)
         if root_manifest.project_id not in {item.project_id for item in projects}:
             projects.append(root_manifest)
     return sorted(projects, key=lambda item: item.project_id)
 
 
+def _is_project_directory(path: Path) -> bool:
+    """Recognize bounded project roots without traversing large portfolio trees."""
+    return any((path / marker).exists() for marker in PROJECT_MARKERS)
+
+
 def load_or_infer_manifest(project_root: Path) -> ProjectManifest:
     for filename in ("labos.project.yaml", "labos.project.yml", "labos.project.json"):
         manifest_path = project_root / filename
         if manifest_path.exists():
-            payload = _read_manifest(manifest_path)
-            payload["root_path"] = str(project_root.resolve())
-            payload["manifest_source"] = ManifestSource.DECLARED
-            return ProjectManifest.model_validate(payload)
+            try:
+                payload = _read_manifest(manifest_path)
+                payload["root_path"] = str(project_root.resolve())
+                payload["manifest_source"] = ManifestSource.DECLARED
+                return ProjectManifest.model_validate(payload)
+            except (OSError, UnicodeError, TypeError, ValueError, yaml.YAMLError):
+                fallback = infer_manifest(project_root)
+                fallback.metadata.update(
+                    {
+                        "declared_manifest_error": True,
+                        "declared_manifest_path": filename,
+                    }
+                )
+                return fallback
     return infer_manifest(project_root)
 
 
@@ -120,7 +144,10 @@ def _read_readme(project_root: Path) -> str:
     for name in README_NAMES:
         path = project_root / name
         if path.exists():
-            return path.read_text(encoding="utf-8")
+            try:
+                return path.read_text(encoding="utf-8")
+            except (OSError, UnicodeError):
+                return ""
     return ""
 
 
@@ -197,13 +224,25 @@ def _infer_entry_points(
         entry_points.append(
             EntryPoint(
                 name="node-test",
-                command="npm test",
+                command=_node_test_command(project_root),
                 profile=ResourceProfile.SMOKE,
                 expected_outputs=["test-report"],
                 timeout_seconds=180,
             )
         )
     return entry_points
+
+
+def _node_test_command(project_root: Path) -> str:
+    """Honor a pinned npm package manager through Corepack when declared."""
+    try:
+        payload = json.loads((project_root / "package.json").read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return "npm test"
+    package_manager = payload.get("packageManager")
+    if isinstance(package_manager, str) and package_manager.startswith("npm@"):
+        return "corepack npm test"
+    return "npm test"
 
 
 def _infer_validation_commands(
@@ -610,7 +649,10 @@ def infer_python_project_name(project_root: Path) -> str | None:
     pyproject = project_root / "pyproject.toml"
     if not pyproject.exists():
         return None
-    data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    try:
+        data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, tomllib.TOMLDecodeError):
+        return None
     project = data.get("project", {})
     name = project.get("name")
     if isinstance(name, str):

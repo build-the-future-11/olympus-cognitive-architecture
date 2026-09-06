@@ -1,7 +1,7 @@
 # LabOS Portfolio Layer
 
 LabOS is the portfolio operating layer embedded in Olympus. It discovers sibling
-repositories in the parent workspace, validates declared or inferred manifests,
+project roots in the parent workspace, validates declared or inferred manifests,
 tracks runs in a local SQLite database, emits structured event logs, and writes
 portfolio-wide completion artifacts.
 
@@ -25,8 +25,10 @@ Each project may declare `labos.project.yaml` with:
 - `datasets`, `expected_outputs`, `validation_commands`, `tags`
 - `resource_requirements`
 
-If a manifest is missing, LabOS infers one from Git presence, README headings,
-`pyproject.toml`, `package.json`, and lightweight heuristics.
+If a manifest is missing, LabOS infers one from a top-level Git, README,
+`pyproject.toml`, or `package.json` marker and lightweight heuristics. Discovery
+does not recurse into project trees. A pinned `npm` `packageManager` is executed
+through Corepack.
 
 ## Artifacts
 
@@ -39,6 +41,8 @@ LabOS writes:
 - `artifacts/reports/REMAINING_EXTERNAL_ACTIONS.md`
 
 LabOS reports contain local project paths and may contain captured command
-output. The `artifacts/` directory is intentionally ignored by Git. Review and
-redact generated reports before sharing them outside the machine where they
-were produced.
+output. Values supplied through environment overrides with credential-like keys
+are redacted from captured output and lifecycle events, but arbitrary child
+process output may still be sensitive. The `artifacts/` directory is
+intentionally ignored by Git. Review generated reports before sharing them
+outside the machine where they were produced.

@@ -118,6 +118,71 @@ metadata: {}
     assert manifests[0].manifest_source == ManifestSource.DECLARED
 
 
+def test_discover_projects_includes_marker_based_non_git_projects(tmp_path: Path) -> None:
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    project = workspace / "research-project"
+    project.mkdir()
+    (project / "pyproject.toml").write_text(
+        "[project]\nname='marker-project'\n", encoding="utf-8"
+    )
+    ignored = workspace / "unmarked-archive"
+    ignored.mkdir()
+
+    manifests = discover_projects(workspace)
+
+    assert [manifest.project_id for manifest in manifests] == ["marker-project"]
+
+
+def test_inference_tolerates_malformed_optional_metadata(tmp_path: Path) -> None:
+    project = tmp_path / "MalformedMetadata"
+    project.mkdir()
+    (project / "pyproject.toml").write_text("[project\n", encoding="utf-8")
+    (project / "package.json").write_text("{broken", encoding="utf-8")
+    (project / "README.md").write_bytes(b"\xff\xfe")
+
+    manifest = infer_manifest(project)
+
+    assert manifest.project_id == "malformedmetadata"
+    assert manifest.entry_points[0].command == "npm test"
+
+
+def test_inference_uses_corepack_for_pinned_npm(tmp_path: Path) -> None:
+    project = tmp_path / "web"
+    project.mkdir()
+    (project / "package.json").write_text(
+        '{"name":"web","packageManager":"npm@12.0.2"}', encoding="utf-8"
+    )
+
+    manifest = infer_manifest(project)
+
+    assert manifest.entry_points[0].command == "corepack npm test"
+
+
+def test_malformed_declared_manifest_does_not_hide_sibling_projects(
+    tmp_path: Path,
+) -> None:
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    malformed = workspace / "malformed"
+    malformed.mkdir()
+    (malformed / "labos.project.yaml").write_text("project_id: [", encoding="utf-8")
+    (malformed / "README.md").write_text("# Malformed\n", encoding="utf-8")
+    healthy = workspace / "healthy"
+    healthy.mkdir()
+    (healthy / "README.md").write_text("# Healthy\n", encoding="utf-8")
+
+    manifests = discover_projects(workspace)
+    records = [validate_project(manifest) for manifest in manifests]
+
+    assert [manifest.project_id for manifest in manifests] == ["healthy", "malformed"]
+    malformed_manifest = manifests[1]
+    assert malformed_manifest.metadata["declared_manifest_error"] is True
+    assert records[0].valid is True
+    assert records[1].valid is False
+    assert any("malformed" in issue.message for issue in records[1].issues)
+
+
 def test_validation_detects_missing_readme(tmp_path: Path) -> None:
     repo = tmp_path / "no_readme"
     repo.mkdir()

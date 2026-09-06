@@ -1,0 +1,45 @@
+{
+  "verdict": "PUBLICATION-READY",
+  "checks": [
+    {
+      "check": "local_evidence_validator",
+      "pass": true,
+      "detail": "{\n  \"evidence_validation\": \"PASS\",\n  \"seeded_fault_classifier_evaluations\": 480,\n  \"actual_seeded_fault_executions\": 200,\n  \"public_case_runs\": 20\n}"
+    },
+    {
+      "check": "tests",
+      "pass": true,
+      "detail": "......................                                                   [100%]\n22 passed in 18.41s"
+    },
+    {
+      "check": "external_tasks",
+      "pass": true,
+      "detail": "17 tasks; threshold 15"
+    },
+    {
+      "check": "external_questions",
+      "pass": true,
+      "detail": "20 scored questions; threshold 20"
+    },
+    {
+      "check": "agent_independence",
+      "pass": true,
+      "detail": "agent identities differ on every task"
+    },
+    {
+      "check": "cross_domain",
+      "pass": true,
+      "detail": "4 fields: ['Computer Science', 'Economics', 'Engineering', 'Physics']"
+    },
+    {
+      "check": "heldout_or_ood",
+      "pass": true,
+      "detail": "visibility=['ood']; public_train is pilot evidence only"
+    },
+    {
+      "check": "complete_reports",
+      "pass": true,
+      "detail": "numeric=True; reports=True; provider_errors_absent=True"
+    }
+  ]
+}

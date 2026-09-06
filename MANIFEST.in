@@ -2,10 +2,14 @@ include CHANGELOG.md
 include CONTRIBUTING.md
 include LICENSE
 include OLYMPUS_MODEL_FOUNDRY_LEDGER.md
+include PROJECT_STATUS.md
 include RELEASE.md
 include SECURITY.md
+include TRUTH_MAP.md
 recursive-include behaviors *.yaml
 recursive-include datasets *.json *.jsonl *.txt
 recursive-include docs *.md
+recursive-exclude docs *OUTREACH*.md
+recursive-include evidence *.md *.json
 recursive-include examples *.py
 recursive-include research *.md

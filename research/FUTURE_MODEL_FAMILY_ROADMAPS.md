@@ -59,3 +59,23 @@ unavailable until a real checkpoint passes its own family gates.
 - Bottlenecks: feedback delay, non-stationarity, hidden confounding, safe online
   learning, and reproducible environment snapshots.
 - Dependency: Atlas grounding plus Perseus execution reliability.
+
+## Aion — governed autonomous research loops
+
+- Capability justification: propose a falsifiable experiment, execute only
+  authorized bounded work, audit its own evidence, and stop or revise when the
+  result contradicts the hypothesis.
+- Data: versioned research protocols, negative-result corpora, audit findings,
+  resource receipts, interruption/recovery traces, and independently reviewed
+  claim-to-evidence mappings.
+- Compute path: orchestration and verifier baselines before any model training;
+  adapter specialization only after deterministic policy enforcement is shown
+  to be insufficient.
+- Evaluations: protocol adherence, protected-data isolation, claim precision,
+  false-promotion rate, intervention recovery, budget compliance, and external
+  reproduction.
+- Falsification criterion: Aion adds no value if a deterministic controller
+  with the same tools and budget matches its valid-experiment rate and has an
+  equal or lower false-promotion rate.
+- Dependency: promoted Hermes execution substrate, Perseus tool reliability,
+  Atlas evidence grounding, and Kronos rollback/continual-learning controls.

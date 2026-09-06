@@ -1,0 +1,49 @@
+{
+  "agent_a": {
+    "accuracy": 0.0,
+    "all_correct": false,
+    "correct": 0,
+    "extra": [],
+    "missing": [
+      "fig From figure 2e, report the label of the line with the highest change in n(0) when G is 10^18."
+    ],
+    "per_question": {
+      "fig From figure 2e, report the label of the line with the highest change in n(0) when G is 10^18.": false
+    },
+    "total": 1
+  },
+  "agent_a_model": "qwen3:0.6b",
+  "agent_a_provider": "ollama",
+  "agent_a_provider_error": null,
+  "agent_a_report_exists": false,
+  "agent_b": {
+    "accuracy": 0.0,
+    "all_correct": false,
+    "correct": 0,
+    "extra": [],
+    "missing": [
+      "fig From figure 2e, report the label of the line with the highest change in n(0) when G is 10^18."
+    ],
+    "per_question": {
+      "fig From figure 2e, report the label of the line with the highest change in n(0) when G is 10^18.": false
+    },
+    "total": 1
+  },
+  "agent_b_model": "llama3.2:1b",
+  "agent_b_provider": "ollama",
+  "agent_b_provider_error": null,
+  "agent_b_report_exists": false,
+  "agreement": {
+    "fig From figure 2e, report the label of the line with the highest change in n(0) when G is 10^18.": true
+  },
+  "canonical_answers_sha256": "249b875a1123cc236f38cbf867651aca9bdee3fd1c447ded764659e2fdb40656",
+  "false_consensus": {
+    "fig From figure 2e, report the label of the line with the highest change in n(0) when G is 10^18.": true
+  },
+  "false_consensus_count": 1,
+  "false_consensus_rate": 1.0,
+  "pairwise_agreement_count": 1,
+  "pairwise_agreement_rate": 1.0,
+  "question_count": 1,
+  "task_id": "capsule-0811394"
+}

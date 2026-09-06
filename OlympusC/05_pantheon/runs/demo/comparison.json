@@ -1,0 +1,13 @@
+{
+  "label": "REPRODUCED",
+  "reasons": [
+    "canonical artifacts match and numerical difference is within exact-rerun tolerance"
+  ],
+  "disagreement": {
+    "d_z": 0.0,
+    "d_rel": 0.0,
+    "sign_agreement": 1,
+    "ci_overlap": 0.9999999999977767
+  },
+  "expected_fault": null
+}

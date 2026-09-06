@@ -10,6 +10,14 @@ def validate_project(manifest: ProjectManifest) -> ValidationResult:
     project_root = Path(manifest.root_path)
     if not project_root.exists():
         issues.append(ValidationIssue(severity="error", message="Project root does not exist."))
+    if manifest.metadata.get("declared_manifest_error"):
+        filename = manifest.metadata.get("declared_manifest_path", "labos.project file")
+        issues.append(
+            ValidationIssue(
+                severity="error",
+                message=f"Declared manifest '{filename}' is malformed or invalid.",
+            )
+        )
     if not _has_readme(project_root):
         issues.append(ValidationIssue(severity="warning", message="README is missing."))
     if not manifest.entry_points:

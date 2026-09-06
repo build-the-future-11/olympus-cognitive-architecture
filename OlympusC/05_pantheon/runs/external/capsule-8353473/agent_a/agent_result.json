@@ -1,0 +1,31 @@
+{
+  "agent_report_exists": false,
+  "answers": {
+    "fig Report plot label of the index with the higher adjusted closing price in 2008.": null
+  },
+  "model": "qwen3:0.6b",
+  "provider": "ollama",
+  "provider_error": null,
+  "report_exists": true,
+  "report_origin": "harness_failure_normalization",
+  "role": "agent_a",
+  "runtime_sec": 35.35430133299997,
+  "source": "external/corebench/capsules/capsule-8353473.tar.gz",
+  "source_sha256": "217c3b646cc62950c75567c3126979f0177fc7ef6f0db1cab776a3c159c82efa",
+  "task_id": "capsule-8353473",
+  "transcript": [
+    {
+      "text": "<report-json>\n{\n  \"fig\": null\n}\n</report-json>",
+      "tool_calls": [],
+      "turn": 0
+    },
+    {
+      "text": "<report-json>\n{\n  \"fig\": null\n}\n</report-json>",
+      "tool_calls": [],
+      "turn": 1
+    }
+  ],
+  "turns": 2,
+  "workspace_ephemeral": true,
+  "workspace_isolation": "macos sandbox-exec; repository and user home denied; network denied"
+}

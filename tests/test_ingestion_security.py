@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import socket
 from email.message import Message
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -43,6 +44,35 @@ def _policy() -> PermissionPolicy:
 def test_network_is_denied_by_default() -> None:
     with pytest.raises(PermissionError, match="disabled"):
         IngestionPipeline().ingest_http("https://data.example.org/file.txt")
+
+
+def test_file_ingestion_is_bounded_and_can_be_root_restricted(tmp_path: Path) -> None:
+    allowed = tmp_path / "allowed"
+    allowed.mkdir()
+    sample = allowed / "sample.txt"
+    sample.write_text("bounded", encoding="utf-8")
+    policy = PermissionPolicy(allowed_read_roots=(str(allowed),))
+    assert IngestionPipeline(policy, max_file_bytes=7).ingest_file(sample).text == "bounded"
+
+    outside = tmp_path / "outside.txt"
+    outside.write_text("outside", encoding="utf-8")
+    with pytest.raises(PermissionError, match="allowed roots"):
+        IngestionPipeline(policy).ingest_file(outside)
+    with pytest.raises(ValueError, match="byte limit"):
+        IngestionPipeline(policy, max_file_bytes=6).ingest_file(sample)
+
+
+def test_shard_writes_are_denied_by_default(tmp_path: Path) -> None:
+    with pytest.raises(PermissionError, match="writes are disabled"):
+        IngestionPipeline().shard([], tmp_path / "shard.json")
+
+    policy = PermissionPolicy(
+        allow_filesystem_write=True,
+        allowed_write_roots=(str(tmp_path),),
+    )
+    output = tmp_path / "shard.json"
+    IngestionPipeline(policy).shard([], output)
+    assert output.read_text(encoding="utf-8") == "[]"
 
 
 @pytest.mark.parametrize(

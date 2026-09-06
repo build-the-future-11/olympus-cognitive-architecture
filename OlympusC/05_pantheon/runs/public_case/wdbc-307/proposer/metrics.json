@@ -1,0 +1,14 @@
+{
+  "accuracy": 0.972027972027972,
+  "case_id": "wdbc-307",
+  "dataset_hash": "aed4d90353a2cd2d1c1c69e013e22871c0bebe79c36adec92d0cfa6ebb8a5ddf",
+  "effect": 0.3426573426573426,
+  "implementation": "sklearn_lbfgs",
+  "majority_accuracy": 0.6293706293706294,
+  "n_test": 143,
+  "n_train": 426,
+  "roc_auc": 0.9853249475890985,
+  "role": "proposer",
+  "runtime_sec": 0.0031532489999790414,
+  "split_seed": 307
+}

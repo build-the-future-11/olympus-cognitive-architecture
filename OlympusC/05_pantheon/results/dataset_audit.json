@@ -1,0 +1,181 @@
+{
+  "synthetic": {
+    "packages": [
+      {
+        "seed": 0,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 172,
+        "treatment_zeros": 148
+      },
+      {
+        "seed": 1,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 147,
+        "treatment_zeros": 173
+      },
+      {
+        "seed": 2,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 167,
+        "treatment_zeros": 153
+      },
+      {
+        "seed": 3,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 151,
+        "treatment_zeros": 169
+      },
+      {
+        "seed": 4,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 167,
+        "treatment_zeros": 153
+      },
+      {
+        "seed": 5,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 154,
+        "treatment_zeros": 166
+      },
+      {
+        "seed": 6,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 169,
+        "treatment_zeros": 151
+      },
+      {
+        "seed": 7,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 165,
+        "treatment_zeros": 155
+      },
+      {
+        "seed": 8,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 157,
+        "treatment_zeros": 163
+      },
+      {
+        "seed": 9,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 152,
+        "treatment_zeros": 168
+      },
+      {
+        "seed": 10,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 164,
+        "treatment_zeros": 156
+      },
+      {
+        "seed": 11,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 156,
+        "treatment_zeros": 164
+      },
+      {
+        "seed": 12,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 152,
+        "treatment_zeros": 168
+      },
+      {
+        "seed": 13,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 139,
+        "treatment_zeros": 181
+      },
+      {
+        "seed": 14,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 156,
+        "treatment_zeros": 164
+      },
+      {
+        "seed": 15,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 164,
+        "treatment_zeros": 156
+      },
+      {
+        "seed": 16,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 160,
+        "treatment_zeros": 160
+      },
+      {
+        "seed": 17,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 156,
+        "treatment_zeros": 164
+      },
+      {
+        "seed": 18,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 159,
+        "treatment_zeros": 161
+      },
+      {
+        "seed": 19,
+        "rows": 320,
+        "duplicates": 0,
+        "missing_cells": 0,
+        "treatment_ones": 175,
+        "treatment_zeros": 145
+      }
+    ],
+    "generator": "y = 0.8*x + 1.25*treatment + Normal(0,1)",
+    "leakage_risk": "No predictive split; claim is a frozen-table effect estimate."
+  },
+  "public": {
+    "name": "Breast Cancer Wisconsin (Diagnostic)",
+    "rows": 569,
+    "features": 30,
+    "missing_cells": 0,
+    "duplicate_rows_in_features_plus_target": 0,
+    "class_counts": {
+      "0": 212,
+      "1": 357
+    },
+    "split": "10 prespecified stratified 75/25 splits; scaler fit on train only",
+    "raw_redistribution": "Not included; loaded at runtime from scikit-learn."
+  }
+}

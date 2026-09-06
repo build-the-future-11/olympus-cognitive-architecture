@@ -1,0 +1,301 @@
+{
+  "agent_report_exists": false,
+  "answers": {
+    "fig Report the label of the line with the lowest expectation value at Time 2.": null
+  },
+  "model": "llama3.2:1b",
+  "provider": "ollama",
+  "provider_error": null,
+  "report_exists": true,
+  "report_origin": "harness_failure_normalization",
+  "role": "agent_b",
+  "runtime_sec": 25.172696249999944,
+  "source": "external/corebench/capsules/capsule-3990498.tar.gz",
+  "source_sha256": "38f3652ac459320a4df99c3137c5194d848cc35b3378c3154c281ec6c7a8a428",
+  "task_id": "capsule-3990498",
+  "transcript": [
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "pwd; find . -maxdepth 2 -type f | head -100",
+            "timeout_sec": 300
+          },
+          "id": "call_tkyb923e",
+          "name": "shell"
+        }
+      ],
+      "turn": 0
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "test.py",
+            "timeout_sec": 300
+          },
+          "id": "call_3ups8qb6",
+          "name": "shell"
+        }
+      ],
+      "turn": 1
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "pwd; find . -maxdepth 2 -type f | head -100",
+            "timeout_sec": 300
+          },
+          "id": "call_zggrfy10",
+          "name": "shell"
+        }
+      ],
+      "turn": 2
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "test.py",
+            "timeout_sec": 300
+          },
+          "id": "call_7xdok63q",
+          "name": "shell"
+        }
+      ],
+      "turn": 3
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "pwd; find . -maxdepth 2 -type f | head -100",
+            "timeout_sec": 300
+          },
+          "id": "call_ckbsj6ne",
+          "name": "shell"
+        }
+      ],
+      "turn": 4
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_4vhdhwn4",
+          "name": "shell"
+        }
+      ],
+      "turn": 5
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_z54esgig",
+          "name": "shell"
+        }
+      ],
+      "turn": 6
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_e4ku5j9i",
+          "name": "shell"
+        }
+      ],
+      "turn": 7
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_dtnx2ahw",
+          "name": "shell"
+        }
+      ],
+      "turn": 8
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_w5darfhz",
+          "name": "shell"
+        }
+      ],
+      "turn": 9
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_rwleabo4",
+          "name": "shell"
+        }
+      ],
+      "turn": 10
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_gf0xkict",
+          "name": "shell"
+        }
+      ],
+      "turn": 11
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_akmqjr28",
+          "name": "shell"
+        }
+      ],
+      "turn": 12
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_bpnzcmad",
+          "name": "shell"
+        }
+      ],
+      "turn": 13
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_6vi4tzb0",
+          "name": "shell"
+        }
+      ],
+      "turn": 14
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_plzt2wlx",
+          "name": "shell"
+        }
+      ],
+      "turn": 15
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_djzhix0o",
+          "name": "shell"
+        }
+      ],
+      "turn": 16
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_im7z0z8k",
+          "name": "shell"
+        }
+      ],
+      "turn": 17
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_ixyi8kya",
+          "name": "shell"
+        }
+      ],
+      "turn": 18
+    },
+    {
+      "text": "",
+      "tool_calls": [
+        {
+          "arguments": {
+            "command": "fig",
+            "timeout_sec": 300
+          },
+          "id": "call_bjxesx2i",
+          "name": "shell"
+        }
+      ],
+      "turn": 19
+    }
+  ],
+  "turns": 20,
+  "workspace_ephemeral": true,
+  "workspace_isolation": "macos sandbox-exec; repository and user home denied; network denied"
+}

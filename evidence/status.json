@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "current_release_gate": "REQUIRES_CI_AND_HUMAN_REVIEW",
+  "historical_evidence_attests_current_tree": false,
+  "generated_on": "2026-09-01",
+  "final_verification": "evidence/final_verification.json",
+  "canonical_root": "/Volumes/PRO-BLADE/GitHub-Every-Repo/Olympus",
+  "revision": {
+    "kind": "git_working_tree",
+    "value": "audit-repair-20260906",
+    "closest_verified_baseline": "2b0e3930d4403a9df830bd470c64f2d3c5028088"
+  },
+  "stages": [
+    {"stage": 1, "name": "canonical-source-merge-stage-truth-audit", "state": "OUTCOME_VERIFIED", "evidence": "evidence/stage_01.md"},
+    {"stage": 2, "name": "reference-architecture-promotion-constitution", "state": "IMPLEMENTED", "evidence": "evidence/stage_02.md"},
+    {"stage": 3, "name": "foundry-integrity-audit-hardening", "state": "OUTCOME_VERIFIED", "evidence": "evidence/stage_03.md"},
+    {"stage": 4, "name": "hermes-baseline-reconstruction", "state": "BASELINED", "evidence": "evidence/stage_04.md"},
+    {"stage": 5, "name": "training-data-pipeline-reliability", "state": "SMOKE_TESTED", "evidence": "evidence/stage_05.md"},
+    {"stage": 6, "name": "task-tool-evaluation-harness", "state": "SMOKE_TESTED", "evidence": "evidence/stage_06.md"},
+    {"stage": 7, "name": "matched-baselines-mechanism-ablations", "state": "ABLATION_RUN", "evidence": "evidence/stage_07.md"},
+    {"stage": 8, "name": "resource-safe-local-foundry", "state": "SMOKE_TESTED", "evidence": "evidence/stage_08.md"},
+    {"stage": 9, "name": "forge-web-control-ux", "state": "SMOKE_TESTED", "evidence": "evidence/stage_09.md"},
+    {"stage": 10, "name": "prometheus-aion-stage-scaffolding-without-fake-progress", "state": "SPECIFIED", "evidence": "evidence/stage_10.md"},
+    {"stage": 11, "name": "reproducibility-release-candidate", "state": "REPRODUCED", "evidence": "evidence/stage_11.md"},
+    {"stage": 12, "name": "skeptical-final-audit-next-experiment", "state": "OUTCOME_VERIFIED", "evidence": "evidence/stage_12.md"}
+  ],
+  "families": {
+    "Hermes": "NOT_PROMOTED",
+    "Prometheus": "SPECIFIED",
+    "Perseus": "SPECIFIED",
+    "Atlas": "SPECIFIED",
+    "Kronos": "SPECIFIED",
+    "Aion": "SPECIFIED"
+  },
+  "verified_test_floor": 64,
+  "promotion": "NOT_PROMOTED"
+}

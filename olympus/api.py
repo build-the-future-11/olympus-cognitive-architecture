@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import ipaddress
 import os
+import secrets
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from functools import lru_cache
@@ -9,7 +11,7 @@ from tempfile import TemporaryDirectory
 from typing import Annotated, Literal
 
 import httpx
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
 
 from olympus import __version__
@@ -26,7 +28,9 @@ from olympus.demos import (
 )
 from olympus.forge.compiler import NaturalLanguageBehaviorCompiler
 from olympus.forge.runtime import ForgeRuntime
+from olympus.foundry.jobs import FoundryJobManager
 from olympus.foundry.ollama import OllamaClient
+from olympus.foundry.resources import WorkloadTier, assess_workload, memory_snapshot
 from olympus.foundry.service import FoundryService
 
 
@@ -77,7 +81,8 @@ interpreter = InterpretiveSuperpositionNetwork()
 
 @lru_cache(maxsize=1)
 def get_foundry_service() -> FoundryService:
-    root = Path(os.environ.get("OLYMPUS_FOUNDRY_ROOT", "artifacts/foundry"))
+    configured = os.environ.get("OLYMPUS_FOUNDRY_ROOT")
+    root = Path(configured).expanduser() if configured else Path.cwd() / "artifacts/foundry"
     return FoundryService(root)
 
 
@@ -86,8 +91,53 @@ def get_ollama_client() -> OllamaClient:
     return OllamaClient(os.environ.get("OLYMPUS_OLLAMA_URL", "http://127.0.0.1:11434"))
 
 
+@lru_cache(maxsize=1)
+def get_foundry_job_manager() -> FoundryJobManager:
+    sample = Path(__file__).resolve().parent / "foundry/foundry_verification.txt"
+    return FoundryJobManager(get_foundry_service(), sample)
+
+
 FoundryDependency = Annotated[FoundryService, Depends(get_foundry_service)]
 OllamaDependency = Annotated[OllamaClient, Depends(get_ollama_client)]
+FoundryJobsDependency = Annotated[FoundryJobManager, Depends(get_foundry_job_manager)]
+
+
+def require_mutation_access(
+    request: Request,
+    authorization: Annotated[str | None, Header()] = None,
+) -> None:
+    """Permit local mutations, or require the configured bearer token.
+
+    The default remains convenient for a directly bound loopback development
+    server. Requests arriving from another host or through a forwarding proxy
+    are denied unless OLYMPUS_API_TOKEN is configured and supplied.
+    """
+
+    expected = os.environ.get("OLYMPUS_API_TOKEN")
+    supplied = authorization.removeprefix("Bearer ") if authorization else ""
+    if expected:
+        if supplied and secrets.compare_digest(supplied, expected):
+            return
+        raise HTTPException(status_code=401, detail="valid bearer token required")
+
+    if request.headers.get("forwarded") or request.headers.get("x-forwarded-for"):
+        raise HTTPException(
+            status_code=403,
+            detail="proxied mutations require OLYMPUS_API_TOKEN",
+        )
+    host = request.client.host if request.client is not None else ""
+    try:
+        is_loopback = ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        is_loopback = host == "testclient"
+    if not is_loopback:
+        raise HTTPException(
+            status_code=403,
+            detail="mutating endpoints are loopback-only without OLYMPUS_API_TOKEN",
+        )
+
+
+MutationAccess = Annotated[None, Depends(require_mutation_access)]
 
 
 @asynccontextmanager
@@ -97,13 +147,20 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         get_foundry_service().close()
         get_foundry_service.cache_clear()
     get_ollama_client.cache_clear()
+    get_foundry_job_manager.cache_clear()
 
 
 app = FastAPI(title="Olympus Forge API", version=__version__, lifespan=lifespan)
 
 
 @app.get("/health")
-def health() -> dict[str, str]:
+def health(service: FoundryDependency) -> dict[str, str]:
+    try:
+        integrity = service.store.integrity_check()
+    except Exception as error:
+        raise HTTPException(status_code=503, detail="foundry registry unavailable") from error
+    if integrity != "ok":
+        raise HTTPException(status_code=503, detail=f"foundry registry integrity: {integrity}")
     return {"status": "ok"}
 
 
@@ -175,9 +232,67 @@ def foundry_status(
     return service.status()
 
 
+@app.get("/foundry/overview")
+def foundry_overview(service: FoundryDependency) -> dict[str, object]:
+    snapshot = memory_snapshot()
+    datasets = service.store.datasets()
+    experiments = service.store.experiments()
+    checkpoints = service.store.checkpoints()
+    evaluations = service.store.evaluations()
+    models = service.store.models()
+    return {
+        "status": service.status(),
+        "latest_dataset": datasets[-1].model_dump(mode="json") if datasets else None,
+        "latest_experiment": experiments[-1].model_dump(mode="json") if experiments else None,
+        "latest_checkpoint": checkpoints[-1].model_dump(mode="json") if checkpoints else None,
+        "latest_evaluation": evaluations[-1].model_dump(mode="json") if evaluations else None,
+        "latest_model": models[-1].model_dump(mode="json") if models else None,
+        "promotion_boundary": (
+            "VERIFIED_INFRASTRUCTURE_ONLY" if models else "NO_PROMOTED_ARTIFACT"
+        ),
+        "resources": {
+            "snapshot": snapshot.as_dict(),
+            "small": assess_workload(WorkloadTier.SMALL, snapshot).admitted,
+            "medium": assess_workload(WorkloadTier.MEDIUM, snapshot).admitted,
+        },
+    }
+
+
+@app.get("/foundry/jobs/current")
+def foundry_job_status(manager: FoundryJobsDependency) -> dict[str, object]:
+    return manager.snapshot().model_dump(mode="json")
+
+
+@app.post("/foundry/jobs/start")
+def start_foundry_job(manager: FoundryJobsDependency, _access: MutationAccess) -> dict[str, object]:
+    try:
+        return manager.start().model_dump(mode="json")
+    except RuntimeError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+
+
+@app.post("/foundry/jobs/cancel")
+def cancel_foundry_job(
+    manager: FoundryJobsDependency, _access: MutationAccess
+) -> dict[str, object]:
+    try:
+        return manager.cancel().model_dump(mode="json")
+    except RuntimeError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+
+
+@app.post("/foundry/jobs/retry")
+def retry_foundry_job(manager: FoundryJobsDependency, _access: MutationAccess) -> dict[str, object]:
+    try:
+        return manager.retry().model_dump(mode="json")
+    except RuntimeError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+
+
 @app.post("/foundry/verify")
 def verify_foundry(
     service: FoundryDependency,
+    _access: MutationAccess,
 ) -> dict[str, object]:
     sample = Path(__file__).resolve().parent / "foundry/foundry_verification.txt"
     try:
@@ -210,6 +325,7 @@ def list_foundry_models(
 def create_chat_completion(
     request: ChatCompletionRequest,
     service: FoundryDependency,
+    _access: MutationAccess,
 ) -> dict[str, object]:
     prompt = "\n".join(f"{message.role}: {message.content}" for message in request.messages)
     try:
@@ -260,6 +376,7 @@ def ollama_health(
 def ollama_generate(
     request: OllamaGenerateRequest,
     client: OllamaDependency,
+    _access: MutationAccess,
 ) -> dict[str, object]:
     try:
         return client.generate(

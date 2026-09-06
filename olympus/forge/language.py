@@ -71,12 +71,20 @@ class BehaviorLanguage:
 
     def semantic_check(self, spec: BehaviorSpec) -> list[str]:
         node_ids = {node.id for node in spec.nodes}
-        errors = [
+        duplicate_ids = sorted(
+            node_id
+            for node_id in node_ids
+            if sum(node.id == node_id for node in spec.nodes) > 1
+        )
+        errors = [f"Duplicate node ID: {node_id}" for node_id in duplicate_ids]
+        errors.extend(
+            [
             f"Missing dependency: {dependency}"
             for node in spec.nodes
             for dependency in node.depends_on
             if dependency not in node_ids
-        ]
+            ]
+        )
         try:
             spec.topological_order()
         except Exception as error:  # noqa: BLE001

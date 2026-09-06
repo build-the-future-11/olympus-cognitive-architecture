@@ -1,0 +1,376 @@
+[
+    {
+        "field": "Physics",
+        "language": "Python",
+        "capsule_title": "Computational characterization of nonwoven fibrous media",
+        "capsule_id": "capsule-9026204",
+        "task_prompt": "Execute 'fibrous-media-analysis.ipynb'. Save the results in latex format in ../results. For all the runs, disable the cell execution timeout and allow errors.",
+        "results": [
+            {
+                "fig From the cumulative pore size distribution (PSD) comparison plots measuring pore diameter vs. cumulative frequency, report the plot label of the model with the lowest cumulative frequency at pore diameter 25 on plot (a).": "Lombard model (1989)"
+            },
+            {
+                "fig From the cumulative pore size distribution (PSD) comparison plots measuring pore diameter vs. cumulative frequency, report the plot label of the model with the lowest cumulative frequency at pore diameter 25 on plot (a).": "Lombard model (1989)"
+            },
+            {
+                "fig From the cumulative pore size distribution (PSD) comparison plots measuring pore diameter vs. cumulative frequency, report the plot label of the model with the lowest cumulative frequency at pore diameter 25 on plot (a).": "Lombard model (1989)"
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.6709443.v1"
+    },
+    {
+        "field": "Engineering",
+        "language": "Python",
+        "capsule_title": "Parametric Saccade Model",
+        "capsule_id": "capsule-8467067",
+        "task_prompt": "Run the following Python files: 'Example_1.py', 'Example_2.py', 'Example_3.py', 'Example_4.py', 'Example_5.py'.",
+        "results": [
+            {
+                "fig From the example 4 plots, report from the main sequence subplot the letter of the Saccade with the lowest saccade peak velocity at a saccade amplitude of 10 degrees.": "E"
+            },
+            {
+                "fig From the example 4 plots, report from the main sequence subplot the letter of the Saccade with the lowest saccade peak velocity at a saccade amplitude of 10 degrees.": "E"
+            },
+            {
+                "fig From the example 4 plots, report from the main sequence subplot the letter of the Saccade with the lowest saccade peak velocity at a saccade amplitude of 10 degrees.": "E"
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.b86bad0a-58ff-4648-9d9f-3bd88ce831f3"
+    },
+    {
+        "field": "Engineering",
+        "language": "Python",
+        "capsule_title": "Human Activities Recognition on PAMAP2 dataset using Random Forest",
+        "capsule_id": "capsule-9419423",
+        "task_prompt": "Run 'RandomForest.py'.",
+        "results": [
+            {
+                "Report the mean accuracy.": 0.927,
+                "Report the mean F1 score.": 0.923
+            },
+            {
+                "Report the mean accuracy.": 0.925,
+                "Report the mean F1 score.": 0.918
+            },
+            {
+                "Report the mean accuracy.": 0.926,
+                "Report the mean F1 score.": 0.92
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.0414025.v1"
+    },
+    {
+        "field": "Engineering",
+        "language": "Python",
+        "capsule_title": "Parasitic Self and Mutual Inductances of Thin-Film Capacitors",
+        "capsule_id": "capsule-6724161",
+        "task_prompt": "Run 'Main_Cparasites.py'.",
+        "results": [
+            {
+                "fig From the figure depicting calculated transmission coefficient for the 100-nF VISHAY capacitor, report the label of the line with the highest |S21| at frequency 10^0": "Single"
+            },
+            {
+                "fig From the figure depicting calculated transmission coefficient for the 100-nF VISHAY capacitor, report the label of the line with the highest |S21| at frequency 10^0": "Single"
+            },
+            {
+                "fig From the figure depicting calculated transmission coefficient for the 100-nF VISHAY capacitor, report the label of the line with the highest |S21| at frequency 10^0": "Single"
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.76709120-1c53-4fe0-bbed-7a5f8e06cf02"
+    },
+    {
+        "field": "Engineering",
+        "language": "Python",
+        "capsule_title": "Policy iteration for linear quadratic games with stochastic parameters",
+        "capsule_id": "capsule-8610546",
+        "task_prompt": "Run 'experiments.py'.",
+        "results": [
+            {
+                "Report the cost for the optimal method.": 3019
+            },
+            {
+                "Report the cost for the optimal method.": 3019
+            },
+            {
+                "Report the cost for the optimal method.": 3019
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.0098640.v1"
+    },
+    {
+        "field": "Physics",
+        "language": "Python",
+        "capsule_title": "Effective Lifetime of Non-Equilibrium Carriers in Semiconductors from Non-Adiabatic Molecular Dynamics Simulations",
+        "capsule_id": "capsule-0811394",
+        "task_prompt": "Run 'test.py'.",
+        "results": [
+            {
+                "fig From figure 2e, report the label of the line with the highest change in n(0) when G is 10^18.": "Auger"
+            },
+            {
+                "fig From figure 2e, report the label of the line with the highest change in n(0) when G is 10^18.": "Auger"
+            },
+            {
+                "fig From figure 2e, report the label of the line with the highest change in n(0) when G is 10^18.": "Auger"
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.8344712.v1"
+    },
+    {
+        "field": "Economics",
+        "language": "R",
+        "capsule_title": "How the Other Half Died: Immigration and Mortality in US Cities -- Replication Package",
+        "capsule_id": "capsule-4320893",
+        "task_prompt": "Create a symbolic link between /data and data. Using Rscript, run 'code/master.R' from the base directory (NOT from in code).",
+        "results": [
+            {
+                "fig From the heatmap measuring mortality rate relative to American born, report the name of the country with the highest mortality rate relative to American born age 55 to 64 for F.": "Ireland"
+            },
+            {
+                "fig From the heatmap measuring mortality rate relative to American born, report the name of the country with the highest mortality rate relative to American born age 55 to 64 for F.": "Ireland"
+            },
+            {
+                "fig From the heatmap measuring mortality rate relative to American born, report the name of the country with the highest mortality rate relative to American born age 55 to 64 for F.": "Ireland"
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.8530479.v1"
+    },
+    {
+        "field": "Engineering",
+        "language": "Python",
+        "capsule_title": "20mm Transducer Array Characterization for Class DE Driving with Experimental Results",
+        "capsule_id": "capsule-8185407",
+        "task_prompt": "From the ../data directory, run the following python scripts: '../code/extract.py', '../code/eta_freq_sweep.py', '../code/power_sweep.py', '../code/merge_s1p.py', '../code/calc_power.py'.",
+        "results": [
+            {
+                "Report the load power (Pload) for Transducer F from the measured data results. Ignore units.": 1345.61367149            
+            },
+            {
+                "Report the load power (Pload) for Transducer F from the measured data results. Ignore units.": 1345.61367149            
+            },
+            {
+                "Report the load power (Pload) for Transducer F from the measured data results. Ignore units.": 1345.61367149            
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.1109/iscas45731.2020.9180423"
+    },
+    {
+        "field": "Engineering",
+        "language": "Python",
+        "capsule_title": "Big data analystics for smart grid system using google colab",
+        "capsule_id": "capsule-5360076",
+        "task_prompt": "Execute 'code_ocean2_of_final_feature_engineering_+GBoost+final_figures+big_data_analytics_on_smart_grid_system_.ipynb'. Save the results in html format in ../results. Disable the cell execution timeout and allow errors.",
+        "results": [
+            {
+                "fig Report the name of the machine learning model used with the greatest run time for the applied big data analytics on decentralized smart grid system.": "Random forest"
+            },
+            {
+                "fig Report the name of the machine learning model used with the greatest run time for the applied big data analytics on decentralized smart grid system.": "Random forest"
+            },
+            {
+                "fig Report the name of the machine learning model used with the greatest run time for the applied big data analytics on decentralized smart grid system.": "Random forest"
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.9201912.v1"
+    },
+    {
+        "field": "Engineering",
+        "language": "Python",
+        "capsule_title": "Partially Blind Handovers for mmWave New Radio Aided by Sub-6 GHz LTE Signaling",
+        "capsule_id": "capsule-2675546",
+        "task_prompt": "Run 'main.py'.",
+        "results": [
+            {
+                "fig From the UE #74 Handover Executions plot, report the Proposed decision at time 25 m/s.": 0,
+                "What is the original (baseline) handover success rate for UE #74? Report the value as a percentage. Do not include the percentage sign.": 100
+            },
+            {
+                "fig From the UE #74 Handover Executions plot, report the Proposed decision at time 25 m/s.": 0,
+                "What is the original (baseline) handover success rate for UE #74? Report the value as a percentage. Do not include the percentage sign.": 100
+            },
+            {
+                "fig From the UE #74 Handover Executions plot, report the Proposed decision at time 25 m/s.": 0,
+                "What is the original (baseline) handover success rate for UE #74? Report the value as a percentage. Do not include the percentage sign.": 100
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.d9fecfa5-3035-458e-bd76-4c81dc8cf0fc"
+    },
+    {
+        "field": "Engineering",
+        "language": "Python",
+        "capsule_title": "Intelligent Reflecting Surface Operation under Predictable Receiver Mobility: A Continuous Time Propagation Model",
+        "capsule_id": "capsule-0571975",
+        "task_prompt": "Using python3, run 'satcom.py'.",
+        "results": [
+            {
+                "Report the max gain % of planar IRS.": 3.80583
+            },
+            {
+                "Report the max gain % of planar IRS.": 3.80583
+            },
+            {
+                "Report the max gain % of planar IRS.": 3.80583
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.1140031.v1"
+    },
+    {
+        "field": "Physics",
+        "language": "Python",
+        "capsule_title": "Integration window determation for optimal FOM using the liquid scintillation spectrometer Quantulus 1220",
+        "capsule_id": "capsule-5007288",
+        "task_prompt": "Run 'FOM.py'.",
+        "results": [
+            {
+                "fig From the plots measuring counts/s for every channel, report the label of the line with the highest Counts/s at Channel 200.": "Spectrum"
+            },
+            {
+                "fig From the plots measuring counts/s for every channel, report the label of the line with the highest Counts/s at Channel 200.": "Spectrum"
+            },
+            {
+                "fig From the plots measuring counts/s for every channel, report the label of the line with the highest Counts/s at Channel 200.": "Spectrum"
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.7695385.v1"
+    },
+    {
+        "field": "Engineering",
+        "language": "Python",
+        "capsule_title": "Measuring Sample Path Causal Influences With Relative Entropy",
+        "capsule_id": "capsule-8353473",
+        "task_prompt": "Using the ln bash command and the -s flag, create a new file in the current directory with the same name as ../data. From the 'notebooks' folder, create the ../../results/figs directory. Set the environment variable MPLBACKEND to \"Agg\". Execute all the notebooks in the 'notebooks' directory in parallel. Save the results in html format in ../../results. Disable the cell execution timeout and allow errors. Pause executing the script until all of the runs are completed.",
+        "results": [
+            {
+                "fig Report plot label of the index with the higher adjusted closing price in 2008.": "HS"
+            },
+            {
+                "fig Report plot label of the index with the higher adjusted closing price in 2008.": "HS"
+            },
+            {
+                "fig Report plot label of the index with the higher adjusted closing price in 2008.": "HS"
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.7419991.v1"
+    },
+    {
+        "field": "Physics",
+        "language": "Python",
+        "capsule_title": "acdecom - A Python Module for Acoustic Wave Decomposition in Flow Ducts",
+        "capsule_id": "capsule-4407237",
+        "task_prompt": "Run pip install in the current directory with the -v flag. Then, run the following python files: 'examples/plot_turbo.py', 'examples/plot_RienstraCutOns.py', 'examples/plot_rectangularWaveNumbers.py', 'examples/plot_turbo.py', 'examples/plot_liner.py', and 'examples/plot_higherOrderModes.py'.",
+        "results": [
+            {
+                "fig From the plot measuring damping of a wave along a rectangular duct of length 1.0 m, report the label of the line with the highest dissipation % at frequency 1000 Hz.": "Kirchoff"
+            },
+            {
+                "fig From the plot measuring damping of a wave along a rectangular duct of length 1.0 m, report the label of the line with the highest dissipation % at frequency 1000 Hz.": "Kirchoff"
+            },
+            {
+                "fig From the plot measuring damping of a wave along a rectangular duct of length 1.0 m, report the label of the line with the highest dissipation % at frequency 1000 Hz.": "Kirchoff"
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.7639723.v1"
+    },
+    {
+        "field": "Engineering",
+        "language": "Python",
+        "capsule_title": "Supplementary code for data exploration and analysis of the paper: Assessing the physicochemical and microbiological condition of surface waters in Urab\u00e1-Colombia: Impact of human activities and agro-industry",
+        "capsule_id": "capsule-6562149",
+        "task_prompt": "Execute 'DataExplorationAnalysisScript.ipynb'. Save the results in html format in ../results. Disable the cell execution timeout and allow errors.",
+        "results": [
+            {
+                "fig Report the p-value of the distance (m) from the plot with the new data histograms.": 0.061
+            },
+            {
+                "fig Report the p-value of the distance (m) from the plot with the new data histograms.": 0.061
+            },
+            {
+                "fig Report the p-value of the distance (m) from the plot with the new data histograms.": 0.061
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.8303479.v1"
+    },
+    {
+        "field": "Economics",
+        "language": "R",
+        "capsule_title": "Replication of All Figures in: Statistical Uncertainty in the Ranking of Journals and Universities",
+        "capsule_id": "capsule-2151475",
+        "task_prompt": "Using Rscript, run 'master.R'.",
+        "results": [
+            {
+                "fig Report the name of the university ranked #1 by impact factor.": "Chicago",
+                "fig Report the name of the journal with the highest 2011 impact factor from the analysis of 30 journals.": "JEL"
+            },
+            {
+                "fig Report the name of the university ranked #1 by impact factor.": "Chicago",
+                "fig Report the name of the journal with the highest 2011 impact factor from the analysis of 30 journals.": "JEL"
+            },
+            {
+                "fig Report the name of the university ranked #1 by impact factor.": "Chicago",
+                "fig Report the name of the journal with the highest 2011 impact factor from the analysis of 30 journals.": "JEL"
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.0659696.v1"
+    },
+    {
+        "field": "Computer Science",
+        "language": "Python",
+        "capsule_title": "Harshness-Aware Sentiment Mining Framework for Product Review",
+        "capsule_id": "capsule-5172670",
+        "task_prompt": "Run '5.em_R.py'.",
+        "results": [
+            {
+                "Report the accuracy of the analysis of the movie.": 0.74,
+                "From the distribution of the HBF in the analysis of the movie, report the % positive.": 63
+            },
+            {
+                "Report the accuracy of the analysis of the movie.": 0.74,
+                "From the distribution of the HBF in the analysis of the movie, report the % positive.": 63
+            },
+            {
+                "Report the accuracy of the analysis of the movie.": 0.74,
+                "From the distribution of the HBF in the analysis of the movie, report the % positive.": 63
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.7306590.v1"
+    },
+    {
+        "field": "Computer Science",
+        "language": "Python",
+        "capsule_title": "E2E-FS: An End-to-End Feature Selection Method for Neural Networks",
+        "capsule_id": "capsule-7350043",
+        "task_prompt": "Run 'example.py' and write the output to /results/example.txt. Print commands as they run and stop if any command fails.",
+        "gpu": true,
+        "results": [
+            {
+                "Report the final accuracy of the E2E-FS method on the mnist dataset.": 0.9726999998092651
+            },
+            {
+                "Report the final accuracy of the E2E-FS method on the mnist dataset.": 0.970600009
+            },
+            {
+                "Report the final accuracy of the E2E-FS method on the mnist dataset.": 0.975600004196167
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.4665859.v1"
+    },
+    {
+        "field": "Physics",
+        "language": "Python",
+        "capsule_title": "tqix: A toolbox for Quantum measurement, quantum tomography, quantum metrology, and others",
+        "capsule_id": "capsule-3990498",
+        "task_prompt": "Run 'test.py'.",
+        "results": [
+            {
+                "fig Report the label of the line with the lowest expectation value at Time 2.": "<sigma z>"
+            },
+            {
+                "fig Report the label of the line with the lowest expectation value at Time 2.": "<sigma z>"
+            },
+            {
+                "fig Report the label of the line with the lowest expectation value at Time 2.": "<sigma z>"
+            }
+        ],
+        "capsule_doi": "https://doi.org/10.24433/CO.0647308.v1"
+    }
+]

@@ -1,0 +1,102 @@
+{
+  "agents": [
+    {
+      "digest": "7df6b6e09427a769808717c0a93cadc4ae99ed4eb8bf5ca557c90846becea435",
+      "model": "qwen3:0.6b",
+      "provider": "ollama"
+    },
+    {
+      "digest": "baf6a787fdffd633537aa2eb51cfd54cb93ff08e28040095462bb63daf552878",
+      "model": "llama3.2:1b",
+      "provider": "ollama"
+    }
+  ],
+  "benchmark_visibility": [
+    "ood"
+  ],
+  "claim_boundary": "Local small-model OOD reproduction evidence; does not estimate frontier-agent or human-adjudication performance.",
+  "decoding": {
+    "max_turns": 20,
+    "provider_timeout_seconds": 900,
+    "temperature": 0
+  },
+  "fields": [
+    "Computer Science",
+    "Economics",
+    "Engineering",
+    "Physics"
+  ],
+  "frozen_at_utc": "2026-09-03T09:47:18.410557+00:00",
+  "isolation": {
+    "canonical_answers_exposed_to_agent": false,
+    "filesystem": "macOS sandbox-exec denies /Users/ryan and /Volumes/PRO-BLADE",
+    "network": "denied inside agent shell",
+    "workspace": "distinct ephemeral /private/tmp extraction per agent"
+  },
+  "manifest": "external/corebench/manifest.jsonl",
+  "manifest_sha256": "1c08bcb4def54d7f98e7628ffe9f422172eb073677c1fb8f78824c68d4d6facc",
+  "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "protocol_id": "PANTHEON-COREBENCH-OOD-LOCAL-20260903",
+  "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 21.0.0 (clang-2100.1.1.101)]",
+  "questions": 20,
+  "schema_version": 1,
+  "source_file_sha256": {
+    "docs/EXTERNAL_VALIDATION_PROTOCOL.md": "5dc3ec9d2a43d71ba3af4513f0e2782220fb3364577765de79adc62339476b39",
+    "pyproject.toml": "d9ebd121eb13c6ae321decd0966414548c6d8e3f2c3e22d3dda93588f60adacf",
+    "scripts/analyze_external_results.py": "5889148752f6371bc2e6145b20980c09876844416f9609b37e5e0c2a93343e1f",
+    "scripts/build_paper_assets.py": "df117dac8c0dac5718781e9f6952e7ce1ee49d7a881f10fb2b2309a60448a26e",
+    "scripts/build_registry.py": "f7e5a808c4ed20050a990bcc377a3bcfa438a47675838564af7e09f5d066ddad",
+    "scripts/check_external_ready.py": "0dfb545cda59c5a8da3f8efd52a566d88a4aa861e156d86fd51377f4b052f781",
+    "scripts/compare_results.py": "0b8ba1392c297345696277ca73a7c573ce02e2ca77422a01f2d09409ebb2e4c2",
+    "scripts/make_demo_package.py": "a9e361094adb2698e8e4465fea73c20e47dcc6e9120b4dd19a3d3127c1429210",
+    "scripts/make_report.sh": "7c92c9b3ad26c93b8f5ee9cce5a581d08030d9282015dbc6ebff8a3f0e0a3b0a",
+    "scripts/prepare_corebench.py": "ec54f01bda4e1eca79263ede7c4440ca50ecbd77510312b64f46ef7d29542366",
+    "scripts/publication_gate.py": "038f27d1ddee77d17ca23bdffb71a238ecad724882d1b9f2255dffb1c82ed82a",
+    "scripts/reproduce_all.sh": "4b19f3a213c5e0ba02c474aaefb7418e8efa4d40369f2b5998e92b6fc629c382",
+    "scripts/run_ablations.sh": "7c92c9b3ad26c93b8f5ee9cce5a581d08030d9282015dbc6ebff8a3f0e0a3b0a",
+    "scripts/run_baselines.sh": "7e2d988b1e169216d60cf4088481d04bab079af9aa04e6af6e99ddbc78fcd3b8",
+    "scripts/run_everything_publishable.sh": "4279d4e894900b885fe31a6a98279a0f51eced51d963a9873f88b7895f1d7e78",
+    "scripts/run_experiments.sh": "8729f505d8898c52c9e9cbbb11c304fe17d4a85cbca14fea7840bea06d82f1b5",
+    "scripts/run_external_study.py": "022aeb7ef8ef125cd89ae4839f7e802cb18dc9a78b37b6fc3be9782e6c876bb7",
+    "scripts/run_final_external.sh": "b9e7e67534e9b45b841f1650de3b0329da108053145bf2a332aeaf9c927bfde6",
+    "scripts/run_local_ood_study.sh": "021e26435903cb66367955a19728cfa93964408600ca0474bd2d5782b6421589",
+    "scripts/run_proposer.py": "0534a855d265bd3315c3f387b5821055783b59902672818527e76e9b83c958b0",
+    "scripts/run_public_case_study.py": "dbe7f372ca77c3135f9a6442d20adb98da0101eab2a7d6e9b0e9128fd4e7ca67",
+    "scripts/run_replicator.py": "d2e354fb2f95e13e08c4b79cd12e8c985fef0ffee39a03415e8a19fdcd6078dc",
+    "scripts/run_seeded_faults.py": "41898c956cddab3b229145d55c0a9bc53373751b48dcaf44dcd137b9de98ebf1",
+    "scripts/setup.sh": "1ac9baa968ab041eb5a779f494dbbdd08fcccc6f5a578f1a053ae874d43c47f6",
+    "scripts/setup_external.sh": "62543013be2a8a9b10f49efed65698465b230d0da31e7a5dbefe126f6950219d",
+    "scripts/smoke_test.sh": "effb2b609d6c94b1de71cde2bbbd82a7bfb72494a7f27fad43d4733d60d02942",
+    "scripts/validate_evidence.py": "32d967a31d5f8c40483b04106f629281250f00a3b7d8af12c68c5f00c9e0b23a",
+    "scripts/write_local_ood_protocol.py": "6d3a2d6e96005342ed5fb67871ffb418259100d296f77ca9241e6acaec282d26",
+    "src/pantheon/__init__.py": "94b0bda7c0d2721046145eef190c4e60219a238fcc31a07074624b03c67ba801",
+    "src/pantheon/adjudication.py": "b32047faf36b46902d2714b7ff1e5446674a173edbce40c537c67704d0dd53b7",
+    "src/pantheon/external/__init__.py": "525d18c25ea31a22a49153e6b991d6e90ea513bcfd48dae760009fc3f6fbcda9",
+    "src/pantheon/external/agent_loop.py": "35d9b9ed6dd7b7d9a9b371c3b29b6bd7d6c2e055e561950718c966b48871358d",
+    "src/pantheon/external/providers.py": "75b7c451205f13709765975cdf0bf37975ec94d5a82450ccf83d6f0d45b2b6f1",
+    "src/pantheon/external/scoring.py": "776d9d459d8720fd904f22b9843f274c34941e11f6441aaaa3ded8db11d6e772",
+    "src/pantheon/hashing.py": "45130c6b53ee244dad62a77a86717c4469a73db6bbfd01dc27dec67fc06ab569",
+    "src/pantheon/package.py": "5f53edf20c4d3285c605f066ffbc9ce602489a55a593b7fef1cf49a389a6281c",
+    "src/pantheon/registry.py": "c46c9e20180e22964e2cc50991bd427506630fb30edd16db89c47c5934ce9ce0",
+    "src/pantheon/runner.py": "9b79594e0383b2a012a4f6e2ea22f80d6fad2c573e214e2fd94f523471a6fb5a",
+    "src/pantheon/statistics.py": "695971a567a6130e71546cfed187154a3c8d2f787ca33579ad9210f8e3d2f221",
+    "tests/test_external_agent_loop.py": "3e2b5c578b84f800da32de6a166362522cf72b9f9a9fb0acd68ef2aee1011f39",
+    "tests/test_external_provider.py": "cdbdb0ca1fc2247bbf5b268b2a3598b790dbeef91f928fc67292bbed5a0a3061",
+    "tests/test_external_scoring.py": "095b46e54a707fcbb7d70a5bba4ec4f4996fb119108db6ffd908d048dc2e634c",
+    "tests/test_hashing.py": "6d1ff7c290c885776aef2b2d219da5c884d10c4e33d11417c20baf52ca36183c",
+    "tests/test_package.py": "eec315fdbbb1db392228392718ac2e8f727c09be980e33b53ea6f0b9f8d2784a",
+    "tests/test_replication.py": "756d1bc1ca0ce32cb9c80a518a6ae379cf4345be809c2633c01a556e7645c326",
+    "tests/test_safe_extraction.py": "ba66b54f2cf7e82e9f803f634f1b43fb10daf7c4e6f591194ee55ebb0e38fe5a",
+    "tests/test_statistics.py": "5bdea8cb504fdb5189f46a47dd1e1461d15d716cbbbfd7076f385c008188e8d5"
+  },
+  "source_identity": "e580c663aba0967850d38189453c30d48f0d07f8679a6121381d592c9294966e",
+  "success_gate": {
+    "all_reports_required": true,
+    "distinct_agent_identities": true,
+    "minimum_fields": 2,
+    "minimum_questions": 20,
+    "minimum_tasks": 15,
+    "provider_errors_allowed": false
+  },
+  "tasks": 17
+}

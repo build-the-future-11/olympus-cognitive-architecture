@@ -63,6 +63,37 @@ export type OllamaHealth = {
   models: string[];
 };
 
+export type FoundryOverview = {
+  promotion_boundary: string;
+  latest_dataset: null | {
+    dataset_id: string;
+    version: string;
+    sha256: string;
+    source: string;
+    license: string;
+  };
+  latest_experiment: null | {
+    experiment_id: string;
+    status: string;
+    config: Record<string, unknown>;
+  };
+  latest_checkpoint: null | { checkpoint_id: string; sha256: string };
+  latest_evaluation: null | { evaluation_id: string; passed: boolean; decision: string };
+  resources: {
+    small: boolean;
+    medium: boolean;
+    snapshot: { available_bytes: number; swap_fraction: number };
+  };
+};
+
+export type FoundryJob = {
+  job_id: string | null;
+  status: "IDLE" | "RUNNING" | "CANCEL_REQUESTED" | "CANCELLED" | "SUCCEEDED" | "FAILED";
+  started_at: string | null;
+  finished_at: string | null;
+  error: string | null;
+};
+
 function isDemoRecord(value: unknown): value is DemoRecord {
   if (typeof value !== "object" || value === null || Array.isArray(value)) {
     return false;
@@ -146,6 +177,59 @@ export async function fetchFoundryStatus(signal?: AbortSignal): Promise<FoundryS
   }
   return payload as FoundryStatus;
 }
+
+export async function fetchFoundryOverview(signal?: AbortSignal): Promise<FoundryOverview> {
+  const payload: unknown = await (
+    await apiFetch("/api/foundry/overview", { signal })
+  ).json();
+  if (
+    !isObject(payload) ||
+    typeof payload.promotion_boundary !== "string" ||
+    !isObject(payload.resources) ||
+    typeof payload.resources.small !== "boolean" ||
+    typeof payload.resources.medium !== "boolean" ||
+    !isObject(payload.resources.snapshot) ||
+    !isNumber(payload.resources.snapshot.available_bytes) ||
+    !isNumber(payload.resources.snapshot.swap_fraction)
+  ) {
+    throw new Error("The API returned an invalid Foundry overview");
+  }
+  return payload as FoundryOverview;
+}
+
+function parseFoundryJob(payload: unknown): FoundryJob {
+  const statuses = ["IDLE", "RUNNING", "CANCEL_REQUESTED", "CANCELLED", "SUCCEEDED", "FAILED"];
+  if (
+    !isObject(payload) ||
+    (payload.job_id !== null && typeof payload.job_id !== "string") ||
+    typeof payload.status !== "string" ||
+    !statuses.includes(payload.status) ||
+    (payload.started_at !== null && typeof payload.started_at !== "string") ||
+    (payload.finished_at !== null && typeof payload.finished_at !== "string") ||
+    (payload.error !== null && typeof payload.error !== "string")
+  ) {
+    throw new Error("The API returned invalid Foundry job state");
+  }
+  return payload as FoundryJob;
+}
+
+export async function fetchFoundryJob(signal?: AbortSignal): Promise<FoundryJob> {
+  return parseFoundryJob(
+    await (await apiFetch("/api/foundry/jobs/current", { signal })).json()
+  );
+}
+
+async function updateFoundryJob(action: "start" | "cancel" | "retry"): Promise<FoundryJob> {
+  return parseFoundryJob(
+    await (
+      await apiFetch(`/api/foundry/jobs/${action}`, { method: "POST" })
+    ).json()
+  );
+}
+
+export const startFoundryJob = (): Promise<FoundryJob> => updateFoundryJob("start");
+export const cancelFoundryJob = (): Promise<FoundryJob> => updateFoundryJob("cancel");
+export const retryFoundryJob = (): Promise<FoundryJob> => updateFoundryJob("retry");
 
 export async function fetchFoundryModels(signal?: AbortSignal): Promise<FoundryModel[]> {
   const payload = (await (await apiFetch("/api/v1/models", { signal })).json()) as {

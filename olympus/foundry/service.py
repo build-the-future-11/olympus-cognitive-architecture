@@ -7,6 +7,7 @@ import platform
 import shutil
 import subprocess
 import sys
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -42,6 +43,15 @@ def _atomic_write(path: Path, payload: bytes) -> None:
         os.fsync(temporary.fileno())
         temporary_path = Path(temporary.name)
     temporary_path.replace(path)
+
+
+class FoundryCancelled(RuntimeError):
+    """Raised only at artifact-safe boundaries when a local run is cancelled."""
+
+
+def _check_cancelled(cancelled: Callable[[], bool] | None) -> None:
+    if cancelled is not None and cancelled():
+        raise FoundryCancelled("foundry run cancelled at an artifact-safe boundary")
 
 
 class FoundryService:
@@ -160,6 +170,7 @@ class FoundryService:
         train_fraction: float = 0.8,
         smoothing: float = 0.25,
         repository: Path | None = None,
+        cancelled: Callable[[], bool] | None = None,
     ) -> FoundryPipelineResult:
         if not 0.5 <= train_fraction <= 0.95:
             raise ValueError("train_fraction must be between 0.5 and 0.95")
@@ -200,6 +211,7 @@ class FoundryService:
             "experiment", experiment_id, "started", experiment.model_dump(mode="json")
         )
         try:
+            _check_cancelled(cancelled)
             model = CharacterBigramModel.train(
                 training_text,
                 smoothing=smoothing,
@@ -212,6 +224,7 @@ class FoundryService:
                 "dataset_sha256": dataset.sha256,
                 "code_commit": experiment.code_commit,
             }
+            _check_cancelled(cancelled)
             checkpoint_payload = model.checkpoint.canonical_bytes()
             checkpoint_sha = _sha256(checkpoint_payload)
             checkpoint_id = f"ckpt_{checkpoint_sha[:16]}"
@@ -238,6 +251,8 @@ class FoundryService:
                 "saved",
                 {"sha256": checkpoint_sha, "path": str(checkpoint_path)},
             )
+
+            _check_cancelled(cancelled)
 
             candidate = model.evaluate(evaluation_text)
             baseline = uniform_baseline_metrics(
@@ -282,6 +297,7 @@ class FoundryService:
                 "completed",
                 evaluation.model_dump(mode="json"),
             )
+            _check_cancelled(cancelled)
             if not passed:
                 experiment.status = ArtifactStatus.NEGATIVE_RESULT
                 experiment.updated_at = _utc_now()
@@ -348,7 +364,11 @@ class FoundryService:
                 ArtifactStatus.NEGATIVE_RESULT,
                 ArtifactStatus.VERIFIED,
             }:
-                experiment.status = ArtifactStatus.FAILED
+                experiment.status = (
+                    ArtifactStatus.CANCELLED
+                    if isinstance(error, FoundryCancelled)
+                    else ArtifactStatus.FAILED
+                )
                 experiment.failure_reason = f"{type(error).__name__}: {error}"
                 experiment.updated_at = _utc_now()
                 self.store.update_experiment(experiment)
@@ -361,7 +381,11 @@ class FoundryService:
             raise
 
     def run_verification_pipeline(
-        self, sample_path: Path, *, repository: Path | None = None
+        self,
+        sample_path: Path,
+        *,
+        repository: Path | None = None,
+        cancelled: Callable[[], bool] | None = None,
     ) -> FoundryPipelineResult:
         dataset = self.register_text_dataset(
             sample_path,
@@ -378,6 +402,7 @@ class FoundryService:
             synthetic=True,
             generator="Human-authored deterministic Foundry verification fixture v1",
         )
+        _check_cancelled(cancelled)
         return self.run_bigram_experiment(
             dataset,
             hypothesis=(
@@ -385,6 +410,7 @@ class FoundryService:
                 "on held-out transitions from the structured verification corpus."
             ),
             repository=repository,
+            cancelled=cancelled,
         )
 
     def list_models(self) -> list[ModelRecord]:

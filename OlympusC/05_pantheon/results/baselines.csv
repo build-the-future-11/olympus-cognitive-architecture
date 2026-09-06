@@ -1,0 +1,4 @@
+method,count,localization_accuracy
+numeric_only,160,0.125
+pairwise_artifact,160,0.625
+pantheon,160,1.0

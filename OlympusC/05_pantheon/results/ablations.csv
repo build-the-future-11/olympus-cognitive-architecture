@@ -1,0 +1,4 @@
+ablation,localization_accuracy,n
+No artifact hashes,0.125,160
+No canonical manifest,0.625,160
+Full Pantheon,1.0,160

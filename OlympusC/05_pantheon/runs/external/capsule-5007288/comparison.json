@@ -1,0 +1,49 @@
+{
+  "agent_a": {
+    "accuracy": 0.0,
+    "all_correct": false,
+    "correct": 0,
+    "extra": [],
+    "missing": [],
+    "per_question": {
+      "fig From the plots measuring counts/s for every channel, report the label of the line with the highest Counts/s at Channel 200.": false
+    },
+    "total": 1
+  },
+  "agent_a_model": "qwen3:0.6b",
+  "agent_a_provider": "ollama",
+  "agent_a_provider_error": null,
+  "agent_a_report_exists": true,
+  "agent_a_report_origin": "harness_failure_normalization",
+  "agent_a_submitted_report": false,
+  "agent_b": {
+    "accuracy": 0.0,
+    "all_correct": false,
+    "correct": 0,
+    "extra": [],
+    "missing": [],
+    "per_question": {
+      "fig From the plots measuring counts/s for every channel, report the label of the line with the highest Counts/s at Channel 200.": false
+    },
+    "total": 1
+  },
+  "agent_b_model": "llama3.2:1b",
+  "agent_b_provider": "ollama",
+  "agent_b_provider_error": null,
+  "agent_b_report_exists": true,
+  "agent_b_report_origin": "harness_failure_normalization",
+  "agent_b_submitted_report": false,
+  "agreement": {
+    "fig From the plots measuring counts/s for every channel, report the label of the line with the highest Counts/s at Channel 200.": false
+  },
+  "canonical_answers_sha256": "eef3693a328189e56fec7c8814167a1d199ec7399d570007f4a463eca243ba6e",
+  "false_consensus": {
+    "fig From the plots measuring counts/s for every channel, report the label of the line with the highest Counts/s at Channel 200.": false
+  },
+  "false_consensus_count": 0,
+  "false_consensus_rate": 0.0,
+  "pairwise_agreement_count": 0,
+  "pairwise_agreement_rate": 0.0,
+  "question_count": 1,
+  "task_id": "capsule-5007288"
+}

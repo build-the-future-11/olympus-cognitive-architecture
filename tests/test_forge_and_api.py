@@ -1,31 +1,42 @@
 import asyncio
 from pathlib import Path
+from typing import Any
 
 import httpx
+import pytest
 
 from olympus.api import app, demos
 from olympus.demos import run_division_demo, run_forge_demo, run_hermes_demo
 from olympus.forge.compiler import NaturalLanguageBehaviorCompiler
 from olympus.forge.language import BehaviorLanguage
 from olympus.forge.runtime import ForgeRuntime
+from olympus.memory.store import MemoryStore
 
 
 async def _async_request(
     method: str,
     path: str,
     json: dict[str, object] | None = None,
+    *,
+    headers: dict[str, str] | None = None,
+    client_address: tuple[str, int] = ("127.0.0.1", 123),
 ) -> httpx.Response:
-    transport = httpx.ASGITransport(app=app)
+    transport = httpx.ASGITransport(app=app, client=client_address)
     async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
-        return await client.request(method, path, json=json)
+        return await client.request(method, path, json=json, headers=headers)
 
 
 def _request(
     method: str,
     path: str,
     json: dict[str, object] | None = None,
+    *,
+    headers: dict[str, str] | None = None,
+    client_address: tuple[str, int] = ("127.0.0.1", 123),
 ) -> httpx.Response:
-    return asyncio.run(_async_request(method, path, json))
+    return asyncio.run(
+        _async_request(method, path, json, headers=headers, client_address=client_address)
+    )
 
 
 def test_behavior_language_round_trip() -> None:
@@ -47,6 +58,32 @@ def test_forge_runtime_executes_behavior() -> None:
     result = runtime.execute(spec, "The cloud was a dragon above the city.")
     assert "output" in result.outputs
     assert len(result.events) >= 4
+    assert result.outputs["tool_result"] == {
+        "status": "skipped",
+        "reason": "no tool handler configured",
+    }
+
+
+def test_forge_runtime_only_reports_effects_it_performs(tmp_path: Path) -> None:
+    compiler = NaturalLanguageBehaviorCompiler()
+    spec = compiler.compile("Interpret, use a tool, write memory, and merge.").spec
+    calls: list[str] = []
+
+    def tool(prompt: str, outputs: dict[str, Any]) -> dict[str, Any]:
+        calls.append(prompt)
+        return {"status": "executed", "interpretations_seen": len(outputs["interpretations"])}
+
+    with MemoryStore(tmp_path / "forge.sqlite3") as memory:
+        result = ForgeRuntime(tool_handler=tool, memory=memory).execute(spec, "Evidence first.")
+        records = memory.query("forge")
+
+    assert calls == ["Evidence first."]
+    assert result.outputs["tool_result"] == {
+        "status": "executed",
+        "interpretations_seen": 6,
+    }
+    assert result.outputs["memory_write"]["status"] == "persisted"
+    assert len(records) == 1
 
 
 def test_api_endpoints() -> None:
@@ -78,6 +115,33 @@ def test_api_endpoints() -> None:
     )
     assert run_response.status_code == 200
     assert "output" in run_response.json()["outputs"]
+
+
+def test_mutating_api_endpoints_are_local_or_token_authenticated(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    remote = _request(
+        "POST",
+        "/foundry/verify",
+        client_address=("203.0.113.10", 123),
+    )
+    assert remote.status_code == 403
+
+    monkeypatch.setenv("OLYMPUS_API_TOKEN", "test-secret")
+    missing = _request("POST", "/foundry/verify")
+    assert missing.status_code == 401
+    wrong = _request(
+        "POST",
+        "/foundry/verify",
+        headers={"Authorization": "Bearer wrong"},
+    )
+    assert wrong.status_code == 401
+    authorized = _request(
+        "POST",
+        "/foundry/jobs/cancel",
+        headers={"Authorization": "Bearer test-secret"},
+    )
+    assert authorized.status_code == 409
 
 
 def test_demo_endpoint_returns_real_cached_results() -> None:

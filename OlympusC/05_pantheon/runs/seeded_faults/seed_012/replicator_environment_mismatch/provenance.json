@@ -1,0 +1,47 @@
+{
+  "canary_observed": null,
+  "canonical_hashes": {
+    "analysis.awk": "c3ec1086df030af8d688f4812fb8d6af10f53c3d120335d98a493ee54b1af2e6",
+    "claim.yaml": "8c331602cc324da867ea231edaee12d570d42a769c569bd048eb9f57b8acc9fe",
+    "claim_boundary.md": "204c7672f323c2779474aaa4d41d48995d9e838e570e87ec9bf847fdce6104bf",
+    "data.csv": "b37e17de48be8dd361a685b73c0ea1c0491217667e02cbece484d927475aaa25",
+    "environment.lock": "29a93d5d91e8475b72b55ef3a408d5070d5c561ba1ad491188d26cfd8ada040f",
+    "expected_schema.json": "bbd26cc747b84c8c72aa67dfd1bb73d8310c488462d52962f9517a3482a93050",
+    "protocol.md": "83a19f19fb2048141bf08a3955b408a447d773bc0465cd9c1fa5a8fb3de2c996",
+    "stopping_rule.md": "18087d6422a744d0f531ee9c2238e4cbf483a9ee32c77506ce2d1d10b4f126eb"
+  },
+  "code_hash": "c3ec1086df030af8d688f4812fb8d6af10f53c3d120335d98a493ee54b1af2e6",
+  "controller_python": "3.13.5",
+  "data_hash": "b37e17de48be8dd361a685b73c0ea1c0491217667e02cbece484d927475aaa25",
+  "environment_hash": "f32c4a5a29e2692fee53ecf9f9992eba04ced07fa7f6ba1c6ac801e83cbe8718",
+  "executor": "awk",
+  "fault": "environment_mismatch",
+  "independence_vector": {
+    "context": 1,
+    "environment": 0,
+    "model": 0,
+    "runtime": 1,
+    "seed": 0
+  },
+  "metric_mode": "canonical",
+  "observed_hashes": {
+    "analysis.awk": "c3ec1086df030af8d688f4812fb8d6af10f53c3d120335d98a493ee54b1af2e6",
+    "claim.yaml": "8c331602cc324da867ea231edaee12d570d42a769c569bd048eb9f57b8acc9fe",
+    "claim_boundary.md": "204c7672f323c2779474aaa4d41d48995d9e838e570e87ec9bf847fdce6104bf",
+    "data.csv": "b37e17de48be8dd361a685b73c0ea1c0491217667e02cbece484d927475aaa25",
+    "environment.lock": "f32c4a5a29e2692fee53ecf9f9992eba04ced07fa7f6ba1c6ac801e83cbe8718",
+    "expected_schema.json": "bbd26cc747b84c8c72aa67dfd1bb73d8310c488462d52962f9517a3482a93050",
+    "protocol.md": "83a19f19fb2048141bf08a3955b408a447d773bc0465cd9c1fa5a8fb3de2c996",
+    "stopping_rule.md": "18087d6422a744d0f531ee9c2238e4cbf483a9ee32c77506ce2d1d10b4f126eb"
+  },
+  "package_path": "/mnt/data/pantheon_final_pass/Olympus Pantheon/05_pantheon/packages/synth_012",
+  "pid": 1120,
+  "protocol_hash": "83a19f19fb2048141bf08a3955b408a447d773bc0465cd9c1fa5a8fb3de2c996",
+  "returncode": 0,
+  "role": "replicator",
+  "runtime_sec": 0.0032552929999383196,
+  "seed": 12,
+  "start_unix": 1787982865.487448,
+  "status": "SUCCEEDED",
+  "workspace_kind": "fresh_tempdir"
+}

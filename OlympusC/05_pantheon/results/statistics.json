@@ -1,0 +1,33 @@
+{
+  "seeded_fault": {
+    "n_comparisons": 160,
+    "n_seeds": 20,
+    "n_conditions": 8,
+    "exact_counts_by_method": [
+      {
+        "method": "numeric_only",
+        "sum": 20,
+        "count": 160
+      },
+      {
+        "method": "pairwise_artifact",
+        "sum": 100,
+        "count": 160
+      },
+      {
+        "method": "pantheon",
+        "sum": 160,
+        "count": 160
+      }
+    ],
+    "note": "Exact counts on controlled injected faults; no sampling-based significance test is claimed."
+  },
+  "public_case": {
+    "n_split_seeds": 10,
+    "mean_abs_effect_difference": 0.00699300699300696,
+    "sd_abs_effect_difference": 0.007371276597129085,
+    "max_abs_effect_difference": 0.020979020979021,
+    "direction_agreement_rate": 1.0,
+    "note": "Split-seed summaries are descriptive because train/test splits overlap and are not independent studies."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Pantheon Disagreement",
+  "type": "object",
+  "required": ["label", "reasons", "disagreement"],
+  "properties": {
+    "label": {"type": "string"},
+    "reasons": {"type": "array", "items": {"type": "string"}},
+    "disagreement": {
+      "type": "object",
+      "required": ["d_z", "d_rel", "sign_agreement", "ci_overlap"]
+    }
+  },
+  "additionalProperties": true
+}

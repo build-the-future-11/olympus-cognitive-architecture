@@ -1,0 +1,21 @@
+task_id,field,language,question,agent_a_correct,agent_b_correct,agent_a_answered,agent_b_answered,agreement,false_consensus
+capsule-0571975,Engineering,Python,Report the max gain % of planar IRS.,0,0,0,0,0,0
+capsule-0811394,Physics,Python,"fig From figure 2e, report the label of the line with the highest change in n(0) when G is 10^18.",0,0,0,0,0,0
+capsule-2151475,Economics,R,fig Report the name of the journal with the highest 2011 impact factor from the analysis of 30 journals.,0,0,0,0,0,0
+capsule-2151475,Economics,R,fig Report the name of the university ranked #1 by impact factor.,0,0,0,0,0,0
+capsule-2675546,Engineering,Python,What is the original (baseline) handover success rate for UE #74? Report the value as a percentage. Do not include the percentage sign.,0,0,0,0,0,0
+capsule-2675546,Engineering,Python,"fig From the UE #74 Handover Executions plot, report the Proposed decision at time 25 m/s.",0,0,0,0,0,0
+capsule-3990498,Physics,Python,fig Report the label of the line with the lowest expectation value at Time 2.,0,0,0,0,0,0
+capsule-4407237,Physics,Python,"fig From the plot measuring damping of a wave along a rectangular duct of length 1.0 m, report the label of the line with the highest dissipation % at frequency 1000 Hz.",0,0,0,0,0,0
+capsule-5007288,Physics,Python,"fig From the plots measuring counts/s for every channel, report the label of the line with the highest Counts/s at Channel 200.",0,0,0,0,0,0
+capsule-5172670,Computer Science,Python,"From the distribution of the HBF in the analysis of the movie, report the % positive.",0,0,0,0,0,0
+capsule-5172670,Computer Science,Python,Report the accuracy of the analysis of the movie.,0,0,0,0,0,0
+capsule-5360076,Engineering,Python,fig Report the name of the machine learning model used with the greatest run time for the applied big data analytics on decentralized smart grid system.,0,0,0,0,0,0
+capsule-6562149,Engineering,Python,fig Report the p-value of the distance (m) from the plot with the new data histograms.,0,0,0,0,0,0
+capsule-6724161,Engineering,Python,"fig From the figure depicting calculated transmission coefficient for the 100-nF VISHAY capacitor, report the label of the line with the highest |S21| at frequency 10^0",0,0,0,0,0,0
+capsule-7350043,Computer Science,Python,Report the final accuracy of the E2E-FS method on the mnist dataset.,0,0,0,0,0,0
+capsule-8185407,Engineering,Python,Report the load power (Pload) for Transducer F from the measured data results. Ignore units.,0,0,0,0,0,0
+capsule-8353473,Engineering,Python,fig Report plot label of the index with the higher adjusted closing price in 2008.,0,0,0,0,0,0
+capsule-8467067,Engineering,Python,"fig From the example 4 plots, report from the main sequence subplot the letter of the Saccade with the lowest saccade peak velocity at a saccade amplitude of 10 degrees.",0,0,0,0,0,0
+capsule-8610546,Engineering,Python,Report the cost for the optimal method.,0,0,0,0,0,0
+capsule-9026204,Physics,Python,"fig From the cumulative pore size distribution (PSD) comparison plots measuring pore diameter vs. cumulative frequency, report the plot label of the model with the lowest cumulative frequency at pore diameter 25 on plot (a).",0,0,0,0,0,0

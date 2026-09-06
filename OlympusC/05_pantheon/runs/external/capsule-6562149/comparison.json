@@ -1,0 +1,49 @@
+{
+  "agent_a": {
+    "accuracy": 0.0,
+    "all_correct": false,
+    "correct": 0,
+    "extra": [],
+    "missing": [],
+    "per_question": {
+      "fig Report the p-value of the distance (m) from the plot with the new data histograms.": false
+    },
+    "total": 1
+  },
+  "agent_a_model": "qwen3:0.6b",
+  "agent_a_provider": "ollama",
+  "agent_a_provider_error": null,
+  "agent_a_report_exists": true,
+  "agent_a_report_origin": "harness_failure_normalization",
+  "agent_a_submitted_report": false,
+  "agent_b": {
+    "accuracy": 0.0,
+    "all_correct": false,
+    "correct": 0,
+    "extra": [],
+    "missing": [],
+    "per_question": {
+      "fig Report the p-value of the distance (m) from the plot with the new data histograms.": false
+    },
+    "total": 1
+  },
+  "agent_b_model": "llama3.2:1b",
+  "agent_b_provider": "ollama",
+  "agent_b_provider_error": null,
+  "agent_b_report_exists": true,
+  "agent_b_report_origin": "harness_failure_normalization",
+  "agent_b_submitted_report": false,
+  "agreement": {
+    "fig Report the p-value of the distance (m) from the plot with the new data histograms.": false
+  },
+  "canonical_answers_sha256": "188fd79fe3055441038681cdf3784e1940dd19dd7c76a18173afd36f01c56bd5",
+  "false_consensus": {
+    "fig Report the p-value of the distance (m) from the plot with the new data histograms.": false
+  },
+  "false_consensus_count": 0,
+  "false_consensus_rate": 0.0,
+  "pairwise_agreement_count": 0,
+  "pairwise_agreement_rate": 0.0,
+  "question_count": 1,
+  "task_id": "capsule-6562149"
+}

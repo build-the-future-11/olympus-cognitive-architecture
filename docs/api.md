@@ -1,5 +1,10 @@
 # API
 
+The supported development deployment binds to `127.0.0.1`. Mutating and model
+generation endpoints accept loopback clients without credentials. For any
+non-loopback or proxied deployment, configure `OLYMPUS_API_TOKEN` and send
+`Authorization: Bearer <token>`; proxied mutations are otherwise denied.
+
 ## Endpoints
 
 - `GET /health`
@@ -8,6 +13,11 @@
 - `POST /forge/run`
 - `GET /demos`
 - `GET /foundry/status`
+- `GET /foundry/overview`
+- `GET /foundry/jobs/current`
+- `POST /foundry/jobs/start`
+- `POST /foundry/jobs/cancel`
+- `POST /foundry/jobs/retry`
 - `POST /foundry/verify`
 - `GET /v1/models`
 - `POST /v1/chat/completions`

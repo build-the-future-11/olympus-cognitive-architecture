@@ -1,0 +1,22 @@
+{
+  "answers": {},
+  "model": "qwen3:0.6b",
+  "provider": "ollama",
+  "provider_error": null,
+  "report_exists": false,
+  "role": "agent_a",
+  "runtime_sec": 26.536346124999966,
+  "source": "external/corebench/capsules/capsule-0571975.tar.gz",
+  "source_sha256": "09504b29fdea223da87ea2ef9067cc534ec2c59babe2afa91a0a1b21f6bb9466",
+  "task_id": "capsule-0571975",
+  "transcript": [
+    {
+      "text": "<report.json>\n{\n  \"max gain %\": null\n}\n</report.json>",
+      "tool_calls": [],
+      "turn": 0
+    }
+  ],
+  "turns": 1,
+  "workspace_ephemeral": true,
+  "workspace_isolation": "macos sandbox-exec; repository and user home denied; network denied"
+}

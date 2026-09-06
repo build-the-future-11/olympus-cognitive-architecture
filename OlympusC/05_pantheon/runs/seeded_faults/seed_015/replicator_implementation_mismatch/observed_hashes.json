@@ -1,0 +1,10 @@
+{
+  "analysis.awk": "0847e69bfaa22063bc720b125a1fdf993c2de1f006ae0d37a3fcabf9d4f156d7",
+  "claim.yaml": "358b0ab148aac636cc45b114e3ff5dde79015eb25f21ab5c84b1f344455768ae",
+  "claim_boundary.md": "204c7672f323c2779474aaa4d41d48995d9e838e570e87ec9bf847fdce6104bf",
+  "data.csv": "e71b82b44850e1e92f64afd26060edf4f06baa977e43a88c299f8659607656ba",
+  "environment.lock": "29a93d5d91e8475b72b55ef3a408d5070d5c561ba1ad491188d26cfd8ada040f",
+  "expected_schema.json": "bbd26cc747b84c8c72aa67dfd1bb73d8310c488462d52962f9517a3482a93050",
+  "protocol.md": "83a19f19fb2048141bf08a3955b408a447d773bc0465cd9c1fa5a8fb3de2c996",
+  "stopping_rule.md": "18087d6422a744d0f531ee9c2238e4cbf483a9ee32c77506ce2d1d10b4f126eb"
+}

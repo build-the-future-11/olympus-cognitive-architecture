@@ -6,35 +6,48 @@ Run these commands from a clean checkout:
 
 ```bash
 python3.14 -m venv .venv
-.venv/bin/pip install -e ".[dev]"
-.venv/bin/ruff check .
-.venv/bin/mypy olympus tests
-.venv/bin/pytest --cov=olympus --cov-branch --cov-report=term-missing -q
-.venv/bin/pip-audit --strict .
-.venv/bin/python -m olympus.cli demo run-all
-.venv/bin/python -m olympus.cli foundry verify-pipeline
-.venv/bin/python -m olympus.cli foundry status
-.venv/bin/python -m olympus.cli foundry prepare-dataset \
+python -m pip install uv==0.12.5
+uv sync --locked --all-extras
+uv run ruff check .
+uv run mypy olympus tests
+uv run pytest --cov=olympus --cov-branch --cov-report=term-missing -q
+uv run python -m pip_audit --strict .
+uv run python -m olympus.cli demo run-all
+uv run python -m olympus.cli foundry verify-pipeline
+uv run python -m olympus.cli foundry status
+uv run python -m olympus.cli foundry prepare-dataset \
   --output artifacts/release-deep-dataset
-.venv/bin/python -m build
-.venv/bin/python -m twine check dist/*
+uv run python -m build
+uv run python -m twine check dist/*
 cd apps/forge-web
-npm ci
-npm test
-npm audit --omit=dev --audit-level=high
-npm run build
+corepack npm ci
+corepack npm test
+corepack npm audit --audit-level=moderate
+corepack npm run build
 ```
 
 A releasable revision must pass every command. The generated Python artifacts
 are `dist/*.whl` and `dist/*.tar.gz`; the generated web assets are
 `apps/forge-web/dist/`.
 
+The JSON files under `evidence/` and `artifacts/stage-execution/` are historical
+run records unless they name an exact Git commit. They must never be treated as
+attesting to whichever files happen to be in `dist/`. The tag workflow creates
+and attests a fresh `dist/SHA256SUMS` alongside every release.
+
+The release candidate must additionally install its wheel into a new ordinary
+virtual environment outside the source tree, execute `foundry verify-pipeline`,
+then execute `foundry status` after process restart. Stage truth must agree with
+`evidence/status.json`, and a failed promotion must not emit a release manifest.
+
 ## Source-publication gate
 
-The proprietary license, author name, canonical public GitHub repository,
+The proprietary license, author name, configured repository metadata,
 dependency audits, CI gate, SBOM generation, artifact attestations, and release
-workflow are implemented. The source repository exists at the canonical URL.
-PyPI publication still depends on its owner-controlled Trusted Publisher.
+workflow are implemented. The audit repair branch is anchored to upstream but
+is not a release until its exact commit passes CI and human review. PyPI
+publication still depends on owner-controlled branch protection and Trusted
+Publisher setup.
 
 The repository owner must complete these account-controlled actions:
 

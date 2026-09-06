@@ -1,0 +1,21 @@
+{
+  "n_tasks": 17,
+  "n_questions": 20,
+  "agent_a_mean_task_accuracy": 0.0,
+  "agent_b_mean_task_accuracy": 0.0,
+  "mean_pairwise_agreement_rate": 0.0,
+  "false_consensus_count": 0,
+  "false_consensus_question_rate": 0.0,
+  "false_consensus_rate_wilson95": [
+    0,
+    0.16112515805281938
+  ],
+  "agent_pairs": [
+    {
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b"
+    }
+  ]
+}

@@ -44,7 +44,7 @@ class NaturalLanguageBehaviorCompiler:
                 BehaviorNode(
                     id="tool",
                     kind=NodeKind.TOOL,
-                    description="Execute a deterministic tool check",
+                    description="Invoke the runtime's configured tool handler",
                     depends_on=[previous_node],
                 )
             )
@@ -54,7 +54,7 @@ class NaturalLanguageBehaviorCompiler:
                 BehaviorNode(
                     id="memory",
                     kind=NodeKind.MEMORY_WRITE,
-                    description="Persist useful findings",
+                    description="Persist findings when a memory store is configured",
                     depends_on=[previous_node],
                 )
             )

@@ -269,10 +269,31 @@ def test_run_database_event_log_and_runner_lifecycle(tmp_path: Path) -> None:
         profile=ResourceProfile.BENCHMARK,
         timeout_seconds=0.01,
     )
+    secret = "never-write-this-secret"
+    redacted = runner.run_command(
+        project_id="redaction",
+        command=(
+            f"{sys.executable} -c 'import os; "
+            "print(os.environ[\"OPENAI_API_KEY\"]); "
+            "print(os.environ[\"PUBLIC_MODE\"])'"
+        ),
+        cwd=tmp_path,
+        profile=ResourceProfile.SMOKE,
+        extra_env={"OPENAI_API_KEY": secret, "PUBLIC_MODE": "local"},
+    )
     runner.close()
     assert success.status == ProjectStatus.SMOKE_TESTED
     assert timeout.classification == "timeout"
     assert timeout.status == ProjectStatus.FULL_BENCHMARK_PENDING_COMPUTE
+    assert secret not in redacted.stdout
+    assert "<redacted>\nlocal" in redacted.stdout
+    persisted = (tmp_path / "runner" / "labos_events.jsonl").read_text(encoding="utf-8")
+    assert secret not in persisted
+    event = json.loads(persisted.splitlines()[-1])
+    assert event["env_overrides"] == {
+        "OPENAI_API_KEY": "<redacted>",
+        "PUBLIC_MODE": "local",
+    }
 
 
 @pytest.mark.parametrize(

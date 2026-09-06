@@ -1,0 +1,118 @@
+{
+  "tasks": 17,
+  "questions": 20,
+  "fields": [
+    "Computer Science",
+    "Economics",
+    "Engineering",
+    "Physics"
+  ],
+  "languages": [
+    "Python",
+    "R"
+  ],
+  "question_weighted_metrics": {
+    "agent_a_correct": {
+      "count": 0,
+      "n": 20,
+      "rate": 0.0,
+      "wilson95": [
+        0.0,
+        0.16112515805281938
+      ],
+      "task_cluster_bootstrap95": [
+        0.0,
+        0.0
+      ]
+    },
+    "agent_b_correct": {
+      "count": 0,
+      "n": 20,
+      "rate": 0.0,
+      "wilson95": [
+        0.0,
+        0.16112515805281938
+      ],
+      "task_cluster_bootstrap95": [
+        0.0,
+        0.0
+      ]
+    },
+    "agent_a_answered": {
+      "count": 0,
+      "n": 20,
+      "rate": 0.0,
+      "wilson95": [
+        0.0,
+        0.16112515805281938
+      ],
+      "task_cluster_bootstrap95": [
+        0.0,
+        0.0
+      ]
+    },
+    "agent_b_answered": {
+      "count": 0,
+      "n": 20,
+      "rate": 0.0,
+      "wilson95": [
+        0.0,
+        0.16112515805281938
+      ],
+      "task_cluster_bootstrap95": [
+        0.0,
+        0.0
+      ]
+    },
+    "agreement": {
+      "count": 0,
+      "n": 20,
+      "rate": 0.0,
+      "wilson95": [
+        0.0,
+        0.16112515805281938
+      ],
+      "task_cluster_bootstrap95": [
+        0.0,
+        0.0
+      ]
+    },
+    "false_consensus": {
+      "count": 0,
+      "n": 20,
+      "rate": 0.0,
+      "wilson95": [
+        0.0,
+        0.16112515805281938
+      ],
+      "task_cluster_bootstrap95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "task_macro_accuracy": {
+    "agent_a": 0.0,
+    "agent_b": 0.0
+  },
+  "agent_authored_report_rate": {
+    "agent_a": 0.0,
+    "agent_b": 0.0
+  },
+  "trajectory": {
+    "agent_a_total_tool_calls": 12,
+    "agent_b_total_tool_calls": 284,
+    "agent_a_median_turns": 2.0,
+    "agent_b_median_turns": 9.0,
+    "agent_a_max_turn_saturation": 0,
+    "agent_b_max_turn_saturation": 7,
+    "agent_a_total_runtime_sec": 666.2601071649995,
+    "agent_b_total_runtime_sec": 1112.574946668001
+  },
+  "paired_accuracy": {
+    "agent_a_only_correct": 0,
+    "agent_b_only_correct": 0,
+    "exact_mcnemar_p": 1.0
+  },
+  "inference_note": "Wilson intervals treat questions as Bernoulli trials; task-cluster bootstrap intervals preserve within-task dependence over the 17 observed tasks. Neither supports population-wide agent claims."
+}

@@ -1,0 +1,49 @@
+{
+  "agent_a": {
+    "accuracy": 0.0,
+    "all_correct": false,
+    "correct": 0,
+    "extra": [],
+    "missing": [],
+    "per_question": {
+      "Report the max gain % of planar IRS.": false
+    },
+    "total": 1
+  },
+  "agent_a_model": "qwen3:0.6b",
+  "agent_a_provider": "ollama",
+  "agent_a_provider_error": null,
+  "agent_a_report_exists": true,
+  "agent_a_report_origin": "harness_failure_normalization",
+  "agent_a_submitted_report": false,
+  "agent_b": {
+    "accuracy": 0.0,
+    "all_correct": false,
+    "correct": 0,
+    "extra": [],
+    "missing": [],
+    "per_question": {
+      "Report the max gain % of planar IRS.": false
+    },
+    "total": 1
+  },
+  "agent_b_model": "llama3.2:1b",
+  "agent_b_provider": "ollama",
+  "agent_b_provider_error": null,
+  "agent_b_report_exists": true,
+  "agent_b_report_origin": "harness_failure_normalization",
+  "agent_b_submitted_report": false,
+  "agreement": {
+    "Report the max gain % of planar IRS.": false
+  },
+  "canonical_answers_sha256": "655a1e6a6337d0e2a8be35187a2d6e0cf9bd2584a993d506820baaab4a83e10c",
+  "false_consensus": {
+    "Report the max gain % of planar IRS.": false
+  },
+  "false_consensus_count": 0,
+  "false_consensus_rate": 0.0,
+  "pairwise_agreement_count": 0,
+  "pairwise_agreement_rate": 0.0,
+  "question_count": 1,
+  "task_id": "capsule-0571975"
+}

@@ -431,6 +431,23 @@ def load_trained_model(path: Path, *, device: str = "cpu") -> TinyCausalLM:
     return model
 
 
+def _validated_resume_config(
+    requested: SFTConfig, checkpoint: dict[str, Any]
+) -> SFTConfig:
+    """Permit extending epochs while keeping every artifact-defining setting frozen."""
+    loaded = SFTConfig.model_validate(checkpoint["training_config"])
+    requested_frozen = requested.model_dump(mode="json", exclude={"epochs"})
+    loaded_frozen = loaded.model_dump(mode="json", exclude={"epochs"})
+    if requested_frozen != loaded_frozen:
+        raise ValueError(
+            "resume checkpoint configuration mismatch; only the epoch target may change"
+        )
+    completed_epochs = int(checkpoint["completed_epochs"])
+    if requested.epochs < completed_epochs:
+        raise ValueError("resume epoch target cannot be below completed epochs")
+    return loaded.model_copy(update={"epochs": requested.epochs})
+
+
 def run_sft(
     manifest_path: Path,
     output_root: Path,
@@ -450,16 +467,11 @@ def run_sft(
     governor = ResourceGovernor(output_root / ".workload.lock")
     start = time.perf_counter()
     with governor:
+        effective_config = config
         random.seed(config.seed)
         torch.manual_seed(config.seed)
         generator = torch.Generator().manual_seed(config.seed)
         device = _resolve_device(config.device)
-        train_rows = _encode_examples(
-            _load_examples(manifest, "train", manifest_path.parent), config
-        )
-        validation_rows = _encode_examples(
-            _load_examples(manifest, "validation", manifest_path.parent), config
-        )
         base_sha: str | None = None
         completed_epochs = 0
         optimizer_steps = 0
@@ -468,8 +480,7 @@ def run_sft(
             model, resumed = _model_from_checkpoint(resume_checkpoint, device)
             if resumed["dataset_manifest_sha256"] != manifest.manifest_sha256:
                 raise ValueError("resume checkpoint dataset hash does not match")
-            if SFTConfig.model_validate(resumed["training_config"]).mode != config.mode:
-                raise ValueError("resume checkpoint training mode does not match")
+            effective_config = _validated_resume_config(config, resumed)
             completed_epochs = int(resumed["completed_epochs"])
             optimizer_steps = int(resumed["optimizer_steps"])
             base_sha = cast(str | None, resumed.get("base_checkpoint_sha256"))
@@ -483,28 +494,40 @@ def run_sft(
         else:
             model = TinyCausalLM(config.model).to(device)
 
+        train_rows = _encode_examples(
+            _load_examples(manifest, "train", manifest_path.parent), effective_config
+        )
+        validation_rows = _encode_examples(
+            _load_examples(manifest, "validation", manifest_path.parent), effective_config
+        )
+
         trainable = [parameter for parameter in model.parameters() if parameter.requires_grad]
         if not trainable:
             raise RuntimeError("training configuration has no trainable parameters")
         optimizer = torch.optim.AdamW(
-            trainable, lr=config.learning_rate, weight_decay=config.weight_decay
+            trainable,
+            lr=effective_config.learning_rate,
+            weight_decay=effective_config.weight_decay,
         )
         if resume_checkpoint is not None:
             optimizer.load_state_dict(resumed["optimizer_state"])
             generator.set_state(resumed["generator_state"])
 
         initial_validation = evaluate_loss(model, validation_rows, device=device)
-        mixed_effective = config.mixed_precision and device.type == "cuda"
-        run_id = f"sft-{config.mode}-{manifest.manifest_sha256[:12]}-s{config.seed}"
+        mixed_effective = effective_config.mixed_precision and device.type == "cuda"
+        run_id = (
+            f"sft-{effective_config.mode}-{manifest.manifest_sha256[:12]}"
+            f"-s{effective_config.seed}"
+        )
         log_path = output_root / run_id / "metrics.jsonl"
         log_path.parent.mkdir(parents=True, exist_ok=True)
         log_mode = "a" if resume_checkpoint is not None else "w"
         optimizer.zero_grad(set_to_none=True)
         with log_path.open(log_mode, encoding="utf-8") as log:
-            for epoch in range(completed_epochs, config.epochs):
+            for epoch in range(completed_epochs, effective_config.epochs):
                 model.train()
                 epoch_losses: list[float] = []
-                batches = list(_batches(train_rows, config.batch_size, generator))
+                batches = list(_batches(train_rows, effective_config.batch_size, generator))
                 for batch_index, (tokens, labels) in enumerate(batches):
                     autocast = (
                         torch.autocast(device_type="cuda", dtype=torch.bfloat16)
@@ -513,15 +536,19 @@ def run_sft(
                     )
                     with autocast:
                         loss = _loss(model, tokens.to(device), labels.to(device))
-                        scaled_loss = loss / config.gradient_accumulation_steps
+                        scaled_loss = loss / effective_config.gradient_accumulation_steps
                     scaled_loss.backward()  # type: ignore[no-untyped-call]
                     epoch_losses.append(float(loss.detach().cpu().item()))
                     should_step = (
-                        (batch_index + 1) % config.gradient_accumulation_steps == 0
+                        (batch_index + 1)
+                        % effective_config.gradient_accumulation_steps
+                        == 0
                         or batch_index + 1 == len(batches)
                     )
                     if should_step:
-                        nn.utils.clip_grad_norm_(trainable, config.gradient_clip_norm)
+                        nn.utils.clip_grad_norm_(
+                            trainable, effective_config.gradient_clip_norm
+                        )
                         optimizer.step()
                         optimizer.zero_grad(set_to_none=True)
                         optimizer_steps += 1
@@ -543,8 +570,8 @@ def run_sft(
         checkpoint_payload: dict[str, Any] = {
             "schema_version": 1,
             "run_id": run_id,
-            "model_config": config.model.model_dump(mode="json"),
-            "training_config": config.model_dump(mode="json"),
+            "model_config": effective_config.model.model_dump(mode="json"),
+            "training_config": effective_config.model_dump(mode="json"),
             "dataset_manifest_sha256": manifest.manifest_sha256,
             "base_checkpoint_sha256": base_sha,
             "model_state": model.state_dict(),
@@ -556,7 +583,7 @@ def run_sft(
         }
         _atomic_torch_save(checkpoint_path, checkpoint_payload)
         adapter_path: Path | None = None
-        if config.mode != "full":
+        if effective_config.mode != "full":
             adapter_path = output_root / run_id / "adapter.pt"
             adapter_state = {
                 name: tensor.detach().cpu()
@@ -567,9 +594,9 @@ def run_sft(
                 adapter_path,
                 {
                     "schema_version": 1,
-                    "mode": config.mode,
-                    "rank": config.lora_rank,
-                    "alpha": config.lora_alpha,
+                    "mode": effective_config.mode,
+                    "rank": effective_config.lora_rank,
+                    "alpha": effective_config.lora_alpha,
                     "base_checkpoint_sha256": base_sha,
                     "dataset_manifest_sha256": manifest.manifest_sha256,
                     "adapter_state": adapter_state,
@@ -579,7 +606,7 @@ def run_sft(
         trainable_parameters = sum(parameter.numel() for parameter in trainable)
         return TrainingSummary(
             run_id=run_id,
-            mode=config.mode,
+            mode=effective_config.mode,
             dataset_manifest_sha256=manifest.manifest_sha256,
             base_checkpoint_sha256=base_sha,
             checkpoint_path=str(checkpoint_path),
@@ -594,7 +621,7 @@ def run_sft(
             initial_validation_loss=initial_validation,
             final_validation_loss=final_validation,
             final_validation_perplexity=math.exp(min(final_validation, 20.0)),
-            mixed_precision_requested=config.mixed_precision,
+            mixed_precision_requested=effective_config.mixed_precision,
             mixed_precision_effective=mixed_effective,
             elapsed_seconds=time.perf_counter() - start,
             preflight_memory=governor.preflight.as_dict() if governor.preflight else {},

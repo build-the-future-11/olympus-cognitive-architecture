@@ -1,0 +1,57 @@
++ Rscript master.R
+Loading required package: usethis
+[[1]]
+[1] "devtools"  "usethis"   "stats"     "graphics"  "grDevices" "utils"    
+[7] "datasets"  "methods"   "base"     
+
+[[2]]
+ [1] "csranks"   "devtools"  "usethis"   "stats"     "graphics"  "grDevices"
+ [7] "utils"     "datasets"  "methods"   "base"     
+
+[[3]]
+ [1] "gridExtra" "csranks"   "devtools"  "usethis"   "stats"     "graphics" 
+ [7] "grDevices" "utils"     "datasets"  "methods"   "base"     
+
+[[4]]
+ [1] "ggplot2"   "gridExtra" "csranks"   "devtools"  "usethis"   "stats"    
+ [7] "graphics"  "grDevices" "utils"     "datasets"  "methods"   "base"     
+
+[[5]]
+ [1] "readxl"    "ggplot2"   "gridExtra" "csranks"   "devtools"  "usethis"  
+ [7] "stats"     "graphics"  "grDevices" "utils"     "datasets"  "methods"  
+[13] "base"     
+
+[[6]]
+ [1] "stringr"   "readxl"    "ggplot2"   "gridExtra" "csranks"   "devtools" 
+ [7] "usethis"   "stats"     "graphics"  "grDevices" "utils"     "datasets" 
+[13] "methods"   "base"     
+
+[[7]]
+ [1] "data.table" "stringr"    "readxl"     "ggplot2"    "gridExtra" 
+ [6] "csranks"    "devtools"   "usethis"    "stats"      "graphics"  
+[11] "grDevices"  "utils"      "datasets"   "methods"    "base"      
+
+New names:
+* `` -> ...26
+New names:
+* `` -> ...2
+* `` -> ...3
+* `` -> ...4
+New names:
+* `` -> ...26
+New names:
+* `` -> ...26
+New names:
+* `` -> ...14
+There were 50 or more warnings (use warnings() to see the first 50)
+Saving 7 x 7 in image
+Saving 7 x 7 in image
+Saving 7 x 7 in image
+Saving 7 x 7 in image
+Saving 7 x 7 in image
+Saving 7 x 7 in image
+Saving 7 x 7 in image
+Saving 7 x 7 in image
+Warning message:
+In sqrt(aggvar/agginst$n) : NaNs produced
+Time difference of 11.01582 mins

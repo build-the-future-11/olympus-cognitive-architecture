@@ -1,3 +1,4 @@
+import hashlib
 from pathlib import Path
 
 import httpx
@@ -38,6 +39,8 @@ def test_hermes_nano_uses_memory(tmp_path: Path) -> None:
         records = store.query("episodic")
         assert response["confidence"] > 0
         assert len(records) == 1
+        expected = hashlib.sha256(b"Keep the project local and private.").hexdigest()
+        assert records[0].key == f"prompt:{expected}"
 
 
 def test_sdk_exposes_stable_foundry_contract() -> None:

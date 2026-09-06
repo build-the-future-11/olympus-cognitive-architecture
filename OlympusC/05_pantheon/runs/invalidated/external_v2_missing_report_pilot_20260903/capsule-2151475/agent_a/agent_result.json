@@ -1,0 +1,22 @@
+{
+  "answers": {},
+  "model": "qwen3:0.6b",
+  "provider": "ollama",
+  "provider_error": null,
+  "report_exists": false,
+  "role": "agent_a",
+  "runtime_sec": 23.817297124999868,
+  "source": "external/corebench/capsules/capsule-2151475.tar.gz",
+  "source_sha256": "aebc71c01c361a6514801002bfb9a577e6cb95f7940686900411f440ab5827ca",
+  "task_id": "capsule-2151475",
+  "transcript": [
+    {
+      "text": "",
+      "tool_calls": [],
+      "turn": 0
+    }
+  ],
+  "turns": 1,
+  "workspace_ephemeral": true,
+  "workspace_isolation": "macos sandbox-exec; repository and user home denied; network denied"
+}

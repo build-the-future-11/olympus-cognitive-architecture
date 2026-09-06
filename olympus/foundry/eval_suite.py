@@ -210,11 +210,18 @@ def evaluate_checkpoint(
     regressions = sum(result.regressed for result in category_results)
     exact_rate = exact / len(examples)
     format_rate = compliant / len(examples)
-    passed = candidate_loss < baseline_loss and regressions == 0 and format_rate >= 0.8
+    workflow_floor = min(score.exact_match_rate for score in _workflow_scores(examples, generated))
+    passed = (
+        candidate_loss < baseline_loss
+        and regressions == 0
+        and exact_rate >= 0.5
+        and format_rate >= 0.8
+        and workflow_floor >= 0.5
+    )
     decision = (
-        "Passed the infrastructure smoke gate; this does not satisfy Hermes promotion gates."
+        "Passed the bounded capability smoke gate; this does not satisfy Hermes promotion gates."
         if passed
-        else "Failed the infrastructure smoke gate and is ineligible for model promotion."
+        else "Failed the bounded capability smoke gate and is ineligible for model promotion."
     )
     report = HeldOutEvaluation(
         checkpoint_path=str(checkpoint_path.resolve()),

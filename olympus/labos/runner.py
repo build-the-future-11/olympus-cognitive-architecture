@@ -11,6 +11,17 @@ from pathlib import Path
 
 from olympus.labos.manifest import ProjectManifest, ProjectStatus, ResourceProfile
 
+SENSITIVE_ENV_FRAGMENTS = (
+    "API_KEY",
+    "AUTH",
+    "COOKIE",
+    "CREDENTIAL",
+    "PASSWORD",
+    "PRIVATE_KEY",
+    "SECRET",
+    "TOKEN",
+)
+
 
 @dataclass(slots=True)
 class RunResult:
@@ -198,13 +209,15 @@ class PortfolioRunner:
             )
         finished_at = datetime.now(UTC).isoformat()
         classification = classify_run(return_code, stderr)
+        safe_stdout = _redact_sensitive_values(stdout, extra_env)
+        safe_stderr = _redact_sensitive_values(stderr, extra_env)
         status = status_from_run(return_code, classification, profile)
         result = RunResult(
             project_id=project_id,
             command=command,
             return_code=return_code,
-            stdout=stdout[-20_000:],
-            stderr=stderr[-20_000:],
+            stdout=safe_stdout[-20_000:],
+            stderr=safe_stderr[-20_000:],
             status=status,
             started_at=started_at,
             finished_at=finished_at,
@@ -224,7 +237,7 @@ class PortfolioRunner:
                 "status": status.value,
                 "started_at": started_at,
                 "finished_at": finished_at,
-                "env_overrides": extra_env or {},
+                "env_overrides": _redact_env_overrides(extra_env),
             }
         )
         return result
@@ -273,3 +286,27 @@ def _decode_timeout_stream(value: str | bytes | None) -> str:
     if isinstance(value, bytes):
         return value.decode(errors="replace")
     return value
+
+
+def _is_sensitive_env_key(key: str) -> bool:
+    normalized = key.upper()
+    return any(fragment in normalized for fragment in SENSITIVE_ENV_FRAGMENTS)
+
+
+def _redact_env_overrides(values: dict[str, str] | None) -> dict[str, str]:
+    if not values:
+        return {}
+    return {
+        key: "<redacted>" if _is_sensitive_env_key(key) else value
+        for key, value in values.items()
+    }
+
+
+def _redact_sensitive_values(text: str, values: dict[str, str] | None) -> str:
+    if not values:
+        return text
+    redacted = text
+    for key, value in values.items():
+        if _is_sensitive_env_key(key) and value:
+            redacted = redacted.replace(value, "<redacted>")
+    return redacted

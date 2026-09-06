@@ -1,6 +1,6 @@
 # Olympus Reality Ledger
 
-Observed on 2026-08-21 from the repository and local runtime. Status terms are
+Observed on 2026-09-01 from the repository and local runtime. Status terms are
 literal; no model-family capability is inferred from architecture code.
 
 ## Real and verified
@@ -21,6 +21,10 @@ literal; no model-family capability is inferred from architecture code.
   exclusive RAM/swap governor, real tiny causal SFT, LoRA, nibble-packed 4-bit
   QLoRA, checkpoint resume, held-out category evaluation, int4/int8
   quantization, and fail-closed hash-bound promotion gates.
+- Typed task/tool scoring, matched-seed and matched-budget comparisons that
+  demote unsupported mechanisms, and resource admission with cancellation.
+- A locally built Forge API/web control surface with provenance, live admission,
+  job lifecycle, start, cancel, and retry. It is not deployed.
 
 ## Implemented but not a trained Olympus model
 
@@ -32,7 +36,7 @@ literal; no model-family capability is inferred from architecture code.
 ## Not present
 
 - A trained Hermes Alpha checkpoint.
-- A promoted Prometheus, Perseus, Atlas, or Kronos checkpoint.
+- A promoted Prometheus, Perseus, Atlas, Kronos, or Aion checkpoint.
 - A completed Hermes base-model comparison and licensing decision.
 - Hermes-specific SFT, tool-use post-training, quantization comparison, or Percy
   task evaluation.
@@ -50,13 +54,16 @@ and returned exact output through the real Olympus adapter in 0.118 seconds of
 model-reported time. It was unloaded before training. It is a verified local
 provider baseline, not an Olympus-trained checkpoint.
 
-The deep smoke transformer reduced held-out loss with no category regressions,
-and its int4/int8 artifacts preserved loss within 2%. It nevertheless scored
-0% exact task completion and 0% tool exact match. The promotion engine returned
-`NOT_PROMOTED`. Exact measurements are in `OLYMPUS_MODEL_FOUNDRY_LEDGER.md`.
+The deep smoke transformer reduced held-out loss from 5.78961 to 3.90434 with no
+category regressions, and its int4/int8 artifacts preserved loss within 2%. It
+nevertheless scored 0% exact task completion and 0% tool exact match. Both
+quantization quality gates are false and the promotion engine returned
+`NOT_PROMOTED`. The three-seed packing ablation produced no distinct condition,
+so its mechanism claim is explicitly demoted. Exact measurements are in
+`OLYMPUS_MODEL_FOUNDRY_LEDGER.md`.
 
 ## Naming rule
 
-No artifact may use Hermes, Prometheus, Perseus, Atlas, or Kronos as its model
+No artifact may use Hermes, Prometheus, Perseus, Atlas, Kronos, or Aion as its model
 identity until a real immutable checkpoint exists and passes the family-specific
 evaluation and deployment gates.

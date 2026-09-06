@@ -7,6 +7,7 @@ import re
 import resource
 import subprocess
 from dataclasses import dataclass
+from enum import StrEnum
 from pathlib import Path
 from typing import IO, Self
 
@@ -34,9 +35,87 @@ class MemorySnapshot:
         }
 
 
+class WorkloadTier(StrEnum):
+    SMALL = "small"
+    MEDIUM = "medium"
+
+
+@dataclass(frozen=True, slots=True)
+class WorkloadPolicy:
+    tier: WorkloadTier
+    estimated_peak_bytes: int
+    minimum_available_bytes: int
+    maximum_swap_fraction: float
+    maximum_active_runs: int
+    maximum_queued_runs: int
+
+
+@dataclass(frozen=True, slots=True)
+class AdmissionDecision:
+    admitted: bool
+    reason: str
+    policy: WorkloadPolicy
+    snapshot: MemorySnapshot
+
+
+WORKLOAD_POLICIES = {
+    WorkloadTier.SMALL: WorkloadPolicy(
+        tier=WorkloadTier.SMALL,
+        estimated_peak_bytes=1 * 1024**3,
+        minimum_available_bytes=2 * 1024**3,
+        maximum_swap_fraction=0.90,
+        maximum_active_runs=1,
+        maximum_queued_runs=1,
+    ),
+    WorkloadTier.MEDIUM: WorkloadPolicy(
+        tier=WorkloadTier.MEDIUM,
+        estimated_peak_bytes=6 * 1024**3,
+        minimum_available_bytes=8 * 1024**3,
+        maximum_swap_fraction=0.50,
+        maximum_active_runs=1,
+        maximum_queued_runs=0,
+    ),
+}
+
+
+def assess_workload(
+    tier: WorkloadTier,
+    snapshot: MemorySnapshot,
+    *,
+    active_runs: int = 0,
+    queued_runs: int = 0,
+) -> AdmissionDecision:
+    policy = WORKLOAD_POLICIES[tier]
+    if active_runs >= policy.maximum_active_runs:
+        reason = "active-run limit reached"
+    elif queued_runs > policy.maximum_queued_runs:
+        reason = "queue limit exceeded"
+    elif snapshot.available_bytes < policy.minimum_available_bytes:
+        reason = "available memory is below the tier safety floor"
+    elif snapshot.swap_fraction > policy.maximum_swap_fraction:
+        reason = "swap utilization exceeds the tier safety ceiling"
+    else:
+        return AdmissionDecision(True, "admitted", policy, snapshot)
+    return AdmissionDecision(False, reason, policy, snapshot)
+
+
 def _run(command: list[str]) -> str:
     result = subprocess.run(command, check=True, capture_output=True, text=True, timeout=5)
     return result.stdout
+
+
+def _try_run(command: list[str]) -> str | None:
+    """Return command output when an optional host probe is available.
+
+    Resource discovery runs in CI, containers, and OS sandboxes where individual
+    host-information commands may be present but denied. A denied optional probe
+    must not make otherwise measurable memory unavailable.
+    """
+
+    try:
+        return _run(command)
+    except (OSError, subprocess.SubprocessError):
+        return None
 
 
 def _peak_rss_bytes() -> int:
@@ -45,7 +124,14 @@ def _peak_rss_bytes() -> int:
 
 
 def _macos_memory() -> MemorySnapshot:
-    total = int(_run(["sysctl", "-n", "hw.memsize"]).strip())
+    total_output = _try_run(["sysctl", "-n", "hw.memsize"])
+    if total_output is not None:
+        total = int(total_output.strip())
+    else:
+        try:
+            total = int(os.sysconf("SC_PHYS_PAGES")) * int(os.sysconf("SC_PAGE_SIZE"))
+        except (OSError, ValueError) as error:
+            raise RuntimeError("cannot determine total macOS memory") from error
     vm_output = _run(["vm_stat"])
     page_size_match = re.search(r"page size of (\d+) bytes", vm_output)
     if page_size_match is None:
@@ -60,15 +146,22 @@ def _macos_memory() -> MemorySnapshot:
         pages.get(name, 0)
         for name in ("Pages free", "Pages inactive", "Pages speculative", "Pages purgeable")
     )
-    swap_output = _run(["sysctl", "vm.swapusage"])
-    swap_match = re.search(r"total = ([0-9.]+)M\s+used = ([0-9.]+)M", swap_output)
-    if swap_match is None:
-        raise RuntimeError("cannot parse macOS swap usage")
+    swap_output = _try_run(["sysctl", "vm.swapusage"])
+    swap_match = (
+        re.search(r"total = ([0-9.]+)M\s+used = ([0-9.]+)M", swap_output)
+        if swap_output is not None
+        else None
+    )
+    # macOS does not expose swap totals through a stable non-sysctl interface.
+    # A zero total means "not observable" to MemorySnapshot and deliberately
+    # disables the ratio gate while retaining the available-memory safety gate.
+    swap_total = int(float(swap_match.group(1)) * 1024 * 1024) if swap_match else 0
+    swap_used = int(float(swap_match.group(2)) * 1024 * 1024) if swap_match else 0
     return MemorySnapshot(
         total_bytes=total,
         available_bytes=available_pages * page_size,
-        swap_total_bytes=int(float(swap_match.group(1)) * 1024 * 1024),
-        swap_used_bytes=int(float(swap_match.group(2)) * 1024 * 1024),
+        swap_total_bytes=swap_total,
+        swap_used_bytes=swap_used,
         process_peak_rss_bytes=_peak_rss_bytes(),
     )
 

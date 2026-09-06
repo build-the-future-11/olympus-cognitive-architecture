@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from typing import TypedDict
 
 from olympus.core.interpretation import InterpretiveSuperpositionNetwork
@@ -23,7 +24,7 @@ class HermesNano:
         self.memory.put(
             MemoryRecord(
                 kind="episodic",
-                key=f"prompt:{abs(hash(prompt))}",
+                key=f"prompt:{hashlib.sha256(prompt.encode('utf-8')).hexdigest()}",
                 value=best.statement,
                 salience=best.confidence,
                 tags=["hermes", best.category.value],

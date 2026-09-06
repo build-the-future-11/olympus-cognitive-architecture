@@ -1,0 +1,9 @@
+claim_id: synth-linear-012
+hypothesis: The treatment has a positive adjusted effect on y.
+primary_metric: adjusted_ols_treatment_effect
+expected_direction: positive
+claim_boundary:
+  effect_min: 0.0
+data_kind: synthetic
+generator_seed: 12
+blinded_replication: true

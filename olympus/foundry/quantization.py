@@ -237,7 +237,11 @@ def quantize_checkpoint(
         context_limit_enforced=context_limit_enforced,
         tool_exact_match_rate=tool_exact,
         peak_rss_bytes=memory_snapshot().process_peak_rss_bytes,
-        passed_quality_gate=(abs(loss_change) <= 0.02 and context_limit_enforced),
+        passed_quality_gate=(
+            abs(loss_change) <= 0.02
+            and context_limit_enforced
+            and tool_exact >= 0.75
+        ),
     )
     report_path = output_root / f"int{bits}-report.json"
     _atomic_json(report_path, report.model_dump(mode="json"))

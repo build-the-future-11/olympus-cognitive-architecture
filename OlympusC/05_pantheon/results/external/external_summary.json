@@ -1,0 +1,850 @@
+{
+  "n_tasks": 17,
+  "tasks": [
+    {
+      "question_count": 1,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "Report the max gain % of planar IRS.": false
+      },
+      "false_consensus": {
+        "Report the max gain % of planar IRS.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "Report the max gain % of planar IRS.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "Report the max gain % of planar IRS.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-0571975",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "655a1e6a6337d0e2a8be35187a2d6e0cf9bd2584a993d506820baaab4a83e10c",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 1,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "fig From figure 2e, report the label of the line with the highest change in n(0) when G is 10^18.": false
+      },
+      "false_consensus": {
+        "fig From figure 2e, report the label of the line with the highest change in n(0) when G is 10^18.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig From figure 2e, report the label of the line with the highest change in n(0) when G is 10^18.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig From figure 2e, report the label of the line with the highest change in n(0) when G is 10^18.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-0811394",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "249b875a1123cc236f38cbf867651aca9bdee3fd1c447ded764659e2fdb40656",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 2,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "fig Report the name of the journal with the highest 2011 impact factor from the analysis of 30 journals.": false,
+        "fig Report the name of the university ranked #1 by impact factor.": false
+      },
+      "false_consensus": {
+        "fig Report the name of the journal with the highest 2011 impact factor from the analysis of 30 journals.": false,
+        "fig Report the name of the university ranked #1 by impact factor.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 2,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig Report the name of the journal with the highest 2011 impact factor from the analysis of 30 journals.": false,
+          "fig Report the name of the university ranked #1 by impact factor.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 2,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig Report the name of the journal with the highest 2011 impact factor from the analysis of 30 journals.": false,
+          "fig Report the name of the university ranked #1 by impact factor.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-2151475",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "c2f4ac223b0ddc27322b038a16d8a2b5b9694e66f3a3d661c544683b0f958e1a",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 2,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "What is the original (baseline) handover success rate for UE #74? Report the value as a percentage. Do not include the percentage sign.": false,
+        "fig From the UE #74 Handover Executions plot, report the Proposed decision at time 25 m/s.": false
+      },
+      "false_consensus": {
+        "What is the original (baseline) handover success rate for UE #74? Report the value as a percentage. Do not include the percentage sign.": false,
+        "fig From the UE #74 Handover Executions plot, report the Proposed decision at time 25 m/s.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 2,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "What is the original (baseline) handover success rate for UE #74? Report the value as a percentage. Do not include the percentage sign.": false,
+          "fig From the UE #74 Handover Executions plot, report the Proposed decision at time 25 m/s.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 2,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "What is the original (baseline) handover success rate for UE #74? Report the value as a percentage. Do not include the percentage sign.": false,
+          "fig From the UE #74 Handover Executions plot, report the Proposed decision at time 25 m/s.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-2675546",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "19696326a143b2cb4ccc5087bbf5f69c680a3ae21260a6a128bb82e55a121c41",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 1,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "fig Report the label of the line with the lowest expectation value at Time 2.": false
+      },
+      "false_consensus": {
+        "fig Report the label of the line with the lowest expectation value at Time 2.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig Report the label of the line with the lowest expectation value at Time 2.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig Report the label of the line with the lowest expectation value at Time 2.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-3990498",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "e831c68cb65c3c02ea919ef1520437263af9ec1c8f6aa85b8306679498c20110",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 1,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "fig From the plot measuring damping of a wave along a rectangular duct of length 1.0 m, report the label of the line with the highest dissipation % at frequency 1000 Hz.": false
+      },
+      "false_consensus": {
+        "fig From the plot measuring damping of a wave along a rectangular duct of length 1.0 m, report the label of the line with the highest dissipation % at frequency 1000 Hz.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig From the plot measuring damping of a wave along a rectangular duct of length 1.0 m, report the label of the line with the highest dissipation % at frequency 1000 Hz.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig From the plot measuring damping of a wave along a rectangular duct of length 1.0 m, report the label of the line with the highest dissipation % at frequency 1000 Hz.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-4407237",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "4524d456466f8f146a5b1a311b4ca6cc3154d2e7779cdb4145981a17f9cc44ee",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 1,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "fig From the plots measuring counts/s for every channel, report the label of the line with the highest Counts/s at Channel 200.": false
+      },
+      "false_consensus": {
+        "fig From the plots measuring counts/s for every channel, report the label of the line with the highest Counts/s at Channel 200.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig From the plots measuring counts/s for every channel, report the label of the line with the highest Counts/s at Channel 200.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig From the plots measuring counts/s for every channel, report the label of the line with the highest Counts/s at Channel 200.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-5007288",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "eef3693a328189e56fec7c8814167a1d199ec7399d570007f4a463eca243ba6e",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 1,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "fig Report the name of the machine learning model used with the greatest run time for the applied big data analytics on decentralized smart grid system.": false
+      },
+      "false_consensus": {
+        "fig Report the name of the machine learning model used with the greatest run time for the applied big data analytics on decentralized smart grid system.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig Report the name of the machine learning model used with the greatest run time for the applied big data analytics on decentralized smart grid system.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig Report the name of the machine learning model used with the greatest run time for the applied big data analytics on decentralized smart grid system.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-5360076",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "e18ba0950e2fdf4b8e49d0fed2b4dbd6da9eb95ccba47b63183a2340e604a8dc",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 1,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "fig Report the p-value of the distance (m) from the plot with the new data histograms.": false
+      },
+      "false_consensus": {
+        "fig Report the p-value of the distance (m) from the plot with the new data histograms.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig Report the p-value of the distance (m) from the plot with the new data histograms.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig Report the p-value of the distance (m) from the plot with the new data histograms.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-6562149",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "188fd79fe3055441038681cdf3784e1940dd19dd7c76a18173afd36f01c56bd5",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 1,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "fig From the figure depicting calculated transmission coefficient for the 100-nF VISHAY capacitor, report the label of the line with the highest |S21| at frequency 10^0": false
+      },
+      "false_consensus": {
+        "fig From the figure depicting calculated transmission coefficient for the 100-nF VISHAY capacitor, report the label of the line with the highest |S21| at frequency 10^0": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig From the figure depicting calculated transmission coefficient for the 100-nF VISHAY capacitor, report the label of the line with the highest |S21| at frequency 10^0": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig From the figure depicting calculated transmission coefficient for the 100-nF VISHAY capacitor, report the label of the line with the highest |S21| at frequency 10^0": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-6724161",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "004d77ad2934ab3c029fe0b35813991343a2888dd18fe44f08ece455a274b9f2",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 1,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "Report the final accuracy of the E2E-FS method on the mnist dataset.": false
+      },
+      "false_consensus": {
+        "Report the final accuracy of the E2E-FS method on the mnist dataset.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "Report the final accuracy of the E2E-FS method on the mnist dataset.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "Report the final accuracy of the E2E-FS method on the mnist dataset.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-7350043",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "8738afd80db45e159c89b6a0a847348bf3ec4f4b99ab215e90b74f36d54f12e0",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 1,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "Report the load power (Pload) for Transducer F from the measured data results. Ignore units.": false
+      },
+      "false_consensus": {
+        "Report the load power (Pload) for Transducer F from the measured data results. Ignore units.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "Report the load power (Pload) for Transducer F from the measured data results. Ignore units.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "Report the load power (Pload) for Transducer F from the measured data results. Ignore units.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-8185407",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "5211ac1654d69a9ecafa195a3fabf703ca6f16e391b48e6efa440bbf9425e33f",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 1,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "fig Report plot label of the index with the higher adjusted closing price in 2008.": false
+      },
+      "false_consensus": {
+        "fig Report plot label of the index with the higher adjusted closing price in 2008.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig Report plot label of the index with the higher adjusted closing price in 2008.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig Report plot label of the index with the higher adjusted closing price in 2008.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-8353473",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "edeee9b7a7c22e2be78828c65cd8ee044539da356652460e537445df3caa002d",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 1,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "fig From the example 4 plots, report from the main sequence subplot the letter of the Saccade with the lowest saccade peak velocity at a saccade amplitude of 10 degrees.": false
+      },
+      "false_consensus": {
+        "fig From the example 4 plots, report from the main sequence subplot the letter of the Saccade with the lowest saccade peak velocity at a saccade amplitude of 10 degrees.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig From the example 4 plots, report from the main sequence subplot the letter of the Saccade with the lowest saccade peak velocity at a saccade amplitude of 10 degrees.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig From the example 4 plots, report from the main sequence subplot the letter of the Saccade with the lowest saccade peak velocity at a saccade amplitude of 10 degrees.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-8467067",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "e0bd894986d69a662e5670227e4ccd5eb18dbcf71e8424611e7b89abce984867",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 1,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "Report the cost for the optimal method.": false
+      },
+      "false_consensus": {
+        "Report the cost for the optimal method.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "Report the cost for the optimal method.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "Report the cost for the optimal method.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-8610546",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "a984c05d9ae5cd2990d31e2d98bd8b8352b3e25f1f748a976a92b1f8207ebdfa",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 1,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "fig From the cumulative pore size distribution (PSD) comparison plots measuring pore diameter vs. cumulative frequency, report the plot label of the model with the lowest cumulative frequency at pore diameter 25 on plot (a).": false
+      },
+      "false_consensus": {
+        "fig From the cumulative pore size distribution (PSD) comparison plots measuring pore diameter vs. cumulative frequency, report the plot label of the model with the lowest cumulative frequency at pore diameter 25 on plot (a).": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig From the cumulative pore size distribution (PSD) comparison plots measuring pore diameter vs. cumulative frequency, report the plot label of the model with the lowest cumulative frequency at pore diameter 25 on plot (a).": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 1,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "fig From the cumulative pore size distribution (PSD) comparison plots measuring pore diameter vs. cumulative frequency, report the plot label of the model with the lowest cumulative frequency at pore diameter 25 on plot (a).": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-9026204",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "3258eecb309b16ccf55e44c2ba52d823e9fbe1cb534bec9000f6b76db25484f5",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    },
+    {
+      "question_count": 2,
+      "pairwise_agreement_count": 0,
+      "pairwise_agreement_rate": 0.0,
+      "false_consensus_count": 0,
+      "false_consensus_rate": 0.0,
+      "agreement": {
+        "From the distribution of the HBF in the analysis of the movie, report the % positive.": false,
+        "Report the accuracy of the analysis of the movie.": false
+      },
+      "false_consensus": {
+        "From the distribution of the HBF in the analysis of the movie, report the % positive.": false,
+        "Report the accuracy of the analysis of the movie.": false
+      },
+      "agent_a": {
+        "correct": 0,
+        "total": 2,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "From the distribution of the HBF in the analysis of the movie, report the % positive.": false,
+          "Report the accuracy of the analysis of the movie.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "agent_b": {
+        "correct": 0,
+        "total": 2,
+        "accuracy": 0.0,
+        "all_correct": false,
+        "per_question": {
+          "From the distribution of the HBF in the analysis of the movie, report the % positive.": false,
+          "Report the accuracy of the analysis of the movie.": false
+        },
+        "missing": [],
+        "extra": []
+      },
+      "task_id": "capsule-5172670",
+      "agent_a_provider": "ollama",
+      "agent_a_model": "qwen3:0.6b",
+      "agent_b_provider": "ollama",
+      "agent_b_model": "llama3.2:1b",
+      "canonical_answers_sha256": "39a6ebf8ab46e87fe04e9f90b79b3467a659fdebea60805a1df19e9e6dc83e35",
+      "agent_a_report_exists": true,
+      "agent_b_report_exists": true,
+      "agent_a_submitted_report": false,
+      "agent_b_submitted_report": false,
+      "agent_a_report_origin": "harness_failure_normalization",
+      "agent_b_report_origin": "harness_failure_normalization",
+      "agent_a_provider_error": null,
+      "agent_b_provider_error": null
+    }
+  ]
+}
