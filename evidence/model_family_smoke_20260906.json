@@ -1,10 +1,21 @@
 {
   "schema_version": 1,
-  "run_id": "models-smoke-a39b5df00347-s20260906-n24",
-  "created_at": "2026-09-06T12:27:25.749116Z",
+  "run_id": "models-smoke-8ff505b9c622-s20260906-n24",
+  "created_at": "2026-09-06T18:26:40.875259Z",
   "seed": 20260906,
   "optimization_steps": 24,
-  "source_sha256": "a39b5df00347f56aef45c8f7b0604b93166c76225e1ce168b6a3e439511c94cf",
+  "source_paths": [
+    "core/schemas.py",
+    "models/substrate.py",
+    "models/hermes.py",
+    "models/prometheus.py",
+    "models/perseus.py",
+    "models/atlas.py",
+    "models/kronos.py",
+    "models/aion.py",
+    "models/smoke.py"
+  ],
+  "source_sha256": "8ff505b9c622e158893f6c58b7271b3b04f0eec59f95f8ae4e1322e9fb8733d7",
   "python_version": "3.14.7",
   "torch_version": "2.14.0",
   "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
@@ -19,7 +30,7 @@
   },
   "substrate_checkpoint": {
     "relative_path": "shared-substrate.pt",
-    "sha256": "9eccb2508d13137fdce943ccc915c9a980c564e4a3bdd15da4a4fa8a70c5d8a4",
+    "sha256": "3a2b87f694a739f59257e0bef1e809956996cd5ef344c7a6024dc41b5c15ef15",
     "bytes": 10533,
     "qualifying_checkpoint": false,
     "promoted": false
@@ -47,7 +58,7 @@
       },
       "checkpoint": {
         "relative_path": "hermes.pt",
-        "sha256": "fb264771c522d496e6c3a52aeb09d2d0a9894ee3d5b31a718eb872c45cb4320e",
+        "sha256": "20c95cef2e309d964ddfa44db3b8b43d6bb440a3a17928252e0d025703fcc1dd",
         "bytes": 10230,
         "qualifying_checkpoint": false,
         "promoted": false
@@ -79,7 +90,7 @@
       },
       "checkpoint": {
         "relative_path": "prometheus.pt",
-        "sha256": "7802fce45ed9ff85fd079dc839d8513e9a81480d7ea06631f2207a2576f4a5ef",
+        "sha256": "20dfa295879e92e8252550c0d5b90631c11e480152fb19d7b34c8f7d08e66639",
         "bytes": 6069,
         "qualifying_checkpoint": false,
         "promoted": false
@@ -112,7 +123,7 @@
       },
       "checkpoint": {
         "relative_path": "perseus.pt",
-        "sha256": "33f2fe6faf3cb21ef81de774396a71074441f12edade774d77d5782ed42cd798",
+        "sha256": "8dd019837198777f9358af8e533390eae2e2883577730ea0a08f7b07373bf993",
         "bytes": 6919,
         "qualifying_checkpoint": false,
         "promoted": false
@@ -138,13 +149,13 @@
         "finite": true
       },
       "deterministic_checks": {
-        "version_is_replayable": true,
+        "version_resolves_in_current_service": true,
         "provenance_is_complete": true,
         "acl_filtered_before_results": true
       },
       "checkpoint": {
         "relative_path": "atlas.pt",
-        "sha256": "2aec6c9fad1880f7c9df387e81a5ac492152b150cea12c08d1167fa80984aa95",
+        "sha256": "dc1c5f692bc45eb9fac5e5985978a8cff39ac9582f0665e23a83792d3dffaca7",
         "bytes": 6323,
         "qualifying_checkpoint": false,
         "promoted": false
@@ -163,7 +174,7 @@
       ],
       "training": {
         "initial_loss": 1.857471227645874,
-        "final_loss": -1.0868386030197144,
+        "final_loss": -1.086822509765625,
         "learned_parameters": 3303,
         "gradient_update_observed": true,
         "loss_decreased": true,
@@ -175,7 +186,7 @@
       },
       "checkpoint": {
         "relative_path": "kronos.pt",
-        "sha256": "e18b69b2b263bab0a96ebd10884e7f29bceea5d1fc2b4b8168cc360982a44cbd",
+        "sha256": "4efc07ade983ea22c08ceb3843de2bb2c302c71525a519e3f2ec3167a7bf0a47",
         "bytes": 22389,
         "qualifying_checkpoint": false,
         "promoted": false
@@ -207,7 +218,7 @@
       },
       "checkpoint": {
         "relative_path": "aion.pt",
-        "sha256": "545a15c15a893bdfbebfb70d7c0c0994f3ee3ecd1f47c06e4c092a76dc275e02",
+        "sha256": "2a4d432bf9342cc3c3c89e0422f7075a0cd7d42f734fc158d3a5f3911b664986",
         "bytes": 5659,
         "qualifying_checkpoint": false,
         "promoted": false

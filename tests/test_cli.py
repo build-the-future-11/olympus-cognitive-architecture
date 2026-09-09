@@ -4,11 +4,53 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
 from typer.testing import CliRunner
 
 from olympus.cli import app
+from olympus.foundry.promotion import PromotionReport
 
 runner = CliRunner()
+
+
+@pytest.mark.parametrize("passed, exit_code", [(True, 0), (False, 1)])
+def test_promotion_cli_exit_codes_follow_decision(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, passed: bool, exit_code: int
+) -> None:
+    report = PromotionReport(
+        requested_model_id="fixture-model", checkpoint_sha256="a" * 64,
+        gates=[], passed=passed, status="PROMOTED" if passed else "NOT_PROMOTED",
+        release_manifest_path=None, blockers=[] if passed else ["task_quality"],
+    )
+    monkeypatch.setattr("olympus.cli.evaluate_promotion", lambda **kwargs: report)
+    result = runner.invoke(app, [
+        "foundry", "promotion-check", "fixture-model",
+        *[str(tmp_path / name) for name in (
+            "checkpoint.pt", "manifest.json", "evaluation.json", "quantization.json",
+            "MODEL_CARD.md", "promotion.json",
+        )], "Apache-2.0",
+    ])
+    assert result.exit_code == exit_code
+    assert json.loads(result.output)["passed"] is passed
+
+
+def test_promotion_cli_reports_unreadable_evidence_without_traceback(tmp_path: Path) -> None:
+    result = runner.invoke(app, [
+        "foundry", "promotion-check", "fixture-model",
+        *[str(tmp_path / name) for name in (
+            "checkpoint.pt", "manifest.json", "evaluation.json", "quantization.json",
+            "MODEL_CARD.md", "promotion.json",
+        )],
+        "Apache-2.0",
+    ])
+    assert result.exit_code == 2
+    assert "unreadable" in result.output
+    assert "No new decision was produced" in result.output
+    assert "Traceback" not in result.output
+    assert not (tmp_path / "promotion.json").exists()
+    attempts = list((tmp_path / "promotion.json.runs").glob("*/invalid-input.json"))
+    assert len(attempts) == 1
+    assert json.loads(attempts[0].read_text())["status"] == "INVALID_INPUT"
 
 
 def _workspace(tmp_path: Path) -> tuple[Path, Path]:
@@ -126,3 +168,32 @@ def test_labos_resume_failed_reports_empty_history(tmp_path: Path) -> None:
         str(artifacts),
     )
     assert "No failed runs recorded" in output
+
+
+def test_promotion_cli_rejects_ambiguous_serving_evidence(tmp_path: Path) -> None:
+    serving = tmp_path / "serving.json"
+    serving.write_text(
+        '{"passed":true,"passed":false,"checkpoint_sha256":"' + "a" * 64 + '"}',
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "foundry",
+            "promotion-check",
+            "fixture-model",
+            str(tmp_path / "checkpoint.pt"),
+            str(tmp_path / "manifest.json"),
+            str(tmp_path / "evaluation.json"),
+            str(tmp_path / "quantization.json"),
+            str(tmp_path / "MODEL_CARD.md"),
+            str(tmp_path / "promotion.json"),
+            "Apache-2.0",
+            "--serving-verification",
+            str(serving),
+        ],
+    )
+
+    assert result.exit_code == 2
+    assert "duplicate JSON key is forbidden: passed" in result.output

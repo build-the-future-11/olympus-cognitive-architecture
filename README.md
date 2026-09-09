@@ -25,10 +25,25 @@ The shared model substrate and the Hermes, Olympus-Atlas, Prometheus, Perseus,
 Kronos, and Aion role architectures now have executable reference
 implementations under `olympus/models/`. They include typed contracts,
 an access-filtered model view, scoped deterministic validation/gating paths,
-trainable PyTorch components, and focused tests. Hermes and Prometheus have
-partial shared-workspace integration; the remaining family services retain
-local contracts, and the process-local guards are not durable authority or
-rollback services.
+trainable PyTorch components, and focused tests. A fixed synthetic two-phase
+reference replay composes all six roles for one contract-interoperability path:
+Atlas retrieval and Prometheus selection run before it pauses for one declared
+non-material action; resume gates that action through Aion, executes it through
+Perseus, then computes the Kronos observation, grounds or abstains through
+Hermes, and records Aion audit/STOP. The retrieval query and final request are
+explicit public fields bound to authorized-view hashes, and Hermes may see only
+authorized evidence named by the frozen protocol. Runtime-secret HMACs derive
+the public pending/scope identifiers, while a separate private scope token
+reserves Perseus prepare/commit/receipt/rollback access inside the process. The
+approval is host-registered and bound to the exact action-bearing manifest,
+which also records a host-asserted executor profile. Component failures after
+the gate become closed, detail-free Kronos/Hermes outcomes and still reach Aion
+STOP; attempted model calls are charged exactly, including failed calls, while
+completed outputs are cached for an in-process retry.
+
+This replay enforces only aligned *declared* non-material policies. It is not a
+general model runtime, sandbox, durable or crash-safe workflow/rollback service,
+external authority system, or proof that an injected executor is non-material.
 Their status is `EXPERIMENTAL_SMOKE_NOT_PROMOTED`: a bounded synthetic component
 run established executable optimizer/check paths, but no qualifying family
 checkpoint or family-level result exists. See
@@ -64,7 +79,9 @@ provider state.
 Mutating and generation endpoints are loopback-only by default. Before putting
 the API behind any proxy or binding it to a non-loopback address, set a strong
 `OLYMPUS_API_TOKEN` and send it as a bearer token. The development Vite proxy is
-intended only for the local loopback workflow above.
+intended only for the local loopback workflow above. `OlympusSDK` accepts the
+token through its `api_token` constructor argument and refuses to send it over
+plaintext HTTP to a non-loopback host.
 
 To inspect an already-installed Ollama model through the provider adapter:
 
@@ -90,9 +107,14 @@ dataset and run full SFT, LoRA, or genuine 4-bit QLoRA smoke jobs:
 ```
 
 Held-out evaluation, int4/int8 quantization, checkpoint resume, RAM/swap
-governance, and fail-closed promotion are implemented and tested. The current
-tiny transformer is an infrastructure smoke checkpoint and failed task-quality
-gates; no Hermes model is promoted. See
+governance, and a fail-closed candidate-promotion evaluator are implemented and
+tested. Promotion requires exact hash-bound Ed25519 attestations for evaluation,
+quantization, license review and serving, signed by separately configured issuers.
+The operator must pin the reviewed trust-policy digest through
+`OLYMPUS_PROMOTION_TRUST_SHA256`; candidate-supplied keys alone cannot qualify.
+Independent production runners and signer administration are not yet deployed. The
+current tiny transformer is an infrastructure smoke checkpoint and failed
+task-quality gates; no Hermes model is promoted. See
 [`OLYMPUS_MODEL_FOUNDRY_LEDGER.md`](OLYMPUS_MODEL_FOUNDRY_LEDGER.md) for exact
 measurements and blockers.
 
@@ -101,6 +123,20 @@ The complete twelve-stage execution index is machine-readable at
 model-family truth are in
 [`research/SOURCE_OF_TRUTH.md`](research/SOURCE_OF_TRUTH.md); the one highest
 value next experiment and its frozen stop rules are in [`NEXT.md`](NEXT.md).
+
+To reproduce the fixed six-role contract replay and write a sanitized public
+manifest under the ignored artifact directory:
+
+```bash
+.venv/bin/python -m olympus.cli models composition-smoke \
+  --output-dir artifacts/model-composition-smoke/verification \
+  --seed 20260906
+```
+
+The release-facing record is
+[`evidence/model_composition_smoke_20260906.json`](evidence/model_composition_smoke_20260906.json).
+It is synthetic software evidence only: it makes no scientific, model-quality,
+sandbox, durability, or promotion claim.
 
 The former PostgreSQL/pgvector and Redis Compose scaffold is archived under
 `archive/unused-infrastructure/`. It is not used by the implementation and is

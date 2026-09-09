@@ -31,3 +31,17 @@
 **Evaluation protocol.** Ten prespecified stratified 75/25 train/test splits. Standardization parameters are fit on training data only.
 
 **Caution.** This clinical-origin dataset is used only as a machine-learning reproducibility case study. The repository makes no medical or diagnostic-use claim. The current bundled description does not state a dataset license, so redistribution of a new raw-data copy is avoided; the script loads the dataset from scikit-learn at runtime.
+
+## 3. CORE-Bench v1.1 OOD subset
+
+**Purpose.** Exercise the external research-agent harness against frozen computational-reproducibility tasks with canonical answers withheld from agent workspaces.
+
+**Selection.** The definitive V4 protocol contains 17 official OOD capsules and 20 scored questions across Computer Science, Economics, Engineering, and Physics. Sixteen capsules use Python and one uses R.
+
+**Sampling limitation.** This is a size-bounded convenience subset chosen to reach the 20-question structural gate while excluding two approximately 400–800 MB capsules. It is not a random sample and must not be represented as benchmark-wide performance.
+
+**Visibility and contamination.** The source labels the tasks OOD, but the suite is publicly available. The repository therefore records `ood` visibility without claiming that model training contamination is impossible.
+
+**Observed capability.** Both evaluated small local models returned 0/20 non-null answers and authored 0/34 valid reports. This is a bounded negative capability result, not a measurement of false-consensus prevalence among capable agents.
+
+**Evidence.** Selection and hashes are frozen in `external/corebench/manifest.jsonl` and `configs/local_ood_protocol.json`; question-level outcomes are in `results/external/question_level.csv`.

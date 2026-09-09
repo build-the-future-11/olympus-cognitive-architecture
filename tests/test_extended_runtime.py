@@ -76,6 +76,16 @@ def test_trace_recorder_captures_result_timing_and_metadata() -> None:
     assert recorder.events[0].name == "calculation"
     assert recorder.events[0].finished_at >= recorder.events[0].started_at
     assert recorder.events[0].metadata == {"project": "olympus"}
+    assert recorder.events[0].succeeded is True
+    assert recorder.events[0].error_type is None
+
+    def fail() -> None:
+        raise RuntimeError("test failure")
+
+    with pytest.raises(RuntimeError, match="test failure"):
+        recorder.record("failure", fail, project="olympus")
+    assert recorder.events[1].succeeded is False
+    assert recorder.events[1].error_type == "RuntimeError"
 
 
 def test_reference_encoder_handles_structured_and_unknown_content() -> None:
@@ -228,7 +238,9 @@ def test_sdk_validates_configuration_status_and_payloads() -> None:
         non_object.health()
 
 
-def test_run_database_event_log_and_runner_lifecycle(tmp_path: Path) -> None:
+def test_run_database_event_log_and_runner_lifecycle(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     database_path = tmp_path / "runs.sqlite3"
     result = RunResult(
         project_id="demo",
@@ -262,6 +274,12 @@ def test_run_database_event_log_and_runner_lifecycle(tmp_path: Path) -> None:
         cwd=tmp_path,
         profile=ResourceProfile.SMOKE,
     )
+    missing_command = runner.run_command(
+        project_id="missing-command",
+        command="olympus-command-that-does-not-exist",
+        cwd=tmp_path,
+        profile=ResourceProfile.SMOKE,
+    )
     timeout = runner.run_command(
         project_id="timeout",
         command=f"{sys.executable} -c 'import time; time.sleep(1)'",
@@ -270,12 +288,15 @@ def test_run_database_event_log_and_runner_lifecycle(tmp_path: Path) -> None:
         timeout_seconds=0.01,
     )
     secret = "never-write-this-secret"
+    inherited_secret = "never-persist-inherited-secret"
+    monkeypatch.setenv("LABOS_TEST_API_KEY", inherited_secret)
     redacted = runner.run_command(
         project_id="redaction",
         command=(
             f"{sys.executable} -c 'import os; "
-            "print(os.environ[\"OPENAI_API_KEY\"]); "
-            "print(os.environ[\"PUBLIC_MODE\"])'"
+            'print(os.environ["OPENAI_API_KEY"]); '
+            'print(os.environ["LABOS_TEST_API_KEY"]); '
+            'print(os.environ["PUBLIC_MODE"])\''
         ),
         cwd=tmp_path,
         profile=ResourceProfile.SMOKE,
@@ -283,17 +304,30 @@ def test_run_database_event_log_and_runner_lifecycle(tmp_path: Path) -> None:
     )
     runner.close()
     assert success.status == ProjectStatus.SMOKE_TESTED
+    assert missing_command.return_code == 127
+    assert missing_command.classification == "dependency"
+    assert missing_command.status == ProjectStatus.DISCOVERED_ONLY
     assert timeout.classification == "timeout"
     assert timeout.status == ProjectStatus.FULL_BENCHMARK_PENDING_COMPUTE
     assert secret not in redacted.stdout
-    assert "<redacted>\nlocal" in redacted.stdout
+    assert inherited_secret not in redacted.stdout
+    assert "<redacted>\n<redacted>\nlocal" in redacted.stdout
     persisted = (tmp_path / "runner" / "labos_events.jsonl").read_text(encoding="utf-8")
     assert secret not in persisted
+    assert inherited_secret not in persisted
     event = json.loads(persisted.splitlines()[-1])
     assert event["env_overrides"] == {
         "OPENAI_API_KEY": "<redacted>",
         "PUBLIC_MODE": "local",
     }
+    with pytest.raises(ValueError, match="finite positive"):
+        runner.run_command(
+            project_id="invalid-timeout",
+            command=f"{sys.executable} -c pass",
+            cwd=tmp_path,
+            profile=ResourceProfile.SMOKE,
+            timeout_seconds=float("nan"),
+        )
 
 
 @pytest.mark.parametrize(

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import shlex
 import sqlite3
@@ -181,6 +182,8 @@ class PortfolioRunner:
         timeout_seconds: float = 120,
         extra_env: dict[str, str] | None = None,
     ) -> RunResult:
+        if not math.isfinite(timeout_seconds) or timeout_seconds <= 0:
+            raise ValueError("timeout_seconds must be a finite positive value")
         started_at = datetime.now(UTC).isoformat()
         env = os.environ.copy()
         env["PYTHONDONTWRITEBYTECODE"] = "1"
@@ -207,10 +210,18 @@ class PortfolioRunner:
             stderr = (stderr + "\n" if stderr else "") + (
                 f"Command timed out after {timeout_seconds} seconds."
             )
+        except OSError as exc:
+            return_code = 127
+            stdout = ""
+            stderr = f"Command could not be started: {exc}"
+        except ValueError as exc:
+            return_code = 2
+            stdout = ""
+            stderr = f"Invalid command: {exc}"
         finished_at = datetime.now(UTC).isoformat()
         classification = classify_run(return_code, stderr)
-        safe_stdout = _redact_sensitive_values(stdout, extra_env)
-        safe_stderr = _redact_sensitive_values(stderr, extra_env)
+        safe_stdout = _redact_sensitive_values(stdout, env)
+        safe_stderr = _redact_sensitive_values(stderr, env)
         status = status_from_run(return_code, classification, profile)
         result = RunResult(
             project_id=project_id,
@@ -252,6 +263,8 @@ def classify_run(return_code: int, stderr: str) -> str:
     if "permission denied" in lowered or "operation not permitted" in lowered:
         return "permission"
     if "no module named" in lowered or "command not found" in lowered:
+        return "dependency"
+    if "no such file or directory" in lowered or "command could not be started" in lowered:
         return "dependency"
     if "not found" in lowered and "dataset" in lowered:
         return "external_dataset"
@@ -297,8 +310,7 @@ def _redact_env_overrides(values: dict[str, str] | None) -> dict[str, str]:
     if not values:
         return {}
     return {
-        key: "<redacted>" if _is_sensitive_env_key(key) else value
-        for key, value in values.items()
+        key: "<redacted>" if _is_sensitive_env_key(key) else value for key, value in values.items()
     }
 
 

@@ -10,7 +10,7 @@ different states and must not be used interchangeably.
 replication failures that pairwise or numeric-only comparisons miss?
 
 **Completed evidence:** A synthetic controlled benchmark, a small WDBC public
-case, and an external agent study whose agents failed the frozen capability
+case, and an external agent study whose agents failed the post-study capability
 floor. The external study is a valid negative result but cannot estimate false
 consensus among capable agents.
 
@@ -55,11 +55,21 @@ collection, not separate paper claims.
 The shared substrate and Hermes, Prometheus, Perseus, Olympus-Atlas, Kronos,
 and Aion roles now have executable reference components. They establish typed
 interfaces, selected deterministic validation/gating paths, and differentiable
-training paths. Hermes and Prometheus have partial shared-workspace integration;
-the complete six-role runtime does not exist. The families still have no
-qualifying datasets, checkpoints, comparative evaluations, or promoted
-artifacts. The research hypotheses remain inactive until frozen admission,
-baseline, evaluation, and promotion protocols are satisfied.
+training paths. One fixed synthetic, process-local replay composes the six roles
+for a contract-interoperability check with a host-registered,
+execution-manifest-bound Aion approval. It exposes the retrieval query and final
+request as public hash-bound inputs, restricts Hermes to frozen-protocol
+evidence, reserves its public execution scope with a private process-local
+capability, orders Kronos/Hermes after Perseus execution, and closes degraded
+post-gate outcomes through Aion STOP with attempted-call accounting. These are
+software invariants exercised on synthetic fixtures, not research findings. Its
+executor profile and non-material tool status remain host/declaration
+assertions, not sandbox enforcement, and its state/capabilities do not survive a
+process crash. No general, configurable, durable, or autonomous six-role
+runtime exists. The families still have no qualifying datasets, checkpoints,
+comparative evaluations, or promoted artifacts. The replay makes no scientific
+or model-quality claim, and the research hypotheses remain inactive until
+frozen admission, baseline, evaluation, and promotion protocols are satisfied.
 
 ## Priority order
 

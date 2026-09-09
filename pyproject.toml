@@ -32,6 +32,7 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
+  "cryptography>=49.0.0,<51",
   "fastapi>=0.139.0",
   "httpx>=0.28.1",
   "numpy>=2.5.1",
@@ -76,6 +77,7 @@ where = ["."]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 filterwarnings = ["error"]
 
 [tool.ruff]

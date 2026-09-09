@@ -13,7 +13,10 @@ has a concrete admission gate; no empty stage is represented as implemented.
 | Reasoning specialization | **BLOCKED** | Reviewed problem/answer set with verifiable outcomes and anti-memorization split | Exact outcome accuracy, calibration, length/cost, self-correction success |
 | Safety tuning | **BLOCKED** | Written threat model, allowed/refused boundary set, red-team corpus and reviewers | Over-refusal, unsafe compliance, prompt injection, privacy, and regression reports |
 
-The promotion engine in `olympus/foundry/promotion.py` is the enforcement
-boundary. A later stage may add evidence, but it cannot waive dataset identity,
-held-out scale, task quality, quantization, serving, license, or model-card
-requirements.
+The candidate-promotion engine in `olympus/foundry/promotion.py` is one
+enforcement boundary. A later stage may add evidence, but it cannot waive
+dataset identity, held-out scale, task quality, quantization, serving, license,
+or model-card requirements. The engine verifies signed evaluation, quantization,
+license-review and serving evidence against an operator-pinned trust policy.
+Independent production runners, signer administration and real qualifying evidence
+are still required; the signature-verification tests are synthetic protocol fixtures.

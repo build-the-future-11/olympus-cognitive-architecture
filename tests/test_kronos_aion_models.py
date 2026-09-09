@@ -334,6 +334,23 @@ def test_aion_controller_enforces_authority_audit_and_hash_chain() -> None:
     controller.register_approval(registered_execution)
     registered_execution.scope = "mutated-after-registration"
 
+    untrusted_execution = execution_approval.model_copy(
+        update={"approval_id": f"approval_{'9' * 16}"}
+    )
+    with pytest.raises(PermissionError, match="trusted approval"):
+        controller.preflight_approval(
+            state,
+            ResearchStage.AUTHORIZED_EXECUTION,
+            approval=untrusted_execution,
+        )
+    controller.preflight_approval(
+        state,
+        ResearchStage.AUTHORIZED_EXECUTION,
+        approval=execution_approval,
+    )
+    assert state.stage is ResearchStage.PREREGISTERED_PROTOCOL
+    assert controller.verify_chain(state)
+
     with pytest.raises(PermissionError, match="approval"):
         controller.transition(
             state,

@@ -64,12 +64,28 @@ def _canonical_json(value: object) -> bytes:
 
 def _atomic_write(path: Path, payload: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", delete=False) as handle:
-        handle.write(payload)
-        handle.flush()
-        os.fsync(handle.fileno())
-        temporary = Path(handle.name)
-    temporary.replace(path)
+    temporary: Path | None = None
+    try:
+        with NamedTemporaryFile(
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            delete=False,
+        ) as handle:
+            temporary = Path(handle.name)
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        temporary.replace(path)
+        temporary = None
+        if os.name != "nt":
+            directory = os.open(path.parent, os.O_RDONLY)
+            try:
+                os.fsync(directory)
+            finally:
+                os.close(directory)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 class InstructionExample(StrictModel):
@@ -164,8 +180,7 @@ def _assert_no_cross_split_contamination(examples: list[InstructionExample]) -> 
             if previous is not None and previous[0] != example.split:
                 hits += 1
                 raise ValueError(
-                    "cross-split 8-token contamination between "
-                    f"{previous[1]} and {example.id}"
+                    f"cross-split 8-token contamination between {previous[1]} and {example.id}"
                 )
             seen[gram] = (example.split, example.id)
     return hits
@@ -283,6 +298,7 @@ def prepare_instruction_dataset(
 
 
 def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
+    manifest_path = manifest_path.resolve(strict=True)
     manifest = DatasetManifestV2.model_validate_json(manifest_path.read_bytes())
     expected = sha256_bytes(manifest.canonical_bytes(include_hash=False))
     if manifest.manifest_sha256 != expected:
@@ -291,14 +307,24 @@ def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
     split_names = [split.name for split in manifest.splits]
     if len(split_names) != len(set(split_names)):
         raise ValueError("dataset manifest contains duplicate split descriptors")
+    required_splits = {"train", "validation", "test"}
+    if set(split_names) != required_splits:
+        raise ValueError(
+            "dataset manifest must contain exactly the train, validation, and test splits"
+        )
 
     verified_records = 0
+    all_examples: list[InstructionExample] = []
     for split in manifest.splits:
-        path = Path(split.path)
-        if not path.is_absolute():
-            path = manifest_path.parent / path
-        if not path.is_file():
-            raise ValueError(f"dataset split missing: {split.name}")
+        relative_path = Path(split.path)
+        if relative_path.is_absolute():
+            raise ValueError(f"dataset split path must be relative: {split.name}")
+        try:
+            path = (manifest_path.parent / relative_path).resolve(strict=True)
+        except OSError as error:
+            raise ValueError(f"dataset split missing: {split.name}") from error
+        if not path.is_relative_to(manifest_path.parent) or not path.is_file():
+            raise ValueError(f"dataset split path escapes the manifest root: {split.name}")
         payload = path.read_bytes()
         if sha256_bytes(payload) != split.sha256:
             raise ValueError(f"dataset split hash mismatch: {split.name}")
@@ -329,6 +355,25 @@ def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
         if actual_categories != dict(sorted(split.categories.items())):
             raise ValueError(f"dataset split category counts mismatch: {split.name}")
         verified_records += actual_records
+        all_examples.extend(examples)
+
+    ids = [example.id for example in all_examples]
+    duplicate_ids = len(ids) - len(set(ids))
+    if duplicate_ids:
+        raise ValueError(f"verified dataset contains {duplicate_ids} duplicate record IDs")
+    normalized = [_normalized_example(example) for example in all_examples]
+    normalized_duplicates = len(normalized) - len(set(normalized))
+    if normalized_duplicates:
+        raise ValueError(f"verified dataset contains {normalized_duplicates} normalized duplicates")
+    _assert_no_cross_split_contamination(all_examples)
+    missing = [
+        f"{split}:{category}"
+        for split in ("train", "validation", "test")
+        for category in REQUIRED_CATEGORIES
+        if category not in {example.category for example in all_examples if example.split == split}
+    ]
+    if missing:
+        raise ValueError(f"verified dataset category/split coverage missing: {', '.join(missing)}")
 
     if verified_records != manifest.source.record_count:
         raise ValueError(
@@ -340,4 +385,17 @@ def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
             "dataset quality accepted-record count mismatch: "
             f"manifest={manifest.quality.accepted_records} actual={verified_records}"
         )
+    expected_quality_counts = {
+        "input_records": verified_records,
+        "accepted_records": verified_records,
+        "duplicate_ids": 0,
+        "normalized_duplicates": 0,
+        "pii_or_secret_hits": 0,
+        "split_leakage_hits": 0,
+    }
+    for field, expected_value in expected_quality_counts.items():
+        if getattr(manifest.quality, field) != expected_value:
+            raise ValueError(f"dataset quality field mismatch: {field}")
+    if manifest.quality.missing_category_split_pairs:
+        raise ValueError("dataset quality report claims missing category/split coverage")
     return manifest

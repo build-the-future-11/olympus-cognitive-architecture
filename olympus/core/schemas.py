@@ -7,7 +7,11 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class StrictModel(BaseModel):
-    model_config = ConfigDict(extra="forbid", validate_assignment=True)
+    model_config = ConfigDict(
+        extra="forbid",
+        validate_assignment=True,
+        allow_inf_nan=False,
+    )
 
 
 class HypothesisStatus(StrEnum):

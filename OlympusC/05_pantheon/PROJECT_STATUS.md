@@ -25,9 +25,13 @@ Develop a rigorous method for distinguishing pairwise replication agreement from
 
 ## Tested
 
-- 24/24 tests pass, including the post-study scientific-readiness separation.
+- 31 tests pass and 2 macOS-sandbox-dependent tests are skipped, including the
+  post-study scientific-readiness separation.
 - Controlled evidence validator passes: 480 classifications, 200 executions, 20 public-case runs.
-- Frozen protocol verification passes.
+- Frozen V4 machine records remain byte-pinned. Comparing the repaired current
+  source to V4 intentionally exits with
+  `V4_SOURCE_DRIFT_REQUIRES_VERSIONED_PROTOCOL`; a current-source V5 draft
+  manifest is explicitly neither frozen nor executed.
 - External matrix complete: 17/17 tasks, 20/20 questions, 34/34 normalized artifacts.
 - PDF compiles to six pages and was rendered and visually inspected page by page.
 
@@ -45,7 +49,9 @@ Develop a rigorous method for distinguishing pairwise replication agreement from
 
 ## Broken
 
-- No known broken local workflow.
+- A source-identical V4 rerun is no longer possible from the repaired current
+  tree. Both execution wrappers fail before model execution rather than mixing
+  current code with frozen V4 claims or V4 output namespaces.
 - The frozen V4 `PUBLICATION-READY` gate is retained for byte-level reproducibility and certifies structural completeness only. The post-study `poststudy/SCIENTIFIC_READINESS.json` gate supersedes that label for interpretation and fails the agent capability floor.
 
 ## Blockers
@@ -63,7 +69,12 @@ Develop a rigorous method for distinguishing pairwise replication agreement from
 
 ```bash
 make verify
-PANTHEON_PYTHON=../../.venv/bin/python bash scripts/run_local_ood_study.sh
 ../../.venv/bin/python analysis/analyze_external_rigor.py
 ../../.venv/bin/python poststudy/scientific_readiness_gate.py
+../../.venv/bin/python scripts/v5_source_manifest.py
 ```
+
+`scripts/run_local_ood_study.sh` and `scripts/run_final_external.sh` are
+deliberately bound to V4 and now stop on source drift. A new confirmation needs
+a versioned output namespace and model identities bound before a separate V5
+protocol is frozen; the V5 source manifest alone is not execution authority.

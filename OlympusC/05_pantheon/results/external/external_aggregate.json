@@ -17,5 +17,13 @@
       "agent_b_provider": "ollama",
       "agent_b_model": "llama3.2:1b"
     }
-  ]
+  ],
+  "capability_observed": {
+    "agent_a_answered": 0,
+    "agent_b_answered": 0,
+    "joint_answered": 0,
+    "agent_a_authored_reports": 0,
+    "agent_b_authored_reports": 0
+  },
+  "interpretation": "False-consensus prevalence is not identified for capable agents because no evaluated agent returned a non-null answer."
 }

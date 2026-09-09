@@ -92,15 +92,16 @@ from olympus.models.substrate import (
 _SMOKE_STATUS: Literal["EXPERIMENTAL_SMOKE_NOT_PROMOTED"] = (
     "EXPERIMENTAL_SMOKE_NOT_PROMOTED"
 )
-_MODEL_SOURCE_NAMES = (
-    "substrate.py",
-    "hermes.py",
-    "prometheus.py",
-    "perseus.py",
-    "atlas.py",
-    "kronos.py",
-    "aion.py",
-    "smoke.py",
+_MODEL_SOURCE_PATHS = (
+    "core/schemas.py",
+    "models/substrate.py",
+    "models/hermes.py",
+    "models/prometheus.py",
+    "models/perseus.py",
+    "models/atlas.py",
+    "models/kronos.py",
+    "models/aion.py",
+    "models/smoke.py",
 )
 
 
@@ -149,6 +150,7 @@ class FamilySmokeManifest(StrictModel):
     created_at: datetime
     seed: int
     optimization_steps: int = Field(ge=1)
+    source_paths: list[str] = Field(min_length=len(_MODEL_SOURCE_PATHS))
     source_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     python_version: str
     torch_version: str
@@ -165,6 +167,8 @@ class FamilySmokeManifest(StrictModel):
 
     @model_validator(mode="after")
     def validate_summary(self) -> Self:
+        if self.source_paths != list(_MODEL_SOURCE_PATHS):
+            raise ValueError("smoke manifest source paths do not match the canonical scope")
         names = [result.family for result in self.families]
         if len(names) != len(set(names)):
             raise ValueError("smoke manifest family names must be unique")
@@ -294,6 +298,7 @@ def run_family_smoke(
         created_at=datetime.now(UTC),
         seed=seed,
         optimization_steps=steps,
+        source_paths=list(_MODEL_SOURCE_PATHS),
         source_sha256=source_sha256,
         python_version=platform.python_version(),
         torch_version=torch.__version__,
@@ -468,7 +473,7 @@ def _run_atlas(steps: int) -> tuple[TrainingMetric, dict[str, bool], dict[str, A
     result = service.retrieve(AuthorizedQuery("What are Saturn rings made of?"), top_k=1)
     private_query = service.retrieve(AuthorizedQuery("cobalt lantern"), top_k=1)
     checks = {
-        "version_is_replayable": service.get_index(version) is not None,
+        "version_resolves_in_current_service": service.get_index(version) is not None,
         "provenance_is_complete": isinstance(result, EvidenceSet)
         and bool(result.hits[0].passage.passage_hash),
         "acl_filtered_before_results": not isinstance(private_query, EvidenceSet)
@@ -589,6 +594,7 @@ def _smoke_transition_evidence(
 
 class _RecordingExecutor:
     guarantees_idempotency = True
+    execution_profile_sha256 = "0" * 64
 
     def __init__(self) -> None:
         self.calls = 0
@@ -898,11 +904,11 @@ def _write_json_atomic(path: Path, manifest: FamilySmokeManifest) -> None:
 
 
 def _source_digest() -> str:
-    root = Path(__file__).resolve().parent
+    root = Path(__file__).resolve().parents[1]
     digest = hashlib.sha256()
-    for name in _MODEL_SOURCE_NAMES:
-        path = root / name
-        digest.update(name.encode("utf-8"))
+    for relative in _MODEL_SOURCE_PATHS:
+        path = root / relative
+        digest.update(relative.encode("utf-8"))
         digest.update(b"\0")
         digest.update(path.read_bytes())
         digest.update(b"\0")

@@ -4,9 +4,9 @@ All ablations are evaluated on the same 40 frozen seeded-fault package compariso
 
 | Adjudication signals | Localization accuracy | n |
 |---|---:|---:|
-| Numeric only / no artifact hashes | 0.125 | 40 |
-| Pairwise artifacts / no canonical manifest | 0.625 | 40 |
-| Full Pantheon canonical audit | 1.000 | 40 |
+| Numeric only / no artifact hashes | 0.125 | 160 |
+| Pairwise artifacts / no canonical manifest | 0.625 | 160 |
+| Full Pantheon canonical audit | 1.000 | 160 |
 
 The largest qualitative gap is the **shared bug** condition. Proposer and replicator execute the same corrupted implementation, so pairwise hashes and outputs agree. Both weaker baselines label all twenty shared-bug cases as reproduced. Pantheon compares both runs to the frozen canonical package and identifies implementation drift in all twenty.
 

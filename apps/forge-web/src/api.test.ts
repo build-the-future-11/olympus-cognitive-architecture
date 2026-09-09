@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   fetchDemos,
   fetchFoundryJob,
+  fetchFoundryModels,
   fetchFoundryOverview,
   fetchFoundryStatus,
   generateWithFoundry,
@@ -13,7 +14,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("fetchDemos", () => {
+describe("API client", () => {
   it("uses the deployable same-origin API route", async () => {
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify({ forge: { passed: true, detail: "complete" } }), {
@@ -27,7 +28,13 @@ describe("fetchDemos", () => {
     });
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/demos",
-      expect.objectContaining({ headers: { Accept: "application/json" } })
+      expect.objectContaining({
+        cache: "no-store",
+        credentials: "same-origin",
+        headers: { Accept: "application/json" },
+        redirect: "error",
+        referrerPolicy: "no-referrer"
+      })
     );
   });
 
@@ -99,6 +106,37 @@ describe("fetchDemos", () => {
     await expect(fetchFoundryJob()).resolves.toMatchObject({ status: "IDLE" });
   });
 
+  it("rejects internally inconsistent or chronologically impossible job state", async () => {
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            job_id: null,
+            status: "RUNNING",
+            started_at: "2026-09-01T00:00:00Z",
+            finished_at: null,
+            error: null
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } }
+        )
+      )
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            job_id: "job-abc",
+            status: "FAILED",
+            started_at: "2026-09-01T00:00:02Z",
+            finished_at: "2026-09-01T00:00:01Z",
+            error: "redacted failure"
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } }
+        )
+      );
+
+    await expect(fetchFoundryJob()).rejects.toThrow("inconsistent Foundry job state");
+    await expect(fetchFoundryJob()).rejects.toThrow("inconsistent Foundry job state");
+  });
+
   it("uses concrete POST endpoints for verification and generation", async () => {
     const fetchMock = vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
       const payload =
@@ -133,7 +171,11 @@ describe("fetchDemos", () => {
                 total_tokens: 2,
                 unit: "characters"
               },
-              evidence: { checkpoint_id: "ckpt_abc" }
+              evidence: {
+                checkpoint_id: "ckpt_abc",
+                checkpoint_sha256: "a".repeat(64),
+                runtime: "olympus-character-bigram-v1"
+              }
             };
       return new Response(JSON.stringify(payload), {
           status: 200,
@@ -156,6 +198,101 @@ describe("fetchDemos", () => {
         method: "POST",
         body: expect.stringContaining("verified-model")
       })
+    );
+  });
+
+  it("rejects impossible counts and incomplete provenance payloads", async () => {
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            integrity: "ok",
+            datasets: -1,
+            experiments: 0,
+            checkpoints: 0,
+            evaluations: 0,
+            models: 0,
+            evidence_events: 0
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } }
+        )
+      )
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            promotion_boundary: "NO_PROMOTED_ARTIFACT",
+            latest_dataset: { dataset_id: "dataset", version: "1" },
+            latest_experiment: null,
+            latest_checkpoint: null,
+            latest_evaluation: null,
+            resources: {
+              small: true,
+              medium: false,
+              snapshot: { available_bytes: 3_000_000_000, swap_fraction: 0.4 }
+            }
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } }
+        )
+      );
+
+    await expect(fetchFoundryStatus()).rejects.toThrow("invalid Foundry status");
+    await expect(fetchFoundryOverview()).rejects.toThrow("invalid Foundry overview");
+  });
+
+  it("does not label an unverified registry record as a usable model", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          data: [
+            {
+              id: "candidate-model",
+              object: "model",
+              owned_by: "bu1ld-olympus",
+              status: "EVALUATED",
+              capabilities: ["text-generation"],
+              limitations: []
+            }
+          ]
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      )
+    );
+
+    await expect(fetchFoundryModels()).rejects.toThrow("invalid model registry");
+  });
+
+  it("rejects a completion attributed to a different model", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          id: "chatcmpl-abc",
+          object: "chat.completion",
+          model: "different-model",
+          choices: [
+            {
+              index: 0,
+              message: { role: "assistant", content: "untrusted result" },
+              finish_reason: "length"
+            }
+          ],
+          usage: {
+            prompt_tokens: 1,
+            completion_tokens: 1,
+            total_tokens: 2,
+            unit: "characters"
+          },
+          evidence: {
+            checkpoint_id: "ckpt_abc",
+            checkpoint_sha256: "a".repeat(64),
+            runtime: "olympus-character-bigram-v1"
+          }
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      )
+    );
+
+    await expect(generateWithFoundry("verified-model", "inspect evidence")).rejects.toThrow(
+      "invalid chat completion"
     );
   });
 });

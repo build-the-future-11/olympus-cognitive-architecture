@@ -17,6 +17,7 @@ from olympus.models.perseus import (
     CompensatableExecutionError,
     DeterministicActionValidator,
     ExecutionContext,
+    ExecutionReceipt,
     RecoveryClass,
     RetryableExecutionError,
     ToolDefinition,
@@ -195,8 +196,11 @@ def test_prepare_commit_and_idempotent_replay_execute_once() -> None:
     replay.output["written"] = "forged-replay"
     second_replay = manager.commit(prepared.transaction_id, executor)
     same_prepare = manager.prepare(action, context)
+    terminal = manager.snapshot(prepared.transaction_id)
 
     assert receipt.state == TransactionState.COMMITTED
+    assert terminal.state is TransactionState.COMMITTED
+    assert terminal.transaction_id == prepared.transaction_id
     assert replay.replayed is True
     assert second_replay.output == {"written": "safe"}
     assert same_prepare.transaction_id == prepared.transaction_id
@@ -271,6 +275,33 @@ def test_kernel_copies_trusted_approval_and_tool_definition() -> None:
         )
 
 
+def test_capability_kernel_rejects_validator_argument_rewrites() -> None:
+    action = _write_action()
+
+    class RewritingValidator(DeterministicActionValidator):
+        def validate(
+            self, action: ActionEnvelope, definition: ToolDefinition
+        ) -> dict[str, Any]:
+            arguments = super().validate(action, definition)
+            return {**arguments, "content": "rewritten-after-approval"}
+
+    approval = _approval(action)
+    kernel = CapabilityKernel(
+        [_write_tool()],
+        validator=RewritingValidator(),
+        trusted_approvals=[approval],
+    )
+    with pytest.raises(ActionValidationError, match="may not rewrite"):
+        kernel.authorize(
+            action,
+            ExecutionContext(
+                capabilities={"filesystem.write"},
+                satisfied_preconditions={"workspace-clean"},
+                approval_ids={approval.approval_id},
+            ),
+        )
+
+
 def test_prepare_defensively_copies_action_before_commit() -> None:
     action = _write_action()
     manager, context = _authorized_manager(action)
@@ -338,6 +369,9 @@ def test_failed_material_effect_is_not_claimed_rolled_back_or_leaked() -> None:
     manager, context = _authorized_manager(action)
     prepared = manager.prepare(action, context)
 
+    class ToolControlledExceptionName(CompensatableExecutionError):
+        pass
+
     class PartialExecutor:
         guarantees_idempotency = True
 
@@ -345,14 +379,24 @@ def test_failed_material_effect_is_not_claimed_rolled_back_or_leaked() -> None:
             self, tool_id: str, arguments: Mapping[str, Any], transaction_id: str
         ) -> Mapping[str, Any]:
             del tool_id, arguments, transaction_id
-            raise CompensatableExecutionError("secret-token=leaked-123")
+            raise ToolControlledExceptionName("secret-token=leaked-123")
 
     receipt = manager.commit(prepared.transaction_id, PartialExecutor())
     assert receipt.state is TransactionState.FAILED
-    assert receipt.error == "CompensatableExecutionError"
+    assert receipt.error == "compensatable_execution_failure"
     assert "secret-token" not in (receipt.error or "")
+    assert "ToolControlledExceptionName" not in (receipt.error or "")
     with pytest.raises(TransactionStateError, match="compensation action"):
         manager.rollback(prepared.transaction_id)
+
+    with pytest.raises(ValidationError):
+        ExecutionReceipt(
+            transaction_id="tx_forger",
+            idempotency_key="forged-receipt",
+            state=TransactionState.FAILED,
+            recovery_class=RecoveryClass.FATAL,
+            error="PRIVATE_ORCHID_EXFILTRATED",  # type: ignore[arg-type]
+        )
 
 
 @pytest.mark.parametrize(
@@ -367,3 +411,97 @@ def test_failed_material_effect_is_not_claimed_rolled_back_or_leaked() -> None:
 )
 def test_execution_failure_classes(error: BaseException, expected: RecoveryClass) -> None:
     assert classify_execution_failure(error) == expected
+
+
+def test_execution_scopes_prevent_cross_gate_transaction_replay() -> None:
+    action = _write_action()
+    manager, context = _authorized_manager(action)
+    first_scope = "1" * 64
+    second_scope = "2" * 64
+
+    first = manager.prepare(
+        action,
+        context,
+        execution_scope_sha256=first_scope,
+        require_new=True,
+    )
+    second = manager.prepare(
+        action,
+        context,
+        execution_scope_sha256=second_scope,
+        require_new=True,
+    )
+
+    assert first.transaction_id != second.transaction_id
+    assert first.execution_scope_sha256 == first_scope
+    assert second.execution_scope_sha256 == second_scope
+    executor = RecordingSandbox()
+    manager.commit(first.transaction_id, executor)
+    manager.commit(second.transaction_id, executor)
+    assert len(executor.calls) == 2
+
+
+def test_reserved_execution_scope_requires_private_capability_for_prepare_and_commit() -> None:
+    action = _write_action()
+    manager, context = _authorized_manager(action)
+    scope = "3" * 64
+    token = "4" * 64
+    manager.reserve_execution_scope(scope, token)
+
+    with pytest.raises(AuthorizationError, match="reservation token"):
+        manager.prepare(action, context, execution_scope_sha256=scope)
+
+    prepared = manager.prepare(
+        action,
+        context,
+        execution_scope_sha256=scope,
+        execution_scope_token=token,
+        require_new=True,
+    )
+    executor = RecordingSandbox()
+    with pytest.raises(AuthorizationError, match="reservation token"):
+        manager.commit(prepared.transaction_id, executor)
+    with pytest.raises(AuthorizationError, match="reservation token"):
+        manager.rollback(prepared.transaction_id)
+    assert executor.calls == []
+
+    receipt = manager.commit(
+        prepared.transaction_id,
+        executor,
+        execution_scope_token=token,
+    )
+    assert receipt.state is TransactionState.COMMITTED
+    assert len(executor.calls) == 1
+    with pytest.raises(AuthorizationError, match="reservation token"):
+        manager.receipt(prepared.transaction_id)
+    protected_receipt = manager.receipt(
+        prepared.transaction_id, execution_scope_token=token
+    )
+    assert protected_receipt is not None
+    assert protected_receipt.output["written"] == "safe"
+
+
+def test_scoped_prepare_can_require_a_fresh_transaction() -> None:
+    action = _write_action()
+    manager, context = _authorized_manager(action)
+    scope = "3" * 64
+    prepared = manager.prepare(
+        action,
+        context,
+        execution_scope_sha256=scope,
+        require_new=True,
+    )
+
+    with pytest.raises(TransactionStateError, match="already contains"):
+        manager.prepare(
+            action,
+            context,
+            execution_scope_sha256=scope,
+            require_new=True,
+        )
+
+    assert manager.receipt(prepared.transaction_id) is None
+    committed = manager.commit(prepared.transaction_id, RecordingSandbox())
+    recovered = manager.receipt(prepared.transaction_id)
+    assert recovered == committed
+    assert recovered is not committed

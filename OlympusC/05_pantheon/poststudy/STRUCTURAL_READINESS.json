@@ -1,0 +1,51 @@
+{
+  "artifact_complete": true,
+  "checks": [
+    {
+      "check": "local_evidence_validator",
+      "detail": "{\n  \"evidence_validation\": \"PASS\",\n  \"seeded_fault_classifier_evaluations\": 480,\n  \"actual_seeded_fault_executions\": 200,\n  \"public_case_runs\": 20\n}",
+      "pass": true
+    },
+    {
+      "check": "tests",
+      "detail": "31 passed, 2 skipped",
+      "pass": true
+    },
+    {
+      "check": "external_tasks",
+      "detail": "17 tasks; threshold 15",
+      "pass": true
+    },
+    {
+      "check": "external_questions",
+      "detail": "20 scored questions; threshold 20",
+      "pass": true
+    },
+    {
+      "check": "agent_identity_difference",
+      "detail": "agent identities differ on every task",
+      "pass": true
+    },
+    {
+      "check": "cross_domain",
+      "detail": "4 fields: ['Computer Science', 'Economics', 'Engineering', 'Physics']",
+      "pass": true
+    },
+    {
+      "check": "heldout_or_ood",
+      "detail": "visibility=['ood']; public_train is pilot evidence only",
+      "pass": true
+    },
+    {
+      "check": "normalized_artifacts_present",
+      "detail": "numeric=True; normalized_reports=True; provider_errors_absent=True; this does not establish agent authorship",
+      "pass": true
+    }
+  ],
+  "gate_scope": "artifact_completeness_only",
+  "interpretation": "Structural completeness is necessary but insufficient. Run poststudy/scientific_readiness_gate.py for the authoritative scientific verdict.",
+  "publication_ready": false,
+  "schema_version": 1,
+  "scientific_readiness_evaluated": false,
+  "verdict": "ARTIFACT_COMPLETE"
+}

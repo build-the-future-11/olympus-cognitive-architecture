@@ -7,7 +7,7 @@ import threading
 from collections.abc import Callable, Mapping
 from datetime import UTC, datetime
 from enum import IntEnum, StrEnum
-from typing import Any, Protocol, Self
+from typing import Any, Literal, Protocol, Self
 
 import torch
 from pydantic import Field, model_validator
@@ -146,6 +146,27 @@ def action_sha256(action: ActionEnvelope) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
+def scoped_action_sha256(
+    action: ActionEnvelope, execution_scope_sha256: str | None = None
+) -> str:
+    """Derive the transaction fingerprint shared by manager and public audit."""
+
+    if execution_scope_sha256 is None:
+        return action_sha256(action)
+    _validate_digest(execution_scope_sha256, "execution scope")
+    payload = json.dumps(
+        {
+            "action": action.model_dump(mode="json"),
+            "execution_scope_sha256": execution_scope_sha256,
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+        allow_nan=False,
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
 class ActionApproval(StrictModel):
     approval_id: str = Field(pattern=r"^approval_[0-9a-f]{16,64}$")
     action_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
@@ -240,6 +261,14 @@ class CapabilityKernel:
         if definition is None:
             raise ActionValidationError("unknown tool or schema version")
         arguments = self._validator.validate(action, definition)
+        try:
+            rewritten = _json_identity(arguments) != _json_identity(action.arguments)
+        except (TypeError, ValueError) as error:
+            raise ActionValidationError(
+                "action validator returned non-JSON arguments"
+            ) from error
+        if rewritten:
+            raise ActionValidationError("action validators may not rewrite arguments")
         unmet = (
             definition.required_preconditions | set(action.preconditions)
         ) - context.satisfied_preconditions
@@ -264,6 +293,14 @@ class CapabilityKernel:
                     f"tool {definition.tool_id!r} requires a trusted action-bound approval"
                 )
         return definition.model_copy(deep=True), _copy_json_object(arguments)
+
+    def describe_tool(self, tool_id: str, schema_version: str) -> ToolDefinition:
+        """Return a defensive copy for cross-runtime contract consistency checks."""
+
+        definition = self._definitions.get((tool_id, schema_version))
+        if definition is None:
+            raise ActionValidationError("unknown tool or schema version")
+        return definition.model_copy(deep=True)
 
 
 class RecoveryClass(IntEnum):
@@ -380,22 +417,47 @@ class TransactionState(StrEnum):
     ROLLED_BACK = "rolled_back"
 
 
+ExecutionFailureCode = Literal[
+    "retryable_execution_failure",
+    "compensatable_execution_failure",
+    "fatal_execution_failure",
+    "authority_required_execution_failure",
+]
+
+
 class ExecutionReceipt(StrictModel):
-    transaction_id: str
+    transaction_id: str = Field(pattern=r"^tx_[0-9a-f]{64}$")
     idempotency_key: str
     state: TransactionState
     output: dict[str, Any] = Field(default_factory=dict)
     replayed: bool = False
     recovery_class: RecoveryClass | None = None
-    error: str | None = None
+    error: ExecutionFailureCode | None = None
+
+    @model_validator(mode="after")
+    def require_terminal_consistency(self) -> Self:
+        if self.state is TransactionState.COMMITTED:
+            if self.recovery_class is not None or self.error is not None:
+                raise ValueError("committed receipts cannot contain failure metadata")
+        elif self.state is TransactionState.FAILED:
+            if self.recovery_class is None or self.error is None or self.output:
+                raise ValueError(
+                    "failed receipts require closed failure metadata and no output"
+                )
+        else:
+            raise ValueError("execution receipts must describe a terminal transaction")
+        return self
 
 
 class TransactionSnapshot(StrictModel):
-    transaction_id: str
+    transaction_id: str = Field(pattern=r"^tx_[0-9a-f]{64}$")
     idempotency_key: str
     tool_id: str
     state: TransactionState
     material_effect: bool
+    execution_scope_sha256: str | None = Field(
+        default=None, pattern=r"^[0-9a-f]{64}$"
+    )
 
 
 class SandboxExecutor(Protocol):
@@ -415,6 +477,8 @@ class _Transaction:
         arguments: dict[str, Any],
         context: ExecutionContext,
         fingerprint: str,
+        execution_scope_sha256: str | None,
+        execution_scope_token: str | None,
     ) -> None:
         self.transaction_id = transaction_id
         self.action = action.model_copy(deep=True)
@@ -422,6 +486,8 @@ class _Transaction:
         self.arguments = _copy_json_object(arguments)
         self.context = context.model_copy(deep=True)
         self.fingerprint = fingerprint
+        self.execution_scope_sha256 = execution_scope_sha256
+        self.execution_scope_token = execution_scope_token
         self.state = TransactionState.PREPARED
         self.receipt: ExecutionReceipt | None = None
         self.lock = threading.RLock()
@@ -433,6 +499,7 @@ class _Transaction:
             tool_id=self.action.tool_id,
             state=self.state,
             material_effect=self.definition.material_effect,
+            execution_scope_sha256=self.execution_scope_sha256,
         )
 
 
@@ -442,23 +509,147 @@ class TransactionManager:
     def __init__(self, kernel: CapabilityKernel) -> None:
         self._kernel = kernel
         self._transactions: dict[str, _Transaction] = {}
-        self._by_idempotency_key: dict[str, str] = {}
+        self._by_idempotency_key: dict[tuple[str, str | None], str] = {}
+        # A reservation is an in-process capability boundary.  It prevents a
+        # caller that shares this manager from occupying or committing an
+        # execution scope while an external authority is reviewing it.
+        self._scope_reservations: dict[str, str] = {}
         self._lock = threading.RLock()
 
-    @staticmethod
-    def _fingerprint(action: ActionEnvelope) -> str:
-        return action_sha256(action)
+    def reserve_execution_scope(
+        self, execution_scope_sha256: str, execution_scope_token: str
+    ) -> None:
+        """Atomically reserve a scoped transaction for its owning runtime."""
 
-    def prepare(self, action: ActionEnvelope, context: ExecutionContext) -> TransactionSnapshot:
+        _validate_digest(execution_scope_sha256, "execution scope")
+        _validate_digest(execution_scope_token, "execution scope token")
+        with self._lock:
+            existing = self._scope_reservations.get(execution_scope_sha256)
+            if existing is not None:
+                if existing == execution_scope_token:
+                    return
+                raise TransactionStateError("execution scope is already reserved")
+            if any(
+                scope == execution_scope_sha256
+                for _, scope in self._by_idempotency_key
+            ):
+                raise TransactionStateError(
+                    "execution scope already contains a transaction"
+                )
+            self._scope_reservations[execution_scope_sha256] = execution_scope_token
+
+    def release_execution_scope(
+        self, execution_scope_sha256: str, execution_scope_token: str
+    ) -> None:
+        """Release an unused reservation after an aborted preparation path."""
+
+        _validate_digest(execution_scope_sha256, "execution scope")
+        _validate_digest(execution_scope_token, "execution scope token")
+        with self._lock:
+            if self._scope_reservations.get(execution_scope_sha256) != execution_scope_token:
+                raise TransactionStateError("execution scope reservation is not owned")
+            if any(
+                scope == execution_scope_sha256
+                for _, scope in self._by_idempotency_key
+            ):
+                raise TransactionStateError(
+                    "execution scope with a transaction cannot be released"
+                )
+            del self._scope_reservations[execution_scope_sha256]
+
+    def describe_tool(self, tool_id: str, schema_version: str) -> ToolDefinition:
+        """Expose only a defensive description of the injected capability policy."""
+
+        return self._kernel.describe_tool(tool_id, schema_version)
+
+    def preflight(
+        self, action: ActionEnvelope, context: ExecutionContext
+    ) -> tuple[ToolDefinition, dict[str, Any]]:
+        """Validate authority and arguments without creating a transaction."""
+
+        definition, arguments = self._kernel.authorize(
+            action.model_copy(deep=True), context.model_copy(deep=True)
+        )
+        return definition.model_copy(deep=True), _copy_json_object(arguments)
+
+    def snapshot(self, transaction_id: str) -> TransactionSnapshot:
+        """Return a defensive snapshot of the manager-owned transaction state."""
+
+        with self._lock:
+            transaction = self._transactions.get(transaction_id)
+        if transaction is None:
+            raise TransactionStateError("unknown transaction")
+        with transaction.lock:
+            return transaction.snapshot().model_copy(deep=True)
+
+    def receipt(
+        self, transaction_id: str, *, execution_scope_token: str | None = None
+    ) -> ExecutionReceipt | None:
+        """Return a defensive terminal receipt for process-local recovery."""
+
+        with self._lock:
+            transaction = self._transactions.get(transaction_id)
+        if transaction is None:
+            raise TransactionStateError("unknown transaction")
+        with transaction.lock:
+            if (
+                transaction.execution_scope_token is not None
+                and transaction.execution_scope_token != execution_scope_token
+            ):
+                raise AuthorizationError(
+                    "scoped transaction requires its reservation token"
+                )
+            if transaction.receipt is None:
+                return None
+            return transaction.receipt.model_copy(deep=True)
+
+    @staticmethod
+    def _fingerprint(
+        action: ActionEnvelope, execution_scope_sha256: str | None = None
+    ) -> str:
+        return scoped_action_sha256(action, execution_scope_sha256)
+
+    def prepare(
+        self,
+        action: ActionEnvelope,
+        context: ExecutionContext,
+        *,
+        execution_scope_sha256: str | None = None,
+        execution_scope_token: str | None = None,
+        require_new: bool = False,
+    ) -> TransactionSnapshot:
+        if execution_scope_sha256 is not None:
+            _validate_digest(execution_scope_sha256, "execution scope")
+        if execution_scope_token is not None:
+            _validate_digest(execution_scope_token, "execution scope token")
+        if execution_scope_token is not None and execution_scope_sha256 is None:
+            raise ValueError("an execution scope token requires an execution scope")
         action_snapshot = action.model_copy(deep=True)
         definition, arguments = self._kernel.authorize(action_snapshot, context)
-        fingerprint = self._fingerprint(action_snapshot)
+        fingerprint = self._fingerprint(action_snapshot, execution_scope_sha256)
+        idempotency_scope = (
+            action_snapshot.idempotency_key,
+            execution_scope_sha256,
+        )
         with self._lock:
-            existing_id = self._by_idempotency_key.get(action.idempotency_key)
+            reservation = (
+                self._scope_reservations.get(execution_scope_sha256)
+                if execution_scope_sha256 is not None
+                else None
+            )
+            if reservation is not None and reservation != execution_scope_token:
+                raise AuthorizationError("execution scope requires its reservation token")
+            if reservation is None and execution_scope_token is not None:
+                raise AuthorizationError("execution scope token has no reservation")
+            existing_id = self._by_idempotency_key.get(idempotency_scope)
             if existing_id is not None:
                 existing = self._transactions[existing_id]
                 if existing.fingerprint != fingerprint:
                     raise ActionValidationError("idempotency key was reused for a different action")
+                if require_new:
+                    raise TransactionStateError(
+                        "execution scope already contains a transaction"
+                    )
                 return existing.snapshot()
             transaction_id = f"tx_{fingerprint}"
             collision = self._transactions.get(transaction_id)
@@ -471,17 +662,32 @@ class TransactionManager:
                 arguments,
                 context,
                 fingerprint,
+                execution_scope_sha256,
+                execution_scope_token,
             )
             self._transactions[transaction_id] = transaction
-            self._by_idempotency_key[action.idempotency_key] = transaction_id
+            self._by_idempotency_key[idempotency_scope] = transaction_id
             return transaction.snapshot()
 
-    def commit(self, transaction_id: str, executor: SandboxExecutor) -> ExecutionReceipt:
+    def commit(
+        self,
+        transaction_id: str,
+        executor: SandboxExecutor,
+        *,
+        execution_scope_token: str | None = None,
+    ) -> ExecutionReceipt:
         with self._lock:
             transaction = self._transactions.get(transaction_id)
         if transaction is None:
             raise TransactionStateError("unknown transaction")
         with transaction.lock:
+            if (
+                transaction.execution_scope_token is not None
+                and transaction.execution_scope_token != execution_scope_token
+            ):
+                raise AuthorizationError(
+                    "scoped transaction requires its reservation token"
+                )
             if transaction.state == TransactionState.COMMITTED:
                 if transaction.receipt is None:
                     raise TransactionStateError("committed transaction is missing its receipt")
@@ -499,7 +705,12 @@ class TransactionManager:
                 ):
                     raise TransactionStateError("only retryable failures may be committed again")
                 transaction.state = TransactionState.PREPARED
-            if self._fingerprint(transaction.action) != transaction.fingerprint:
+            if (
+                self._fingerprint(
+                    transaction.action, transaction.execution_scope_sha256
+                )
+                != transaction.fingerprint
+            ):
                 raise TransactionStateError("prepared action no longer matches its fingerprint")
             definition, arguments = self._kernel.authorize(
                 transaction.action, transaction.context
@@ -532,9 +743,9 @@ class TransactionManager:
                     idempotency_key=transaction.action.idempotency_key,
                     state=TransactionState.FAILED,
                     recovery_class=recovery_class,
-                    # Do not put tool-controlled exception text into a public
-                    # receipt; it can contain credentials or protected content.
-                    error=type(error).__name__,
+                    # Neither tool-controlled exception text nor dynamic class
+                    # names belong in a public receipt: both can carry secrets.
+                    error=_public_failure_code(recovery_class),
                 )
                 return transaction.receipt.model_copy(deep=True)
             transaction.state = TransactionState.COMMITTED
@@ -546,12 +757,21 @@ class TransactionManager:
             )
             return transaction.receipt.model_copy(deep=True)
 
-    def rollback(self, transaction_id: str) -> TransactionSnapshot:
+    def rollback(
+        self, transaction_id: str, *, execution_scope_token: str | None = None
+    ) -> TransactionSnapshot:
         with self._lock:
             transaction = self._transactions.get(transaction_id)
         if transaction is None:
             raise TransactionStateError("unknown transaction")
         with transaction.lock:
+            if (
+                transaction.execution_scope_token is not None
+                and transaction.execution_scope_token != execution_scope_token
+            ):
+                raise AuthorizationError(
+                    "scoped transaction requires its reservation token"
+                )
             if transaction.state == TransactionState.COMMITTED:
                 raise TransactionStateError(
                     "committed effects require an explicit compensation action"
@@ -575,6 +795,16 @@ def classify_execution_failure(error: BaseException) -> RecoveryClass:
     if isinstance(error, AuthorityRequiredExecutionError | PermissionError):
         return RecoveryClass.AUTHORITY_REQUIRED
     return RecoveryClass.FATAL
+
+
+def _public_failure_code(recovery_class: RecoveryClass) -> ExecutionFailureCode:
+    failure_codes: dict[RecoveryClass, ExecutionFailureCode] = {
+        RecoveryClass.RETRYABLE: "retryable_execution_failure",
+        RecoveryClass.COMPENSATABLE: "compensatable_execution_failure",
+        RecoveryClass.FATAL: "fatal_execution_failure",
+        RecoveryClass.AUTHORITY_REQUIRED: "authority_required_execution_failure",
+    }
+    return failure_codes[recovery_class]
 
 
 def _safe_json_object(value: dict[str, Any]) -> dict[str, Any]:
@@ -608,6 +838,13 @@ def _copy_json_object(value: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(decoded, dict):
         raise ValueError("JSON object copy did not produce an object")
     return decoded
+
+
+def _validate_digest(value: str, label: str) -> None:
+    if len(value) != 64 or any(
+        character not in "0123456789abcdef" for character in value
+    ):
+        raise ValueError(f"{label} must be a lowercase SHA-256 value")
 
 
 def _validate_json_tree(value: Any, *, path: str) -> None:

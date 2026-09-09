@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-09-07",
+  "portfolio_status": "Major Repair",
+  "release_decision": "NOT READY",
+  "projects": [
+    {
+      "name": "Olympus",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/Olympus",
+      "tests": "231 passed; 85.21% branch coverage",
+      "state": "salvageable alpha platform",
+      "decision": "FIX",
+      "license": "proprietary",
+      "principal_blocker": "No trained/promoted named model; release tree is dirty and new package sources are untracked"
+    },
+    {
+      "name": "ML4Science",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/ML4Science",
+      "tests": "63 passed",
+      "state": "portfolio foundry with mostly proposal/negative evidence",
+      "decision": "MERGE",
+      "license": "Apache-2.0",
+      "principal_blocker": "64 ideas collapse to eight mechanism families; zero main-track-ready projects"
+    },
+    {
+      "name": "ML4Industry",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/ML4Industry",
+      "tests": "125 passed, 3 skipped",
+      "state": "working audit framework with negative/limited pilots",
+      "decision": "FIX",
+      "license": "MIT",
+      "principal_blocker": "No production deployment, outcome, or conference-ready experiment"
+    },
+    {
+      "name": "ML4SematicIntelligence",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/ML4SematicIntelligence",
+      "tests": "54 passed, 1 failed",
+      "state": "negative COGS analysis with stale summary",
+      "decision": "FIX",
+      "license": "Apache-2.0",
+      "principal_blocker": "Stale expected label and only one retained Transformer seed"
+    },
+    {
+      "name": "MLInvention",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/MLInvention",
+      "tests": "91 passed, 3 errors",
+      "state": "large proxy-mechanism foundry with fail-closed gate",
+      "decision": "MERGE",
+      "license": "Apache-2.0",
+      "principal_blocker": "Missing independent reproduction handoff; 0/64 worst-condition support"
+    },
+    {
+      "name": "MIT-Stanford-Princeton-Research",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/MIT-Stanford-Princeton-Research",
+      "tests": "364 passed; 14/14 foundry projects verified",
+      "state": "strongest research-foundry implementation",
+      "decision": "KEEP",
+      "license": "MIT, with unresolved vendored-data redistribution question",
+      "principal_blocker": "Zero submission-ready mechanisms; strongest data-contract project lacks independent/deployed validation"
+    },
+    {
+      "name": "CDW",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/CDW",
+      "tests": "268 passed; full Ruff check passed after snapshot exclusion fix",
+      "state": "credible retained negative/protocol pilots",
+      "decision": "FIX",
+      "license": "no distribution permission",
+      "principal_blocker": "Synthetic/internal pilots and protocol deviations; no external validation"
+    },
+    {
+      "name": "Synthica/APEN",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/THE-BU1LD-APEN-Synthica-c7a19f075eced3bbcb86fd6d881cf0e57b7436ae",
+      "tests": "102 passed",
+      "state": "real falsification foundry and negative APEN study",
+      "decision": "KEEP",
+      "license": "missing",
+      "principal_blocker": "APEN loses to established baselines; study is not paper-scale"
+    },
+    {
+      "name": "Causal-Memory-Use",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/Causal-Memory-Use",
+      "tests": "25 passed",
+      "state": "strongest bounded diagnostic/negative-result paper candidate",
+      "decision": "KEEP",
+      "license": "MIT",
+      "principal_blocker": "Naturalistic negative control is non-exchangeable; no production agent or independent semantic scoring"
+    },
+    {
+      "name": "Adaptive-Theory-Geometry",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/Adaptive-Theory-Geometry",
+      "tests": "10 passed",
+      "state": "credible five-seed falsification study",
+      "decision": "KEEP",
+      "license": "missing",
+      "principal_blocker": "Proposed blend/selector and neural prior do not beat simpler controls"
+    },
+    {
+      "name": "DRPT",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/DRPT",
+      "tests": "5 passed",
+      "state": "early prototype",
+      "decision": "FIX",
+      "license": "missing",
+      "principal_blocker": "Training does not preserve trajectory order or test claimed hysteresis"
+    },
+    {
+      "name": "Eigen-JEPA",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/Eigen-JEPA",
+      "tests": "8 passed",
+      "state": "working synthetic world-model prototype",
+      "decision": "FIX",
+      "license": "missing",
+      "principal_blocker": "One seed, synthetic data, and failed rigor gate"
+    },
+    {
+      "name": "EigenFinance",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/EigenFinance",
+      "tests": "none",
+      "state": "empty placeholder containing only a license",
+      "decision": "DELETE",
+      "license": "MIT",
+      "principal_blocker": "No code, documentation, data, tests, or research artifact"
+    },
+    {
+      "name": "FI-JEPA",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/FI-JEPA",
+      "tests": "1 passed",
+      "state": "incomplete experiment scaffold",
+      "decision": "FIX",
+      "license": "missing",
+      "principal_blocker": "Evidence gate fails: overlapping historical outputs, one test, missing canonical multi-seed results"
+    },
+    {
+      "name": "FIM",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/FIM",
+      "tests": "38 passed, 8 skipped",
+      "state": "real bounded negative component study",
+      "decision": "KEEP",
+      "license": "missing",
+      "principal_blocker": "Full memory mechanism has no consistent advantage and external validation is absent"
+    },
+    {
+      "name": "Fabric-Induced-Memory",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/Fabric-Induced-Memory",
+      "tests": "26 passed, 7 skipped",
+      "state": "older duplicate of FIM",
+      "decision": "MERGE",
+      "license": "missing",
+      "principal_blocker": "Duplicated implementation with weaker evidence ownership"
+    },
+    {
+      "name": "GaussianMemory",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/GaussianMemory",
+      "tests": "9 passed",
+      "state": "credible frozen negative mechanism study",
+      "decision": "KEEP",
+      "license": "missing",
+      "principal_blocker": "Write path is detached from delayed loss and the full mechanism is not best"
+    },
+    {
+      "name": "IRIS-Draft",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/IRIS-Draft",
+      "tests": "2 passed",
+      "state": "archival negative-result manuscript",
+      "decision": "ARCHIVE",
+      "license": "missing",
+      "principal_blocker": "Canonical trajectory provenance/source archives are missing; learned mechanism is negative"
+    },
+    {
+      "name": "NPMS",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/NPMS",
+      "tests": "30 passed",
+      "state": "substantial controlled causal-memory infrastructure",
+      "decision": "FIX",
+      "license": "missing",
+      "principal_blocker": "External LoCoMo/LongMemEval acceptance run is not complete"
+    },
+    {
+      "name": "QFIM",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/QFIM",
+      "tests": "19 passed, 7 skipped",
+      "state": "duplicate FIM branch with repaired training path",
+      "decision": "MERGE",
+      "license": "missing",
+      "principal_blocker": "No independent claim/evidence package"
+    },
+    {
+      "name": "RIPII",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/RIPII",
+      "tests": "suite passed",
+      "state": "structured-latent experiment prototype",
+      "decision": "FIX",
+      "license": "missing",
+      "principal_blocker": "No novelty, external baselines, generalization, or multi-seed evidence"
+    },
+    {
+      "name": "RIS",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/RIS",
+      "tests": "none",
+      "state": "unsupported scaffold",
+      "decision": "ARCHIVE",
+      "license": "missing",
+      "principal_blocker": "No evidence behind institutional-grade claims"
+    },
+    {
+      "name": "SCDMIT",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/SCDMIT",
+      "tests": "73 passed",
+      "state": "substantial model/baseline implementation without a complete evidence release",
+      "decision": "FIX",
+      "license": "MIT",
+      "principal_blocker": "No frozen protocol/truth ledger and only one split artifact located"
+    },
+    {
+      "name": "Saphir-Whoof",
+      "path": "/Volumes/PRO-BLADE/GitHub-Every-Repo/Saphir-Whoof",
+      "tests": "9 passed",
+      "state": "experiment-ready multilingual diagnostic toolkit",
+      "decision": "FIX",
+      "license": "MIT",
+      "principal_blocker": "No real-model result ledger or causal evidence"
+    }
+  ]
+}

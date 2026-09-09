@@ -28,8 +28,38 @@ Olympus is organized around six collaborating layers:
    Olympus-Atlas, Prometheus, Perseus, Kronos, and Aion roles. Learned
    components have real PyTorch losses. Deterministic references provide scoped
    ACL, schema/capability, process-local transaction/checkpoint, protocol, and
-   approval validation or gating paths; they do not collectively implement a
-   sandbox, durable rollback, or a production authority service.
+   approval validation or gating paths. `OlympusReferenceReplay` composes them
+   along one fixed synthetic two-phase contract path. Preparation performs
+   authorized Atlas retrieval and Prometheus selection, preregisters Aion, and
+   returns the proposed action/manifest without executing a tool. Resume first
+   validates the host-registered, manifest-bound Aion approval and executor
+   profile, then runs Perseus; only after that terminal execution receipt does it
+   compute Kronos from host-supplied pre-execution features, run Hermes, audit,
+   and reach Aion STOP. The retrieval query and final request are explicit
+   public artifact fields whose traces also bind the applicable authorized-view
+   hashes. Hermes receives the intersection of authorized evidence and frozen
+   protocol evidence, not every otherwise visible workspace item.
+
+   Pending IDs and public execution-scope IDs are domain-separated HMACs under a
+   runtime-private secret. A different HMAC-derived scope token remains private
+   and reserves the public scope in `TransactionManager`; scoped
+   prepare/commit/receipt/rollback operations require that token. This blocks a
+   caller sharing the manager from pre-creating or replaying a transaction into
+   the approved scope, but it is an in-memory capability rather than durable
+   authentication. Model-call use is charged before each attempted family call;
+   terminal receipts and post-execution outputs are cached so an in-process
+   retry neither re-executes a committed tool nor double-counts cached calls.
+   Kronos exceptions/budget exhaustion become closed failed observations, and
+   Hermes exceptions/budget exhaustion become closed abstentions; execution or
+   Kronos failure also forces Hermes to abstain. Those degraded outcomes are
+   audited and reach STOP rather than being reported as success or leaving the
+   authorized run pending.
+
+   The path rejects tools that either shared or Perseus policy *declares*
+   material, but it cannot prove that an injected executor has no material
+   effects. Executor-profile and non-materiality claims are host assertions. It
+   does not implement a sandbox, durable/crash-safe transaction or replay state,
+   real effect rollback, or a production authority service.
    These references are not trained family checkpoints and have not passed
    family evaluation or promotion gates. The exact class map is in
    `docs/model-families.md`.
@@ -45,8 +75,10 @@ The current implementation is intentionally small-scale but real. The Foundry
 verification model proves infrastructure behavior only. Family codenames may
 identify source-level roles, but no external model or checkpoint may take a
 family identity until an immutable checkpoint passes its declared gates.
-Hermes and Prometheus have partial shared-workspace bridges; the other family
-services retain local contracts, and Aion does not yet compose the six roles.
+The fixed reference replay demonstrates bounded interoperability among all six
+roles. It is not a configurable or autonomous research runtime, does not wire
+the trainable family heads into one learned system, and confers no scientific,
+model-quality, qualification, or promotion evidence.
 
 ## Canonical experimental contract
 

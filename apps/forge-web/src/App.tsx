@@ -29,36 +29,66 @@ type LoadState = {
   loading: boolean;
 };
 
+type FoundryResource = "job" | "models" | "overview" | "status";
+type JobAction = "start" | "cancel" | "retry";
+type ConfirmedJobAction = Exclude<JobAction, "cancel">;
+
 const initialLoadState: LoadState = { error: "", loading: true };
+
+const activeJobStatuses = new Set<FoundryJob["status"]>(["RUNNING", "CANCEL_REQUESTED"]);
+
+function errorMessage(caught: unknown, fallback: string): string {
+  return caught instanceof Error ? caught.message : fallback;
+}
+
+function jobStatusTone(status: FoundryJob["status"] | undefined): string {
+  if (status === "SUCCEEDED") return "passed";
+  if (status === "FAILED") return "failed";
+  return "informational";
+}
+
+function admissionLabel(admitted: boolean | undefined): string {
+  return admitted === undefined ? "unknown" : admitted ? "admitted" : "refused";
+}
 
 export function App(): ReactElement {
   const [demos, setDemos] = useState<Record<string, DemoRecord>>({});
   const [foundryStatus, setFoundryStatus] = useState<FoundryStatus | null>(null);
   const [overview, setOverview] = useState<FoundryOverview | null>(null);
   const [job, setJob] = useState<FoundryJob | null>(null);
+  const [jobAction, setJobAction] = useState<JobAction | null>(null);
   const [jobError, setJobError] = useState<string>("");
   const [models, setModels] = useState<FoundryModel[]>([]);
+  const [foundryFailures, setFoundryFailures] = useState<FoundryResource[]>([]);
   const [ollama, setOllama] = useState<OllamaHealth | null>(null);
   const [demoState, setDemoState] = useState<LoadState>(initialLoadState);
   const [foundryState, setFoundryState] = useState<LoadState>(initialLoadState);
   const [ollamaError, setOllamaError] = useState<string>("");
+  const [ollamaLoading, setOllamaLoading] = useState<boolean>(true);
   const [reloadToken, setReloadToken] = useState<number>(0);
   const [verification, setVerification] = useState<FoundryVerification | null>(null);
   const [verifying, setVerifying] = useState<boolean>(false);
   const [verificationError, setVerificationError] = useState<string>("");
+  const [verificationConfirmation, setVerificationConfirmation] = useState<boolean>(false);
+  const [pendingJobAction, setPendingJobAction] = useState<ConfirmedJobAction | null>(null);
   const [selectedModel, setSelectedModel] = useState<string>("");
   const [prompt, setPrompt] = useState<string>("request verify evidence");
   const [completion, setCompletion] = useState<ChatCompletion | null>(null);
   const [generating, setGenerating] = useState<boolean>(false);
   const [generationError, setGenerationError] = useState<string>("");
 
-  const reload = useCallback(() => setReloadToken((value) => value + 1), []);
+  const reload = useCallback(() => {
+    setVerificationConfirmation(false);
+    setPendingJobAction(null);
+    setReloadToken((value) => value + 1);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
     setDemoState({ error: "", loading: true });
     setFoundryState({ error: "", loading: true });
     setOllamaError("");
+    setOllamaLoading(true);
 
     void fetchDemos(controller.signal)
       .then((payload) => {
@@ -79,37 +109,60 @@ export function App(): ReactElement {
         }
       });
 
-    void Promise.all([
+    void Promise.allSettled([
       fetchFoundryStatus(controller.signal),
       fetchFoundryModels(controller.signal),
       fetchFoundryOverview(controller.signal),
       fetchFoundryJob(controller.signal)
     ])
-      .then(([status, registeredModels, currentOverview, currentJob]) => {
-        if (!controller.signal.aborted) {
-          setFoundryStatus(status);
-          setModels(registeredModels);
-          setOverview(currentOverview);
-          setJob(currentJob);
-          setSelectedModel((current) => current || registeredModels[0]?.id || "");
-        }
-      })
-      .catch((caught: unknown) => {
-        if (!controller.signal.aborted) {
+      .then(([statusResult, modelsResult, overviewResult, jobResult]) => {
+        if (controller.signal.aborted) return;
+
+        const failures: Array<{ resource: FoundryResource; reason: unknown }> = [];
+        if (statusResult.status === "fulfilled") {
+          setFoundryStatus(statusResult.value);
+        } else {
           setFoundryStatus(null);
+          failures.push({ resource: "status", reason: statusResult.reason });
+        }
+        if (modelsResult.status === "fulfilled") {
+          const registeredModels = modelsResult.value;
+          setModels(registeredModels);
+          setSelectedModel((current) =>
+            registeredModels.some((model) => model.id === current)
+              ? current
+              : registeredModels[0]?.id || ""
+          );
+        } else {
           setModels([]);
+          setSelectedModel("");
+          failures.push({ resource: "models", reason: modelsResult.reason });
+        }
+        if (overviewResult.status === "fulfilled") {
+          setOverview(overviewResult.value);
+        } else {
           setOverview(null);
+          failures.push({ resource: "overview", reason: overviewResult.reason });
+        }
+        if (jobResult.status === "fulfilled") {
+          setJob(jobResult.value);
+        } else {
           setJob(null);
-          setFoundryState({
-            error: caught instanceof Error ? caught.message : "Unable to load Foundry state",
-            loading: false
-          });
+          failures.push({ resource: "job", reason: jobResult.reason });
         }
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) {
-          setFoundryState((state) => ({ ...state, loading: false }));
-        }
+
+        setFoundryFailures(failures.map(({ resource }) => resource));
+        const failedResources = failures.map(({ resource }) => resource).join(", ");
+        setFoundryState({
+          error:
+            failures.length === 0
+              ? ""
+              : `Some Foundry state is unavailable (${failedResources}): ${errorMessage(
+                  failures[0]?.reason,
+                  "request failed"
+                )}`,
+          loading: false
+        });
       });
 
     void fetchOllamaHealth(controller.signal)
@@ -123,18 +176,53 @@ export function App(): ReactElement {
             caught instanceof Error ? caught.message : "Local Ollama provider unavailable"
           );
         }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setOllamaLoading(false);
       });
 
     return () => controller.abort();
   }, [reloadToken]);
 
   useEffect(() => {
-    if (job?.status !== "RUNNING" && job?.status !== "CANCEL_REQUESTED") return;
-    const timer = window.setTimeout(reload, 500);
-    return () => window.clearTimeout(timer);
+    if (!job || !activeJobStatuses.has(job.status)) return;
+
+    const controller = new AbortController();
+    let timer: number | undefined;
+    let consecutiveFailures = 0;
+    const poll = async (): Promise<void> => {
+      try {
+        const next = await fetchFoundryJob(controller.signal);
+        if (controller.signal.aborted) return;
+        consecutiveFailures = 0;
+        setJob(next);
+        setJobError("");
+        if (!activeJobStatuses.has(next.status)) {
+          reload();
+          return;
+        }
+      } catch (caught: unknown) {
+        if (!controller.signal.aborted) {
+          consecutiveFailures += 1;
+          setJobError(errorMessage(caught, "Unable to refresh Foundry job state"));
+        }
+      }
+      if (!controller.signal.aborted) {
+        const nextDelay = Math.min(1_000 * 2 ** consecutiveFailures, 10_000);
+        timer = window.setTimeout(() => void poll(), nextDelay);
+      }
+    };
+    timer = window.setTimeout(() => void poll(), 1_000);
+    return () => {
+      controller.abort();
+      if (timer !== undefined) window.clearTimeout(timer);
+    };
   }, [job?.status, reload]);
 
-  const updateJob = async (action: "start" | "cancel" | "retry"): Promise<void> => {
+  const updateJob = async (action: JobAction): Promise<void> => {
+    if (jobAction !== null) return;
+    setPendingJobAction(null);
+    setJobAction(action);
     setJobError("");
     try {
       const next =
@@ -145,11 +233,14 @@ export function App(): ReactElement {
             : await retryFoundryJob();
       setJob(next);
     } catch (caught: unknown) {
-      setJobError(caught instanceof Error ? caught.message : "Foundry job control failed");
+      setJobError(errorMessage(caught, "Foundry job control failed"));
+    } finally {
+      setJobAction(null);
     }
   };
 
   const verify = async (): Promise<void> => {
+    setVerificationConfirmation(false);
     setVerifying(true);
     setVerification(null);
     setVerificationError("");
@@ -158,9 +249,7 @@ export function App(): ReactElement {
       setVerification(result);
       reload();
     } catch (caught: unknown) {
-      setVerificationError(
-        caught instanceof Error ? caught.message : "Foundry verification failed"
-      );
+      setVerificationError(errorMessage(caught, "Foundry verification failed"));
     } finally {
       setVerifying(false);
     }
@@ -175,11 +264,40 @@ export function App(): ReactElement {
     try {
       setCompletion(await generateWithFoundry(selectedModel, prompt));
     } catch (caught: unknown) {
-      setGenerationError(caught instanceof Error ? caught.message : "Generation failed");
+      setGenerationError(errorMessage(caught, "Generation failed"));
     } finally {
       setGenerating(false);
     }
   };
+
+  const jobIsActive = activeJobStatuses.has(job?.status ?? "IDLE");
+  const canVerify =
+    !verifying &&
+    jobAction === null &&
+    !foundryState.loading &&
+    foundryStatus !== null &&
+    overview?.resources.small === true &&
+    !jobIsActive;
+  const canStart =
+    job !== null &&
+    jobAction === null &&
+    !foundryState.loading &&
+    !verifying &&
+    foundryStatus !== null &&
+    overview?.resources.small === true &&
+    !jobIsActive;
+  const canRetry =
+    jobAction === null &&
+    !foundryState.loading &&
+    !verifying &&
+    foundryStatus !== null &&
+    overview?.resources.small === true &&
+    (job?.status === "FAILED" || job?.status === "CANCELLED");
+  const modelRegistryStatus = foundryState.loading
+    ? "Loading models"
+    : foundryFailures.includes("models")
+      ? "Model registry unavailable"
+      : `${models.length} verified ${models.length === 1 ? "model" : "models"}`;
 
   return (
     <main className="app-shell">
@@ -196,13 +314,27 @@ export function App(): ReactElement {
         </button>
       </section>
 
-      <section aria-labelledby="foundry-heading" className="panel">
+      <section
+        aria-busy={foundryState.loading}
+        aria-labelledby="foundry-heading"
+        className="panel"
+      >
         <div className="section-heading">
           <div>
             <p className="eyebrow">Golden path</p>
             <h2 id="foundry-heading">Durable model lifecycle</h2>
           </div>
-          <span data-status={foundryStatus?.integrity === "ok" ? "passed" : "failed"}>
+          <span
+            aria-live="polite"
+            data-status={
+              foundryState.loading
+                ? "informational"
+                : foundryStatus?.integrity === "ok"
+                  ? "passed"
+                  : "failed"
+            }
+            role="status"
+          >
             {foundryState.loading
               ? "Loading"
               : foundryStatus?.integrity === "ok"
@@ -214,7 +346,7 @@ export function App(): ReactElement {
           <div className="error-panel" role="alert">
             <p>{foundryState.error}</p>
             <button onClick={reload} type="button">
-              Retry
+              Retry Foundry state
             </button>
           </div>
         ) : null}
@@ -236,50 +368,145 @@ export function App(): ReactElement {
           </dl>
         ) : null}
         <div className="action-row">
-          <button disabled={verifying} onClick={() => void verify()} type="button">
+          <button
+            aria-busy={verifying}
+            disabled={!canVerify}
+            onClick={() => setVerificationConfirmation(true)}
+            type="button"
+          >
             {verifying ? "Training and evaluating…" : "Run verified Foundry pipeline"}
           </button>
           <p>
             Executes a real low-cost train → checkpoint → held-out evaluation → export → promotion
-            run. It creates a verification model, never a fake Hermes checkpoint.
+            request. This foreground request cannot be cancelled from the console and creates a
+            verification model, never a fake Hermes checkpoint.
           </p>
         </div>
+        {verificationConfirmation ? (
+          <div
+            aria-describedby="verify-confirmation-description"
+            aria-labelledby="verify-confirmation-heading"
+            className="confirmation-panel"
+            role="alertdialog"
+          >
+            <h3 id="verify-confirmation-heading">Run the verification pipeline?</h3>
+            <p id="verify-confirmation-description">
+              This writes a dataset, experiment, checkpoint, evaluation, export, and model-registry
+              record. The request cannot be cancelled from this page after it starts.
+            </p>
+            <div className="action-row">
+              <button autoFocus disabled={!canVerify} onClick={() => void verify()} type="button">
+                Confirm verification run
+              </button>
+              <button
+                className="secondary-button"
+                onClick={() => setVerificationConfirmation(false)}
+                type="button"
+              >
+                Go back
+              </button>
+            </div>
+          </div>
+        ) : null}
         <article className="receipt" aria-label="Foundry workload control">
           <div className="card-header">
             <h3>Bounded workload control</h3>
-            <span data-status={job?.status === "SUCCEEDED" ? "passed" : "failed"}>
-              {job?.status ?? "Unavailable"}
+            <span
+              aria-live="polite"
+              data-status={foundryState.loading ? "informational" : jobStatusTone(job?.status)}
+              role="status"
+            >
+              {foundryState.loading ? "Loading" : (job?.status ?? "Unavailable")}
             </span>
           </div>
           <p>
-            Small tier: {overview?.resources.small ? "admitted" : "refused"} · Medium tier:{" "}
-            {overview?.resources.medium ? "admitted" : "refused"} · Available memory:{" "}
+            Small tier: {admissionLabel(overview?.resources.small)} · Medium tier:{" "}
+            {admissionLabel(overview?.resources.medium)} · Available memory:{" "}
             {overview ? `${(overview.resources.snapshot.available_bytes / 1024 ** 3).toFixed(2)} GiB` : "unknown"}
           </p>
           <div className="action-row">
             <button
-              disabled={job?.status === "RUNNING" || job?.status === "CANCEL_REQUESTED"}
-              onClick={() => void updateJob("start")}
+              aria-busy={jobAction === "start"}
+              disabled={!canStart}
+              onClick={() => setPendingJobAction("start")}
               type="button"
             >
-              Start bounded run
+              {jobAction === "start" ? "Starting…" : "Start bounded run"}
             </button>
             <button
-              disabled={job?.status !== "RUNNING"}
+              aria-busy={jobAction === "cancel"}
+              disabled={jobAction !== null || verifying || job?.status !== "RUNNING"}
               onClick={() => void updateJob("cancel")}
               type="button"
             >
-              Cancel safely
+              {jobAction === "cancel" ? "Requesting cancel…" : "Cancel safely"}
             </button>
             <button
-              disabled={job?.status !== "FAILED" && job?.status !== "CANCELLED"}
-              onClick={() => void updateJob("retry")}
+              aria-busy={jobAction === "retry"}
+              disabled={!canRetry}
+              onClick={() => setPendingJobAction("retry")}
               type="button"
             >
-              Retry failed run
+              {jobAction === "retry"
+                ? "Retrying…"
+                : job?.status === "CANCELLED"
+                  ? "Retry cancelled run"
+                  : "Retry failed run"}
             </button>
           </div>
+          {pendingJobAction ? (
+            <div
+              aria-describedby="job-confirmation-description"
+              aria-labelledby="job-confirmation-heading"
+              className="confirmation-panel"
+              role="alertdialog"
+            >
+              <h3 id="job-confirmation-heading">
+                {pendingJobAction === "retry" ? "Retry" : "Start"} the bounded workload?
+              </h3>
+              <p id="job-confirmation-description">
+                This launches a real local training and evaluation job and writes Foundry artifacts.
+                It can be cancelled at an artifact-safe boundary.
+              </p>
+              <div className="action-row">
+                <button
+                  autoFocus
+                  disabled={pendingJobAction === "retry" ? !canRetry : !canStart}
+                  onClick={() => void updateJob(pendingJobAction)}
+                  type="button"
+                >
+                  {pendingJobAction === "retry" ? "Confirm retry" : "Confirm bounded run"}
+                </button>
+                <button
+                  className="secondary-button"
+                  onClick={() => setPendingJobAction(null)}
+                  type="button"
+                >
+                  Go back
+                </button>
+              </div>
+            </div>
+          ) : null}
+          {job && job.status !== "IDLE" ? (
+            <dl className="receipt-details job-details">
+              <div>
+                <dt>Job</dt>
+                <dd>{job.job_id}</dd>
+              </div>
+              <div>
+                <dt>Started</dt>
+                <dd>{job.started_at}</dd>
+              </div>
+              <div>
+                <dt>Finished</dt>
+                <dd>{job.finished_at ?? "in progress"}</dd>
+              </div>
+            </dl>
+          ) : !foundryState.loading && job ? (
+            <p className="empty-state">No bounded workload has been started in this API process.</p>
+          ) : null}
           {jobError ? <p className="inline-error" role="alert">{jobError}</p> : null}
+          {job?.error ? <p className="inline-error" role="alert">{job.error}</p> : null}
         </article>
         <article className="receipt" aria-label="Foundry provenance">
           <div className="card-header">
@@ -311,9 +538,13 @@ export function App(): ReactElement {
           </p>
         ) : null}
         {verification ? (
-          <article className="receipt" aria-live="polite">
+          <article
+            aria-labelledby="verification-receipt-heading"
+            aria-live="polite"
+            className="receipt"
+          >
             <div className="card-header">
-              <h3>Verification receipt</h3>
+              <h3 id="verification-receipt-heading">Verification receipt</h3>
               <span data-status={verification.evaluation.passed ? "passed" : "failed"}>
                 {verification.experiment.status}
               </span>
@@ -347,9 +578,13 @@ export function App(): ReactElement {
             <p className="eyebrow">Percy contract</p>
             <h2 id="models-heading">Verified model registry</h2>
           </div>
-          <span>{models.length} available</span>
+          <span aria-live="polite" role="status">
+            {modelRegistryStatus}
+          </span>
         </div>
-        {models.length === 0 && !foundryState.loading ? (
+        {models.length === 0 &&
+        !foundryState.loading &&
+        !foundryFailures.includes("models") ? (
           <p className="empty-state">
             No model has passed promotion gates. Run the verified pipeline above to create the
             bounded infrastructure-verification model.
@@ -359,15 +594,23 @@ export function App(): ReactElement {
           {models.map((model) => (
             <article className="card" key={model.id}>
               <div className="card-header">
-                <h3>{model.id}</h3>
+                <h3 className="model-id">{model.id}</h3>
                 <span data-status="passed">{model.status}</span>
               </div>
-              <p>{model.capabilities.join(" · ")}</p>
-              <small>{model.limitations[0]}</small>
+              <p>{model.capabilities.join(" · ") || "No capabilities supplied by registry."}</p>
+              <small>
+                {model.limitations.length > 0
+                  ? `Limitations: ${model.limitations.join(" · ")}`
+                  : "No limitations supplied by registry."}
+              </small>
             </article>
           ))}
         </div>
-        <form className="generation-form" onSubmit={(event) => void generate(event)}>
+        <form
+          aria-busy={generating}
+          className="generation-form"
+          onSubmit={(event) => void generate(event)}
+        >
           <label htmlFor="model">Model</label>
           <select
             disabled={models.length === 0 || generating}
@@ -391,7 +634,17 @@ export function App(): ReactElement {
             rows={4}
             value={prompt}
           />
-          <button disabled={!selectedModel || !prompt.trim() || generating} type="submit">
+          <div className="form-meta">
+            <small>Whitespace-only prompts are not submitted.</small>
+            <output aria-live="polite" htmlFor="prompt">
+              {prompt.length.toLocaleString()} / 50,000 characters
+            </output>
+          </div>
+          <button
+            aria-busy={generating}
+            disabled={models.length === 0 || !selectedModel || !prompt.trim() || generating}
+            type="submit"
+          >
             {generating ? "Generating…" : "Generate through stable API"}
           </button>
         </form>
@@ -401,27 +654,53 @@ export function App(): ReactElement {
           </p>
         ) : null}
         {completion ? (
-          <article className="completion" aria-live="polite">
-            <h3>Model output</h3>
+          <article
+            aria-labelledby="model-output-heading"
+            aria-live="polite"
+            className="completion"
+          >
+            <h3 id="model-output-heading">Model output</h3>
             <pre>{completion.choices[0]?.message.content}</pre>
             <small>
               {completion.model} · {completion.usage.completion_tokens} {completion.usage.unit}
             </small>
+            <dl className="receipt-details completion-provenance" aria-label="Generation provenance">
+              <div>
+                <dt>Checkpoint</dt>
+                <dd>{completion.evidence.checkpoint_id}</dd>
+              </div>
+              <div>
+                <dt>Checkpoint SHA-256</dt>
+                <dd>{completion.evidence.checkpoint_sha256}</dd>
+              </div>
+              <div>
+                <dt>Runtime</dt>
+                <dd>{completion.evidence.runtime}</dd>
+              </div>
+            </dl>
           </article>
         ) : null}
       </section>
 
-      <section aria-labelledby="providers-heading" className="panel">
+      <section aria-busy={ollamaLoading} aria-labelledby="providers-heading" className="panel">
         <div className="section-heading">
           <div>
             <p className="eyebrow">Local serving</p>
             <h2 id="providers-heading">Provider health</h2>
           </div>
-          <span data-status={ollama ? "passed" : "failed"}>
-            {ollama ? "Ollama discovery available" : "Ollama unavailable"}
+          <span
+            aria-live="polite"
+            data-status={ollamaLoading ? "informational" : ollama ? "passed" : "failed"}
+            role="status"
+          >
+            {ollamaLoading
+              ? "Checking Ollama"
+              : ollama
+                ? "Ollama discovery available"
+                : "Ollama unavailable"}
           </span>
         </div>
-        {ollama ? (
+        {ollama && !ollamaLoading ? (
           <div>
             <p>
               Installed local models: <strong>{ollama.models.join(", ") || "none"}</strong>
@@ -430,8 +709,10 @@ export function App(): ReactElement {
               Discovery does not imply that a model has loaded or passed generation verification.
             </small>
           </div>
+        ) : ollamaError && !ollamaLoading ? (
+          <p className="inline-error" role="alert">{ollamaError}</p>
         ) : (
-          <p className="inline-error">{ollamaError || "Checking local provider…"}</p>
+          <p className="notice" role="status">Checking local provider…</p>
         )}
       </section>
 
@@ -441,7 +722,11 @@ export function App(): ReactElement {
             <p className="eyebrow">Research prototypes</p>
             <h2 id="demos-heading">Cognitive demo evidence</h2>
           </div>
-          <span>{demoState.loading ? "Running" : `${Object.keys(demos).length} results`}</span>
+          <span aria-live="polite" role="status">
+            {demoState.loading
+              ? "Running"
+              : `${Object.keys(demos).length} ${Object.keys(demos).length === 1 ? "result" : "results"}`}
+          </span>
         </div>
         {demoState.loading ? (
           <p className="notice" role="status">
@@ -452,7 +737,7 @@ export function App(): ReactElement {
           <div className="error-panel" role="alert">
             <p>Live results are unavailable: {demoState.error}</p>
             <button onClick={reload} type="button">
-              Retry
+              Retry demo results
             </button>
           </div>
         ) : null}

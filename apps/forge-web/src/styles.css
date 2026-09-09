@@ -1,4 +1,5 @@
 :root {
+  color-scheme: dark;
   font-family: "Iowan Old Style", "Palatino Linotype", serif;
   color: #f4efe7;
   background:
@@ -7,6 +8,12 @@
     linear-gradient(180deg, #0c1622 0%, #1f2433 100%);
   line-height: 1.5;
   font-weight: 400;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
@@ -41,8 +48,12 @@ button {
 }
 
 button:disabled {
-  cursor: wait;
+  cursor: not-allowed;
   opacity: 0.55;
+}
+
+button[aria-busy="true"] {
+  cursor: progress;
 }
 
 button:focus-visible,
@@ -98,10 +109,15 @@ textarea:focus-visible {
   margin: 0;
 }
 
+.error-panel button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
 .grid {
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
 }
 
 .card {
@@ -114,9 +130,15 @@ textarea:focus-visible {
 
 .card-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
   gap: 1rem;
+}
+
+.card-header > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .card h2,
@@ -124,6 +146,10 @@ textarea:focus-visible {
   font-size: 1.1rem;
   margin: 0 0 0.75rem;
   text-transform: capitalize;
+}
+
+.card .model-id {
+  text-transform: none;
 }
 
 .panel {
@@ -181,6 +207,7 @@ dd {
 .action-row {
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -208,7 +235,30 @@ dd {
 .receipt-details {
   display: grid;
   gap: 0.75rem;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+}
+
+.confirmation-panel {
+  background: rgba(92, 62, 20, 0.32);
+  border: 1px solid rgba(249, 212, 155, 0.5);
+  border-radius: 14px;
+  margin-top: 1rem;
+  max-width: 62ch;
+  padding: 1rem;
+}
+
+.confirmation-panel h3,
+.confirmation-panel p {
+  margin-top: 0;
+}
+
+.confirmation-panel p {
+  color: #f4dfbd;
+}
+
+.job-details,
+.completion-provenance {
+  margin-top: 1rem;
 }
 
 .empty-state {
@@ -237,14 +287,34 @@ dd {
   border-radius: 10px;
   color: #f4efe7;
   padding: 0.75rem;
+  width: 100%;
+}
+
+.generation-form textarea {
+  min-height: 7rem;
+  resize: vertical;
 }
 
 .generation-form button {
   justify-self: start;
 }
 
+.form-meta {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  justify-content: space-between;
+}
+
+.form-meta output {
+  color: #d8dded;
+  font-variant-numeric: tabular-nums;
+}
+
 .completion pre {
   overflow-x: auto;
+  overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 
@@ -258,9 +328,18 @@ dd {
   }
 
   .action-row,
+  .error-panel,
   .section-heading {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .action-row button,
+  .error-panel button,
+  .generation-form button {
+    justify-self: stretch;
+    white-space: normal;
+    width: 100%;
   }
 }
 
@@ -274,6 +353,10 @@ dd {
 
 [data-status="informational"] {
   color: #aebcdb;
+}
+
+[data-status] {
+  font-weight: 700;
 }
 
 small {

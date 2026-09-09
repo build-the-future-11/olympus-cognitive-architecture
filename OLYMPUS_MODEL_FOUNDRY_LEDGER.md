@@ -24,7 +24,7 @@ bigram lifecycle verifier, not Hermes.
 
 ## LOCAL INFERENCE
 
-**FAILED — qwen3:8b.** The installed 8.2B Q4_K_M artifact was tested with
+**HISTORICAL FAILURE REPORTED — qwen3:8b.** The installed 8.2B Q4_K_M artifact was tested with
 context 256, output allowance 1, temperature 0, streaming HTTP, and a 120-second
 bound. It returned zero bytes. Ollama logs show all 37 layers targeted for Metal,
 4,643.78 MiB Metal model allocation plus 333.84 MiB CPU model allocation, mmap
@@ -32,15 +32,19 @@ disabled for partial Metal offload, only 3.6 GiB free host memory and zero free
 swap at admission, then abort during tensor loading when the bounded client
 closed. Swap had grown to 2.704 GiB used. Prompt, context, output length,
 streaming, and Olympus routing are ruled out; the failure is memory pressure
-during load.
+during load. The raw Ollama log and resource snapshot were not retained in the
+repository, so this paragraph is a dated operator report rather than a
+reproducible run artifact.
 
-**REAL — qwen3:0.6b local baseline.** Apache-2.0 Q4_K_M artifact, 522 MB on
+**HISTORICAL RUN REPORTED — qwen3:0.6b local baseline.** Apache-2.0 Q4_K_M artifact, 522 MB on
 disk, local manifest 751.63M parameters and 40,960 context. At context 256 it
 loaded in 15.743 seconds, occupied 567 MB on GPU according to Ollama, and
 returned `OK.`. Through the Olympus Ollama adapter it returned exactly
 `OLYMPUS_LOCAL_MODEL_OK`; model-reported duration was 0.118 seconds and adapter
 process peak RSS was 261,029,888 bytes. It was explicitly unloaded before
-training. It is a frozen provider baseline, not an Olympus-trained model.
+training. The raw request/response and provider log were not retained, so this
+is not independently replayable evidence. It is a reported provider baseline,
+not an Olympus-trained model.
 
 ## BASE CANDIDATES
 
@@ -130,9 +134,12 @@ quantized tool reliability, fresh-process serving for this exact checkpoint,
 and hash-bound model card. No release manifest was emitted.
 
 The existing `FoundryVerificationBigram` registry entry is a lifecycle verifier
-and is not part of the reserved model family. Prometheus, Perseus, Atlas,
-Kronos, and Aion are **SPECIFIED ONLY** in
-`research/FUTURE_MODEL_FAMILY_ROADMAPS.md`.
+and is not part of the reserved model family. At this ledger's 2026-09-01 run
+date, Prometheus, Perseus, Olympus-Atlas, Kronos, and Aion were **SPECIFIED
+ONLY**. Subsequent source-level reference implementations and non-qualifying
+synthetic smokes are recorded separately in
+`evidence/model_family_smoke_20260906.json`; they do not alter any Foundry
+measurement or promotion result above.
 
 ## MATCHED ABLATION
 
@@ -154,8 +161,11 @@ create a distinct condition, so no mechanism claim is made.
    gates without category regression.
 5. Serve the exact candidate checkpoint through fresh CLI, API, OpenAI contract,
    Ollama-compatible export, and web processes; bind results to its hash.
-6. Publish a complete hash-bound model card. Only then may the gate emit a
-   release manifest and allow the Hermes identity.
+6. Publish a complete hash-bound model card.
+7. Provision independent evaluation, quantization, license-review and serving
+   runners and signer credentials. Signature verification and operator trust-policy
+   pinning are implemented, but their protocol tests do not constitute independent
+   model results. Only real qualifying evidence may authorize a release manifest.
 
 No paid compute, remote training, private-data upload, or false model-family
 instantiation occurred.

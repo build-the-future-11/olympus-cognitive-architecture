@@ -9,7 +9,7 @@ include TRUTH_MAP.md
 recursive-include behaviors *.yaml
 recursive-include datasets *.json *.jsonl *.txt
 recursive-include docs *.md
-recursive-exclude docs *OUTREACH*.md
 recursive-include evidence *.md *.json
 recursive-include examples *.py
 recursive-include research *.md
+recursive-include scripts *.py

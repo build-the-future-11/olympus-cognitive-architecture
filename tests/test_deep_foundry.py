@@ -1,15 +1,31 @@
 from __future__ import annotations
 
+import base64
+import hashlib
 import json
+import math
 import os
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from subprocess import CalledProcessError
 
 import pytest
 import torch
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from pydantic import ValidationError
 
 from olympus.foundry import promotion, resources
+from olympus.foundry.attestation import (
+    AttestationBundle,
+    AttestationKind,
+    AttestationStatement,
+    AttestationTrustStore,
+    PromotionEvidenceSubject,
+    SignedAttestation,
+    TrustedAttestationKey,
+    sign_attestation,
+)
 from olympus.foundry.data_pipeline import (
     InstructionExample,
     prepare_instruction_dataset,
@@ -17,6 +33,7 @@ from olympus.foundry.data_pipeline import (
     verify_dataset_manifest,
 )
 from olympus.foundry.eval_suite import (
+    WORKFLOW_CATEGORIES,
     CategoryEvaluation,
     HeldOutEvaluation,
     WorkflowScore,
@@ -36,7 +53,9 @@ from olympus.foundry.sft import (
     TinyCausalLM,
     TinyModelConfig,
     _pack_nibbles,
+    _training_run_id,
     _unpack_nibbles,
+    evaluate_loss,
     generate_text,
     load_trained_model,
     run_sft,
@@ -45,6 +64,75 @@ from olympus.foundry.sft import (
 
 def _source() -> Path:
     return Path(__file__).resolve().parents[1] / "datasets/hermes-smoke/source.jsonl"
+
+
+def test_validation_loss_weights_tokens_not_batches() -> None:
+    torch.manual_seed(19)
+    model = TinyCausalLM(TinyModelConfig(width=16, heads=2, layers=1, max_sequence_tokens=32))
+    rows = [([1] + [5 + index] * (index + 1), [-100] + [5 + index] * (index + 1))
+            for index in range(9)]
+    expected = sum(
+        evaluate_loss(model, [row], device=torch.device("cpu")) * (len(row[0]) - 1)
+        for row in rows
+    ) / sum(len(row[0]) - 1 for row in rows)
+    assert evaluate_loss(model, rows, device=torch.device("cpu")) == pytest.approx(
+        expected, rel=1e-6
+    )
+    assert evaluate_loss(model, list(reversed(rows)), device=torch.device("cpu")) == (
+        pytest.approx(expected, rel=1e-6)
+    )
+    with pytest.raises(ValueError, match="no supervised tokens"):
+        evaluate_loss(model, [([1, 2], [-100, -100])], device=torch.device("cpu"))
+
+
+@pytest.mark.parametrize("weights", [
+    {"saftey": 1.0}, {"safety": -1.0}, {"safety": 65.0}, {"safety": float("inf")},
+])
+def test_training_mixture_rejects_invalid_or_unbounded_weights(weights: dict[str, float]) -> None:
+    with pytest.raises(ValidationError):
+        SFTConfig(category_mix_weights=weights)
+
+
+@pytest.mark.parametrize("vocabulary", [1, 259, 261, 2_000_000_000])
+def test_model_vocabulary_matches_the_fixed_byte_tokenizer(vocabulary: int) -> None:
+    with pytest.raises(ValidationError):
+        TinyModelConfig(vocab_size=vocabulary)
+
+
+def test_evaluation_and_quantization_ignore_training_sampling(
+    trained_foundry: dict[str, Path], tmp_path: Path,
+) -> None:
+    original = evaluate_checkpoint(trained_foundry["full"], trained_foundry["manifest"],
+                                   tmp_path / "original.json", max_generation_tokens=2)
+    payload = torch.load(trained_foundry["full"], weights_only=True)
+    payload["training_config"]["category_mix_weights"] = {"safety": 0, "reasoning": 8}
+    mixed_checkpoint = tmp_path / "mixed.pt"
+    torch.save(payload, mixed_checkpoint)
+    mixed = evaluate_checkpoint(mixed_checkpoint, trained_foundry["manifest"],
+                                tmp_path / "mixed.json", max_generation_tokens=2)
+    assert mixed.category_results == original.category_results
+    assert mixed.overall_candidate_loss == original.overall_candidate_loss
+    assert mixed.test_records == 12
+    quantized = quantize_checkpoint(mixed_checkpoint, trained_foundry["manifest"],
+                                    tmp_path / "quantized", bits=4)
+    assert quantized.source_loss == pytest.approx(original.overall_candidate_loss)
+    assert quantized.dataset_manifest_sha256 == original.dataset_manifest_sha256
+    payload["dataset_manifest_sha256"] = "f" * 64
+    torch.save(payload, mixed_checkpoint)
+    rejected_output = tmp_path / "wrong-dataset"
+    with pytest.raises(ValueError, match="dataset hashes do not match"):
+        quantize_checkpoint(mixed_checkpoint, trained_foundry["manifest"], rejected_output, bits=4)
+    assert not rejected_output.exists()
+
+
+def test_validation_population_is_independent_of_training_mixture(tmp_path: Path) -> None:
+    prepare_instruction_dataset(_source(), tmp_path / "dataset")
+    manifest = tmp_path / "dataset/manifest.json"
+    original = run_sft(manifest, tmp_path / "original", config=_small_config())
+    mixed = run_sft(manifest, tmp_path / "mixed", config=_small_config().model_copy(update={
+        "category_mix_weights": {"safety": 0, "reasoning": 2},
+    }))
+    assert mixed.initial_validation_loss == original.initial_validation_loss
 
 
 def _small_config(*, mode: str = "full", epochs: int = 1) -> SFTConfig:
@@ -58,6 +146,96 @@ def _small_config(*, mode: str = "full", epochs: int = 1) -> SFTConfig:
         mixed_precision=True,
         model=TinyModelConfig(width=32, layers=1, heads=4, max_sequence_tokens=160),
     )
+
+
+def _write_valid_attestations(
+    root: Path,
+    subject: PromotionEvidenceSubject,
+) -> tuple[Path, Path]:
+    evaluation_key = Ed25519PrivateKey.generate()
+    release_key = Ed25519PrivateKey.generate()
+    trust = AttestationTrustStore(
+        keys=[
+            TrustedAttestationKey(
+                key_id="evaluation-key",
+                issuer_id="evaluation-lab",
+                runner_id="evaluation-runner",
+                runner_source_sha256="f" * 64,
+                public_key_base64=base64.b64encode(
+                    evaluation_key.public_key().public_bytes(
+                        serialization.Encoding.Raw,
+                        serialization.PublicFormat.Raw,
+                    )
+                ).decode("ascii"),
+                allowed_kinds={"evaluation", "quantization"},
+            ),
+            TrustedAttestationKey(
+                key_id="release-key",
+                issuer_id="release-lab",
+                runner_id="release-runner",
+                runner_source_sha256="f" * 64,
+                public_key_base64=base64.b64encode(
+                    release_key.public_key().public_bytes(
+                        serialization.Encoding.Raw,
+                        serialization.PublicFormat.Raw,
+                    )
+                ).decode("ascii"),
+                allowed_kinds={"license_review", "serving"},
+            ),
+        ]
+    )
+    issued = datetime.now(UTC) - timedelta(minutes=1)
+    expires = issued + timedelta(days=1)
+    statements: tuple[tuple[AttestationKind, str, str, Ed25519PrivateKey], ...] = (
+        ("evaluation", "evaluation-lab", "evaluation-key", evaluation_key),
+        ("quantization", "evaluation-lab", "evaluation-key", evaluation_key),
+        ("license_review", "release-lab", "release-key", release_key),
+        ("serving", "release-lab", "release-key", release_key),
+    )
+    attestations: list[SignedAttestation] = []
+    for kind, issuer, key_id, private_key in statements:
+        evidence_sha = {
+            "evaluation": subject.evaluation_sha256,
+            "quantization": subject.quantization_report_sha256,
+            "license_review": subject.model_card_sha256,
+            "serving": subject.serving_verification_sha256,
+        }[kind]
+        statement = AttestationStatement(
+            attestation_id=f"fixture-{kind}",
+            kind=kind,
+            issuer_id=issuer,
+            runner_id=(
+                "evaluation-runner"
+                if kind in {"evaluation", "quantization"}
+                else "release-runner"
+            ),
+            runner_source_sha256="f" * 64,
+            issued_at=issued,
+            expires_at=expires,
+            outcome="approved" if kind == "license_review" else "passed",
+            evidence_sha256=evidence_sha,
+            subject=subject,
+        )
+        attestations.append(
+            sign_attestation(statement, key_id=key_id, private_key=private_key)
+        )
+    trust_path = root / "attestation-trust.json"
+    bundle_path = root / "attestation-bundle.json"
+    trust_path.write_text(trust.model_dump_json(indent=2), encoding="utf-8")
+    bundle_path.write_text(
+        AttestationBundle(attestations=attestations).model_dump_json(indent=2),
+        encoding="utf-8",
+    )
+    return bundle_path, trust_path
+
+
+def test_training_output_identity_binds_full_configuration_and_base_checkpoint() -> None:
+    dataset_sha = "d" * 64
+    config = _small_config()
+    run_id = _training_run_id(dataset_sha, config, None)
+    assert run_id == _training_run_id(dataset_sha, config, None)
+    assert run_id != _training_run_id(dataset_sha, config.model_copy(update={"epochs": 2}), None)
+    assert run_id != _training_run_id(dataset_sha, config, "a" * 64)
 
 
 def test_dataset_preparation_is_content_addressed_and_rejects_tampering(
@@ -83,6 +261,35 @@ def test_dataset_preparation_is_content_addressed_and_rejects_tampering(
     forged_path.write_bytes(forged.canonical_bytes())
     with pytest.raises(ValueError, match="split record count mismatch"):
         verify_dataset_manifest(forged_path)
+
+    missing_split = manifest.model_copy(
+        update={
+            "splits": [split for split in manifest.splits if split.name != "validation"],
+            "manifest_sha256": None,
+        }
+    )
+    missing_split.manifest_sha256 = sha256_bytes(missing_split.canonical_bytes(include_hash=False))
+    missing_split_path = tmp_path / "prepared/missing-split-manifest.json"
+    missing_split_path.write_bytes(missing_split.canonical_bytes())
+    with pytest.raises(ValueError, match="exactly the train, validation, and test splits"):
+        verify_dataset_manifest(missing_split_path)
+
+    outside = tmp_path / "outside-train.jsonl"
+    outside.write_bytes((tmp_path / "prepared" / manifest.splits[0].path).read_bytes())
+    escaped_splits = [
+        split.model_copy(update={"path": str(outside)})
+        if split.name == manifest.splits[0].name
+        else split
+        for split in manifest.splits
+    ]
+    escaped = manifest.model_copy(
+        update={"splits": escaped_splits, "manifest_sha256": None}
+    )
+    escaped.manifest_sha256 = sha256_bytes(escaped.canonical_bytes(include_hash=False))
+    escaped_path = tmp_path / "prepared/escaped-manifest.json"
+    escaped_path.write_bytes(escaped.canonical_bytes())
+    with pytest.raises(ValueError, match="split path must be relative"):
+        verify_dataset_manifest(escaped_path)
 
     split = tmp_path / "prepared" / manifest.splits[0].path
     split.write_text(split.read_text(encoding="utf-8") + " ", encoding="utf-8")
@@ -285,6 +492,55 @@ def test_sft_full_lora_qlora_checkpoint_resume_and_generation(
         )
 
 
+def test_dropout_resume_matches_uninterrupted_training(tmp_path: Path) -> None:
+    prepare_instruction_dataset(_source(), tmp_path / "dataset")
+    manifest = tmp_path / "dataset/manifest.json"
+    config = _small_config().model_copy(update={
+        "model": _small_config().model.model_copy(update={"dropout": 0.2}),
+    })
+    first = run_sft(manifest, tmp_path / "split", config=config)
+    target = config.model_copy(update={"epochs": 2})
+    resumed = run_sft(manifest, tmp_path / "resumed", config=target,
+                      resume_checkpoint=Path(first.checkpoint_path))
+    uninterrupted = run_sft(manifest, tmp_path / "continuous", config=target)
+    split_model = load_trained_model(Path(resumed.checkpoint_path))
+    continuous_model = load_trained_model(Path(uninterrupted.checkpoint_path))
+    for name, parameter in split_model.state_dict().items():
+        torch.testing.assert_close(parameter, continuous_model.state_dict()[name], rtol=0, atol=0)
+
+
+def test_gradient_accumulation_matches_full_batches(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Observe gradients before Adam amplifies floating-point noise near zero.
+    # Fixed weights isolate accumulation mathematics, including the partial group.
+    gradients: list[list[torch.Tensor]] = []
+
+    def capture_step(optimizer: torch.optim.AdamW, closure: object = None) -> None:
+        gradients.append([
+            parameter.grad.detach().clone()
+            for group in optimizer.param_groups for parameter in group["params"]
+            if parameter.grad is not None
+        ])
+
+    monkeypatch.setattr(torch.optim.AdamW, "step", capture_step)
+    prepare_instruction_dataset(_source(), tmp_path / "dataset")
+    manifest = tmp_path / "dataset/manifest.json"
+    config = _small_config().model_copy(update={
+        "pack_sequences": False, "batch_size": 1, "gradient_accumulation_steps": 5,
+    })
+    run_sft(manifest, tmp_path / "micro", config=config)
+    micro_gradients = gradients.copy()
+    gradients.clear()
+    run_sft(manifest, tmp_path / "full", config=config.model_copy(update={
+        "batch_size": 5, "gradient_accumulation_steps": 1,
+    }))
+    assert len(gradients) == len(micro_gradients) == 3
+    for micro_group, full_group in zip(micro_gradients, gradients, strict=True):
+        for micro_gradient, full_gradient in zip(micro_group, full_group, strict=True):
+            torch.testing.assert_close(micro_gradient, full_gradient, rtol=1e-4, atol=1e-6)
+
+
 def test_resume_rejects_caller_configuration_mismatch(tmp_path: Path) -> None:
     prepare_instruction_dataset(_source(), tmp_path / "dataset")
     manifest = tmp_path / "dataset/manifest.json"
@@ -302,9 +558,7 @@ def test_resume_rejects_caller_configuration_mismatch(tmp_path: Path) -> None:
             resume_checkpoint=checkpoint,
         )
 
-    mismatched_optimizer = _small_config(epochs=2).model_copy(
-        update={"learning_rate": 0.004}
-    )
+    mismatched_optimizer = _small_config(epochs=2).model_copy(update={"learning_rate": 0.004})
     with pytest.raises(ValueError, match="only the epoch target may change"):
         run_sft(
             manifest,
@@ -338,6 +592,23 @@ def test_held_out_evaluation_quantization_and_negative_promotion(
     assert evaluation.test_records == 12
     assert evaluation.checkpoint_sha256 == sha256_bytes(trained_foundry["full"].read_bytes())
     assert evaluation.passed_smoke_quality_gate is False
+    for field, value in (
+        ("schema_version", 1),
+        ("regression_count", evaluation.regression_count + 1),
+        ("category_results", []),
+        ("workflow_scores", []),
+        ("test_records", evaluation.test_records + 1),
+        ("overall_baseline_perplexity", evaluation.overall_baseline_perplexity + 1),
+        ("passed_smoke_quality_gate", True),
+    ):
+        payload = evaluation.model_dump()
+        payload[field] = value
+        with pytest.raises(ValidationError):
+            HeldOutEvaluation.model_validate(payload)
+    category_payload = evaluation.category_results[0].model_dump()
+    category_payload["regressed"] = not category_payload["regressed"]
+    with pytest.raises(ValidationError):
+        CategoryEvaluation.model_validate(category_payload)
 
     int8 = quantize_checkpoint(
         trained_foundry["full"], trained_foundry["manifest"], tmp_path / "int8", bits=8
@@ -348,6 +619,16 @@ def test_held_out_evaluation_quantization_and_negative_promotion(
     assert int8.quantized_bytes < int8.float_weights_bytes
     assert int4.quantized_bytes < int8.quantized_bytes
     assert int4.passed_quality_gate is False
+    for field, value in (
+        ("schema_version", 1),
+        ("passed_quality_gate", True),
+        ("loss_change_fraction", int4.loss_change_fraction + 1),
+        ("size_reduction_fraction", int4.size_reduction_fraction + 1),
+    ):
+        quantization_payload = int4.model_dump()
+        quantization_payload[field] = value
+        with pytest.raises(ValidationError):
+            QuantizationReport.model_validate(quantization_payload)
     assert load_quantized_model(Path(int4.artifact_path))
     with pytest.raises(ValueError, match="merged full checkpoint"):
         quantize_checkpoint(
@@ -370,9 +651,22 @@ def test_held_out_evaluation_quantization_and_negative_promotion(
     assert report.status == "NOT_PROMOTED"
     assert report.release_manifest_path is None
     assert "training_scale" in report.blockers
+    original = evaluation_path.read_bytes()
+    with pytest.raises(ValueError, match="overwrite"):
+        evaluate_promotion(
+            requested_model_id="hermes-alpha",
+            checkpoint_path=trained_foundry["full"],
+            dataset_manifest_path=trained_foundry["manifest"],
+            evaluation_path=evaluation_path,
+            quantization_report_path=tmp_path / "int4/int4-report.json",
+            model_card_path=Path(__file__),
+            output_path=evaluation_path,
+            approved_base_license="LicenseRef-Proprietary",
+        )
+    assert evaluation_path.read_bytes() == original
 
 
-def test_promotion_gate_can_emit_a_hash_bound_release_manifest(
+def test_candidate_requires_valid_independent_attestation_to_promote(
     trained_foundry: dict[str, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     checkpoint = trained_foundry["full"]
@@ -413,12 +707,12 @@ def test_promotion_gate_can_emit_a_hash_bound_release_manifest(
     workflows = [
         WorkflowScore(
             name=name,
-            categories=["planning"],
-            examples=100,
+            categories=list(categories),
+            examples=100 * len(categories),
             exact_match_rate=0.9,
             nonempty_rate=1.0,
         )
-        for name in ("tool_workflow", "result_comparison", "multi_step_planning")
+        for name, categories in WORKFLOW_CATEGORIES.items()
     ]
     evaluation = HeldOutEvaluation(
         checkpoint_path=str(checkpoint),
@@ -428,8 +722,8 @@ def test_promotion_gate_can_emit_a_hash_bound_release_manifest(
         test_records=1_200,
         overall_baseline_loss=2.0,
         overall_candidate_loss=1.0,
-        overall_baseline_perplexity=7.0,
-        overall_candidate_perplexity=3.0,
+        overall_baseline_perplexity=math.exp(2),
+        overall_candidate_perplexity=math.exp(1),
         category_results=category_results,
         regression_count=0,
         exact_match_rate=0.9,
@@ -443,12 +737,15 @@ def test_promotion_gate_can_emit_a_hash_bound_release_manifest(
     )
     evaluation_path = tmp_path / "evaluation.json"
     evaluation_path.write_text(evaluation.model_dump_json(), encoding="utf-8")
+    quantized_artifact = tmp_path / "fixture-int4.bin"
+    quantized_artifact.write_bytes(b"fixture quantized weights")
     quantization = QuantizationReport(
+        dataset_manifest_sha256=manifest.manifest_sha256,
         format="fixture-int4",
         bits=4,
         source_checkpoint_sha256=checkpoint_sha,
-        artifact_path="fixture",
-        artifact_sha256="a" * 64,
+        artifact_path=str(quantized_artifact),
+        artifact_sha256=sha256_bytes(quantized_artifact.read_bytes()),
         float_weights_bytes=100,
         quantized_bytes=40,
         size_reduction_fraction=0.6,
@@ -468,9 +765,15 @@ def test_promotion_gate_can_emit_a_hash_bound_release_manifest(
     quantization_path.write_text(quantization.model_dump_json(), encoding="utf-8")
     card = tmp_path / "MODEL_CARD.md"
     card.write_text(
-        f"# Test model\n\nCheckpoint: {checkpoint_sha}\n\nLicense: Apache-2.0\n\nLimitations\n",
+        (
+            f"# Test model\n\nCheckpoint: {checkpoint_sha}\n\n"
+            "## License\n\nApache-2.0\n\n"
+            "## Intended use\n\nStructural promotion testing.\n\n"
+            "## Limitations\n\nSynthetic fixture only.\n"
+        ),
         encoding="utf-8",
     )
+    serving_verification = {"passed": True, "checkpoint_sha256": checkpoint_sha}
     report = evaluate_promotion(
         requested_model_id="fixture-model",
         checkpoint_path=checkpoint,
@@ -480,7 +783,87 @@ def test_promotion_gate_can_emit_a_hash_bound_release_manifest(
         model_card_path=card,
         output_path=tmp_path / "promotion.json",
         approved_base_license="Apache-2.0",
-        serving_verification={"passed": True, "checkpoint_sha256": checkpoint_sha},
+        serving_verification=serving_verification,
     )
-    assert report.status == "PROMOTED"
-    assert Path(report.release_manifest_path or "").is_file()
+    assert report.status == "NOT_PROMOTED"
+    assert report.release_manifest_path is None
+    assert report.blockers == ["independent_evidence_authority"]
+    assert not (tmp_path / "release-manifest.json").exists()
+
+    serving_sha = hashlib.sha256(
+        json.dumps(
+            serving_verification,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+            allow_nan=False,
+        ).encode("utf-8")
+    ).hexdigest()
+    subject = PromotionEvidenceSubject(
+        requested_model_id="fixture-model",
+        checkpoint_sha256=checkpoint_sha,
+        dataset_manifest_sha256=manifest.manifest_sha256,
+        evaluation_sha256=sha256_bytes(evaluation_path.read_bytes()),
+        quantization_report_sha256=sha256_bytes(quantization_path.read_bytes()),
+        model_card_sha256=sha256_bytes(card.read_bytes()),
+        serving_verification_sha256=serving_sha,
+        approved_base_license="Apache-2.0",
+    )
+    bundle_path, trust_path = _write_valid_attestations(tmp_path, subject)
+    monkeypatch.setenv("OLYMPUS_PROMOTION_TRUST_SHA256", sha256_bytes(trust_path.read_bytes()))
+    promoted = evaluate_promotion(
+        requested_model_id="fixture-model",
+        checkpoint_path=checkpoint,
+        dataset_manifest_path=manifest_path,
+        evaluation_path=evaluation_path,
+        quantization_report_path=quantization_path,
+        model_card_path=card,
+        output_path=tmp_path / "promotion-with-attestations.json",
+        approved_base_license="Apache-2.0",
+        serving_verification=serving_verification,
+        attestation_bundle_path=bundle_path,
+        attestation_trust_store_path=trust_path,
+    )
+    assert promoted.status == "PROMOTED"
+    assert promoted.blockers == []
+    monkeypatch.delenv("OLYMPUS_PROMOTION_TRUST_SHA256")
+    unpinned = evaluate_promotion(
+        requested_model_id="fixture-model",
+        checkpoint_path=checkpoint,
+        dataset_manifest_path=manifest_path,
+        evaluation_path=evaluation_path,
+        quantization_report_path=quantization_path,
+        model_card_path=card,
+        output_path=tmp_path / "unpinned.json",
+        approved_base_license="Apache-2.0",
+        serving_verification=serving_verification,
+        attestation_bundle_path=bundle_path,
+        attestation_trust_store_path=trust_path,
+    )
+    assert unpinned.blockers == ["independent_evidence_authority"]
+    monkeypatch.setenv("OLYMPUS_PROMOTION_TRUST_SHA256", sha256_bytes(trust_path.read_bytes()))
+    assert promoted.release_manifest_path is not None
+    release_path = Path(promoted.release_manifest_path)
+    release_manifest = json.loads(release_path.read_text(encoding="utf-8"))
+    assert release_manifest["promotion_report_sha256"] == sha256_bytes(
+        (tmp_path / "promotion-with-attestations.json").read_bytes()
+    )
+
+    quantized_artifact.write_bytes(b"tampered quantized weights")
+    rejected_after_tamper = evaluate_promotion(
+        requested_model_id="fixture-model",
+        checkpoint_path=checkpoint,
+        dataset_manifest_path=manifest_path,
+        evaluation_path=evaluation_path,
+        quantization_report_path=quantization_path,
+        model_card_path=card,
+        output_path=tmp_path / "promotion-with-attestations.json",
+        approved_base_license="Apache-2.0",
+        serving_verification=serving_verification,
+        attestation_bundle_path=bundle_path,
+        attestation_trust_store_path=trust_path,
+    )
+    assert rejected_after_tamper.blockers == ["quantized_artifact_identity"]
+    assert rejected_after_tamper.release_manifest_path is None
+    assert release_path.is_file()  # Historical evidence is never deleted by a later run.
+    assert not (tmp_path / "release-manifest.json").exists()

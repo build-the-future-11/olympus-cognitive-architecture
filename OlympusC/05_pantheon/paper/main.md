@@ -1,5 +1,14 @@
 # Pantheon: Canonical Artifact Auditing for Research-Agent Replication
 
+> **Historical controlled-study draft.** This Markdown snapshot predates the
+> completed external-agent capability run. The canonical source is `main.tex`;
+> its current compiled artifact is
+> `../output/pdf/pantheon-canonical-auditing.pdf`. The adjacent `main.pdf` is a
+> historical render and is not authoritative. The bounded post-study verdict is
+> `poststudy/SCIENTIFIC_READINESS.md`: the artifact is complete, but both
+> evaluated agents failed the capability floor. The controlled results below
+> remain valid and must not be read as the final scientific conclusion.
+
 ## Abstract
 
 Autonomous research agents can propose hypotheses, modify code, execute experiments, and write scientific claims, but agreement between two agent runs is not itself evidence of independent replication. We introduce **Pantheon**, a claim-level replication protocol that freezes a canonical research package, executes proposer and replicator runs in isolated workspaces, records artifact and environment provenance, and adjudicates disagreements using canonical hashes, hidden-state canaries, and numerical result comparisons. We evaluate the current rule-based prototype on a controlled seeded-fault benchmark spanning twenty independently generated packages and eight conditions. Across 160 frozen proposer/replicator comparisons, Pantheon localizes all injected fault classes (160/160), compared with 100/160 for pairwise artifact comparison and 20/160 for numerical comparison alone. The key controlled failure is **correlated shared drift**: when proposer and replicator execute the same corrupted implementation, both weaker baselines declare reproduction in all twenty cases, while canonical auditing detects noncanonical code. We additionally run a cross-implementation public-data case study on the Breast Cancer Wisconsin Diagnostic dataset. A scikit-learn logistic-regression proposer and an independent numpy gradient-descent replicator agree on the direction of improvement over a majority baseline on all 10 prespecified splits, with a mean absolute effect difference of 0.00699 accuracy points. These results validate infrastructure mechanisms, not autonomous-agent reliability: no external LLM agents or published research package were replicated in this study. Pantheon is therefore presented as an evaluation and provenance layer for future research-agent replication benchmarks rather than as a demonstrated solution to cross-agent scientific verification.

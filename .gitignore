@@ -1,5 +1,7 @@
 .venv/
 .env
+.env.*
+!.env.example
 __pycache__/
 .pytest_cache/
 .mypy_cache/
@@ -16,6 +18,7 @@ build/
 coverage/
 artifacts/
 sbom/
+release-metadata/
 PORTFOLIO_COMPLETION_REPORT.md
 REMAINING_EXTERNAL_ACTIONS.md
 REPRODUCIBILITY.md

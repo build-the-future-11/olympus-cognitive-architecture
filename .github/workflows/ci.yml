@@ -37,11 +37,19 @@ jobs:
           uv run python -m olympus.cli foundry status --root artifacts/ci-foundry
           uv run python -m olympus.cli foundry prepare-dataset --output artifacts/ci-deep-dataset
       - name: Audit Python dependencies
-        run: uv run python -m pip_audit --strict .
+        run: uv run python scripts/audit_locked_dependencies.py
       - name: Build distributions
-        run: uv run python -m build
+        run: >-
+          uv run python scripts/build_release_artifacts.py
+          --outdir dist --verify-reproducible
       - name: Validate distribution metadata
         run: uv run python -m twine check dist/*
+      - name: Validate distribution payload
+        run: uv run python scripts/validate_distribution_payload.py dist/*.whl dist/*.tar.gz
+      - name: Validate installed wheel outside source checkout
+        run: >-
+          uv run python scripts/validate_installed_wheel.py
+          dist/*.whl --temporary-parent "${RUNNER_TEMP}"
       - name: Verify bundled Foundry corpus
         run: |
           unzip -l dist/*.whl | grep 'olympus/foundry/foundry_verification.txt'
@@ -83,7 +91,9 @@ jobs:
           cache: pip
       - name: Install locked Pantheon environment
         run: python -m pip install uv==0.12.5 && uv sync --locked --all-extras
-      - name: Test Pantheon
-        run: uv run pytest -q
-      - name: Validate committed evidence
-        run: uv run python scripts/validate_evidence.py
+      - name: Install checksum-pinned Tectonic paper compiler
+        run: |
+          ../../scripts/install_tectonic.sh "${RUNNER_TEMP}/tectonic-bin"
+          echo "${RUNNER_TEMP}/tectonic-bin" >> "${GITHUB_PATH}"
+      - name: Verify complete Pantheon boundary
+        run: make verify PYTHON=.venv/bin/python

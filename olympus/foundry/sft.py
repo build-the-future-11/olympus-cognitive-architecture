@@ -19,6 +19,7 @@ from torch.nn import functional as F
 
 from olympus.core.schemas import StrictModel
 from olympus.foundry.data_pipeline import (
+    REQUIRED_CATEGORIES,
     DatasetManifestV2,
     InstructionExample,
     verify_dataset_manifest,
@@ -67,7 +68,11 @@ class ByteTokenizer:
 
 
 class TinyModelConfig(StrictModel):
-    vocab_size: int = ByteTokenizer.vocab_size
+    vocab_size: int = Field(
+        default=ByteTokenizer.vocab_size,
+        ge=ByteTokenizer.vocab_size,
+        le=ByteTokenizer.vocab_size,
+    )
     width: int = Field(default=64, ge=16, le=512)
     layers: int = Field(default=2, ge=1, le=12)
     heads: int = Field(default=4, ge=1, le=16)
@@ -97,6 +102,19 @@ class SFTConfig(StrictModel):
     category_mix_weights: dict[str, float] = Field(default_factory=dict)
     device: Literal["auto", "cpu", "cuda", "mps"] = "cpu"
     model: TinyModelConfig = Field(default_factory=TinyModelConfig)
+
+    @model_validator(mode="after")
+    def validate_mixture(self) -> SFTConfig:
+        for category, weight in self.category_mix_weights.items():
+            if category not in REQUIRED_CATEGORIES:
+                raise ValueError(f"unknown training mixture category: {category}")
+            if not math.isfinite(weight) or not 0 <= weight <= 64:
+                raise ValueError("training mixture weights must be finite and between 0 and 64")
+        return self
+
+    def for_evaluation(self) -> SFTConfig:
+        """Evaluate every original record once, independently of training sampling."""
+        return self.model_copy(update={"category_mix_weights": {}, "pack_sequences": False})
 
 
 class TrainingSummary(StrictModel):
@@ -186,9 +204,9 @@ class QLoRALinear(nn.Module):
         nn.init.kaiming_uniform_(self.lora_a, a=math.sqrt(5))
 
     def _weight(self, dtype: torch.dtype) -> torch.Tensor:
-        values = _unpack_nibbles(
-            self.packed_weight, self.in_features * self.out_features
-        ).reshape(self.out_features, self.in_features)
+        values = _unpack_nibbles(self.packed_weight, self.in_features * self.out_features).reshape(
+            self.out_features, self.in_features
+        )
         signed = values.to(torch.int8) - 8
         return signed.to(dtype) * self.row_scale.to(dtype)[:, None]
 
@@ -221,9 +239,7 @@ class CausalSelfAttention(nn.Module):
             dropout_p=self.dropout if self.training else 0.0,
             is_causal=True,
         )
-        projected = self.output(
-            attended.transpose(1, 2).contiguous().reshape(batch, length, width)
-        )
+        projected = self.output(attended.transpose(1, 2).contiguous().reshape(batch, length, width))
         return cast(torch.Tensor, projected)
 
 
@@ -364,14 +380,25 @@ def evaluate_loss(
     device: torch.device,
 ) -> float:
     model.eval()
-    losses: list[float] = []
+    total_loss = 0.0
+    supervised_tokens = 0
     generator = torch.Generator().manual_seed(0)
     with torch.inference_mode():
         for tokens, labels in _batches(rows, 8, generator):
-            losses.append(float(_loss(model, tokens.to(device), labels.to(device)).item()))
-    if not losses:
-        raise ValueError("evaluation contains no batches")
-    return sum(losses) / len(losses)
+            targets = labels[:, 1:].to(device)
+            count = int((targets != -100).sum().item())
+            if not count:
+                continue
+            logits = model(tokens.to(device)[:, :-1])
+            loss = F.cross_entropy(
+                logits.reshape(-1, logits.shape[-1]), targets.reshape(-1),
+                ignore_index=-100, reduction="sum",
+            )
+            total_loss += float(loss.item())
+            supervised_tokens += count
+    if not supervised_tokens:
+        raise ValueError("evaluation contains no supervised tokens")
+    return total_loss / supervised_tokens
 
 
 def generate_text(
@@ -431,9 +458,7 @@ def load_trained_model(path: Path, *, device: str = "cpu") -> TinyCausalLM:
     return model
 
 
-def _validated_resume_config(
-    requested: SFTConfig, checkpoint: dict[str, Any]
-) -> SFTConfig:
+def _validated_resume_config(requested: SFTConfig, checkpoint: dict[str, Any]) -> SFTConfig:
     """Permit extending epochs while keeping every artifact-defining setting frozen."""
     loaded = SFTConfig.model_validate(checkpoint["training_config"])
     requested_frozen = requested.model_dump(mode="json", exclude={"epochs"})
@@ -446,6 +471,26 @@ def _validated_resume_config(
     if requested.epochs < completed_epochs:
         raise ValueError("resume epoch target cannot be below completed epochs")
     return loaded.model_copy(update={"epochs": requested.epochs})
+
+
+def _training_run_id(
+    dataset_manifest_sha256: str,
+    config: SFTConfig,
+    base_checkpoint_sha256: str | None,
+) -> str:
+    """Bind output paths to every frozen setting that defines a training lineage."""
+
+    identity = {
+        "validation_policy": "all-records-once-unpacked-v1",
+        "training_objective": "supervised-token-mean-v2",
+        "dataset_manifest_sha256": dataset_manifest_sha256,
+        "base_checkpoint_sha256": base_checkpoint_sha256,
+        "config": config.model_dump(mode="json"),
+    }
+    digest = hashlib.sha256(
+        json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    return f"sft-{config.mode}-{dataset_manifest_sha256[:12]}-s{config.seed}-{digest[:12]}"
 
 
 def run_sft(
@@ -481,6 +526,12 @@ def run_sft(
             if resumed["dataset_manifest_sha256"] != manifest.manifest_sha256:
                 raise ValueError("resume checkpoint dataset hash does not match")
             effective_config = _validated_resume_config(config, resumed)
+            if resumed.get("training_objective") != "supervised-token-mean-v2":
+                raise ValueError("resume requires a checkpoint with the v2 training objective")
+            if resumed.get("validation_policy") != "all-records-once-unpacked-v1":
+                raise ValueError("resume requires the current independent validation policy")
+            if resumed.get("training_device") != device.type:
+                raise ValueError("resume must use the original device type")
             completed_epochs = int(resumed["completed_epochs"])
             optimizer_steps = int(resumed["optimizer_steps"])
             base_sha = cast(str | None, resumed.get("base_checkpoint_sha256"))
@@ -498,7 +549,8 @@ def run_sft(
             _load_examples(manifest, "train", manifest_path.parent), effective_config
         )
         validation_rows = _encode_examples(
-            _load_examples(manifest, "validation", manifest_path.parent), effective_config
+            _load_examples(manifest, "validation", manifest_path.parent),
+            effective_config.for_evaluation(),
         )
 
         trainable = [parameter for parameter in model.parameters() if parameter.requires_grad]
@@ -512,12 +564,19 @@ def run_sft(
         if resume_checkpoint is not None:
             optimizer.load_state_dict(resumed["optimizer_state"])
             generator.set_state(resumed["generator_state"])
+            torch.set_rng_state(resumed["torch_rng_state"])
+            random.setstate(resumed["python_rng_state"])
+            if device.type == "cuda":
+                torch.cuda.set_rng_state_all(resumed["device_rng_state"])
+            elif device.type == "mps":
+                torch.mps.set_rng_state(resumed["device_rng_state"])
 
         initial_validation = evaluate_loss(model, validation_rows, device=device)
         mixed_effective = effective_config.mixed_precision and device.type == "cuda"
-        run_id = (
-            f"sft-{effective_config.mode}-{manifest.manifest_sha256[:12]}"
-            f"-s{effective_config.seed}"
+        run_id = _training_run_id(
+            manifest.manifest_sha256,
+            effective_config,
+            base_sha,
         )
         log_path = output_root / run_id / "metrics.jsonl"
         log_path.parent.mkdir(parents=True, exist_ok=True)
@@ -526,9 +585,17 @@ def run_sft(
         with log_path.open(log_mode, encoding="utf-8") as log:
             for epoch in range(completed_epochs, effective_config.epochs):
                 model.train()
-                epoch_losses: list[float] = []
+                epoch_loss_sum = 0.0
+                epoch_tokens = 0
                 batches = list(_batches(train_rows, effective_config.batch_size, generator))
                 for batch_index, (tokens, labels) in enumerate(batches):
+                    accumulation = effective_config.gradient_accumulation_steps
+                    group_start = (batch_index // accumulation) * accumulation
+                    group_tokens = sum(
+                        int((group_labels[:, 1:] != -100).sum().item())
+                        for _, group_labels in batches[group_start:group_start + accumulation]
+                    )
+                    batch_tokens = int((labels[:, 1:] != -100).sum().item())
                     autocast = (
                         torch.autocast(device_type="cuda", dtype=torch.bfloat16)
                         if mixed_effective
@@ -536,19 +603,17 @@ def run_sft(
                     )
                     with autocast:
                         loss = _loss(model, tokens.to(device), labels.to(device))
-                        scaled_loss = loss / effective_config.gradient_accumulation_steps
+                        scaled_loss = loss * (batch_tokens / group_tokens)
                     scaled_loss.backward()  # type: ignore[no-untyped-call]
-                    epoch_losses.append(float(loss.detach().cpu().item()))
+                    epoch_loss_sum += float(loss.detach().cpu().item()) * batch_tokens
+                    epoch_tokens += batch_tokens
                     should_step = (
-                        (batch_index + 1)
-                        % effective_config.gradient_accumulation_steps
-                        == 0
-                        or batch_index + 1 == len(batches)
+                        batch_index + 1
+                    ) % effective_config.gradient_accumulation_steps == 0 or batch_index + 1 == len(
+                        batches
                     )
                     if should_step:
-                        nn.utils.clip_grad_norm_(
-                            trainable, effective_config.gradient_clip_norm
-                        )
+                        nn.utils.clip_grad_norm_(trainable, effective_config.gradient_clip_norm)
                         optimizer.step()
                         optimizer.zero_grad(set_to_none=True)
                         optimizer_steps += 1
@@ -557,9 +622,11 @@ def run_sft(
                 record = {
                     "epoch": completed_epochs,
                     "optimizer_steps": optimizer_steps,
-                    "train_loss": sum(epoch_losses) / len(epoch_losses),
+                    "train_loss": epoch_loss_sum / epoch_tokens,
+                    "training_objective": "supervised-token-mean-v2",
                     "validation_loss": validation_loss,
                     "validation_perplexity": math.exp(min(validation_loss, 20.0)),
+                    "validation_loss_aggregation": "supervised-token-mean-v2",
                 }
                 log.write(json.dumps(record, sort_keys=True) + "\n")
                 log.flush()
@@ -579,7 +646,17 @@ def run_sft(
             "completed_epochs": completed_epochs,
             "optimizer_steps": optimizer_steps,
             "generator_state": generator.get_state(),
+            "training_objective": "supervised-token-mean-v2",
+            "training_device": device.type,
+            "torch_rng_state": torch.get_rng_state(),
+            "python_rng_state": random.getstate(),
+            "device_rng_state": (
+                torch.cuda.get_rng_state_all() if device.type == "cuda"
+                else torch.mps.get_rng_state() if device.type == "mps" else None
+            ),
             "validation_loss": final_validation,
+            "validation_loss_aggregation": "supervised-token-mean-v2",
+            "validation_policy": "all-records-once-unpacked-v1",
         }
         _atomic_torch_save(checkpoint_path, checkpoint_payload)
         adapter_path: Path | None = None

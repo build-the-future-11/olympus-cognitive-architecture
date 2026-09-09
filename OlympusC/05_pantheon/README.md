@@ -178,24 +178,39 @@ The protocol prototype is runnable and evidence-backed. The current paper honest
 
 The definitive protocol is `PANTHEON-COREBENCH-OOD-LOCAL-20260903-V4`. It freezes 17 official OOD capsules, 20 questions, four fields, exact source and model hashes, temperature zero, 768 completion tokens per turn, 20 turns, safe extraction, separate ephemeral workspaces, network-denied shell execution, and canonical-answer withholding.
 
-### Reproduce the completed local study
+### Verify the preserved local study
 
 ```bash
 cd 05_pantheon
-ollama serve
-PANTHEON_PYTHON=../../.venv/bin/python bash scripts/run_local_ood_study.sh
 ../../.venv/bin/python analysis/analyze_external_rigor.py
 make verify
 ```
 
+The repaired current source is intentionally not V4-identical. Both external
+execution wrappers remain bound to V4 and stop before model execution with
+`V4_SOURCE_DRIFT_REQUIRES_VERSIONED_PROTOCOL`; they cannot resume or overwrite
+the preserved V4 trajectories. `configs/local_ood_protocol_v5_source_manifest.json`
+is only a current-source draft. A confirmatory run requires versioned output
+namespaces and model identities before a separate V5 protocol is frozen.
+
 `setup_external.sh` downloads the exact 17-task convenience subset. The selection reaches the frozen 20-question gate while excluding two 400–800 MB capsules; it is not a random sample and must not be described as representative.
 
-The frozen V4 structural gate writes `PUBLICATION-READY` because all preregistered artifacts exist; it is retained byte-for-byte for reproducibility and is not a scientific or venue-readiness judgment. The canonical post-study `poststudy/SCIENTIFIC_READINESS.json` gate instead reports `NEGATIVE_RESULT_ARTIFACT_COMPLETE_CAPABILITY_FLOOR_FAILED`. The decisive measured outcomes are 0/20 canonical accuracy, 0/20 non-null answer rate, 0/34 agent-authored report compliance, 0/20 substantive agreement, and 0/20 false consensus. The Wilson 95% upper bound for each zero event rate is 0.161. With no substantive answers, false-consensus prevalence is unidentified for capable agents.
+The frozen V4 structural gate writes `PUBLICATION-READY` because its internally
+prespecified artifact matrix exists; it is retained byte-for-byte for
+reproducibility and is not a scientific or venue-readiness judgment. V4 was
+frozen before execution but was not externally timestamped or registered. The
+canonical post-study `poststudy/SCIENTIFIC_READINESS.json` gate instead reports
+`NEGATIVE_RESULT_ARTIFACT_COMPLETE_CAPABILITY_FLOOR_FAILED`. The decisive
+measured outcomes are 0/20 canonical accuracy, 0/20 non-null answer rate, 0/34
+agent-authored report compliance, 0/20 substantive agreement, and 0/20 false
+consensus. The Wilson 95% upper bound for each zero event rate is 0.161. With no
+substantive answers, false-consensus prevalence is unidentified for capable
+agents.
 
 Useful commands:
 
 ```bash
-# Verify the frozen protocol and all manuscript evidence
+# Verify preserved evidence, current negative-result gates, scoped integrity, and paper
 make verify
 ```
 

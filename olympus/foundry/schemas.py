@@ -22,7 +22,7 @@ class ArtifactStatus(StrEnum):
 
 class DatasetRecord(StrictModel):
     dataset_id: str = Field(pattern=r"^[a-z0-9][a-z0-9._-]{1,63}$")
-    version: str = Field(min_length=1, max_length=64)
+    version: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._+-]{0,63}$")
     sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     materialized_path: str = Field(min_length=1)
     source: str = Field(min_length=1, max_length=2_000)

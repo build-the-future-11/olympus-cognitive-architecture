@@ -131,3 +131,38 @@ def test_hermes_workspace_runtime_returns_a_bound_validated_envelope() -> None:
     assert answer.citation_evidence_ids == ["mars"]
     assert answer.workspace_sha256 == workspace.sha256
     assert isinstance(abstention, AbstainOutput)
+    protocol_restricted = runtime.respond(
+        workspace,
+        "Mars moons",
+        allowed_evidence_ids={"different-evidence"},
+    )
+    assert isinstance(protocol_restricted, AbstainOutput)
+    assert protocol_restricted.reason == "no_authorized_evidence"
+
+    execution_failure = runtime.respond_after_execution(
+        workspace,
+        "Mars moons",
+        execution_succeeded=False,
+        failure_code="compensatable_execution_failure",
+    )
+    assert isinstance(execution_failure, AbstainOutput)
+    assert (
+        execution_failure.reason
+        == "upstream_execution_failed:compensatable_execution_failure"
+    )
+    upstream_failure = runtime.respond_after_execution(
+        workspace,
+        "Mars moons",
+        execution_succeeded=True,
+        upstream_component_failure="kronos",
+        allowed_evidence_ids={"mars"},
+    )
+    assert isinstance(upstream_failure, AbstainOutput)
+    assert upstream_failure.reason == "upstream_component_failed:kronos"
+    with pytest.raises(ValueError, match="successful execution"):
+        runtime.respond_after_execution(
+            workspace,
+            "Mars moons",
+            execution_succeeded=True,
+            failure_code="impossible",
+        )

@@ -8,13 +8,17 @@ import statistics
 import time
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Any
+from typing import Any, Literal, Self
 
 import torch
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from olympus.core.schemas import StrictModel
-from olympus.foundry.data_pipeline import InstructionExample, verify_dataset_manifest
+from olympus.foundry.data_pipeline import (
+    REQUIRED_CATEGORIES,
+    InstructionExample,
+    verify_dataset_manifest,
+)
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.sft import (
     SFTConfig,
@@ -42,6 +46,13 @@ def _atomic_json(path: Path, payload: object) -> None:
     temporary.replace(path)
 
 
+WORKFLOW_CATEGORIES: dict[str, tuple[str, ...]] = {
+    "tool_workflow": ("tool_use", "agent_behavior"),
+    "result_comparison": ("reasoning", "self_correction", "research"),
+    "multi_step_planning": ("planning", "safety"),
+}
+
+
 class CategoryEvaluation(StrictModel):
     category: str
     records: int = Field(gt=0)
@@ -49,6 +60,15 @@ class CategoryEvaluation(StrictModel):
     candidate_loss: float = Field(ge=0.0)
     loss_change_fraction: float
     regressed: bool
+
+    @model_validator(mode="after")
+    def consistent_metrics(self) -> Self:
+        change = (self.candidate_loss - self.baseline_loss) / max(self.baseline_loss, 1e-12)
+        if not math.isclose(change, self.loss_change_fraction, rel_tol=1e-9, abs_tol=1e-12):
+            raise ValueError("category loss change does not match losses")
+        if self.regressed != (change > 0.05):
+            raise ValueError("category regression flag does not match losses")
+        return self
 
 
 class WorkflowScore(StrictModel):
@@ -60,17 +80,19 @@ class WorkflowScore(StrictModel):
 
 
 class HeldOutEvaluation(StrictModel):
-    schema_version: int = 1
-    suite: str = "olympus-held-out-capabilities-v1"
+    schema_version: Literal[3] = 3
+    suite: Literal["olympus-held-out-capabilities-v3"] = "olympus-held-out-capabilities-v3"
+    sampling_policy: Literal["all-records-once-unpacked-v1"] = "all-records-once-unpacked-v1"
+    loss_aggregation: Literal["supervised-token-mean-v2"] = "supervised-token-mean-v2"
     checkpoint_path: str
     checkpoint_sha256: str
     dataset_manifest_sha256: str
     baseline_identity: str
     test_records: int = Field(gt=0)
-    overall_baseline_loss: float
-    overall_candidate_loss: float
-    overall_baseline_perplexity: float
-    overall_candidate_perplexity: float
+    overall_baseline_loss: float = Field(ge=0)
+    overall_candidate_loss: float = Field(ge=0)
+    overall_baseline_perplexity: float = Field(ge=1)
+    overall_candidate_perplexity: float = Field(ge=1)
     category_results: list[CategoryEvaluation]
     regression_count: int = Field(ge=0)
     exact_match_rate: float = Field(ge=0.0, le=1.0)
@@ -81,6 +103,43 @@ class HeldOutEvaluation(StrictModel):
     peak_rss_bytes: int = Field(ge=0)
     passed_smoke_quality_gate: bool
     decision: str
+
+    @model_validator(mode="after")
+    def consistent_report(self) -> Self:
+        counts = {item.category: item.records for item in self.category_results}
+        if len(counts) != len(self.category_results) or set(counts) != set(REQUIRED_CATEGORIES):
+            raise ValueError("evaluation must contain each required category exactly once")
+        if sum(counts.values()) != self.test_records:
+            raise ValueError("category counts do not match test record count")
+        if self.regression_count != sum(item.regressed for item in self.category_results):
+            raise ValueError("regression count does not match category results")
+        names = [item.name for item in self.workflow_scores]
+        if len(names) != len(set(names)) or set(names) != set(WORKFLOW_CATEGORIES):
+            raise ValueError("evaluation must contain each required workflow exactly once")
+        for score in self.workflow_scores:
+            expected = WORKFLOW_CATEGORIES[score.name]
+            if len(score.categories) != len(expected) or set(score.categories) != set(expected):
+                raise ValueError("workflow category membership is incorrect")
+            if score.examples != sum(counts[category] for category in expected):
+                raise ValueError("workflow example count is incorrect")
+            if score.nonempty_rate < score.exact_match_rate:
+                raise ValueError("exact matches cannot exceed nonempty outputs")
+        for loss, perplexity in (
+            (self.overall_baseline_loss, self.overall_baseline_perplexity),
+            (self.overall_candidate_loss, self.overall_candidate_perplexity),
+        ):
+            if not math.isclose(math.exp(min(loss, 20)), perplexity, rel_tol=1e-6):
+                raise ValueError("perplexity does not match loss")
+        expected_gate = (
+            self.overall_candidate_loss < self.overall_baseline_loss
+            and self.regression_count == 0
+            and self.exact_match_rate >= 0.5
+            and self.format_compliance_rate >= 0.8
+            and min(score.exact_match_rate for score in self.workflow_scores) >= 0.5
+        )
+        if self.passed_smoke_quality_gate != expected_gate:
+            raise ValueError("smoke quality decision does not match metrics")
+        return self
 
 
 def _load_test_examples(manifest_path: Path) -> tuple[str, list[InstructionExample]]:
@@ -129,13 +188,8 @@ def _format_compliant(expected: str, generated: str) -> bool:
 def _workflow_scores(
     examples: list[InstructionExample], generated: dict[str, str]
 ) -> list[WorkflowScore]:
-    definitions = {
-        "tool_workflow": ["tool_use", "agent_behavior"],
-        "result_comparison": ["reasoning", "self_correction", "research"],
-        "multi_step_planning": ["planning", "safety"],
-    }
     results: list[WorkflowScore] = []
-    for name, categories in definitions.items():
+    for name, categories in WORKFLOW_CATEGORIES.items():
         selected = [example for example in examples if example.category in categories]
         exact = sum(
             _normalize(generated[item.id]) == _normalize(item.response) for item in selected
@@ -144,7 +198,7 @@ def _workflow_scores(
         results.append(
             WorkflowScore(
                 name=name,
-                categories=categories,
+                categories=list(categories),
                 examples=len(selected),
                 exact_match_rate=exact / len(selected),
                 nonempty_rate=nonempty / len(selected),
@@ -168,7 +222,7 @@ def evaluate_checkpoint(
     if checkpoint["dataset_manifest_sha256"] != manifest_sha:
         raise ValueError("checkpoint and evaluation dataset hashes do not match")
     training = SFTConfig.model_validate(checkpoint["training_config"])
-    evaluation_config = training.model_copy(update={"pack_sequences": False})
+    evaluation_config = training.for_evaluation()
     all_rows = _encode_examples(examples, evaluation_config)
     baseline_loss = evaluate_loss(baseline, all_rows, device=device)
     candidate_loss = evaluate_loss(candidate, all_rows, device=device)

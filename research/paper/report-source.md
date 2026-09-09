@@ -22,12 +22,19 @@ whose learned router must earn inclusion against a rule-based baseline.
 The repository now accompanies this design with executable reference
 components for the shared substrate and each role. Those components establish
 typed contracts, an authorized pre-model workspace view, selected process-local
-validation/gating paths, and differentiable losses. Hermes and Prometheus have
-partial shared-workspace bridges; the six roles are not composed. These
-components do not establish a trained family model or comparative advantage.
-The bounded release-facing execution record is
-`evidence/model_family_smoke_20260906.json`; it uses deterministic synthetic
-contract fixtures and explicitly authorizes no promotion.
+validation/gating paths, and differentiable losses. A separate fixed,
+two-phase reference replay composes all six roles along one synthetic path:
+authorized Olympus-Atlas retrieval, trusted-receipt Prometheus selection, an
+Aion approval pause, declaratively non-material Perseus execution,
+non-authoritative Kronos observation, extractive Hermes response, and Aion
+audit/STOP. Runtime-secret HMAC identifiers and a private in-memory reservation
+capability bind the reviewed action scope, but no sandbox or durable recovery
+service exists. This run establishes contract interoperability only; it does
+not establish a trained family model, scientific result, or comparative
+advantage. The bounded release-facing records are
+`evidence/model_family_smoke_20260906.json` and
+`evidence/model_composition_smoke_20260906.json`; both use deterministic
+synthetic contract fixtures and explicitly authorize no promotion.
 
 ## Literature synthesis and design consequences
 
@@ -81,8 +88,9 @@ contract fixtures and explicitly authorizes no promotion.
   benchmark, temporal benchmark, or Aion study. Reference modules and synthetic
   unit-gradient paths do not close these gaps.
 - No evidence that specialization beats prompting or deterministic baselines.
-- No end-to-end composition of all six references through the shared workspace
-  and output protocol.
+- No general, configurable, crash-durable, sandboxed, or autonomous composition
+  of the six roles. The fixed in-process synthetic replay exercises one
+  predetermined contract path and is not a family or system-quality result.
 - No constrained token decoder, deployed sandbox, durable family transaction or
   Aion authority store, cryptographically signed approvals/audits, parsed
   rollback/deletion evidence service, or committed-effect rollback.

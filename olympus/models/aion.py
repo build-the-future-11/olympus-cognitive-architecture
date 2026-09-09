@@ -53,6 +53,7 @@ class Approval(StrictModel):
     run_id: str = Field(pattern=r"^aion_[0-9a-f]{16,64}$")
     protocol_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     expected_head_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    subject_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
     expires_at: datetime | None = None
 
     @model_validator(mode="after")
@@ -68,6 +69,7 @@ class Approval(StrictModel):
         protocol_sha256: str,
         expected_head_sha256: str,
         now: datetime,
+        subject_sha256: str | None = None,
     ) -> bool:
         if self.authority is AuthorityKind.MODEL:
             return False
@@ -76,6 +78,7 @@ class Approval(StrictModel):
             or self.run_id != run_id
             or self.protocol_sha256 != protocol_sha256
             or self.expected_head_sha256 != expected_head_sha256
+            or self.subject_sha256 != subject_sha256
         ):
             return False
         if self.expires_at is not None and self.expires_at <= now:
@@ -165,6 +168,9 @@ class AionReceipt(StrictModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
     approval_id: str | None = Field(
         default=None, pattern=r"^approval_[0-9a-f]{16,64}$"
+    )
+    approval_subject_sha256: str | None = Field(
+        default=None, pattern=r"^[0-9a-f]{64}$"
     )
     audit_id: str | None = Field(default=None, pattern=r"^audit_[0-9a-f]{16,64}$")
     tool_calls: int = Field(default=0, ge=0)
@@ -292,6 +298,10 @@ def _state_integrity_error(state: AionRunState) -> str | None:
         scope = _APPROVAL_SCOPE.get(receipt.to_stage)
         if scope is not None and receipt.approval_id is None:
             return f"receipt for {scope} is missing its approval reference"
+        if scope is None and receipt.approval_id is not None:
+            return "ungated receipt contains an approval reference"
+        if receipt.approval_subject_sha256 is not None and receipt.approval_id is None:
+            return "receipt approval subject is missing its approval reference"
         if receipt.to_stage is ResearchStage.PROMOTION_CANDIDATE and receipt.audit_id is None:
             return "promotion receipt is missing its audit reference"
         previous = receipt.receipt_sha256
@@ -375,6 +385,48 @@ class AionController:
                 raise ValueError(f"trusted audit ID is already registered: {audit.audit_id}")
             self._trusted_audits[audit.audit_id] = audit.model_copy(deep=True)
 
+    def preflight_approval(
+        self,
+        state: AionRunState,
+        target: ResearchStage,
+        *,
+        approval: Approval,
+        approval_subject_sha256: str | None = None,
+    ) -> None:
+        """Verify a gated transition's authority without advancing the run.
+
+        Callers that perform expensive preparation before :meth:`transition`
+        can use this check to reject an untrusted, expired, or stale approval
+        first. The transition repeats the same check while holding the
+        controller lock; this method is not an authorization token.
+        """
+
+        state = AionRunState.model_validate(state.model_dump(mode="python"))
+        approval = Approval.model_validate(approval.model_dump(mode="python"))
+        now = self._clock()
+        if now.utcoffset() is None:
+            raise ValueError("controller clock must return a timezone-aware time")
+        with self._lock:
+            if not self._verify_chain_unlocked(state):
+                raise ValueError("Aion run state failed chain or authority validation")
+            if state.receipts and now < state.receipts[-1].timestamp:
+                raise ValueError("controller clock moved backwards relative to the run")
+            if target not in self.allowed_targets(state.stage):
+                raise ValueError(f"illegal Aion transition: {state.stage} -> {target}")
+            current_head = (
+                state.receipts[-1].receipt_sha256
+                if state.receipts
+                else self.genesis_sha256
+            )
+            self._require_trusted_approval_unlocked(
+                state,
+                target,
+                approval=approval,
+                approval_subject_sha256=approval_subject_sha256,
+                current_head=current_head,
+                now=now,
+            )
+
     @staticmethod
     def allowed_targets(stage: ResearchStage) -> frozenset[ResearchStage]:
         return _ALLOWED[stage]
@@ -392,6 +444,7 @@ class AionController:
         authority: AuthorityKind,
         evidence_ids: list[str] | None = None,
         approval: Approval | None = None,
+        approval_subject_sha256: str | None = None,
         audit: AuditFinding | None = None,
         metadata: dict[str, Any] | None = None,
         tool_calls: int = 0,
@@ -432,23 +485,24 @@ class AionController:
 
             required_scope = _APPROVAL_SCOPE.get(target)
             if required_scope is not None:
-                if approval is None or not approval.valid_for(
-                    required_scope,
-                    state.run_id,
-                    state.protocol.sha256,
-                    current_head,
-                    now,
-                ):
+                if approval is None:
                     raise PermissionError(
                         f"valid non-model approval required for {required_scope}"
                     )
-                trusted = self._trusted_approvals.get(approval.approval_id)
-                if trusted != approval:
-                    raise PermissionError(f"trusted approval required for {required_scope}")
+                self._require_trusted_approval_unlocked(
+                    state,
+                    target,
+                    approval=approval,
+                    approval_subject_sha256=approval_subject_sha256,
+                    current_head=current_head,
+                    now=now,
+                )
                 if approval.actor != actor or approval.authority is not authority:
                     raise PermissionError(
                         "gated transition actor and authority must match its approval"
                     )
+            elif approval is not None or approval_subject_sha256 is not None:
+                raise ValueError("approvals are valid only for gated transitions")
 
             if target is ResearchStage.PROMOTION_CANDIDATE:
                 if authority is AuthorityKind.MODEL:
@@ -487,6 +541,7 @@ class AionController:
                 "evidence_ids": transition_evidence,
                 "metadata": metadata or {},
                 "approval_id": approval.approval_id if approval is not None else None,
+                "approval_subject_sha256": approval_subject_sha256,
                 "audit_id": audit.audit_id if audit is not None else None,
                 "tool_calls": tool_calls,
             }
@@ -507,6 +562,34 @@ class AionController:
             )
             self._run_heads[state.run_id] = receipt.receipt_sha256
             return updated
+
+    def _require_trusted_approval_unlocked(
+        self,
+        state: AionRunState,
+        target: ResearchStage,
+        *,
+        approval: Approval,
+        approval_subject_sha256: str | None,
+        current_head: str,
+        now: datetime,
+    ) -> None:
+        required_scope = _APPROVAL_SCOPE.get(target)
+        if required_scope is None:
+            raise ValueError("approval preflight is valid only for gated transitions")
+        if not approval.valid_for(
+            required_scope,
+            state.run_id,
+            state.protocol.sha256,
+            current_head,
+            now,
+            approval_subject_sha256,
+        ):
+            raise PermissionError(
+                f"valid non-model approval required for {required_scope}"
+            )
+        trusted = self._trusted_approvals.get(approval.approval_id)
+        if trusted != approval:
+            raise PermissionError(f"trusted approval required for {required_scope}")
 
     def verify_chain(self, state: AionRunState) -> bool:
         with self._lock:
@@ -535,6 +618,12 @@ class AionController:
                     state.protocol.sha256,
                     receipt.previous_sha256,
                     receipt.timestamp,
+                    receipt.approval_subject_sha256,
+                ):
+                    return False
+                if (
+                    approval.actor != receipt.actor
+                    or approval.authority is not receipt.authority
                 ):
                     return False
             if receipt.to_stage is ResearchStage.PROMOTION_CANDIDATE:

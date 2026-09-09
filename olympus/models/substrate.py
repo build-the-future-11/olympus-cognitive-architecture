@@ -11,7 +11,7 @@ import hashlib
 import json
 import math
 import re
-from collections.abc import Collection
+from collections.abc import Collection, Sequence
 from datetime import datetime
 from enum import Enum, StrEnum
 from typing import Annotated, Any, Literal, Self, cast
@@ -281,6 +281,12 @@ class WorkspaceState(StrictModel):
             raise ValueError("event_sequence must equal the hash-linked event count")
         previous = "0" * 64
         previous_time: datetime | None = None
+        evidence_by_id = {item.evidence_id: item for item in self.evidence}
+        claims_by_id = {item.claim_id: item for item in self.claims}
+        plan_by_id = {item.step_id: item for item in self.plan}
+        seen_added_evidence: set[str] = set()
+        seen_added_claims: set[str] = set()
+        seen_added_plan: set[str] = set()
         for sequence, event in enumerate(self.events, start=1):
             if event.sequence != sequence:
                 raise ValueError("workspace event sequence must be contiguous")
@@ -288,6 +294,16 @@ class WorkspaceState(StrictModel):
                 raise ValueError("workspace event hash chain is discontinuous")
             if previous_time is not None and event.occurred_at < previous_time:
                 raise ValueError("workspace event timestamps must be monotonic")
+            if event.payload.get("transition_schema") == "workspace.append.v1":
+                _verify_workspace_append_event(
+                    event,
+                    evidence_by_id=evidence_by_id,
+                    claims_by_id=claims_by_id,
+                    plan_by_id=plan_by_id,
+                    seen_added_evidence=seen_added_evidence,
+                    seen_added_claims=seen_added_claims,
+                    seen_added_plan=seen_added_plan,
+                )
             previous = event.event_sha256
             previous_time = event.occurred_at
         return self
@@ -331,6 +347,7 @@ def authorized_workspace_view(workspace: WorkspaceState) -> AuthorizedWorkspaceV
         item.model_copy(deep=True)
         for item in workspace.tools
         if item.tool_id in workspace.permissions.allowed_tool_ids
+        and item.required_capabilities.issubset(workspace.permissions.capabilities)
     ]
     return AuthorizedWorkspaceView(
         workspace_id=workspace.workspace_id,
@@ -347,6 +364,147 @@ def validate_workspace_snapshot(workspace: WorkspaceState) -> WorkspaceState:
     """Deeply revalidate mutable containers at every authority/runtime boundary."""
 
     return WorkspaceState.model_validate(workspace.model_dump(mode="python"))
+
+
+def append_workspace_event(
+    workspace: WorkspaceState,
+    *,
+    event_id: str,
+    kind: str,
+    actor: str,
+    occurred_at: datetime,
+    payload: dict[str, Any] | None = None,
+    evidence: Sequence[EvidenceItem] = (),
+    claims: Sequence[Claim] = (),
+    plan_steps: Sequence[PlanStep] = (),
+) -> WorkspaceState:
+    """Return a new hash-linked workspace snapshot with append-only additions.
+
+    This is a narrow, process-local transition helper. It never mutates the
+    supplied snapshot and deliberately cannot replace or delete authority,
+    evidence, claims, plans, or tools. Callers that need those operations must
+    define a separately reviewed transition protocol.
+    """
+
+    snapshot = validate_workspace_snapshot(workspace)
+    added_evidence = [
+        EvidenceItem.model_validate(item.model_dump(mode="python")) for item in evidence
+    ]
+    added_claims = [Claim.model_validate(item.model_dump(mode="python")) for item in claims]
+    added_plan = [
+        PlanStep.model_validate(item.model_dump(mode="python")) for item in plan_steps
+    ]
+    event_payload = {} if payload is None else payload
+    ensure_finite_json(event_payload, label="workspace transition payload")
+    # A JSON round trip both snapshots caller-owned containers and preserves the
+    # exact finite-JSON value whose digest is put into the event chain.
+    payload_snapshot = cast(
+        dict[str, Any],
+        json.loads(
+            json.dumps(
+                event_payload,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+                allow_nan=False,
+            )
+        ),
+    )
+    additions = {
+        "evidence": [item.model_dump(mode="python") for item in added_evidence],
+        "claims": [item.model_dump(mode="python") for item in added_claims],
+        "plan_steps": [item.model_dump(mode="python") for item in added_plan],
+    }
+    transition_payload = {
+        "transition_schema": "workspace.append.v1",
+        "data": payload_snapshot,
+        "added_evidence_ids": [item.evidence_id for item in added_evidence],
+        "added_claim_ids": [item.claim_id for item in added_claims],
+        "added_plan_step_ids": [item.step_id for item in added_plan],
+        "additions_sha256": canonical_sha256(additions),
+    }
+    previous_event_sha256 = (
+        snapshot.events[-1].event_sha256 if snapshot.events else "0" * 64
+    )
+    event = WorkspaceEvent.from_payload(
+        event_id=event_id,
+        sequence=snapshot.event_sequence + 1,
+        kind=kind,
+        actor=actor,
+        occurred_at=occurred_at,
+        payload=transition_payload,
+        previous_event_sha256=previous_event_sha256,
+    )
+    updated = snapshot.model_dump(mode="python")
+    updated.update(
+        {
+            "evidence": [*snapshot.evidence, *added_evidence],
+            "claims": [*snapshot.claims, *added_claims],
+            "plan": [*snapshot.plan, *added_plan],
+            "events": [*snapshot.events, event],
+            "event_sequence": snapshot.event_sequence + 1,
+            "parent_state_sha256": snapshot.sha256,
+        }
+    )
+    return WorkspaceState.model_validate(updated)
+
+
+def _verify_workspace_append_event(
+    event: WorkspaceEvent,
+    *,
+    evidence_by_id: dict[str, EvidenceItem],
+    claims_by_id: dict[str, Claim],
+    plan_by_id: dict[str, PlanStep],
+    seen_added_evidence: set[str],
+    seen_added_claims: set[str],
+    seen_added_plan: set[str],
+) -> None:
+    expected_keys = {
+        "transition_schema",
+        "data",
+        "added_evidence_ids",
+        "added_claim_ids",
+        "added_plan_step_ids",
+        "additions_sha256",
+    }
+    if set(event.payload) != expected_keys or not isinstance(event.payload["data"], dict):
+        raise ValueError("workspace append event has an invalid transition payload")
+
+    def identifiers(key: str) -> list[str]:
+        value = event.payload[key]
+        if (
+            not isinstance(value, list)
+            or not all(isinstance(item, str) for item in value)
+            or len(value) != len(set(value))
+        ):
+            raise ValueError("workspace append event IDs must be unique string lists")
+        return value
+
+    evidence_ids = identifiers("added_evidence_ids")
+    claim_ids = identifiers("added_claim_ids")
+    plan_ids = identifiers("added_plan_step_ids")
+    if seen_added_evidence.intersection(evidence_ids):
+        raise ValueError("workspace evidence was appended more than once")
+    if seen_added_claims.intersection(claim_ids):
+        raise ValueError("workspace claim was appended more than once")
+    if seen_added_plan.intersection(plan_ids):
+        raise ValueError("workspace plan step was appended more than once")
+    try:
+        additions = {
+            "evidence": [
+                evidence_by_id[item].model_dump(mode="python") for item in evidence_ids
+            ],
+            "claims": [claims_by_id[item].model_dump(mode="python") for item in claim_ids],
+            "plan_steps": [plan_by_id[item].model_dump(mode="python") for item in plan_ids],
+        }
+    except KeyError as error:
+        raise ValueError("workspace append event references a missing added object") from error
+    additions_sha256 = event.payload["additions_sha256"]
+    if not isinstance(additions_sha256, str) or canonical_sha256(additions) != additions_sha256:
+        raise ValueError("workspace append event additions hash is invalid")
+    seen_added_evidence.update(evidence_ids)
+    seen_added_claims.update(claim_ids)
+    seen_added_plan.update(plan_ids)
 
 
 class BoundEnvelope(StrictModel):

@@ -189,6 +189,10 @@ def memory_snapshot() -> MemorySnapshot:
     raise RuntimeError(f"resource governor does not support {system}")
 
 
+class WorkloadUnavailable(RuntimeError):
+    """Admission was refused without starting a workload."""
+
+
 class ResourceGovernor:
     """Exclusive local workload lock plus preflight memory and swap enforcement."""
 
@@ -216,19 +220,19 @@ class ResourceGovernor:
             fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError as error:
             handle.close()
-            raise RuntimeError(
+            raise WorkloadUnavailable(
                 "another model-loading or training workload holds the lock"
             ) from error
 
         try:
             snapshot = memory_snapshot()
             if snapshot.available_bytes < self.min_available_bytes:
-                raise RuntimeError(
+                raise WorkloadUnavailable(
                     f"available memory {snapshot.available_bytes} is below the "
                     f"{self.min_available_bytes}-byte safety floor"
                 )
             if snapshot.swap_fraction > self.max_swap_fraction:
-                raise RuntimeError(
+                raise WorkloadUnavailable(
                     f"swap utilization {snapshot.swap_fraction:.1%} exceeds the "
                     f"{self.max_swap_fraction:.1%} safety ceiling"
                 )

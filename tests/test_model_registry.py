@@ -64,11 +64,24 @@ def test_status_snapshot_and_cli_preserve_claim_boundary() -> None:
         "promotion": "NOT_PROMOTED",
         "qualifying_checkpoints": 0,
     }
+    assert status["composition"] == {
+        "status": "TWO_PHASE_REFERENCE_REPLAY",
+        "module": "olympus.models.composition",
+        "scientific_claim": "contract_composition_only",
+        "state_scope": "PROCESS_LOCAL",
+        "action_bound_approval": True,
+        "executor_profile": "HOST_ASSERTED",
+        "material_tools_allowed": False,
+        "sandbox_enforced": False,
+        "promotion_authorized": False,
+        "qualifying_result": False,
+    }
 
     result = CliRunner().invoke(app, ["models", "status"])
     assert result.exit_code == 0, result.output
     payload = json.loads(result.output)
     assert payload["summary"] == status["summary"]
     assert len(payload["families"]) == 6
+    assert payload["composition"] == status["composition"]
     assert all(family["qualifying_checkpoint"] is None for family in payload["families"])
     assert "not qualifying evaluations" in payload["claim_boundary"]

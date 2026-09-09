@@ -154,6 +154,18 @@ def model_family_status() -> dict[str, object]:
             "promotion": "NOT_PROMOTED",
             "qualifying_checkpoints": 0,
         },
+        "composition": {
+            "status": "TWO_PHASE_REFERENCE_REPLAY",
+            "module": "olympus.models.composition",
+            "scientific_claim": "contract_composition_only",
+            "state_scope": "PROCESS_LOCAL",
+            "action_bound_approval": True,
+            "executor_profile": "HOST_ASSERTED",
+            "material_tools_allowed": False,
+            "sandbox_enforced": False,
+            "promotion_authorized": False,
+            "qualifying_result": False,
+        },
         "claim_boundary": (
             "All six families have executable reference components. Synthetic training and "
             "component smokes are not qualifying evaluations, promoted checkpoints, or evidence "

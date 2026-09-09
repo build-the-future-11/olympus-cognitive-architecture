@@ -1,0 +1,369 @@
+{
+  "schema_version": 1,
+  "execution_id": "composition-2026-09-06T182639Z-0eeffc3326f23444",
+  "protocol_id": "composition-2a4bc6d71de5-s20260906",
+  "created_at": "2026-09-06T18:26:39.026767Z",
+  "seed": 20260906,
+  "source_sha256": "2a4bc6d71de5134472de9e3cc5a123f046e4368395e26e3284357e1736d90c9e",
+  "source_paths": [
+    "olympus/core/schemas.py",
+    "olympus/models/__init__.py",
+    "olympus/models/registry.py",
+    "olympus/models/substrate.py",
+    "olympus/models/hermes.py",
+    "olympus/models/prometheus.py",
+    "olympus/models/perseus.py",
+    "olympus/models/atlas.py",
+    "olympus/models/kronos.py",
+    "olympus/models/aion.py",
+    "olympus/models/composition.py",
+    "olympus/models/composition_smoke.py"
+  ],
+  "python_version": "3.14.7",
+  "torch_version": "2.14.0",
+  "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "command": "olympus models composition-smoke --seed 20260906",
+  "data_scope": "deterministic_synthetic_contract_fixture",
+  "result": {
+    "schema_version": 1,
+    "run_id": "aion_32f1661bacae110a",
+    "retrieval_query": "What evidence shows the Olympus runtime integration works?",
+    "retrieval_input_view_sha256": "26d64ffbb8980eb9cef6b739bef653cbed849cba6525cf5aa46e52380f5ec431",
+    "final_request": "What evidence shows the Olympus runtime integration works?",
+    "hermes_input_view_sha256": "19224d387c9536691ee1deb7a65284e110fec74c2ec26ebc4922d1bf734c143b",
+    "hermes_input_evidence_ids": [
+      "receipt:composition-smoke:0",
+      "passage:4ac4ae36043e9ddbd2552af167e1293ca81b6ec970d6eeaa4f553222a22e698c:0"
+    ],
+    "workspace_view": {
+      "workspace_id": "workspace:composition-smoke",
+      "objective": "What evidence shows the Olympus runtime integration works?",
+      "constraints": [],
+      "budget": {
+        "token_budget": 2000,
+        "model_call_budget": 4,
+        "branch_budget": 6,
+        "tool_budget": 1,
+        "latency_budget_ms": 1500,
+        "monetary_budget_usd": 0.0,
+        "memory_budget_mb": 512,
+        "depth_budget": 4
+      },
+      "evidence": [
+        {
+          "evidence_id": "receipt:composition-smoke:0",
+          "source_uri": "memory://composition-smoke/receipt",
+          "content_sha256": "3097360d4a2c983e384315fd1ff53fb98a8e2a3cd3bda0344d9a7682b410682a",
+          "acquired_at": "2026-09-06T11:00:00Z",
+          "license_id": "synthetic-test-only",
+          "acl_labels": [],
+          "span_start": null,
+          "span_end": null,
+          "text": "{\"branch_id\":\"branch-a\",\"check\":\"boolean\",\"claim_sha256\":\"6a4d7121517cb6e9f1e1dd8cd13810cc16a273f84916f69db32fefbb39707a3e\",\"expected\":true,\"issued_by\":\"host-composition-smoke\",\"model_identity_sha256\":\"527ba958c6865ed7d129960c52a915be032cba1e2c3e1bbaa1c4160bfde9860f\",\"observed\":true,\"operation\":\"verify deterministic integration fixture\",\"schema_version\":\"prometheus.transition.v1\",\"tolerance\":0.0,\"workspace_id\":\"workspace:composition-smoke\"}"
+        },
+        {
+          "evidence_id": "passage:4ac4ae36043e9ddbd2552af167e1293ca81b6ec970d6eeaa4f553222a22e698c:0",
+          "source_uri": "memory://composition-smoke/public",
+          "content_sha256": "8a94416ae88b5b648ee33d64b3660b5e2199fbe7d61cee5750690d208c13c855",
+          "acquired_at": "2026-09-06T10:00:00Z",
+          "license_id": "synthetic-test-only",
+          "acl_labels": [],
+          "span_start": 0,
+          "span_end": 84,
+          "text": "Evidence shows the Olympus runtime integration works in a controlled synthetic test."
+        }
+      ],
+      "tools": [
+        {
+          "tool_id": "calculate.sum",
+          "schema_version": "1",
+          "argument_schema": {
+            "type": "object",
+            "properties": {
+              "left": {
+                "type": "integer"
+              },
+              "right": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "left",
+              "right"
+            ],
+            "additionalProperties": false
+          },
+          "required_capabilities": [
+            "calculation"
+          ],
+          "material_effect": false,
+          "approval_required": false
+        }
+      ],
+      "model_identity": {
+        "model_id": "olympus.reference.replay",
+        "family": "Olympus",
+        "version": "0.1.0",
+        "base_model_id": "repository://reference-components",
+        "base_revision": "2a4bc6d71de5",
+        "base_sha256": "2a4bc6d71de5134472de9e3cc5a123f046e4368395e26e3284357e1736d90c9e",
+        "checkpoint_sha256": null,
+        "lifecycle": "experimental"
+      }
+    },
+    "workspace_view_sha256": "19224d387c9536691ee1deb7a65284e110fec74c2ec26ebc4922d1bf734c143b",
+    "aion": {
+      "run_id": "aion_32f1661bacae110a",
+      "protocol_sha256": "124864e2487acd9b40cd2da73b96cb42fee388775130c3305a0fe3585e802c04",
+      "stage": "stop",
+      "steps_used": 6,
+      "tool_calls_used": 1,
+      "final_head_sha256": "287033a93848f3fe4fa212fb556f7d49bfb92936266c4e1baa43e618dd60218b"
+    },
+    "proposed_claim": {
+      "claim_id": "claim:6a4d7121517cb6e9f1e1dd8cd13810cc16a273f84916f69db32fefbb39707a3e",
+      "text": "The controlled workflow reached its declared pre-execution boundary.",
+      "status": "proposed",
+      "support_evidence_ids": [
+        "receipt:composition-smoke:0"
+      ],
+      "refute_evidence_ids": [],
+      "confidence": 0.945
+    },
+    "action": {
+      "tool_id": "calculate.sum",
+      "schema_version": "1",
+      "arguments": {
+        "left": 2,
+        "right": 3
+      },
+      "preconditions": [
+        "inputs-reviewed"
+      ],
+      "idempotency_key": "composition-smoke-action-0001",
+      "approval_id": null
+    },
+    "execution_manifest": {
+      "schema_version": 1,
+      "action_sha256": "b5b32f2817eff2f61bb656678bbf17ee89292708ef6d488f7ea33620d468fc37",
+      "shared_tool": {
+        "tool_id": "calculate.sum",
+        "schema_version": "1",
+        "argument_schema": {
+          "type": "object",
+          "properties": {
+            "left": {
+              "type": "integer"
+            },
+            "right": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "left",
+            "right"
+          ],
+          "additionalProperties": false
+        },
+        "required_capabilities": [
+          "calculation"
+        ],
+        "material_effect": false,
+        "approval_required": false
+      },
+      "perseus_tool": {
+        "tool_id": "calculate.sum",
+        "schema_version": "1",
+        "arguments": {
+          "left": {
+            "kind": "integer",
+            "required": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null
+          },
+          "right": {
+            "kind": "integer",
+            "required": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null
+          }
+        },
+        "required_capabilities": [
+          "calculation"
+        ],
+        "required_preconditions": [
+          "inputs-reviewed"
+        ],
+        "material_effect": false,
+        "approval_required": false
+      },
+      "executor_profile_sha256": "049c84ea7144e0d85d93c43ae2282c61eda521f81dfd4b5b5a5638808a151543",
+      "execution_scope_sha256": "809a26ea61f93b19189e1dede3f1d51cc180c6ba78d9a8fe680c65770a0bf655",
+      "declared_material_effect": false
+    },
+    "execution_manifest_sha256": "6219188dd4947317f30c67eb9343ffbf9afe971c8d7d261668a021c21d7f5810",
+    "approval": {
+      "approval_id": "approval_63f77a0e28d15b83",
+      "authority": "human",
+      "actor": "composition-smoke-reviewer",
+      "scope": "execute",
+      "run_id": "aion_32f1661bacae110a",
+      "protocol_sha256": "124864e2487acd9b40cd2da73b96cb42fee388775130c3305a0fe3585e802c04",
+      "expected_head_sha256": "c6f900a4cb348d62bf523572f1d99b0e5de01737a26d476bf5609e3f53a05019",
+      "subject_sha256": "6219188dd4947317f30c67eb9343ffbf9afe971c8d7d261668a021c21d7f5810",
+      "expires_at": "2026-09-06T13:00:00Z"
+    },
+    "transaction": {
+      "transaction_id": "tx_c52dd31d9676b12cce09a0e987bbccf367903707ead981960b4010f51b9bd269",
+      "idempotency_key": "composition-smoke-action-0001",
+      "tool_id": "calculate.sum",
+      "state": "committed",
+      "material_effect": false,
+      "execution_scope_sha256": "809a26ea61f93b19189e1dede3f1d51cc180c6ba78d9a8fe680c65770a0bf655"
+    },
+    "execution": {
+      "transaction_id": "tx_c52dd31d9676b12cce09a0e987bbccf367903707ead981960b4010f51b9bd269",
+      "idempotency_key": "composition-smoke-action-0001",
+      "state": "committed",
+      "summary_sha256": "baf18b8d83210bf15b6797a6962b930b023c5fe8d9b968ba79dc7cebd00eab6c",
+      "replayed": false,
+      "recovery_class": null,
+      "error_code": null,
+      "raw_output_recorded": false
+    },
+    "kronos_observation": {
+      "status": "completed",
+      "failure_code": null,
+      "input_reference_sha256": "8b67b2859968da12dcd3497fcd0539fd630d48b789bacb2f4be4716e8bae5c51",
+      "temporal_event_id": "temporal:composition-smoke:1",
+      "environment_version": "composition-smoke-v1",
+      "model_state_sha256": "d6a2052a55a8a5d77779833cade69343913114b48b628e321658e4d8b986c26f",
+      "forecast_sha256": "bedab9f88351a42291d1ff902389fc05d67c09facdd4fe3d3b407ef7a9aef35f",
+      "forecast_mean": [
+        [
+          -0.20456412434577942
+        ],
+        [
+          -0.23818667232990265
+        ]
+      ],
+      "forecast_log_variance": [
+        [
+          0.24389353394508362
+        ],
+        [
+          -0.5462132692337036
+        ]
+      ],
+      "proposed_action_indices": [
+        2,
+        2
+      ],
+      "source_kind": "host_supplied_pre_execution_features",
+      "source_authenticated": false,
+      "feature_values_disclosed": false,
+      "authoritative": false,
+      "used_for_action_selection": false
+    },
+    "answer": {
+      "kind": "text",
+      "producer": "hermes",
+      "text": "Evidence shows the Olympus runtime integration works in a controlled synthetic test.",
+      "citation_evidence_ids": [
+        "passage:4ac4ae36043e9ddbd2552af167e1293ca81b6ec970d6eeaa4f553222a22e698c:0"
+      ],
+      "confidence": 1.0,
+      "reason": null
+    },
+    "budget_usage": {
+      "minimum_model_calls": 4,
+      "model_call_budget": 4,
+      "model_calls_used": 4,
+      "tool_call_budget": 1,
+      "tool_calls_used": 1
+    },
+    "traces": [
+      {
+        "family": "Olympus-Atlas",
+        "operation": "authorized_retrieval",
+        "status": "completed",
+        "input_sha256": "d1e3aa336cc17e830bec5b2f8b8635fc2ae5e732f079eb8cbb848f0391777457",
+        "output_sha256": "2c0333d53f4787a66a111fb2a127605117880402c592ed337d2fc877d20e485d"
+      },
+      {
+        "family": "Prometheus",
+        "operation": "trusted_process_selection",
+        "status": "completed",
+        "input_sha256": "19224d387c9536691ee1deb7a65284e110fec74c2ec26ebc4922d1bf734c143b",
+        "output_sha256": "4280e57e795e786d540bf121c3297ca50876b8ec0184a8126bb15d36f9f8c5f8"
+      },
+      {
+        "family": "Aion",
+        "operation": "preregistered_execution_gate",
+        "status": "prepared",
+        "input_sha256": "124864e2487acd9b40cd2da73b96cb42fee388775130c3305a0fe3585e802c04",
+        "output_sha256": "c6f900a4cb348d62bf523572f1d99b0e5de01737a26d476bf5609e3f53a05019"
+      },
+      {
+        "family": "Perseus",
+        "operation": "declared_non_material_transaction",
+        "status": "completed",
+        "input_sha256": "b5b32f2817eff2f61bb656678bbf17ee89292708ef6d488f7ea33620d468fc37",
+        "output_sha256": "baf18b8d83210bf15b6797a6962b930b023c5fe8d9b968ba79dc7cebd00eab6c"
+      },
+      {
+        "family": "Kronos",
+        "operation": "post_execution_forecast_from_host_pre_execution_features",
+        "status": "completed",
+        "input_sha256": "8b67b2859968da12dcd3497fcd0539fd630d48b789bacb2f4be4716e8bae5c51",
+        "output_sha256": "98e2618fff0241a56d1265085402dd080bd5b4dc17744366abe18aabcfd14b75"
+      },
+      {
+        "family": "Hermes",
+        "operation": "post_execution_grounded_response",
+        "status": "completed",
+        "input_sha256": "dc5dd9c28446147acf1454e24e5464697279f5ca94e6bca5942977deab5d2acd",
+        "output_sha256": "a9fae70093fb50c3cbb78b3f58b6c92f7f43003313003fb41c082b8bb281687d"
+      },
+      {
+        "family": "Aion",
+        "operation": "record_outcome_and_stop",
+        "status": "completed",
+        "input_sha256": "c6f900a4cb348d62bf523572f1d99b0e5de01737a26d476bf5609e3f53a05019",
+        "output_sha256": "287033a93848f3fe4fa212fb556f7d49bfb92936266c4e1baa43e618dd60218b"
+      }
+    ],
+    "execution_succeeded": true,
+    "declared_material_effect": false,
+    "scientific_claim": "contract_composition_only",
+    "promotion_authorized": false,
+    "qualifying_result": false
+  },
+  "deterministic_checks": {
+    "manifest_protocol_id_matches_frozen_protocol": true,
+    "all_six_roles_exercised": true,
+    "expected_role_statuses_completed": true,
+    "aion_chain_verified_and_stopped": true,
+    "non_material_execution_committed_once": true,
+    "workspace_event_chain_revalidated": true,
+    "prometheus_claim_remains_proposed": true,
+    "approval_binds_action_policy_and_executor_profile": true,
+    "budget_accounting_is_exact": true,
+    "transaction_snapshot_is_terminal": true,
+    "kronos_is_host_supplied_and_non_authoritative": true,
+    "hermes_returned_grounded_text": true,
+    "public_artifact_excludes_trusted_state": true,
+    "protected_and_raw_executor_output_absent": true,
+    "promotion_and_qualification_denied": true
+  },
+  "passed": true,
+  "scientific_claim": "contract_composition_only",
+  "promotion_authorized": false,
+  "qualifying_result": false,
+  "limitations": [
+    "The fixture uses one synthetic public document, one trusted synthetic receipt, one non-material in-memory tool, and a randomly initialized Kronos component.",
+    "The replay proves contract composition and fail-closed gates only; it does not establish model quality, sandboxing, durability, scientific validity, or promotion."
+  ]
+}

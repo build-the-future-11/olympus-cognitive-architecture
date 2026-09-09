@@ -5,6 +5,7 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
+import httpx
 import typer
 from rich.console import Console
 from rich.table import Table
@@ -13,16 +14,18 @@ from olympus.api import demos
 from olympus.core.workspace import LatentWorkspace
 from olympus.forge.compiler import NaturalLanguageBehaviorCompiler
 from olympus.forge.runtime import ForgeRuntime
+from olympus.foundry.attestation import load_strict_json_object
 from olympus.foundry.data_pipeline import prepare_instruction_dataset
 from olympus.foundry.eval_suite import evaluate_checkpoint
 from olympus.foundry.ollama import OllamaClient
-from olympus.foundry.promotion import evaluate_promotion
+from olympus.foundry.promotion import evaluate_promotion, record_invalid_promotion_attempt
 from olympus.foundry.quantization import quantize_checkpoint
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.service import FoundryService
 from olympus.foundry.sft import SFTConfig, TinyModelConfig, run_sft
 from olympus.labos.manifest import ProjectRecord, ResourceProfile
 from olympus.labos.portfolio import PortfolioService
+from olympus.models.hermes_chat import HermesChat
 from olympus.models.registry import model_family_status
 
 app = typer.Typer(help="Olympus command line interface.")
@@ -36,7 +39,77 @@ app.add_typer(forge_app, name="forge")
 app.add_typer(labos_app, name="labos")
 app.add_typer(foundry_app, name="foundry")
 app.add_typer(models_app, name="models")
+hermes_app = typer.Typer(help="Experimental Hermes with an explicitly selected base model.")
+app.add_typer(hermes_app, name="hermes")
 console = Console()
+
+
+@hermes_app.command("doctor")
+def hermes_doctor(
+    base_url: str = "http://127.0.0.1:11434",
+    model: str | None = None,
+) -> None:
+    """Check backend and installed identity without downloading or generating."""
+    try:
+        client = OllamaClient(base_url=base_url, timeout_seconds=5)
+        version = client.version()
+        names = client.list_models()
+        digest = client.model_digest(model) if model is not None else None
+    except (httpx.HTTPError, ValueError):
+        typer.echo(json.dumps({"status": "NOT_READY", "reason":
+            "Backend unavailable, malformed response, or requested model missing. "
+            "Check Ollama service, endpoint, and 'ollama list'."}))
+        raise typer.Exit(1) from None
+    ready = bool(names)
+    typer.echo(json.dumps({"status": "AVAILABLE_UNQUALIFIED" if ready else "NO_MODELS",
+                           "backend_version": version, "models": names,
+                           "selected_model": model, "digest": digest,
+                           "generation_verified": False}))
+    if not ready:
+        raise typer.Exit(1)
+
+
+@hermes_app.command("chat")
+def hermes_chat(
+    model: str = typer.Option(..., help="Exact installed Ollama model name; no fallback."),
+    base_url: str = "http://127.0.0.1:11434",
+    context_tokens: int = typer.Option(2048, min=256, max=131072),
+    max_tokens: int = typer.Option(256, min=1, max=4096),
+) -> None:
+    """Ephemeral multi-turn chat. /clear resets history; /exit exits."""
+    try:
+        session = HermesChat(OllamaClient(base_url=base_url), model,
+                             context_tokens=context_tokens, max_tokens=max_tokens)
+    except (httpx.HTTPError, ValueError):
+        typer.echo("Cannot initialize Hermes. Start Ollama and check the exact installed model "
+                   "with 'ollama list'; also check endpoint and context settings.", err=True)
+        raise typer.Exit(1) from None
+    typer.echo(f"Experimental Hermes powered by {model}\nDigest: {session.digest}\n"
+               "No chat is saved. /clear, /exit. Responses are not document-verified.\n"
+               "Streamed text is provisional until completion; failed turns are not retained.")
+    while True:
+        try:
+            prompt = input("You> ")
+            if prompt.strip() == "/exit":
+                return
+            if prompt.strip() == "/clear":
+                session.clear()
+                typer.echo("Conversation cleared.")
+                continue
+            typer.echo("Hermes> ", nl=False)
+            result = session.answer(prompt, on_token=lambda text: typer.echo(text, nl=False))
+            typer.echo()
+            if session.truncated:
+                typer.echo("[Older turns omitted to fit the input budget.]")
+            if result.finish_reason == "length":
+                typer.echo("[Output budget reached; answer may be incomplete.]")
+        except (EOFError, KeyboardInterrupt):
+            typer.echo("\nSession closed.")
+            return
+        except (httpx.HTTPError, ValueError):
+            typer.echo("\nGeneration failed; discard any partial output. "
+                       "Check backend availability, model identity and "
+                       "input length. Failed turn was not saved.", err=True)
 
 
 def _default_instruction_source() -> Path:
@@ -113,6 +186,21 @@ def models_smoke(
 
     manifest = run_family_smoke(output_dir.resolve(), seed=seed, steps=steps)
     console.print_json(json.dumps(manifest.model_dump(mode="json")))
+    if not manifest.passed:
+        raise typer.Exit(code=1)
+
+
+@models_app.command("composition-smoke")
+def models_composition_smoke(
+    output_dir: Path = Path("artifacts/model-composition-smoke"),
+    seed: int = 20_260_906,
+) -> None:
+    """Run the fixed non-material six-role contract-composition replay."""
+
+    from olympus.models.composition_smoke import run_reference_replay_smoke
+
+    manifest = run_reference_replay_smoke(output_dir.resolve(), seed=seed)
+    console.print_json(manifest.model_dump_json())
     if not manifest.passed:
         raise typer.Exit(code=1)
 
@@ -302,18 +390,61 @@ def foundry_promotion_check(
     model_card: Path,
     output: Path,
     approved_base_license: str,
+    serving_verification: Path | None = None,
+    attestation_bundle: Path | None = None,
+    attestation_trust_store: Path | None = None,
 ) -> None:
-    report = evaluate_promotion(
-        requested_model_id=requested_model_id,
-        checkpoint_path=checkpoint.resolve(),
-        dataset_manifest_path=manifest.resolve(),
-        evaluation_path=evaluation.resolve(),
-        quantization_report_path=quantization.resolve(),
-        model_card_path=model_card.resolve(),
-        output_path=output.resolve(),
-        approved_base_license=approved_base_license,
-    )
+    def record_invalid(error: Exception) -> None:
+        try:
+            attempt = record_invalid_promotion_attempt(
+                output.resolve(), requested_model_id=requested_model_id,
+                error_type=type(error).__name__,
+            )
+            console.print_json(json.dumps({"status": "INVALID_INPUT", "attempt": str(attempt)}))
+        except OSError:
+            console.print("Invalid-input diagnostic could not be persisted; check output access.")
+
+    serving_payload = None
+    if serving_verification is not None:
+        try:
+            serving_payload = load_strict_json_object(serving_verification.resolve())
+        except (OSError, ValueError) as exc:
+            record_invalid(exc)
+            raise typer.BadParameter(
+                f"invalid serving-verification JSON: {exc}",
+                param_hint="serving_verification",
+            ) from exc
+    try:
+        report = evaluate_promotion(
+            requested_model_id=requested_model_id,
+            checkpoint_path=checkpoint.resolve(),
+            dataset_manifest_path=manifest.resolve(),
+            evaluation_path=evaluation.resolve(),
+            quantization_report_path=quantization.resolve(),
+            model_card_path=model_card.resolve(),
+            output_path=output.resolve(),
+            approved_base_license=approved_base_license,
+            serving_verification=serving_payload,
+            attestation_bundle_path=(
+                attestation_bundle.resolve() if attestation_bundle is not None else None
+            ),
+            attestation_trust_store_path=(
+                attestation_trust_store.resolve()
+                if attestation_trust_store is not None
+                else None
+            ),
+        )
+    except (OSError, ValueError) as exc:
+        record_invalid(exc)
+        raise typer.BadParameter(
+            "Promotion evidence is invalid or unreadable. Check input paths, byte limits, "
+            "schema/metric consistency and dataset hashes. No new decision was produced; "
+            "do not use an older output as this run's result.",
+            param_hint="promotion evidence",
+        ) from exc
     console.print_json(report.model_dump_json())
+    if not report.passed:
+        raise typer.Exit(code=1)
 
 
 def _portfolio_service(workspace: Path, artifacts: Path) -> PortfolioService:

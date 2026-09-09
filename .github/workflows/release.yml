@@ -6,20 +6,16 @@ on:
       - "v*"
 
 permissions:
-  contents: write
-  id-token: write
-  attestations: write
+  contents: read
 
 jobs:
-  publish:
-    needs: pantheon-boundary
+  release-candidate:
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    environment:
-      name: pypi
-      url: https://pypi.org/project/olympus-cognitive-architecture/
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.14"
@@ -30,9 +26,14 @@ jobs:
           cache: npm
           cache-dependency-path: apps/forge-web/package-lock.json
 
-      - name: Verify tag matches package version
+      - name: Verify annotated tag matches package version
         shell: bash
         run: |
+          test "$(git cat-file -t "${GITHUB_REF_NAME}")" = "tag"
+          git fetch --no-tags origin main:refs/remotes/origin/main
+          tag_commit="$(git rev-parse "${GITHUB_REF_NAME}^{commit}")"
+          test "${tag_commit}" = "$(git rev-parse HEAD)"
+          test "${tag_commit}" = "$(git rev-parse refs/remotes/origin/main)"
           version="$(python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
           test "${GITHUB_REF_NAME}" = "v${version}"
 
@@ -49,7 +50,7 @@ jobs:
           uv run python -m olympus.cli foundry verify-pipeline --root artifacts/release-foundry
           uv run python -m olympus.cli foundry status --root artifacts/release-foundry
           uv run python -m olympus.cli foundry prepare-dataset --output artifacts/release-deep-dataset
-          uv run python -m pip_audit --strict .
+          uv run python scripts/audit_locked_dependencies.py
       - name: Verify web release gate
         working-directory: apps/forge-web
         run: |
@@ -59,11 +60,18 @@ jobs:
 
       - name: Build Python distributions
         run: |
-          test -z "$(git status --porcelain --untracked-files=no)"
-          uv run python -m build
-          sha256sum dist/*.whl dist/*.tar.gz > dist/SHA256SUMS
+          test -z "$(git status --porcelain)"
+          uv run python scripts/build_release_artifacts.py --outdir dist --verify-reproducible
+          mkdir -p release-metadata
+          (cd dist && sha256sum *.whl *.tar.gz) > release-metadata/SHA256SUMS
       - name: Validate distribution metadata
         run: uv run python -m twine check dist/*
+      - name: Validate distribution payload
+        run: uv run python scripts/validate_distribution_payload.py dist/*.whl dist/*.tar.gz
+      - name: Validate installed wheel outside source checkout
+        run: >-
+          uv run python scripts/validate_installed_wheel.py
+          dist/*.whl --temporary-parent "${RUNNER_TEMP}"
       - name: Verify bundled Foundry corpus
         run: |
           unzip -l dist/*.whl | grep 'olympus/foundry/foundry_verification.txt'
@@ -71,26 +79,26 @@ jobs:
       - name: Generate CycloneDX SBOMs
         run: |
           mkdir -p sbom
-          uv run python -m pip_audit --strict --format cyclonedx-json --output sbom/olympus-python.cdx.json .
+          uv run python scripts/audit_locked_dependencies.py --format cyclonedx-json --output sbom/olympus-python.cdx.json
           cd apps/forge-web
           corepack npm sbom --sbom-format cyclonedx > ../../sbom/olympus-web.cdx.json
-      - name: Attest release artifacts
-        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+      - name: Upload verified release candidate
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          subject-path: |
+          name: olympus-release-${{ github.sha }}
+          path: |
             dist/*
+            release-metadata/*
             sbom/*
-
-      - name: Publish Python distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
-      - name: Publish GitHub release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh release create "${GITHUB_REF_NAME}" dist/* sbom/* --generate-notes --verify-tag
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
 
   pantheon-boundary:
     runs-on: macos-15
     timeout-minutes: 20
+    permissions:
+      contents: read
     defaults:
       run:
         working-directory: OlympusC/05_pantheon
@@ -102,7 +110,51 @@ jobs:
           cache: pip
       - name: Install locked Pantheon environment
         run: python -m pip install uv==0.12.5 && uv sync --locked --all-extras
-      - name: Verify Pantheon boundary
+      - name: Install checksum-pinned Tectonic paper compiler
         run: |
-          uv run pytest -q
-          uv run python scripts/validate_evidence.py
+          ../../scripts/install_tectonic.sh "${RUNNER_TEMP}/tectonic-bin"
+          echo "${RUNNER_TEMP}/tectonic-bin" >> "${GITHUB_PATH}"
+      - name: Verify Pantheon boundary
+        run: make verify PYTHON=.venv/bin/python
+
+  publish:
+    needs:
+      - release-candidate
+      - pantheon-boundary
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: pypi
+      url: https://pypi.org/project/olympus-cognitive-architecture/
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Download verified release candidate
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: olympus-release-${{ github.sha }}
+          path: release-candidate
+      - name: Recheck distribution checksums
+        working-directory: release-candidate/dist
+        run: sha256sum -c ../release-metadata/SHA256SUMS
+      - name: Attest release artifacts
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: |
+            release-candidate/dist/*
+            release-candidate/release-metadata/*
+            release-candidate/sbom/*
+      - name: Publish Python distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        with:
+          packages-dir: release-candidate/dist/
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "${GITHUB_REF_NAME}"
+          release-candidate/dist/* release-candidate/release-metadata/*
+          release-candidate/sbom/* --generate-notes --verify-tag
+          --repo "${GITHUB_REPOSITORY}"

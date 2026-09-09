@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+from collections.abc import Collection
 from dataclasses import dataclass
 from typing import TypedDict
 
@@ -203,9 +204,16 @@ class HermesWorkspaceRuntime:
     def __init__(self, service: HermesGroundedService | None = None) -> None:
         self.service = service or HermesGroundedService()
 
-    def respond(self, workspace: WorkspaceState, request: str) -> TextOutput | AbstainOutput:
+    def respond(
+        self,
+        workspace: WorkspaceState,
+        request: str,
+        *,
+        allowed_evidence_ids: Collection[str] | None = None,
+    ) -> TextOutput | AbstainOutput:
         workspace = validate_workspace_snapshot(workspace)
         view = authorized_workspace_view(workspace)
+        allowed = set(allowed_evidence_ids) if allowed_evidence_ids is not None else None
         available = [
             HermesEvidence(
                 evidence_id=item.evidence_id,
@@ -216,6 +224,7 @@ class HermesWorkspaceRuntime:
             )
             for item in view.evidence
             if item.text is not None
+            and (allowed is None or item.evidence_id in allowed)
         ]
         grounded = self.service.answer(
             request,
@@ -241,6 +250,46 @@ class HermesWorkspaceRuntime:
                 ],
                 confidence=grounded.confidence,
             )
+        validate_envelope_against_workspace(envelope, workspace)
+        return envelope
+
+    def respond_after_execution(
+        self,
+        workspace: WorkspaceState,
+        request: str,
+        *,
+        execution_succeeded: bool,
+        failure_code: str | None = None,
+        upstream_component_failure: str | None = None,
+        allowed_evidence_ids: Collection[str] | None = None,
+    ) -> TextOutput | AbstainOutput:
+        """Ground a final response without masking an upstream tool failure."""
+
+        workspace = validate_workspace_snapshot(workspace)
+        if execution_succeeded:
+            if failure_code is not None:
+                raise ValueError("successful execution cannot include a failure code")
+            if upstream_component_failure is None:
+                return self.respond(
+                    workspace,
+                    request,
+                    allowed_evidence_ids=allowed_evidence_ids,
+                )
+        elif not failure_code:
+            raise ValueError("failed execution requires a sanitized failure code")
+        if upstream_component_failure not in {None, "kronos"}:
+            raise ValueError("unsupported upstream component failure")
+        reason = (
+            f"upstream_execution_failed:{failure_code}"
+            if not execution_succeeded
+            else f"upstream_component_failed:{upstream_component_failure}"
+        )
+        envelope = AbstainOutput(
+            workspace_sha256=workspace.sha256,
+            model_identity_sha256=canonical_sha256(workspace.model_identity),
+            reason=reason,
+            unresolved=[request],
+        )
         validate_envelope_against_workspace(envelope, workspace)
         return envelope
 

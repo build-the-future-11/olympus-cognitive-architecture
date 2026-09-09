@@ -2,14 +2,15 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import time
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Any, Literal, cast
+from typing import Any, Literal, Self, cast
 
 import torch
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from olympus.core.schemas import StrictModel
 from olympus.foundry.data_pipeline import InstructionExample, verify_dataset_manifest
@@ -65,7 +66,10 @@ class QuantizedTensor(StrictModel):
 
 
 class QuantizationReport(StrictModel):
-    schema_version: int = 1
+    schema_version: Literal[3] = 3
+    sampling_policy: Literal["all-records-once-unpacked-v1"] = "all-records-once-unpacked-v1"
+    dataset_manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    loss_aggregation: Literal["supervised-token-mean-v2"] = "supervised-token-mean-v2"
     format: str
     bits: QuantizationBits
     source_checkpoint_sha256: str
@@ -74,17 +78,35 @@ class QuantizationReport(StrictModel):
     float_weights_bytes: int = Field(gt=0)
     quantized_bytes: int = Field(gt=0)
     size_reduction_fraction: float
-    source_loss: float
-    quantized_loss: float
+    source_loss: float = Field(ge=0)
+    quantized_loss: float = Field(ge=0)
     loss_change_fraction: float
-    source_latency_ms: float
-    quantized_latency_ms: float
-    startup_latency_ms: float
-    max_context_tokens: int
+    source_latency_ms: float = Field(ge=0)
+    quantized_latency_ms: float = Field(ge=0)
+    startup_latency_ms: float = Field(ge=0)
+    max_context_tokens: int = Field(gt=0)
     context_limit_enforced: bool
     tool_exact_match_rate: float = Field(ge=0.0, le=1.0)
     peak_rss_bytes: int = Field(ge=0)
     passed_quality_gate: bool
+
+    @model_validator(mode="after")
+    def consistent_metrics(self) -> Self:
+        reduction = 1 - self.quantized_bytes / self.float_weights_bytes
+        change = (self.quantized_loss - self.source_loss) / max(self.source_loss, 1e-12)
+        for actual, reported in (
+            (reduction, self.size_reduction_fraction),
+            (change, self.loss_change_fraction),
+        ):
+            if not math.isclose(actual, reported, rel_tol=1e-9, abs_tol=1e-12):
+                raise ValueError("quantization derived metric does not match measurements")
+        expected_gate = (
+            abs(change) <= 0.02 and self.context_limit_enforced
+            and self.tool_exact_match_rate >= 0.75
+        )
+        if self.passed_quality_gate != expected_gate:
+            raise ValueError("quantization quality decision does not match metrics")
+        return self
 
 
 def _quantize_tensor(tensor: torch.Tensor, bits: QuantizationBits) -> dict[str, Any]:
@@ -159,10 +181,17 @@ def quantize_checkpoint(
     *,
     bits: QuantizationBits,
 ) -> QuantizationReport:
+    if bits not in (4, 8):
+        raise ValueError("quantization bits must be 4 or 8")
     source, checkpoint = _model_from_checkpoint(checkpoint_path, torch.device("cpu"))
     training = SFTConfig.model_validate(checkpoint["training_config"])
     if training.mode != "full":
         raise ValueError("post-training quantization currently requires a merged full checkpoint")
+    manifest = verify_dataset_manifest(manifest_path)
+    if manifest.manifest_sha256 != checkpoint["dataset_manifest_sha256"]:
+        raise ValueError("checkpoint and quantization dataset hashes do not match")
+    if manifest.manifest_sha256 is None:
+        raise ValueError("quantization dataset has no content hash")
     output_root.mkdir(parents=True, exist_ok=True)
     float_path = output_root / "float32-model.pt"
     _atomic_torch_save(float_path, source.state_dict())
@@ -185,7 +214,6 @@ def quantize_checkpoint(
     quantized = load_quantized_model(artifact)
     startup_ms = (time.perf_counter() - start) * 1_000
 
-    manifest = verify_dataset_manifest(manifest_path)
     test_descriptor = next(split for split in manifest.splits if split.name == "test")
     test_path = Path(test_descriptor.path)
     if not test_path.is_absolute():
@@ -195,7 +223,7 @@ def quantize_checkpoint(
         for line in test_path.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
-    eval_config = training.model_copy(update={"pack_sequences": False})
+    eval_config = training.for_evaluation()
     rows = _encode_examples(examples, eval_config)
     source_loss = evaluate_loss(source, rows, device=torch.device("cpu"))
     quantized_loss = evaluate_loss(quantized, rows, device=torch.device("cpu"))
@@ -219,6 +247,7 @@ def quantize_checkpoint(
     quantized_size = artifact.stat().st_size
     loss_change = (quantized_loss - source_loss) / max(source_loss, 1e-12)
     report = QuantizationReport(
+        dataset_manifest_sha256=manifest.manifest_sha256,
         format=f"olympus-symmetric-int{bits}-v1",
         bits=bits,
         source_checkpoint_sha256=_sha256(checkpoint_path),

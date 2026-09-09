@@ -21,6 +21,17 @@ def test_all_family_smoke_executes_and_persists_truthful_artifacts(tmp_path: Pat
     assert manifest.passed
     assert manifest.promotion_authorized is False
     assert manifest.scientific_claim == "execution_smoke_only"
+    assert manifest.source_paths == [
+        "core/schemas.py",
+        "models/substrate.py",
+        "models/hermes.py",
+        "models/prometheus.py",
+        "models/perseus.py",
+        "models/atlas.py",
+        "models/kronos.py",
+        "models/aion.py",
+        "models/smoke.py",
+    ]
     assert manifest.substrate.passed
     assert [result.family for result in manifest.families] == [
         "Hermes",

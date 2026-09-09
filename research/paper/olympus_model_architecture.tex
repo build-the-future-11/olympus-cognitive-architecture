@@ -29,8 +29,10 @@ view, durable evidence graph, and constrained output protocol; adapters,
 auxiliary heads, services, and promotion criteria would differ. We specify
 module boundaries, objectives, data requirements, threat models, matched-budget
 baselines, ablations, and rejection rules. Executable references accompany all
-six roles and the shared substrate, but they do not yet form that composed
-system. They instantiate typed contracts, post-generation output validation,
+six roles and the shared substrate. A fixed two-phase replay now composes them
+along one synthetic, in-process contract path with an external approval pause;
+it is neither the proposed durable system nor evidence of model quality. The
+references instantiate typed contracts, post-generation output validation,
 selected process-local validation and gating paths, and differentiable losses
 without claiming trained capability. We also argue
 that Aion should begin as a deterministic controller, not a monolithic
@@ -99,7 +101,7 @@ or a functioning production service.
 \begin{table}[h]
 \centering
 \small
-\begin{tabularx}{\linewidth}{l l X}
+\begin{tabularx}{\linewidth}{l l >{\raggedright\arraybackslash}X}
 \toprule
 Artifact & Status & Evidence allowed in this paper \\
 \midrule
@@ -110,6 +112,7 @@ Perseus & \implemented & host-approved, process-local transaction reference; no 
 \atlas & \implemented & opaque process-local hybrid index and separate scorer; no qualifying index study \\
 Kronos & \implemented & temporal planner and local checkpoint gate; no parsed evidence reports or family result \\
 Aion & \implemented & host-trusted, process-local state machine and masked router; no research-loop result \\
+Fixed six-role replay & \implemented & one synthetic contract-composition run; no sandbox, durability, or system result \\
 \bottomrule
 \end{tabularx}
 \caption{Truth boundary at manuscript revision. Reference code is implementation
@@ -130,7 +133,7 @@ The implemented \texttt{TextOutput}, \texttt{ClaimOutput},
 \texttt{ActionOutput}, and \texttt{AbstainOutput} variants are parsed after
 generation; constrained token decoding remains target work.
 
-Integration is partial. Hermes filters the authorized view and returns a
+Family integration is bounded. Hermes filters the authorized view and returns a
 source-workspace-bound text or abstention output. Prometheus accepts canonical
 transition receipts only when a host-allowlisted content hash binds the
 workspace, model, branch, claim, and compared values. \atlas{} uses opaque keyed
@@ -148,6 +151,27 @@ actor, authority, and scope; transition evidence IDs must belong to the frozen
 protocol, and model authority cannot promote. Its receipt chain and trust stores
 are process-local and unsigned. None of these
 ``trusted'' inputs is a cryptographic identity or durable authority service.
+
+A separate \texttt{OlympusReferenceReplay} connects the six deterministic
+service boundaries along one fixed path. Preparation performs authorized
+\atlas{} retrieval and Prometheus process-check selection, advances Aion to a
+frozen-protocol gate, and returns a public action-bearing execution manifest.
+Resume accepts only a host-registered approval bound to that manifest and chain
+head, then runs Perseus, computes a non-authoritative Kronos observation from
+host-supplied pre-execution features, runs an extractive Hermes response over
+authorized evidence named by the frozen protocol, and records Aion audit and
+STOP. Public pending and scope identifiers are domain-separated HMACs under a
+runtime secret; a distinct private in-memory capability reserves the scoped
+Perseus transaction. Failed or exhausted post-gate family calls become closed,
+detail-free outcomes and still reach STOP.
+
+This replay rejects tools that the aligned policies \emph{declare} material,
+but its injected executor is not a sandbox and can violate that declaration.
+Its approvals, pending work, HMAC capabilities, transactions, cached retry
+state, and Aion heads are process-local. The committed smoke therefore proves
+only interoperability of one synthetic contract path. It proves neither actual
+effect isolation, crash recovery, autonomous research, scientific validity,
+family quality, nor promotion readiness.
 
 We use \atlas{} externally because ``Atlas'' already denotes a retrieval-
 augmented language model \citep{izacard2022atlas}. All future checkpoint IDs
@@ -232,7 +256,7 @@ environment identities. Evidence references include content hash, source URI,
 acquisition time, license, access label, and span offsets. Claims have explicit
 support, refute, and unknown edges.
 
-The model emits exactly one grammar-constrained envelope:
+The target model emits exactly one grammar-constrained envelope:
 
 \begin{quote}\small
 \texttt{Answer\{claims,citations,confidence,abstention?\}}\\
@@ -274,8 +298,9 @@ the proposed specialization under matched budgets.
 
 The following subsections specify target family experiments and production
 boundaries. Present-tense component names describe the proposed design, not a
-claim that datasets, trained adapters, deployed services, or end-to-end
-composition already exist. The bounded current APIs are summarized above.
+claim that datasets, trained adapters, deployed services, or a general durable
+composition already exist. The bounded current APIs and fixed synthetic replay
+are summarized above.
 
 \subsection{Hermes: grounded interpretation and response}
 
@@ -481,7 +506,8 @@ Aion & optional router & protocol, audit, approval, promotion & learned vs deter
 The reference implementation now supplies schema definitions, an authorized
 pre-model workspace projection, validators, ACL filtering, host-allowlisted
 receipt/approval checks, process-local transactions, guarded local checkpoint
-staging, and the Aion state machine before family training. Unit tests cover
+staging, the Aion state machine, and one fixed six-role synthetic replay before
+family training. Unit tests cover
 malformed, unauthorized, stale-authority, and post-hoc transitions. Phase 0
 remains incomplete: there is no constrained decoder, deployed sandbox, durable
 transaction or Aion store, parsed rollback/deletion evidence service, end-to-end
@@ -577,9 +603,12 @@ collection of prematurely named models. One shared decoder supports economical
 specialization; explicit services preserve retrieval, action, time, and audit
 boundaries; deterministic systems keep authority outside learned policies. Each
 family has a primary hypothesis and an explicit rejection rule. The reference
-contracts and components now exist. The immediate research direction
-is to integrate and freeze those baselines, then run one Hermes 0.6B adapter
-experiment. Prometheus and Perseus come next, \atlas{} and Kronos only after
+contracts, components, and one bounded interoperability replay now exist. The
+immediate model-research direction is to freeze the baselines and run one Hermes
+0.6B adapter experiment after the planned Pantheon capable-agent confirmation,
+whose protocol must first be separately preregistered and frozen. Prometheus
+and Perseus come next, \atlas{}
+and Kronos only after
 their prerequisites, and Aion remains a governed controller until learning
 demonstrates value. The proposal becomes a model paper only after those
 experiments exist. Until then, its scientifically correct outputs are the
@@ -590,11 +619,13 @@ reference implementation and protocol, not a capability claim.
 The repository accompanies this manuscript with one executable shared
 substrate, six executable family-role modules, their focused tests, six family
 architecture files, a claim--source ledger, a canonical research report,
-BibTeX references, this source, and the bounded release-facing record
-\texttt{evidence/model\_family\_smoke\_20260906.json}. That record uses synthetic
-contract fixtures and marks every emitted checkpoint non-qualifying and
-unpromoted. No generated number in a later revision is valid unless linked to
-an immutable run manifest.
+BibTeX references, this source, the bounded family-component record
+\texttt{evidence/model\_family\_smoke\_20260906.json}, and the bounded six-role
+record \texttt{evidence/model\_composition\_smoke\_20260906.json}. Both records
+use synthetic contract fixtures, authorize no promotion, and make no
+family-quality or scientific claim; the latter records contract composition
+only. No generated number in a later revision is valid unless linked to a
+content-addressed run manifest.
 
 \bibliographystyle{plainnat}
 \bibliography{references}

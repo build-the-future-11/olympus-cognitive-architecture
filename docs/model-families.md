@@ -1,8 +1,8 @@
 # Executable Model-Family References
 
-Olympus now contains executable reference implementations for the shared
-substrate and all six named family roles. After the bounded local component
-run described below, their canonical state is
+Olympus contains executable reference implementations for the shared substrate
+and all six named family roles. After the bounded local component run described
+below, their canonical state is
 `EXPERIMENTAL_SMOKE_NOT_PROMOTED`.
 
 That state has a deliberately narrow meaning: the repository contains real
@@ -43,25 +43,54 @@ artifacts, not family checkpoints. Workspace hashes and event chains are
 integrity checks over supplied in-memory objects; they are not durable,
 append-only, signed, or externally anchored records.
 
-Integration is partial, not one composed runtime. `HermesWorkspaceRuntime`
-consumes a filtered shared workspace and returns a validated `TextOutput` or
-`AbstainOutput`; `PrometheusSelector` resolves trusted transition receipts from
-authorized workspace evidence. Olympus-Atlas, Perseus, Kronos, and Aion still
-use family-local service contracts, learned scorers are not wired into every
-deterministic service, and Aion does not invoke the other five services as an
-end-to-end research loop. The registry proves that declared classes are
-importable, not that this dependency graph is integrated.
+Two integration scopes must not be conflated. The family-component smoke runs
+the six references independently. Separately, `OlympusReferenceReplay` composes
+all six along one fixed synthetic sequence. Preparation performs authorized
+Atlas retrieval and Prometheus branch selection, preregisters Aion, then pauses
+before execution. Resume validates the host-registered approval before creating
+a transaction, executes Perseus, computes Kronos after execution from explicitly
+host-supplied pre-execution features, runs Hermes, audits, and reaches Aion STOP.
+Its public artifacts intentionally expose the retrieval query and final request,
+with authorized-view hashes bound into their Atlas/Hermes traces; callers must
+not put secrets in those inputs. The final Hermes view is further filtered to
+evidence named by the frozen protocol.
+
+The public pending artifact exposes the exact action and execution manifest
+while the trusted workspace remains process-local. Resume requires a
+host-registered Aion approval whose subject is the manifest containing the
+action hash, aligned shared/Perseus tool policies, a host-asserted executor
+profile, and a unique public execution scope. Runtime-secret,
+domain-separated HMACs derive the pending and scope IDs. A distinct private
+HMAC-derived reservation token never appears in public artifacts and is needed
+for the scoped Perseus prepare, commit, receipt, and rollback operations. It
+prevents another caller sharing the same manager from filling the reviewed
+scope, but does not survive process loss.
+
+This is bounded contract composition, not a general model runtime. The path
+accepts only tools whose shared and Perseus declarations say they are
+non-material, but it has no sandbox capable of verifying the injected
+executor's behavior. It accounts for a model call before invocation, including
+a call that raises, and caches terminal transactions and post-execution outputs
+for an identical in-process retry. Kronos failures become closed failed
+observations; execution or Kronos failure makes Hermes abstain; and Hermes
+runtime/budget failures become closed, detail-free abstentions. Each degraded
+path is auditable and reaches Aion STOP. Pending state, private capabilities,
+authority records, transactions, cached outputs, and recovery are not durable
+across process loss. The trainable family components are not wired together,
+and the replay makes no scientific, autonomous-research, model-quality,
+qualification, or promotion claim. Registry presence proves that declared
+classes are importable, not that a production dependency graph exists.
 
 ## Family implementations
 
 | Family | Executable surfaces | What is real | What remains unproven |
 | --- | --- | --- | --- |
-| Hermes | `HermesGroundedService`, `HermesWorkspaceRuntime`, `HermesGroundingModule` in `olympus/models/hermes.py` | Content-hash checking, authorized-view filtering before scoring, extractive span citations, abstention, shared-workspace-bound text/abstain outputs, memory proposals marked `requires_approval`, and trainable attribution/confidence/memory heads | A memory persistence/approval service, integration of the learned heads with the deterministic runtime, generative answer quality, held-out calibration, a licensed base adapter, and every family promotion gate |
+| Hermes | `HermesGroundedService`, `HermesWorkspaceRuntime`, `HermesGroundingModule` in `olympus/models/hermes.py` | Content-hash checking, authorized-view filtering before scoring, optional caller allowlisting (used by the composition to restrict evidence to the frozen protocol), extractive span citations, abstention, upstream execution/Kronos failure-aware abstention, shared-workspace-bound text/abstain outputs, memory proposals marked `requires_approval`, and trainable attribution/confidence/memory heads | A memory persistence/approval service, integration of the learned heads with the deterministic runtime, generative answer quality, held-out calibration, a licensed base adapter, and every family promotion gate |
 | Olympus-Atlas | `OlympusAtlasService`, `OlympusAtlasRetriever` in `olympus/models/atlas.py` | Opaque keyed corpus-version identifiers inside one service process; ACL-before-ranking and ACL-filtered index inspection; BM25, deterministic hashed dense retrieval, reciprocal-rank fusion, late interaction; and a trainable bi-encoder/late-interaction scorer | Durable or cross-process indexing/replay, shared-workspace/output adaptation, private-corpus quality, latency/scale, learned scorer integration, and comparative retrieval results |
 | Prometheus | `TransitionReceipt`, `TrainableBranchProposer`, `TrainableProcessVerifier`, `PrometheusSelector` in `olympus/models/prometheus.py` | Bounded typed branches, canonical transition receipts, host-supplied trusted receipt hashes bound to workspace/model/branch/claim, authorized evidence resolution, typed comparisons, proposer/verifier losses, diversity loss, and deterministic rejection/abstention | Independent receipt issuance or signature verification, integration of learned scorers with the selector, autonomous hypothesis generation, scientific validity, proposer/verifier independence, and advantage over equal-compute baselines |
-| Perseus | `DeterministicActionValidator`, `ActionApproval`, `CapabilityKernel`, `TrainableActionPolicy`, `TrainableRecoveryPolicy`, `TransactionManager` in `olympus/models/perseus.py` | Versioned action rules, required preconditions, host-registered action-bound approvals, defensive copies, commit-time reauthorization, sanitized error receipts, differentiable action/recovery policies, and process-local idempotency-key replay around an injected executor | A sandbox implementation, durable/crash-safe transactions, verification of the executor's idempotency claim, rollback of committed or failed material effects, end-to-end recovery quality, and stateful benchmark performance |
-| Kronos | `SelectiveStateEncoder`, `KronosTemporalPlanner`, `TemporalAdapterManager` in `olympus/models/kronos.py` | Timestamped event validation/tensorization, an explicit time-decayed state recurrence, probabilistic forecast and action-plan heads, joint loss, local locked/hash/config-bound checkpoint staging, restricted tensor-only loading, and host-allowlisted evidence identifiers bound to one candidate and metric tuple | Parsed or signed evaluation/rollback/deletion reports, actual rollback or deletion replay, causal or calibrated forecasting, useful planning, retention under real drift, and family-level promotion. `TemporalAdapterManager.promote()` is a local experimental checkpoint-acceptance gate and cannot confer Foundry/family promotion |
-| Aion | `AionController`, `AionRouter` in `olympus/models/aion.py` | A protocol-bound state machine, controller-owned process-local run/protocol heads, host-registered approvals bound to actor/authority/scope/run/protocol/head, audits bound to run/protocol/head, frozen-protocol evidence IDs, injected trusted time, structurally validated hash-linked receipts, step/tool budgets, rejection of model-authority promotion, legal-transition masking, router loss, and an explicit learned-router kill rule | Durable or signed authority/audit storage, integration with the shared workspace and five services, autonomous research, scientific discovery, external replication, and evidence that learning adds value over the deterministic controller |
+| Perseus | `DeterministicActionValidator`, `ActionApproval`, `CapabilityKernel`, `TrainableActionPolicy`, `TrainableRecoveryPolicy`, `TransactionManager` in `olympus/models/perseus.py` | Versioned action rules, required preconditions, host-registered action-bound approvals, defensive copies, non-mutating preflight, commit-time reauthorization, terminal snapshots, sanitized closed failure receipts, differentiable action/recovery policies, process-local scoped idempotency, and optional private reservation-token checks on prepare/commit/receipt/rollback | A sandbox implementation, durable/crash-safe transactions or reservation capabilities, verification of the executor's profile/idempotency claims or actual absence of material effects, rollback of committed or failed material effects, end-to-end recovery quality, and stateful benchmark performance |
+| Kronos | `SelectiveStateEncoder`, `KronosTemporalPlanner`, `TemporalAdapterManager` in `olympus/models/kronos.py` | Timestamped event validation/tensorization, an explicit time-decayed state recurrence, probabilistic forecast and action-plan heads, joint loss, local locked/hash/config-bound checkpoint staging, restricted tensor-only loading, and host-allowlisted evidence identifiers bound to one candidate and metric tuple. The fixed composition computes Kronos after Perseus from unauthenticated host-supplied pre-execution features, never uses its proposed indices to select the action, and converts runtime/budget failure into a closed failed observation | Parsed or signed evaluation/rollback/deletion reports, actual rollback or deletion replay, causal or calibrated forecasting, useful planning, retention under real drift, and family-level promotion. `TemporalAdapterManager.promote()` is a local experimental checkpoint-acceptance gate and cannot confer Foundry/family promotion |
+| Aion | `AionController`, `AionRouter` in `olympus/models/aion.py` | A protocol-bound state machine, controller-owned process-local run/protocol heads, host-registered approvals bound to actor/authority/scope/run/protocol/head and an optional exact subject hash, audits bound to run/protocol/head, frozen-protocol evidence IDs, injected trusted time, structurally validated hash-linked receipts, step/tool budgets, rejection of model-authority promotion, legal-transition masking, router loss, and an explicit learned-router kill rule. The fixed composition uses the execution-manifest hash as the approval subject and audits successful or closed degraded post-gate outcomes before STOP | Durable or signed authority/audit storage, a configurable general six-role service graph, autonomous research, scientific discovery, external replication, and evidence that learning adds value over the deterministic controller |
 
 `Atlas` is already used by an earlier retrieval-augmented model. Public prose
 therefore uses **Olympus-Atlas**; the Python module remains `atlas.py`.
@@ -79,7 +108,9 @@ Run the focused reference-implementation suite from the repository root:
   tests/test_prometheus.py \
   tests/test_perseus.py \
   tests/test_kronos_aion_models.py \
-  tests/test_model_smoke.py
+  tests/test_model_smoke.py \
+  tests/test_model_composition.py \
+  tests/test_model_composition_smoke.py
 ```
 
 These tests exercise validation failures, access and authority boundaries,
@@ -107,6 +138,35 @@ every emitted checkpoint is explicitly marked `qualifying_checkpoint=false`
 and `promoted=false`. The data scope is
 `deterministic_synthetic_contract_fixtures`; this is execution evidence, not a
 family-level experiment.
+
+To generate a fresh ignored six-role composition manifest:
+
+```bash
+.venv/bin/python -m olympus.cli models composition-smoke \
+  --output-dir artifacts/model-composition-smoke/verification \
+  --seed 20260906
+```
+
+The release-facing sanitized record is
+[`evidence/model_composition_smoke_20260906.json`](../evidence/model_composition_smoke_20260906.json).
+It uses one deterministic synthetic fixture and one tool declared non-material.
+Its manifest-bound approval and successful replay establish only that the fixed
+contracts interoperate in one process. The smoke and adversarial tests also
+exercise frozen-protocol evidence filtering, reserved-scope isolation,
+single-execution retry behavior, exact attempted-call accounting, and closed
+degraded completion. They do not establish sandboxing, crash durability,
+executor behavior, scientific validity, model quality, or
+qualification/promotion.
+
+## Extending a family
+
+Every family extension must update contracts, registration, rejection and
+mutation tests, bounded evidence, and the truth ledgers together. Extensions to
+the fixed composition must also preserve the approval manifest, public/private
+state boundary, frozen-protocol evidence filter, reserved-scope capability,
+post-execution trace order, closed degraded terminal paths, and exact
+attempted-call accounting. The complete required checklist is in
+[`CONTRIBUTING.md`](../CONTRIBUTING.md#extending-a-model-family).
 
 Family promotion still requires the immutable dataset, checkpoint, evaluation,
 safety, serving, licensing, and human-review gates described in

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 import sqlite3
 from pathlib import Path
@@ -11,7 +12,7 @@ import pytest
 from olympus.api import app, get_foundry_service, get_ollama_client
 from olympus.foundry.bigram import CharacterBigramModel
 from olympus.foundry.ollama import OllamaClient
-from olympus.foundry.schemas import ArtifactStatus, DatasetRecord
+from olympus.foundry.schemas import ArtifactStatus, DatasetRecord, ExperimentRecord
 from olympus.foundry.service import FoundryService
 from olympus.foundry.store import FoundryStore
 
@@ -78,14 +79,172 @@ def test_store_rejects_dataset_identity_rewrite(tmp_path: Path) -> None:
     )
     rewritten = first.model_copy(update={"sha256": "b" * 64})
     with FoundryStore(tmp_path / "registry.sqlite3") as store:
-        store.register_dataset(first)
-        store.register_dataset(first)
+        assert store.register_dataset(first) is True
+        assert store.register_dataset(first) is False
         with pytest.raises(ValueError, match="different content"):
             store.register_dataset(rewritten)
         changed_license = first.model_copy(update={"license": "different-license"})
         with pytest.raises(ValueError, match="different metadata"):
             store.register_dataset(changed_license)
         assert store.integrity_check() == "ok"
+
+
+def test_store_preserves_experiment_identity_and_append_only_finite_evidence(
+    tmp_path: Path,
+) -> None:
+    dataset = DatasetRecord(
+        dataset_id="fixture-data",
+        version="1",
+        sha256="a" * 64,
+        materialized_path=str(tmp_path / "fixture.txt"),
+        source="repository://fixture",
+        owner="test",
+        license="test-only",
+        provenance="test fixture",
+        privacy_classification="internal",
+        synthetic=False,
+        byte_count=10,
+        character_count=10,
+        created_at="2026-08-21T00:00:00+00:00",
+    )
+    experiment = ExperimentRecord(
+        experiment_id="FND_FIXTURE",
+        hypothesis="The immutable experiment linkage remains coherent.",
+        model_family="fixture",
+        dataset_id=dataset.dataset_id,
+        dataset_version=dataset.version,
+        dataset_sha256=dataset.sha256,
+        seed=7,
+        config={"test": True},
+        code_commit="a" * 40,
+        hardware={"machine": "test"},
+        status=ArtifactStatus.RUNNING_EXPERIMENT,
+        created_at="2026-08-21T00:00:00+00:00",
+        updated_at="2026-08-21T00:00:00+00:00",
+    )
+    with FoundryStore(tmp_path / "registry.sqlite3") as store:
+        store.register_dataset(dataset)
+        store.register_experiment(experiment)
+        updated = experiment.model_copy(
+            update={
+                "updated_at": "2026-08-21T00:00:01+00:00",
+            }
+        )
+        store.update_experiment(updated)
+        forged = updated.model_copy(
+            update={
+                "dataset_id": "other-dataset",
+                "dataset_version": "9",
+                "dataset_sha256": "f" * 64,
+            }
+        )
+        with pytest.raises(ValueError, match="immutable metadata"):
+            store.update_experiment(forged)
+        unsupported_transition = updated.model_copy(
+            update={
+                "status": ArtifactStatus.VERIFIED,
+                "updated_at": "2026-08-21T00:00:02+00:00",
+            }
+        )
+        with pytest.raises(ValueError, match="invalid experiment status transition"):
+            store.update_experiment(unsupported_transition)
+        assert store.experiments() == [updated]
+
+        with pytest.raises(ValueError, match="finite JSON"):
+            store.append_evidence(
+                timestamp="2026-08-21T00:00:02+00:00",
+                entity_type="experiment",
+                entity_id=experiment.experiment_id,
+                action="invalid",
+                payload={"metric": float("nan")},
+            )
+        nonfinite = experiment.model_copy(
+            update={"experiment_id": "FND_NONFINITE", "config": {"metric": float("nan")}}
+        )
+        with pytest.raises(ValueError, match="finite JSON"):
+            store.register_experiment(nonfinite)
+        store.append_evidence(
+            timestamp="2026-08-21T00:00:02+00:00",
+            entity_type="experiment",
+            entity_id=experiment.experiment_id,
+            action="checkpointed",
+            payload={"metric": 1.0},
+        )
+        with pytest.raises(sqlite3.IntegrityError, match="append-only"):
+            store._connection.execute("DELETE FROM evidence")
+        assert store.integrity_check() == "ok"
+
+
+def test_store_integrity_detects_column_and_json_linkage_divergence(tmp_path: Path) -> None:
+    database = tmp_path / "registry.sqlite3"
+    with FoundryStore(database) as store:
+        dataset = DatasetRecord(
+            dataset_id="fixture-data",
+            version="1",
+            sha256="a" * 64,
+            materialized_path=str(tmp_path / "fixture.txt"),
+            source="repository://fixture",
+            owner="test",
+            license="test-only",
+            provenance="test fixture",
+            privacy_classification="internal",
+            synthetic=False,
+            byte_count=10,
+            character_count=10,
+            created_at="2026-08-21T00:00:00+00:00",
+        )
+        store.register_dataset(dataset)
+        divergent = dataset.model_copy(update={"sha256": "b" * 64})
+        store._connection.execute(
+            "UPDATE datasets SET record_json = ? WHERE dataset_id = ? AND version = ?",
+            (divergent.model_dump_json(), dataset.dataset_id, dataset.version),
+        )
+        store._connection.commit()
+        assert store.integrity_check() == "datasets column/record mismatch: sha256"
+
+
+def test_store_integrity_detects_cross_record_dataset_divergence(tmp_path: Path) -> None:
+    database = tmp_path / "registry.sqlite3"
+    dataset = DatasetRecord(
+        dataset_id="fixture-data",
+        version="1",
+        sha256="a" * 64,
+        materialized_path=str(tmp_path / "fixture.txt"),
+        source="repository://fixture",
+        owner="test",
+        license="test-only",
+        provenance="test fixture",
+        privacy_classification="internal",
+        synthetic=False,
+        byte_count=10,
+        character_count=10,
+        created_at="2026-08-21T00:00:00+00:00",
+    )
+    experiment = ExperimentRecord(
+        experiment_id="FND_FIXTURE",
+        hypothesis="Registry lineage remains coherent.",
+        model_family="fixture",
+        dataset_id=dataset.dataset_id,
+        dataset_version=dataset.version,
+        dataset_sha256=dataset.sha256,
+        seed=7,
+        config={"test": True},
+        code_commit="a" * 40,
+        hardware={"machine": "test"},
+        status=ArtifactStatus.RUNNING_EXPERIMENT,
+        created_at="2026-08-21T00:00:00+00:00",
+        updated_at="2026-08-21T00:00:00+00:00",
+    )
+    with FoundryStore(database) as store:
+        store.register_dataset(dataset)
+        store.register_experiment(experiment)
+        divergent = experiment.model_copy(update={"dataset_sha256": "b" * 64})
+        store._connection.execute(
+            "UPDATE experiments SET record_json = ? WHERE experiment_id = ?",
+            (divergent.model_dump_json(), experiment.experiment_id),
+        )
+        store._connection.commit()
+        assert store.integrity_check() == "experiment dataset content identity mismatch"
 
 
 def test_store_migrates_the_exact_legacy_verification_source(tmp_path: Path) -> None:
@@ -194,9 +353,77 @@ def test_foundry_detects_checkpoint_tampering(tmp_path: Path) -> None:
 
         health = service.model_health(result.model.model_id)
         assert health["status"] == "corrupt"
-        assert health["reason"] == "checkpoint hash mismatch"
-        with pytest.raises(RuntimeError, match="checkpoint hash mismatch"):
+        assert health["reason"] in {"checkpoint byte count mismatch", "checkpoint hash mismatch"}
+        with pytest.raises(RuntimeError, match="checkpoint (?:byte count|hash) mismatch"):
             service.generate(result.model.model_id, "test")
+
+
+def test_foundry_rejects_noncanonical_checkpoint_registry_paths(tmp_path: Path) -> None:
+    with FoundryService(tmp_path / "foundry") as service:
+        result = service.run_verification_pipeline(_sample_path())
+        outside = tmp_path / "outside.json"
+        outside.write_bytes(Path(result.checkpoint.path).read_bytes())
+        forged = result.checkpoint.model_copy(update={"path": str(outside)})
+        service.store._connection.execute(
+            "UPDATE checkpoints SET record_json = ? WHERE checkpoint_id = ?",
+            (forged.model_dump_json(), result.checkpoint.checkpoint_id),
+        )
+        service.store._connection.commit()
+
+        health = service.model_health(result.model.model_id)
+        assert health["status"] == "corrupt"
+        assert health["reason"] == "checkpoint path is not canonical"
+        with pytest.raises(RuntimeError, match="path is not canonical"):
+            service.generate(result.model.model_id, "test")
+
+
+def test_foundry_code_provenance_fails_closed_when_git_is_unavailable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def unavailable(*args: object, **kwargs: object) -> None:
+        raise FileNotFoundError("git is unavailable")
+
+    monkeypatch.setattr("olympus.foundry.service.subprocess.run", unavailable)
+    assert FoundryService._code_commit(tmp_path) == "unavailable"
+
+
+def test_foundry_persists_secret_safe_unexpected_failures(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    secret = "PRIVATE_TRAINING_FAILURE_DETAIL"
+
+    def fail(*_: object, **__: object) -> None:
+        raise OSError(secret)
+
+    with FoundryService(tmp_path / "foundry") as service:
+        dataset = service.register_text_dataset(
+            _sample_path(),
+            dataset_id="failure-fixture",
+            version="1",
+            source="repository://fixture",
+            owner="test",
+            license_name="test-only",
+            provenance="failure redaction fixture",
+            privacy_classification="internal",
+            synthetic=False,
+        )
+        monkeypatch.setattr("olympus.foundry.service.CharacterBigramModel.train", fail)
+        with pytest.raises(OSError, match=secret):
+            service.run_bigram_experiment(
+                dataset,
+                hypothesis="Unexpected failure details must remain private.",
+            )
+        experiment = service.store.experiments()[0]
+        failure_event = service.store.evidence()[-1]
+
+    assert experiment.status is ArtifactStatus.FAILED
+    assert secret not in (experiment.failure_reason or "")
+    assert secret not in str(failure_event.payload)
+    assert secret not in caplog.text
+    assert "OSError" in caplog.text
 
 
 def test_foundry_rejects_changed_materialized_dataset(tmp_path: Path) -> None:
@@ -217,10 +444,100 @@ def test_foundry_rejects_changed_materialized_dataset(tmp_path: Path) -> None:
             service.run_bigram_experiment(dataset, hypothesis="Integrity must be checked.")
 
 
+def test_foundry_uses_only_registered_canonical_dataset_identity(tmp_path: Path) -> None:
+    source = tmp_path / "source.txt"
+    alternate = tmp_path / "alternate.txt"
+    source.write_text("registered evidence " * 20, encoding="utf-8")
+    alternate.write_text("different unregistered content " * 20, encoding="utf-8")
+    with FoundryService(tmp_path / "foundry") as service:
+        dataset = service.register_text_dataset(
+            source,
+            dataset_id="lineage-fixture",
+            version="1",
+            source="repository://fixture",
+            owner="test",
+            license_name="test-only",
+            provenance="registered fixture",
+            privacy_classification="internal",
+            synthetic=False,
+        )
+        forged = dataset.model_copy(
+            update={
+                "sha256": hashlib.sha256(alternate.read_bytes()).hexdigest(),
+                "materialized_path": str(alternate),
+                "byte_count": alternate.stat().st_size,
+                "character_count": len(alternate.read_text(encoding="utf-8")),
+            }
+        )
+        with pytest.raises(ValueError, match="does not match the registered dataset"):
+            service.run_bigram_experiment(forged, hypothesis="Forged lineage must fail.")
+        assert service.store.experiments() == []
+
+
+def test_foundry_rejects_path_traversal_before_materializing_dataset(tmp_path: Path) -> None:
+    source = tmp_path / "source.txt"
+    source.write_text("bounded dataset materialization " * 20, encoding="utf-8")
+    digest = hashlib.sha256(source.read_bytes()).hexdigest()
+    escaped = tmp_path / f"escape-{digest}.txt"
+    with FoundryService(tmp_path / "foundry") as service:
+        with pytest.raises(ValueError, match="string_pattern_mismatch"):
+            service.register_text_dataset(
+                source,
+                dataset_id="path-fixture",
+                version="../../../escape",
+                source="repository://fixture",
+                owner="test",
+                license_name="test-only",
+                provenance="path traversal fixture",
+                privacy_classification="internal",
+                synthetic=False,
+            )
+    assert not escaped.exists()
+
+
+def test_duplicate_dataset_registration_is_idempotent_and_emits_one_event(
+    tmp_path: Path,
+) -> None:
+    with FoundryService(tmp_path / "foundry") as service:
+        first = service.register_text_dataset(
+            _sample_path(),
+            dataset_id="idempotent-fixture",
+            version="1",
+            source="repository://fixture",
+            owner="test",
+            license_name="test-only",
+            provenance="idempotency fixture",
+            privacy_classification="internal",
+            synthetic=False,
+        )
+        second = service.register_text_dataset(
+            _sample_path(),
+            dataset_id="idempotent-fixture",
+            version="1",
+            source="repository://fixture",
+            owner="test",
+            license_name="test-only",
+            provenance="idempotency fixture",
+            privacy_classification="internal",
+            synthetic=False,
+        )
+        assert second == first
+        assert [event.action for event in service.store.evidence()] == ["registered"]
+
+
 def test_ollama_client_validates_and_generates() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         if request.url.path == "/api/tags":
-            return httpx.Response(200, json={"models": [{"name": "qwen3:8b"}]})
+            return httpx.Response(
+                200,
+                json={
+                    "models": [
+                        {"name": "qwen3:8b", "digest": "sha256:" + "a" * 64}
+                    ]
+                },
+            )
+        if request.url.path == "/api/version":
+            return httpx.Response(200, json={"version": "0.11.10"})
         assert request.url.path == "/api/chat"
         body = json.loads(request.content)
         assert body["stream"] is False
@@ -233,6 +550,7 @@ def test_ollama_client_validates_and_generates() -> None:
         return httpx.Response(
             200,
             json={
+                "model": "qwen3:8b",
                 "message": {"role": "assistant", "content": "OLYMPUS_LOCAL_MODEL_OK"},
                 "done": True,
                 "done_reason": "stop",
@@ -242,6 +560,8 @@ def test_ollama_client_validates_and_generates() -> None:
 
     client = OllamaClient(transport=httpx.MockTransport(handler))
     assert client.list_models() == ["qwen3:8b"]
+    assert client.version() == "0.11.10"
+    assert client.model_digest("qwen3:8b") == "sha256:" + "a" * 64
     result = client.generate(model="qwen3:8b", prompt="verify")
     assert result.content == "OLYMPUS_LOCAL_MODEL_OK"
     assert result.evidence["provider"] == "ollama"
@@ -249,6 +569,50 @@ def test_ollama_client_validates_and_generates() -> None:
         client.generate(model="qwen3:8b", prompt="verify", max_tokens=0)
     with pytest.raises(ValueError, match="context_tokens"):
         client.generate(model="qwen3:8b", prompt="verify", context_tokens=128)
+
+    for invalid_url in (
+        "ftp://127.0.0.1:11434",
+        "http://user:secret@127.0.0.1:11434",
+        "http://127.0.0.1:11434/api",
+        "http://127.0.0.1:11434?token=secret",
+    ):
+        with pytest.raises(ValueError, match="HTTP or HTTPS origin"):
+            OllamaClient(base_url=invalid_url)
+    with pytest.raises(ValueError, match="require HTTPS"):
+        OllamaClient(base_url="http://ollama.example:11434")
+    with pytest.raises(ValueError, match="finite and positive"):
+        OllamaClient(timeout_seconds=float("nan"))
+
+
+def test_ollama_client_rejects_mismatched_models_and_malformed_metrics() -> None:
+    def mismatched(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={
+                "model": "other:latest",
+                "message": {"role": "assistant", "content": "unexpected"},
+                "done": True,
+            },
+        )
+
+    client = OllamaClient(transport=httpx.MockTransport(mismatched))
+    with pytest.raises(ValueError, match="model does not match"):
+        client.generate(model="qwen3:8b", prompt="verify")
+
+    def malformed_metric(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={
+                "model": "qwen3:8b",
+                "message": {"role": "assistant", "content": "unexpected"},
+                "done": True,
+                "eval_count": -1,
+            },
+        )
+
+    malformed = OllamaClient(transport=httpx.MockTransport(malformed_metric))
+    with pytest.raises(ValueError, match="malformed eval_count"):
+        malformed.generate(model="qwen3:8b", prompt="verify")
 
 
 async def _api_request(
@@ -258,7 +622,7 @@ async def _api_request(
     json_body: dict[str, object] | None = None,
 ) -> httpx.Response:
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+    async with httpx.AsyncClient(transport=transport, base_url="http://127.0.0.1") as client:
         return await client.request(method, path, json=json_body)
 
 

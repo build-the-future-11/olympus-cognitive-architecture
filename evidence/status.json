@@ -6,6 +6,7 @@
   "generated_on": "2026-09-06",
   "final_verification": "evidence/final_verification.json",
   "family_component_evidence": "evidence/model_family_smoke_20260906.json",
+  "family_composition_evidence": "evidence/model_composition_smoke_20260906.json",
   "canonical_root": "/Volumes/PRO-BLADE/GitHub-Every-Repo/Olympus",
   "revision": {
     "kind": "git_working_tree",
@@ -34,6 +35,6 @@
     "Kronos": "EXPERIMENTAL_SMOKE_NOT_PROMOTED",
     "Aion": "EXPERIMENTAL_SMOKE_NOT_PROMOTED"
   },
-  "verified_test_floor": 150,
+  "verified_test_floor": 195,
   "promotion": "NOT_PROMOTED"
 }

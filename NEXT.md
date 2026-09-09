@@ -1,7 +1,8 @@
 # Next Experiments
 
 The highest-value research experiment is a confirmatory Pantheon study with
-agents that pass a frozen capability floor. The next Foundry experiment is a
+agents that pass a prespecified, externally timestamped capability admission
+floor. The next Foundry experiment is a
 revision-pinned Qwen3-0.6B-Base QLoRA run, but it remains blocked on license
 approval, data scale, provenance, and compute admission. Neither experiment may
 be represented as completed by smoke-test evidence.
@@ -44,7 +45,8 @@ context enforcement, fresh-process serving, and a hash-bound model card. Stop
 on license ambiguity, split contamination, budget mismatch, resource refusal,
 or two materially identical infrastructure failures.
 
-Pantheon stops before inference if capability thresholds fail. Foundry stops
-before training if provenance, license, split isolation, or resource admission
-fails. Negative results are retained and reported without relabeling them as
-successful model or agent evaluations.
+Pantheon withholds consensus estimation and interpretation after inference if
+the measured capability thresholds fail. Foundry stops before training if
+provenance, license, split isolation, or resource admission fails. Negative
+results are retained and reported without relabeling them as successful model
+or agent evaluations.

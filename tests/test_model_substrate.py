@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 from datetime import UTC, datetime
+from typing import Any
 
 import pytest
 import torch
@@ -25,6 +26,7 @@ from olympus.models.substrate import (
     ToolSpec,
     WorkspaceEvent,
     WorkspaceState,
+    append_workspace_event,
     authorized_workspace_view,
     canonical_json_bytes,
     canonical_sha256,
@@ -197,6 +199,47 @@ def test_workspace_event_log_is_hash_linked_contiguous_and_monotonic() -> None:
         validate_workspace_snapshot(workspace)
 
 
+def test_append_workspace_event_reconstructs_without_mutating_caller_state() -> None:
+    base = _workspace()
+    parent_sha256 = base.sha256
+    added = _evidence("evidence:2")
+    payload: dict[str, Any] = {"nested": {"values": [1]}}
+
+    updated = append_workspace_event(
+        base,
+        event_id="event:append:1",
+        kind="evidence_added",
+        actor="test-runtime",
+        occurred_at=datetime(2026, 9, 6, tzinfo=UTC),
+        payload=payload,
+        evidence=[added],
+    )
+    cast_values = payload["nested"]
+    assert isinstance(cast_values, dict)
+    cast_values["values"].append(2)
+
+    assert base.event_sequence == 0
+    assert [item.evidence_id for item in base.evidence] == ["evidence:1"]
+    assert updated.parent_state_sha256 == parent_sha256
+    assert updated.event_sequence == 1
+    assert [item.evidence_id for item in updated.evidence] == ["evidence:1", "evidence:2"]
+    assert updated.events[0].payload["data"] == {"nested": {"values": [1]}}
+    assert validate_workspace_snapshot(updated) == updated
+
+    replacement_text = "A different appended record."
+    tampered = updated.model_copy(deep=True)
+    tampered.evidence[1] = EvidenceItem(
+        evidence_id="evidence:2",
+        source_uri="urn:test:replacement",
+        content_sha256=hashlib.sha256(replacement_text.encode()).hexdigest(),
+        acquired_at=datetime(2026, 9, 6, tzinfo=UTC),
+        license_id="test-only",
+        text=replacement_text,
+    )
+    with pytest.raises(ValidationError, match="additions hash"):
+        validate_workspace_snapshot(tampered)
+
+
 def test_canonical_hash_sorts_sets_and_output_parser_discriminates() -> None:
     left = PermissionSet(granted_acl_labels={"z", "a"}, capabilities={"two", "one"})
     right = PermissionSet(granted_acl_labels={"a", "z"}, capabilities={"one", "two"})
@@ -252,12 +295,26 @@ def test_authorized_workspace_view_removes_private_model_inputs() -> None:
                 text=private_text,
             ),
         ],
+        tools=[
+            ToolSpec(
+                tool_id="tool:private",
+                schema_version="1",
+                argument_schema={
+                    "type": "object",
+                    "properties": {},
+                    "additionalProperties": False,
+                },
+                required_capabilities={"private-tool"},
+            )
+        ],
+        permissions=PermissionSet(allowed_tool_ids={"tool:private"}),
         model_identity=_workspace().model_identity,
     )
     view = authorized_workspace_view(workspace)
 
     assert isinstance(view, AuthorizedWorkspaceView)
     assert [item.evidence_id for item in view.evidence] == ["evidence:public"]
+    assert view.tools == []
     serialized = view.model_dump_json()
     assert private_text not in serialized
     assert "evidence:private" not in serialized
