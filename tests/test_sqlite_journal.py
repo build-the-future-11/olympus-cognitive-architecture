@@ -14,10 +14,10 @@ class _WalFailingConnection:
     def __init__(self, real: sqlite3.Connection) -> None:
         self._real = real
 
-    def execute(self, sql: str, *args: object, **kwargs: object):  # type: ignore[no-untyped-def]
+    def execute(self, sql: str, parameters: object = ()) -> sqlite3.Cursor:
         if "journal_mode = WAL" in sql or "journal_mode=WAL" in sql:
             raise sqlite3.OperationalError("disk I/O error")
-        return self._real.execute(sql, *args, **kwargs)
+        return self._real.execute(sql, parameters)  # type: ignore[arg-type]
 
 
 def test_apply_durable_journal_mode_prefers_wal(tmp_path: Path) -> None:
