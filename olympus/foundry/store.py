@@ -9,6 +9,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from olympus.core.sqlite_journal import apply_durable_journal_mode
 from olympus.foundry.schemas import (
     ArtifactStatus,
     CheckpointRecord,
@@ -30,9 +31,15 @@ class FoundryStore:
         self._lock = threading.RLock()
         self._connection.row_factory = sqlite3.Row
         self._connection.execute("PRAGMA foreign_keys = ON")
-        self._connection.execute("PRAGMA journal_mode = WAL")
+        apply_durable_journal_mode(self._connection)
         self._connection.execute("PRAGMA synchronous = FULL")
-        self._migrate()
+        try:
+            self._migrate()
+        except BaseException:
+            # Construction must not leak a live database handle when schema
+            # creation fails (for example, on a read-only artifact root).
+            self._connection.close()
+            raise
 
     def _migrate(self) -> None:
         self._connection.executescript(
