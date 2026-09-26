@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sqlite3
 from pathlib import Path
+from threading import RLock
 
 from pydantic import Field
 
@@ -18,7 +19,15 @@ class MemoryRecord(StrictModel):
 
 
 class MemoryStore:
+    """Serialize individual public operations on the shared SQLite connection.
+
+    Direct access to ``connection`` must be externally synchronized. This lock
+    does not make a sequence of method calls one transaction or coordinate
+    separate store instances/processes; SQLite handles their database locking.
+    """
+
     def __init__(self, path: Path) -> None:
+        self._lock = RLock()
         self.path = path
         path.parent.mkdir(parents=True, exist_ok=True)
         self.connection = sqlite3.connect(path, timeout=30.0, check_same_thread=False)
@@ -38,7 +47,8 @@ class MemoryStore:
         self.connection.commit()
 
     def close(self) -> None:
-        self.connection.close()
+        with self._lock:
+            self.connection.close()
 
     def __enter__(self) -> MemoryStore:
         return self
@@ -47,18 +57,19 @@ class MemoryStore:
         self.close()
 
     def put(self, record: MemoryRecord) -> None:
-        # A failed statement or commit must not be published by a later put.
-        with self.connection:
+        # Hold the lock through commit/rollback, not just statement execution.
+        with self._lock, self.connection:
             self.connection.execute(
                 "REPLACE INTO memory (kind, key, value, salience, tags) VALUES (?, ?, ?, ?, ?)",
                 (record.kind, record.key, record.value, record.salience, ",".join(record.tags)),
             )
 
     def get(self, key: str) -> MemoryRecord | None:
-        row = self.connection.execute(
-            "SELECT kind, key, value, salience, tags FROM memory WHERE key = ?",
-            (key,),
-        ).fetchone()
+        with self._lock:
+            row = self.connection.execute(
+                "SELECT kind, key, value, salience, tags FROM memory WHERE key = ?",
+                (key,),
+            ).fetchone()
         if row is None:
             return None
         return MemoryRecord(
@@ -70,13 +81,14 @@ class MemoryStore:
         )
 
     def query(self, kind: str) -> list[MemoryRecord]:
-        rows = self.connection.execute(
-            (
-                "SELECT kind, key, value, salience, tags FROM memory "
-                "WHERE kind = ? ORDER BY salience DESC"
-            ),
-            (kind,),
-        ).fetchall()
+        with self._lock:
+            rows = self.connection.execute(
+                (
+                    "SELECT kind, key, value, salience, tags FROM memory "
+                    "WHERE kind = ? ORDER BY salience DESC"
+                ),
+                (kind,),
+            ).fetchall()
         return [
             MemoryRecord(
                 kind=row[0],
