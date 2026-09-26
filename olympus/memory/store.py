@@ -22,20 +22,24 @@ class MemoryStore:
         self.path = path
         path.parent.mkdir(parents=True, exist_ok=True)
         self.connection = sqlite3.connect(path, timeout=30.0, check_same_thread=False)
-        apply_durable_journal_mode(self.connection)
-        self.connection.execute("PRAGMA synchronous = FULL")
-        self.connection.execute(
-            """
-            CREATE TABLE IF NOT EXISTS memory (
-                kind TEXT NOT NULL,
-                key TEXT PRIMARY KEY,
-                value TEXT NOT NULL,
-                salience REAL NOT NULL,
-                tags TEXT NOT NULL
+        try:
+            apply_durable_journal_mode(self.connection)
+            self.connection.execute("PRAGMA synchronous = FULL")
+            self.connection.execute(
+                """
+                CREATE TABLE IF NOT EXISTS memory (
+                    kind TEXT NOT NULL,
+                    key TEXT PRIMARY KEY,
+                    value TEXT NOT NULL,
+                    salience REAL NOT NULL,
+                    tags TEXT NOT NULL
+                )
+                """
             )
-            """
-        )
-        self.connection.commit()
+            self.connection.commit()
+        except BaseException:
+            self.connection.close()
+            raise
 
     def close(self) -> None:
         self.connection.close()
