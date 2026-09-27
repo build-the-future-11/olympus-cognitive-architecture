@@ -47,11 +47,12 @@ class MemoryStore:
         self.close()
 
     def put(self, record: MemoryRecord) -> None:
-        self.connection.execute(
-            "REPLACE INTO memory (kind, key, value, salience, tags) VALUES (?, ?, ?, ?, ?)",
-            (record.kind, record.key, record.value, record.salience, ",".join(record.tags)),
-        )
-        self.connection.commit()
+        # A failed statement or commit must not be published by a later put.
+        with self.connection:
+            self.connection.execute(
+                "REPLACE INTO memory (kind, key, value, salience, tags) VALUES (?, ?, ?, ?, ?)",
+                (record.kind, record.key, record.value, record.salience, ",".join(record.tags)),
+            )
 
     def get(self, key: str) -> MemoryRecord | None:
         row = self.connection.execute(
