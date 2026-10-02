@@ -292,11 +292,21 @@ def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
     if len(split_names) != len(set(split_names)):
         raise ValueError("dataset manifest contains duplicate split descriptors")
 
+    manifest_root = manifest_path.parent.resolve()
     verified_records = 0
     for split in manifest.splits:
-        path = Path(split.path)
-        if not path.is_absolute():
-            path = manifest_path.parent / path
+        descriptor_path = Path(split.path)
+        if descriptor_path.is_absolute() or ".." in descriptor_path.parts:
+            raise ValueError(
+                f"dataset split path must stay relative to the manifest root: {split.name}"
+            )
+        path = (manifest_root / descriptor_path).resolve()
+        try:
+            path.relative_to(manifest_root)
+        except ValueError as error:
+            raise ValueError(
+                f"dataset split path escapes manifest root: {split.name}"
+            ) from error
         if not path.is_file():
             raise ValueError(f"dataset split missing: {split.name}")
         payload = path.read_bytes()
