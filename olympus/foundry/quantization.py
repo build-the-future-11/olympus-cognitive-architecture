@@ -13,8 +13,10 @@ from pydantic import Field
 
 from olympus.core.schemas import StrictModel
 from olympus.foundry.data_pipeline import InstructionExample, verify_dataset_manifest
+from olympus.foundry.latency import measure_paired_latency
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.sft import (
+    ByteTokenizer,
     SFTConfig,
     TinyCausalLM,
     TinyModelConfig,
@@ -85,6 +87,8 @@ class QuantizationReport(StrictModel):
     tool_exact_match_rate: float = Field(ge=0.0, le=1.0)
     peak_rss_bytes: int = Field(ge=0)
     passed_quality_gate: bool
+    inference_execution: str = "legacy_unspecified"
+    latency_benchmark: dict[str, Any] | None = None
 
 
 def _quantize_tensor(tensor: torch.Tensor, bits: QuantizationBits) -> dict[str, Any]:
@@ -146,10 +150,33 @@ def load_quantized_model(path: Path) -> TinyCausalLM:
     return model
 
 
-def _latency(model: TinyCausalLM, prompt: str) -> float:
-    start = time.perf_counter()
-    generate_text(model, prompt, device=torch.device("cpu"), max_new_tokens=16)
-    return (time.perf_counter() - start) * 1_000
+def _paired_forward_latency(
+    source: TinyCausalLM, quantized: TinyCausalLM, prompt: str
+) -> dict[str, Any]:
+    encoded = ByteTokenizer.encode(prompt, bos=True)
+    context_limit = min(source.config.max_sequence_tokens, quantized.config.max_sequence_tokens)
+    tokens = torch.tensor([encoded[-context_limit:]], dtype=torch.long)
+    source.eval()
+    quantized.eval()
+    with torch.inference_mode():
+        timing = measure_paired_latency(lambda: source(tokens), lambda: quantized(tokens))
+    return {
+        **timing.as_dict(),
+        "workload": "fixed_context_cpu_forward",
+        "batch_size": 1,
+        "input_tokens": tokens.shape[1],
+        "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
+        "input_token_ids_sha256": hashlib.sha256(
+            json.dumps(tokens.tolist(), separators=(",", ":")).encode("utf-8")
+        ).hexdigest(),
+        "input_truncated_to_context": len(encoded) > context_limit,
+        "torch_version": torch.__version__,
+        "torch_num_threads": torch.get_num_threads(),
+        "torch_num_interop_threads": torch.get_num_interop_threads(),
+        "source_parameter_dtype": str(next(source.parameters()).dtype),
+        "candidate_parameter_dtype": str(next(quantized.parameters()).dtype),
+        "device": "cpu",
+    }
 
 
 def quantize_checkpoint(
@@ -159,6 +186,8 @@ def quantize_checkpoint(
     *,
     bits: QuantizationBits,
 ) -> QuantizationReport:
+    if isinstance(bits, bool) or not isinstance(bits, int) or bits not in (4, 8):
+        raise ValueError("quantization bits must be 4 or 8")
     source, checkpoint = _model_from_checkpoint(checkpoint_path, torch.device("cpu"))
     training = SFTConfig.model_validate(checkpoint["training_config"])
     if training.mode != "full":
@@ -200,8 +229,7 @@ def quantize_checkpoint(
     source_loss = evaluate_loss(source, rows, device=torch.device("cpu"))
     quantized_loss = evaluate_loss(quantized, rows, device=torch.device("cpu"))
     prompt = "List the safe steps before starting a memory-heavy local model workload."
-    source_latency = _latency(source, prompt)
-    quantized_latency = _latency(quantized, prompt)
+    latency_benchmark = _paired_forward_latency(source, quantized, prompt)
     tool_examples = [item for item in examples if item.category in {"tool_use", "agent_behavior"}]
     tool_exact = sum(
         generate_text(quantized, item.prompt, device=torch.device("cpu"), max_new_tokens=48)
@@ -219,6 +247,7 @@ def quantize_checkpoint(
     quantized_size = artifact.stat().st_size
     loss_change = (quantized_loss - source_loss) / max(source_loss, 1e-12)
     report = QuantizationReport(
+        schema_version=2,
         format=f"olympus-symmetric-int{bits}-v1",
         bits=bits,
         source_checkpoint_sha256=_sha256(checkpoint_path),
@@ -230,14 +259,16 @@ def quantize_checkpoint(
         source_loss=source_loss,
         quantized_loss=quantized_loss,
         loss_change_fraction=loss_change,
-        source_latency_ms=source_latency,
-        quantized_latency_ms=quantized_latency,
+        source_latency_ms=latency_benchmark["reference_median_ms"],
+        quantized_latency_ms=latency_benchmark["candidate_median_ms"],
         startup_latency_ms=startup_ms,
         max_context_tokens=training.model.max_sequence_tokens,
         context_limit_enforced=context_limit_enforced,
         tool_exact_match_rate=tool_exact,
         peak_rss_bytes=memory_snapshot().process_peak_rss_bytes,
         passed_quality_gate=(abs(loss_change) <= 0.02 and context_limit_enforced),
+        inference_execution="float32_cpu_with_dequantized_stored_weights",
+        latency_benchmark=latency_benchmark,
     )
     report_path = output_root / f"int{bits}-report.json"
     _atomic_json(report_path, report.model_dump(mode="json"))

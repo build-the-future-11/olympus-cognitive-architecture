@@ -1,0 +1,460 @@
+{
+  "protocol": {
+    "schema": "olympus.isolated_quantization_probe.v1",
+    "purpose": "Separate stored artifact size from loaded float32 model and process RSS",
+    "evidence_type": "retained 36-record constructed engineering fixture",
+    "retained_probe_sha256": "7b19fa2b7f22d72a82ba14be229c1a8dd746ddd826412442566f9b797730c741",
+    "script_sha256": "ed5736a1d2b561b6b4574083b7f75cd70de05bb3777b786748abdbb02e68eb27",
+    "repetitions": 3,
+    "variant_orders": [
+      [
+        "float32",
+        "int4",
+        "int8"
+      ],
+      [
+        "int4",
+        "int8",
+        "float32"
+      ],
+      [
+        "int8",
+        "float32",
+        "int4"
+      ]
+    ],
+    "process_isolation": "One fresh Python interpreter per variant and repetition",
+    "timing_scope": "Load excludes Python/torch import; forward excludes two warmup calls",
+    "rss_scope": "Linux resident pages including shared libraries; not proportional set size",
+    "peak_scope": "Each child process high-water RSS, including interpreter and imports",
+    "cache_policy": "OS file caches are not cleared; these are not cold-storage measurements",
+    "inference_execution": "All three variants execute float32 CPU kernels",
+    "scientific_outcome_campaign": false,
+    "new_training": false,
+    "model_promotion_authorized": false,
+    "research_claims_authorized": false
+  },
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "rows": [
+    {
+      "variant": "float32",
+      "artifact_relative_path": "int4/float32-model.pt",
+      "artifact_sha256": "ccc84f108fba232b3d0cdc2419e2a8269b738e0276a68e6653ef723cac5602f6",
+      "artifact_bytes": 144790,
+      "parameter_bytes": 138112,
+      "buffer_bytes": 0,
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "rss_before_load_bytes": 266887168,
+      "rss_after_load_bytes": 270991360,
+      "rss_load_delta_bytes": 4104192,
+      "rss_after_forward_bytes": 282546176,
+      "process_peak_before_load_bytes": 266629120,
+      "process_peak_after_forward_bytes": 282234880,
+      "load_ms": 7.517383,
+      "forward_samples_ms": [
+        0.352756,
+        2.234972,
+        0.590579,
+        1.571838,
+        0.824675,
+        0.841677,
+        0.404395
+      ],
+      "forward_median_ms": 0.824675,
+      "input_tokens": 64,
+      "input_token_ids_sha256": "0e58501d48eab7cf91bd3ca6bdae8d80eec18a11def399acaa4291cc3ffdb9e2",
+      "output_shape": [
+        1,
+        64,
+        260
+      ],
+      "output_finite": true,
+      "torch_version": "2.11.0+cpu",
+      "torch_threads": 1,
+      "torch_interop_threads": 1,
+      "python": "3.14.7",
+      "pid": 5,
+      "trial": 0
+    },
+    {
+      "variant": "int4",
+      "artifact_relative_path": "int4/model-int4.pt",
+      "artifact_sha256": "7474a2ddc304e094a1d0dffd1e4a7263bc36054a166c1323e13dc00c90357e1b",
+      "artifact_bytes": 32277,
+      "parameter_bytes": 138112,
+      "buffer_bytes": 0,
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "rss_before_load_bytes": 266694656,
+      "rss_after_load_bytes": 274305024,
+      "rss_load_delta_bytes": 7610368,
+      "rss_after_forward_bytes": 283541504,
+      "process_peak_before_load_bytes": 266432512,
+      "process_peak_after_forward_bytes": 283217920,
+      "load_ms": 7.97081,
+      "forward_samples_ms": [
+        0.505226,
+        0.262701,
+        0.194002,
+        0.41516,
+        0.354607,
+        0.199618,
+        0.224458
+      ],
+      "forward_median_ms": 0.262701,
+      "input_tokens": 64,
+      "input_token_ids_sha256": "0e58501d48eab7cf91bd3ca6bdae8d80eec18a11def399acaa4291cc3ffdb9e2",
+      "output_shape": [
+        1,
+        64,
+        260
+      ],
+      "output_finite": true,
+      "torch_version": "2.11.0+cpu",
+      "torch_threads": 1,
+      "torch_interop_threads": 1,
+      "python": "3.14.7",
+      "pid": 14,
+      "trial": 0
+    },
+    {
+      "variant": "int8",
+      "artifact_relative_path": "int8/model-int8.pt",
+      "artifact_sha256": "b349581edafef235a517f66102a4f46035b42bd81fed48e492a6a172c032025a",
+      "artifact_bytes": 49493,
+      "parameter_bytes": 138112,
+      "buffer_bytes": 0,
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "rss_before_load_bytes": 266702848,
+      "rss_after_load_bytes": 272809984,
+      "rss_load_delta_bytes": 6107136,
+      "rss_after_forward_bytes": 282824704,
+      "process_peak_before_load_bytes": 266436608,
+      "process_peak_after_forward_bytes": 282566656,
+      "load_ms": 6.523448,
+      "forward_samples_ms": [
+        0.41925,
+        0.289096,
+        0.20345,
+        0.186957,
+        0.264784,
+        0.189338,
+        0.172908
+      ],
+      "forward_median_ms": 0.20345,
+      "input_tokens": 64,
+      "input_token_ids_sha256": "0e58501d48eab7cf91bd3ca6bdae8d80eec18a11def399acaa4291cc3ffdb9e2",
+      "output_shape": [
+        1,
+        64,
+        260
+      ],
+      "output_finite": true,
+      "torch_version": "2.11.0+cpu",
+      "torch_threads": 1,
+      "torch_interop_threads": 1,
+      "python": "3.14.7",
+      "pid": 23,
+      "trial": 0
+    },
+    {
+      "variant": "int4",
+      "artifact_relative_path": "int4/model-int4.pt",
+      "artifact_sha256": "7474a2ddc304e094a1d0dffd1e4a7263bc36054a166c1323e13dc00c90357e1b",
+      "artifact_bytes": 32277,
+      "parameter_bytes": 138112,
+      "buffer_bytes": 0,
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "rss_before_load_bytes": 266252288,
+      "rss_after_load_bytes": 273928192,
+      "rss_load_delta_bytes": 7675904,
+      "rss_after_forward_bytes": 283172864,
+      "process_peak_before_load_bytes": 265887744,
+      "process_peak_after_forward_bytes": 282935296,
+      "load_ms": 12.867805,
+      "forward_samples_ms": [
+        0.384111,
+        0.342499,
+        0.287068,
+        0.337741,
+        0.289237,
+        0.272535,
+        0.306992
+      ],
+      "forward_median_ms": 0.306992,
+      "input_tokens": 64,
+      "input_token_ids_sha256": "0e58501d48eab7cf91bd3ca6bdae8d80eec18a11def399acaa4291cc3ffdb9e2",
+      "output_shape": [
+        1,
+        64,
+        260
+      ],
+      "output_finite": true,
+      "torch_version": "2.11.0+cpu",
+      "torch_threads": 1,
+      "torch_interop_threads": 1,
+      "python": "3.14.7",
+      "pid": 32,
+      "trial": 1
+    },
+    {
+      "variant": "int8",
+      "artifact_relative_path": "int8/model-int8.pt",
+      "artifact_sha256": "b349581edafef235a517f66102a4f46035b42bd81fed48e492a6a172c032025a",
+      "artifact_bytes": 49493,
+      "parameter_bytes": 138112,
+      "buffer_bytes": 0,
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "rss_before_load_bytes": 266711040,
+      "rss_after_load_bytes": 272789504,
+      "rss_load_delta_bytes": 6078464,
+      "rss_after_forward_bytes": 282869760,
+      "process_peak_before_load_bytes": 266346496,
+      "process_peak_after_forward_bytes": 282607616,
+      "load_ms": 18.585206,
+      "forward_samples_ms": [
+        0.375136,
+        0.771842,
+        0.69518,
+        0.451796,
+        0.312981,
+        0.366524,
+        0.29554
+      ],
+      "forward_median_ms": 0.375136,
+      "input_tokens": 64,
+      "input_token_ids_sha256": "0e58501d48eab7cf91bd3ca6bdae8d80eec18a11def399acaa4291cc3ffdb9e2",
+      "output_shape": [
+        1,
+        64,
+        260
+      ],
+      "output_finite": true,
+      "torch_version": "2.11.0+cpu",
+      "torch_threads": 1,
+      "torch_interop_threads": 1,
+      "python": "3.14.7",
+      "pid": 41,
+      "trial": 1
+    },
+    {
+      "variant": "float32",
+      "artifact_relative_path": "int4/float32-model.pt",
+      "artifact_sha256": "ccc84f108fba232b3d0cdc2419e2a8269b738e0276a68e6653ef723cac5602f6",
+      "artifact_bytes": 144790,
+      "parameter_bytes": 138112,
+      "buffer_bytes": 0,
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "rss_before_load_bytes": 266866688,
+      "rss_after_load_bytes": 270974976,
+      "rss_load_delta_bytes": 4108288,
+      "rss_after_forward_bytes": 282497024,
+      "process_peak_before_load_bytes": 266612736,
+      "process_peak_after_forward_bytes": 282218496,
+      "load_ms": 5.449858,
+      "forward_samples_ms": [
+        0.684499,
+        0.383163,
+        0.289119,
+        0.336012,
+        0.371366,
+        0.27892,
+        0.327402
+      ],
+      "forward_median_ms": 0.336012,
+      "input_tokens": 64,
+      "input_token_ids_sha256": "0e58501d48eab7cf91bd3ca6bdae8d80eec18a11def399acaa4291cc3ffdb9e2",
+      "output_shape": [
+        1,
+        64,
+        260
+      ],
+      "output_finite": true,
+      "torch_version": "2.11.0+cpu",
+      "torch_threads": 1,
+      "torch_interop_threads": 1,
+      "python": "3.14.7",
+      "pid": 50,
+      "trial": 1
+    },
+    {
+      "variant": "int8",
+      "artifact_relative_path": "int8/model-int8.pt",
+      "artifact_sha256": "b349581edafef235a517f66102a4f46035b42bd81fed48e492a6a172c032025a",
+      "artifact_bytes": 49493,
+      "parameter_bytes": 138112,
+      "buffer_bytes": 0,
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "rss_before_load_bytes": 266706944,
+      "rss_after_load_bytes": 272809984,
+      "rss_load_delta_bytes": 6103040,
+      "rss_after_forward_bytes": 282824704,
+      "process_peak_before_load_bytes": 266440704,
+      "process_peak_after_forward_bytes": 282570752,
+      "load_ms": 6.536281,
+      "forward_samples_ms": [
+        1.030764,
+        0.263608,
+        0.190647,
+        1.867462,
+        0.347853,
+        0.214134,
+        1.513594
+      ],
+      "forward_median_ms": 0.347853,
+      "input_tokens": 64,
+      "input_token_ids_sha256": "0e58501d48eab7cf91bd3ca6bdae8d80eec18a11def399acaa4291cc3ffdb9e2",
+      "output_shape": [
+        1,
+        64,
+        260
+      ],
+      "output_finite": true,
+      "torch_version": "2.11.0+cpu",
+      "torch_threads": 1,
+      "torch_interop_threads": 1,
+      "python": "3.14.7",
+      "pid": 59,
+      "trial": 2
+    },
+    {
+      "variant": "float32",
+      "artifact_relative_path": "int4/float32-model.pt",
+      "artifact_sha256": "ccc84f108fba232b3d0cdc2419e2a8269b738e0276a68e6653ef723cac5602f6",
+      "artifact_bytes": 144790,
+      "parameter_bytes": 138112,
+      "buffer_bytes": 0,
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "rss_before_load_bytes": 266858496,
+      "rss_after_load_bytes": 270974976,
+      "rss_load_delta_bytes": 4116480,
+      "rss_after_forward_bytes": 282497024,
+      "process_peak_before_load_bytes": 266506240,
+      "process_peak_after_forward_bytes": 282112000,
+      "load_ms": 5.276442,
+      "forward_samples_ms": [
+        0.234038,
+        0.220744,
+        0.184536,
+        0.211562,
+        0.193816,
+        0.233875,
+        0.189037
+      ],
+      "forward_median_ms": 0.211562,
+      "input_tokens": 64,
+      "input_token_ids_sha256": "0e58501d48eab7cf91bd3ca6bdae8d80eec18a11def399acaa4291cc3ffdb9e2",
+      "output_shape": [
+        1,
+        64,
+        260
+      ],
+      "output_finite": true,
+      "torch_version": "2.11.0+cpu",
+      "torch_threads": 1,
+      "torch_interop_threads": 1,
+      "python": "3.14.7",
+      "pid": 68,
+      "trial": 2
+    },
+    {
+      "variant": "int4",
+      "artifact_relative_path": "int4/model-int4.pt",
+      "artifact_sha256": "7474a2ddc304e094a1d0dffd1e4a7263bc36054a166c1323e13dc00c90357e1b",
+      "artifact_bytes": 32277,
+      "parameter_bytes": 138112,
+      "buffer_bytes": 0,
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "rss_before_load_bytes": 266383360,
+      "rss_after_load_bytes": 273993728,
+      "rss_load_delta_bytes": 7610368,
+      "rss_after_forward_bytes": 283226112,
+      "process_peak_before_load_bytes": 266100736,
+      "process_peak_after_forward_bytes": 283017216,
+      "load_ms": 22.96841,
+      "forward_samples_ms": [
+        0.223046,
+        0.366917,
+        0.308091,
+        0.195679,
+        0.240139,
+        0.17136,
+        0.170987
+      ],
+      "forward_median_ms": 0.223046,
+      "input_tokens": 64,
+      "input_token_ids_sha256": "0e58501d48eab7cf91bd3ca6bdae8d80eec18a11def399acaa4291cc3ffdb9e2",
+      "output_shape": [
+        1,
+        64,
+        260
+      ],
+      "output_finite": true,
+      "torch_version": "2.11.0+cpu",
+      "torch_threads": 1,
+      "torch_interop_threads": 1,
+      "python": "3.14.7",
+      "pid": 77,
+      "trial": 2
+    }
+  ],
+  "medians_over_three_processes": {
+    "float32": {
+      "artifact_bytes": 144790,
+      "parameter_bytes": 138112,
+      "buffer_bytes": 0,
+      "load_ms": 5.449858,
+      "rss_before_load_bytes": 266866688,
+      "rss_after_load_bytes": 270974976,
+      "rss_load_delta_bytes": 4108288,
+      "rss_after_forward_bytes": 282497024,
+      "process_peak_after_forward_bytes": 282218496,
+      "forward_median_ms": 0.336012
+    },
+    "int4": {
+      "artifact_bytes": 32277,
+      "parameter_bytes": 138112,
+      "buffer_bytes": 0,
+      "load_ms": 12.867805,
+      "rss_before_load_bytes": 266383360,
+      "rss_after_load_bytes": 273993728,
+      "rss_load_delta_bytes": 7610368,
+      "rss_after_forward_bytes": 283226112,
+      "process_peak_after_forward_bytes": 283017216,
+      "forward_median_ms": 0.262701
+    },
+    "int8": {
+      "artifact_bytes": 49493,
+      "parameter_bytes": 138112,
+      "buffer_bytes": 0,
+      "load_ms": 6.536281,
+      "rss_before_load_bytes": 266706944,
+      "rss_after_load_bytes": 272809984,
+      "rss_load_delta_bytes": 6103040,
+      "rss_after_forward_bytes": 282824704,
+      "process_peak_after_forward_bytes": 282570752,
+      "forward_median_ms": 0.347853
+    }
+  },
+  "source_files_sha256": {
+    "olympus/foundry/sft.py": "b8408542ef7e3a30c8b11819c45b117ec12b94006d7d805d7291a92f45d00f23",
+    "olympus/foundry/quantization.py": "71800804256f4e6a386439042642a70685e041af4b1baf2983e94d46cfd0e9eb"
+  }
+}
