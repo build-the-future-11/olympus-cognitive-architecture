@@ -1,0 +1,35 @@
+{
+  "schema": "olympus.isolated_quantization_probe.v1",
+  "purpose": "Separate stored artifact size from loaded float32 model and process RSS",
+  "evidence_type": "retained 36-record constructed engineering fixture",
+  "retained_probe_sha256": "7b19fa2b7f22d72a82ba14be229c1a8dd746ddd826412442566f9b797730c741",
+  "script_sha256": "ed5736a1d2b561b6b4574083b7f75cd70de05bb3777b786748abdbb02e68eb27",
+  "repetitions": 3,
+  "variant_orders": [
+    [
+      "float32",
+      "int4",
+      "int8"
+    ],
+    [
+      "int4",
+      "int8",
+      "float32"
+    ],
+    [
+      "int8",
+      "float32",
+      "int4"
+    ]
+  ],
+  "process_isolation": "One fresh Python interpreter per variant and repetition",
+  "timing_scope": "Load excludes Python/torch import; forward excludes two warmup calls",
+  "rss_scope": "Linux resident pages including shared libraries; not proportional set size",
+  "peak_scope": "Each child process high-water RSS, including interpreter and imports",
+  "cache_policy": "OS file caches are not cleared; these are not cold-storage measurements",
+  "inference_execution": "All three variants execute float32 CPU kernels",
+  "scientific_outcome_campaign": false,
+  "new_training": false,
+  "model_promotion_authorized": false,
+  "research_claims_authorized": false
+}
