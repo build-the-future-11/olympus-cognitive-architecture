@@ -23,6 +23,7 @@ from olympus.foundry.eval_suite import (
 from olympus.foundry.promotion import evaluate_promotion
 from olympus.foundry.quantization import (
     QuantizationReport,
+    _paired_forward_latency,
     load_quantized_model,
     quantize_checkpoint,
 )
@@ -184,6 +185,9 @@ def test_tokenizer_model_and_nibble_quantization_are_real() -> None:
         TinyModelConfig(width=30, heads=4)
     model = TinyCausalLM(TinyModelConfig(width=32, layers=1, heads=4, max_sequence_tokens=32))
     assert model(torch.ones((2, 12), dtype=torch.long)).shape == (2, 12, 260)
+    timing = _paired_forward_latency(model, model, "long context " * 30)
+    assert timing["input_tokens"] == 32
+    assert timing["input_truncated_to_context"] is True
     with pytest.raises(ValueError, match="sequence limit"):
         model(torch.ones((1, 33), dtype=torch.long))
     qlora = QLoRALinear(torch.nn.Linear(32, 16), rank=2, alpha=4)
@@ -276,6 +280,24 @@ def test_held_out_evaluation_quantization_and_negative_promotion(
     )
     assert int8.quantized_bytes < int8.float_weights_bytes
     assert int4.quantized_bytes < int8.quantized_bytes
+    for quantized_report in (int8, int4):
+        assert quantized_report.schema_version == 2
+        assert quantized_report.inference_execution == "float32_cpu_with_dequantized_stored_weights"
+        assert quantized_report.latency_benchmark is not None
+        assert quantized_report.latency_benchmark["workload"] == "fixed_context_cpu_forward"
+        assert quantized_report.latency_benchmark["measured_rounds"] == 7
+        assert len(quantized_report.latency_benchmark["reference_ms"]) == 7
+        assert len(quantized_report.latency_benchmark["candidate_ms"]) == 7
+        assert quantized_report.latency_benchmark["source_parameter_dtype"] == "torch.float32"
+        assert quantized_report.latency_benchmark["candidate_parameter_dtype"] == "torch.float32"
+        assert (
+            quantized_report.source_latency_ms
+            == quantized_report.latency_benchmark["reference_median_ms"]
+        )
+        assert (
+            quantized_report.quantized_latency_ms
+            == quantized_report.latency_benchmark["candidate_median_ms"]
+        )
     assert load_quantized_model(Path(int4.artifact_path))
     with pytest.raises(ValueError, match="merged full checkpoint"):
         quantize_checkpoint(
