@@ -92,11 +92,17 @@ class OllamaClient:
         message = payload.get("message")
         if not isinstance(message, dict) or not isinstance(message.get("content"), str):
             raise ValueError("Ollama chat response is malformed")
+        if payload.get("done") is not True:
+            raise ValueError("Ollama chat response is not complete")
+        # Older Ollama responses omit the optional reason or send an empty string.
+        done_reason = payload.get("done_reason", "")
+        if not isinstance(done_reason, str) or done_reason not in ("", "stop", "length"):
+            raise ValueError("Ollama chat response has an unsupported done_reason")
         content = message["content"]
         return GenerationResult(
             model=model,
             content=content,
-            finish_reason="stop" if payload.get("done") is True else "length",
+            finish_reason="length" if done_reason == "length" else "stop",
             prompt_characters=len(prompt),
             generated_characters=len(content),
             evidence={
