@@ -163,7 +163,7 @@ describe("exact-source model registry admission review", () => {
     state.registryFails = true;
     fireEvent.click(screen.getByRole("button", { name: "Refresh live state" }));
     await screen.findByRole("alert");
-    expect(screen.getByText("0 available")).toBeInTheDocument();
+    expect(screen.getByText("Registry unavailable")).toBeInTheDocument();
     expect(screen.getByLabelText("Model")).toBeDisabled();
     await clickGenerate();
 
