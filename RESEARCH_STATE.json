@@ -3,7 +3,7 @@
   "project": "Olympus Cognitive Architecture",
   "repository": "build-the-future-11/olympus-cognitive-architecture",
   "updated_utc": "2026-10-10",
-  "current_phase": "DEVELOPMENT_ENGINEERING_VERIFIED_LOCAL",
+  "current_phase": "DEVELOPMENT_ENGINEERING_REVIEWED",
   "scientific_disposition": "NOT_REASSESSED",
   "research_question": "Can the Foundry preserve the identity and provenance of the actual records consumed by training and evaluation under changes to dataset files?",
   "scientific_objective": "Reliable, inspectable research infrastructure; this engineering study makes no model capability claim.",
@@ -94,14 +94,37 @@
     {
       "date": "2026-10-10",
       "event": "Confirmed 10 consumer failures and 5 unchanged controls on PR23; implemented one verified-record snapshot and passed 34 focused tests. Hosted complete release validation remains required."
+    },
+    {
+      "date": "2026-10-10",
+      "event": "Published PR27 code snapshot fef543387eb0b5d612f8ad9a5452530ac3f7ca4f passed the full Python3.14 and web release gate. Independent source review found no blocker; reviewer did not independently rerun tests. This metadata update leaves the tested implementation and test source hashes unchanged."
     }
   ],
   "verification": {
     "local_tests_passed": 34,
     "new_regression_cases": 15,
     "baseline_failed_cases": 10,
-    "full_release_status": "PENDING_HOSTED_CHECKS",
-    "independent_review": "PENDING",
-    "research_complete": false
+    "full_release_status": "PASSED_FOR_VALIDATED_CODE_SNAPSHOT",
+    "independent_review": {
+      "date": "2026-10-10",
+      "reviewer": "Independent parent research agent",
+      "status": "NO_BLOCKING_FINDINGS",
+      "validated_source_commit": "fef543387eb0b5d612f8ad9a5452530ac3f7ca4f",
+      "scope": [
+        "Same-byte hash verification and parsed-record binding",
+        "All complete-dataset checks before returning",
+        "Evaluation, SFT and quantization consume verified records",
+        "Compatibility verifier return type",
+        "Release of unused split dictionaries"
+      ],
+      "independent_test_rerun": false,
+      "limit": "Source review only; full integration evidence comes from the hosted Python3.14.8 release gate."
+    },
+    "research_complete": false,
+    "validated_source_commit": "fef543387eb0b5d612f8ad9a5452530ac3f7ca4f",
+    "hosted_release_url": "https://github.com/build-the-future-11/olympus-cognitive-architecture/actions/runs/38026180950",
+    "hosted_python": "3.14.8",
+    "hosted_tests_passed": 194,
+    "hosted_branch_coverage_percent": 87.4
   }
 }

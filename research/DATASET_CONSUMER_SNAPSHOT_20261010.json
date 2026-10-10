@@ -38,7 +38,8 @@
     "Exact-module isolated pytest: 34 passed",
     "Ruff changed code and tests: passed",
     "Strict Mypy with silent imports on changed code and tests: passed",
-    "Package Python3.14 and full release gate: required hosted validation"
+    "Package Python3.14 and full release gate: required hosted validation",
+    "Full Python3.14 and web release gate subsequently passed at the explicitly recorded source commit."
   ],
   "limits": [
     "The full package environment is unavailable locally.",
@@ -47,5 +48,40 @@
     "PR26 token-loss normalization is a separate change and is not included."
   ],
   "reproduction": "docs/dataset-consumer-snapshot-20261010.md",
-  "scientific_claim": "None beyond the bounded dataset-consumption invariant."
+  "scientific_claim": "None beyond the bounded dataset-consumption invariant.",
+  "followup_review": {
+    "date": "2026-10-10",
+    "reviewer": "Independent parent research agent",
+    "status": "NO_BLOCKING_FINDINGS",
+    "validated_source_commit": "fef543387eb0b5d612f8ad9a5452530ac3f7ca4f",
+    "scope": [
+      "Same-byte hash verification and parsed-record binding",
+      "All complete-dataset checks before returning",
+      "Evaluation, SFT and quantization consume verified records",
+      "Compatibility verifier return type",
+      "Release of unused split dictionaries"
+    ],
+    "independent_test_rerun": false,
+    "limit": "Source review only; full integration evidence comes from the hosted Python3.14.8 release gate."
+  },
+  "hosted_verification": {
+    "source_commit": "fef543387eb0b5d612f8ad9a5452530ac3f7ca4f",
+    "url": "https://github.com/build-the-future-11/olympus-cognitive-architecture/actions/runs/38026180950",
+    "conclusion": "success",
+    "python": "3.14.8",
+    "tests_passed": 194,
+    "branch_coverage_percent": 87.4,
+    "strict_typecheck_files": 78,
+    "checks": [
+      "Exact source binding",
+      "Full Python tests",
+      "Strict type check",
+      "Ruff",
+      "Golden path",
+      "Dependency audits",
+      "Package build and metadata",
+      "Bundled corpus",
+      "Web tests and build"
+    ]
+  }
 }
