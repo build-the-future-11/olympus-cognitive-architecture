@@ -1,0 +1,14 @@
+{
+  "source_sha256": "a5b91bacdf98e72b1a3adc8aba008219ac30fac8d0cb95e550087bd03a8db54a",
+  "fixture": "/tmp/olympus-optimizer-config-review-a_hv1m09",
+  "harness_history": "Initial witness config width=8 was rejected by the existing >=16 validation before training; fixture changed to admitted width16.",
+  "scope": "One artificial first epoch; contradictory optimizer metadata then rejected before continuation training or attempt creation; real Foundry modules with optional top-level web API bypassed",
+  "saved_training_config_lr": 0.003,
+  "saved_optimizer_lr": 0.0,
+  "admitted": false,
+  "error_type": "ValueError",
+  "error": "checkpoint optimizer policy does not match the declared configuration",
+  "source_unchanged_during_execution": true,
+  "prior_rejected_witness": "/tmp/olympus_optimizer_models_next_review_before.json",
+  "result": "PASS after independent optimizer-policy repair"
+}

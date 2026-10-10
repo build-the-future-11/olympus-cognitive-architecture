@@ -1,0 +1,17 @@
+{
+  "source_sha256": "3dc870224693c5a757369f7f14ce8609b9b788ae9ea337f348db1428b06fe6bb",
+  "fixture": "/tmp/olympus-optimizer-config-review-_qu_ou0n",
+  "harness_history": "Initial witness config width=8 was rejected by the existing >=16 validation before training; fixture changed to admitted width16.",
+  "scope": "one artificial first epoch and one additional artificial epoch; real Foundry modules; optional top-level web API bypassed",
+  "saved_training_config_lr": 0.003,
+  "saved_optimizer_lr": 0.0,
+  "admitted": true,
+  "status": "COMPLETED",
+  "recorded_learning_rate": 0.003,
+  "actual_optimizer_learning_rate": 0.0,
+  "all_model_weights_unchanged": true,
+  "completed_epochs": 2,
+  "optimizer_steps": 4,
+  "prior_optimizer_steps": 2,
+  "source_unchanged_during_execution": true
+}
