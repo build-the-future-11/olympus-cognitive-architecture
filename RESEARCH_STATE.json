@@ -54,7 +54,9 @@
     "docs/dataset-reverification-20261010.md",
     "tests/test_dataset_consumer_snapshot.py",
     "docs/dataset-consumer-snapshot-20261010.md",
-    "research/DATASET_CONSUMER_SNAPSHOT_20261010.json"
+    "research/DATASET_CONSUMER_SNAPSHOT_20261010.json",
+    "docs/foundry-window-and-dataset-20261010.md",
+    "research/verification/foundry_integration_20261010/receipt.json"
   ],
   "claims": [
     {
@@ -98,6 +100,23 @@
     {
       "date": "2026-10-10",
       "event": "Published PR27 code snapshot fef543387eb0b5d612f8ad9a5452530ac3f7ca4f passed the full Python3.14 and web release gate. Independent source review found no blocker; reviewer did not independently rerun tests. This metadata update leaves the tested implementation and test source hashes unchanged."
+    },
+    {
+      "date": "2026-10-10",
+      "event": "Opened engineering integration of PR26 token-normalization source 2519ef345da556d210a1cb0f705077a835b6f8e6 with PR27 verified-data snapshots cbc54b95970891e54d658c085ead03714396aa13. Additional bounded engineering hypothesis: materializing only one optimizer window preserves batch order, token denominators, gradients, optimizer steps, and generator state while limiting padded tensor retention to gradient_accumulation_steps batches. No scientific study or promotion."
+    },
+    {
+      "date": "2026-10-10",
+      "kind": "independent_review_finding",
+      "event": "Independent source review found that quantize_checkpoint verifies a dataset but never binds its manifest identity to the source checkpoint and writes weight artifacts before that data preflight. New bounded engineering correction: require identical checkpoint/dataset manifest SHA before artifact writes; invalid or missing identities must produce no quantized outputs. Existing matching input, v1/v2 normalization and snapshot behavior must be preserved.",
+      "reviewer": "jepa_astronomy",
+      "scientific_runs": 0
+    },
+    {
+      "date": "2026-10-10",
+      "event": "Integrated PR26 normalization with PR27 verified snapshots; bounded padded training tensors to one accumulation window; bound quantization dataset identity before output publication. Seven pre-fix failures reproduced. Final220 local tests, Ruff and strict Mypy81files passed. Detailed retained failures and source hashes in new development record and receipt. Exact integration hosted release pending; prior top-level verification remains historical.",
+      "record": "docs/foundry-window-and-dataset-20261010.md",
+      "scientific_outcomes_created": false
     }
   ],
   "verification": {
@@ -126,5 +145,24 @@
     "hosted_python": "3.14.8",
     "hosted_tests_passed": 194,
     "hosted_branch_coverage_percent": 87.4
+  },
+  "active_engineering_revision": {
+    "phase": "LOCALLY_VERIFIED_PENDING_HOSTED_RELEASE",
+    "normalization_parent": "2519ef345da556d210a1cb0f705077a835b6f8e6",
+    "snapshot_parent": "cbc54b95970891e54d658c085ead03714396aa13",
+    "falsifier": "Changed tensors/order/generator state, changed analytic gradients or optimizer parameters, or padded-tensor lookahead beyond one accumulation window.",
+    "budget": {
+      "new_engineering_hypotheses": 2,
+      "cpu_test_command_seconds": 120,
+      "protected_runs": 0,
+      "paid_runs": 0
+    },
+    "prior_verification": "Top-level verification records describe the preserved earlier snapshot only.",
+    "verification": "research/verification/foundry_integration_20261010/receipt.json",
+    "development_record": "docs/foundry-window-and-dataset-20261010.md",
+    "local_tests_passed": 220,
+    "new_regression_cases": 7,
+    "independent_source_review": "no blocking findings; no independent test rerun",
+    "scientific_outcomes_created": false
   }
 }

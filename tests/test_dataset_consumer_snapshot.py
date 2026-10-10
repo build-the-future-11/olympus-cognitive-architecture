@@ -135,7 +135,10 @@ def test_quantization_encodes_the_verified_test_snapshot(
     config = sft.SFTConfig(model=sft.TinyModelConfig(width=16, layers=1, max_sequence_tokens=64))
     model = sft.TinyCausalLM(config.model)
     # Exercise actual quantized serialization but stop before any scoring.
-    checkpoint: dict[str, Any] = {"training_config": config.model_dump(mode="json")}
+    checkpoint: dict[str, Any] = {
+        "training_config": config.model_dump(mode="json"),
+        "dataset_manifest_sha256": prepared.manifest.manifest_sha256,
+    }
     checkpoint_path = tmp_path / "untrained-fixture.pt"
     checkpoint_path.write_bytes(b"artificial-untrained-checkpoint")
     monkeypatch.setattr(quantization, "_model_from_checkpoint", lambda *_: (model, checkpoint))

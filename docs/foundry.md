@@ -109,6 +109,25 @@ promotion controls on hardware that cannot safely train a large model.
 nibbles, not an int8 substitute. `--resume-checkpoint` restores model,
 optimizer, completed epoch/step counters, and deterministic generator state.
 
+New SFT runs use `supervised_token_mean_v2`: loss is the mean over supervised
+next-token targets, with prompt and padding positions excluded. Gradient
+accumulation uses the actual target count across each optimizer window, including
+the final partial window. Changing microbatch sizes therefore preserves the
+window's objective when its examples and forward behavior are the same.
+
+The normalization version is stored in training logs, checkpoint configuration,
+training summaries, held-out reports, and quantization reports. V2 run paths end
+in `-tokens-v2`, separating them from historical run paths. Checkpoints without
+this metadata retain `legacy_batch_mean_v1`; evaluation and quantization use that
+legacy definition. To resume such a checkpoint, pass
+`--loss-normalization legacy_batch_mean_v1` explicitly. Resuming with a different
+normalization is rejected.
+
+V2 changes optimization trajectories and reported losses. Its measurements must
+remain bound to that version and source; they are not interchangeable with the
+retained v1 losses in `OLYMPUS_MODEL_FOUNDRY_LEDGER.md`. The dated implementation
+record is `research/SFT_TOKEN_NORMALIZATION_20261010.md`.
+
 ```bash
 .venv/bin/olympus foundry evaluate-checkpoint CHECKPOINT MANIFEST REPORT
 .venv/bin/olympus foundry quantize-checkpoint CHECKPOINT MANIFEST OUTPUT --bits 4

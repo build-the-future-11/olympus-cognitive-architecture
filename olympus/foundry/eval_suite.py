@@ -17,9 +17,10 @@ from olympus.core.schemas import StrictModel
 from olympus.foundry.data_pipeline import InstructionExample, load_verified_dataset
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.sft import (
-    SFTConfig,
+    LossNormalization,
     TinyCausalLM,
     TinyModelConfig,
+    _checkpoint_training_config,
     _encode_examples,
     _model_from_checkpoint,
     evaluate_loss,
@@ -81,6 +82,7 @@ class HeldOutEvaluation(StrictModel):
     peak_rss_bytes: int = Field(ge=0)
     passed_smoke_quality_gate: bool
     decision: str
+    loss_normalization: LossNormalization = "legacy_batch_mean_v1"
 
 
 def _load_test_examples(manifest_path: Path) -> tuple[str, list[InstructionExample]]:
@@ -96,7 +98,7 @@ def _baseline_model(
     if base_checkpoint is not None:
         model, _ = _model_from_checkpoint(base_checkpoint, torch.device("cpu"))
         return model, f"checkpoint:{_sha256(base_checkpoint)}"
-    training = SFTConfig.model_validate(checkpoint["training_config"])
+    training = _checkpoint_training_config(checkpoint)
     torch.manual_seed(training.seed)
     return TinyCausalLM(TinyModelConfig.model_validate(checkpoint["model_config"])), (
         f"deterministic-untrained-seed-{training.seed}"
@@ -158,18 +160,26 @@ def evaluate_checkpoint(
     manifest_sha, examples = _load_test_examples(manifest_path)
     if checkpoint["dataset_manifest_sha256"] != manifest_sha:
         raise ValueError("checkpoint and evaluation dataset hashes do not match")
-    training = SFTConfig.model_validate(checkpoint["training_config"])
+    training = _checkpoint_training_config(checkpoint)
     evaluation_config = training.model_copy(update={"pack_sequences": False})
     all_rows = _encode_examples(examples, evaluation_config)
-    baseline_loss = evaluate_loss(baseline, all_rows, device=device)
-    candidate_loss = evaluate_loss(candidate, all_rows, device=device)
+    baseline_loss = evaluate_loss(
+        baseline, all_rows, device=device, normalization=training.loss_normalization
+    )
+    candidate_loss = evaluate_loss(
+        candidate, all_rows, device=device, normalization=training.loss_normalization
+    )
 
     category_results: list[CategoryEvaluation] = []
     for category in sorted({example.category for example in examples}):
         selected = [example for example in examples if example.category == category]
         rows = _encode_examples(selected, evaluation_config)
-        before = evaluate_loss(baseline, rows, device=device)
-        after = evaluate_loss(candidate, rows, device=device)
+        before = evaluate_loss(
+            baseline, rows, device=device, normalization=training.loss_normalization
+        )
+        after = evaluate_loss(
+            candidate, rows, device=device, normalization=training.loss_normalization
+        )
         change = (after - before) / max(before, 1e-12)
         category_results.append(
             CategoryEvaluation(
@@ -208,6 +218,7 @@ def evaluate_checkpoint(
         else "Failed the infrastructure smoke gate and is ineligible for model promotion."
     )
     report = HeldOutEvaluation(
+        loss_normalization=training.loss_normalization,
         checkpoint_path=str(checkpoint_path.resolve()),
         checkpoint_sha256=_sha256(checkpoint_path),
         dataset_manifest_sha256=manifest_sha,

@@ -8,6 +8,7 @@ import random
 import time
 from collections.abc import Iterable
 from contextlib import nullcontext
+from itertools import islice
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any, Literal, cast
@@ -25,6 +26,7 @@ from olympus.foundry.data_pipeline import (
 from olympus.foundry.resources import ResourceGovernor, memory_snapshot
 
 AdapterMode = Literal["full", "lora", "qlora"]
+LossNormalization = Literal["legacy_batch_mean_v1", "supervised_token_mean_v2"]
 
 
 def _sha256(path: Path) -> str:
@@ -82,6 +84,7 @@ class TinyModelConfig(StrictModel):
 
 class SFTConfig(StrictModel):
     mode: AdapterMode = "full"
+    loss_normalization: LossNormalization = "supervised_token_mean_v2"
     seed: int = Field(default=7, ge=0, le=2**32 - 1)
     epochs: int = Field(default=2, ge=1, le=100)
     batch_size: int = Field(default=4, ge=1, le=128)
@@ -120,6 +123,8 @@ class TrainingSummary(StrictModel):
     elapsed_seconds: float
     preflight_memory: dict[str, int | float]
     final_memory: dict[str, int | float]
+    # Reports written before the corrected objective used batch means.
+    loss_normalization: LossNormalization = "legacy_batch_mean_v1"
 
 
 class LoRALinear(nn.Module):
@@ -335,10 +340,25 @@ def _batches(
         yield tokens, labels
 
 
-def _loss(model: TinyCausalLM, tokens: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
+def _supervised_token_count(labels: torch.Tensor) -> int:
+    """Count next-token targets, excluding prompts, padding, and the first column."""
+    count = int((labels[:, 1:] != -100).sum().item())
+    if count == 0:
+        raise ValueError("batch contains no supervised next-token targets")
+    return count
+
+
+def _loss(
+    model: TinyCausalLM,
+    tokens: torch.Tensor,
+    labels: torch.Tensor,
+    *,
+    reduction: Literal["mean", "sum"] = "mean",
+) -> torch.Tensor:
     logits = model(tokens[:, :-1])
     return F.cross_entropy(
-        logits.reshape(-1, logits.shape[-1]), labels[:, 1:].reshape(-1), ignore_index=-100
+        logits.reshape(-1, logits.shape[-1]), labels[:, 1:].reshape(-1),
+        ignore_index=-100, reduction=reduction,
     )
 
 
@@ -347,16 +367,28 @@ def evaluate_loss(
     rows: list[tuple[list[int], list[int]]],
     *,
     device: torch.device,
+    normalization: LossNormalization = "supervised_token_mean_v2",
 ) -> float:
+    if normalization not in {"legacy_batch_mean_v1", "supervised_token_mean_v2"}:
+        raise ValueError("unsupported loss normalization")
     model.eval()
     losses: list[float] = []
+    denominator = 0
     generator = torch.Generator().manual_seed(0)
     with torch.inference_mode():
         for tokens, labels in _batches(rows, 8, generator):
-            losses.append(float(_loss(model, tokens.to(device), labels.to(device)).item()))
-    if not losses:
+            if normalization == "supervised_token_mean_v2":
+                denominator += _supervised_token_count(labels)
+                reduction: Literal["mean", "sum"] = "sum"
+            else:
+                denominator += 1
+                reduction = "mean"
+            losses.append(float(_loss(
+                model, tokens.to(device), labels.to(device), reduction=reduction
+            ).item()))
+    if denominator == 0:
         raise ValueError("evaluation contains no batches")
-    return sum(losses) / len(losses)
+    return sum(losses) / denominator
 
 
 def generate_text(
@@ -395,10 +427,24 @@ def _resolve_device(name: str) -> torch.device:
     return torch.device(name)
 
 
+def _checkpoint_training_config(checkpoint: dict[str, Any]) -> SFTConfig:
+    """Preserve legacy checkpoint semantics instead of applying new-run defaults."""
+    values = dict(checkpoint["training_config"])
+    if checkpoint.get("schema_version", 1) == 2 and "loss_normalization" not in values:
+        raise ValueError("checkpoint is missing its loss normalization version")
+    values.setdefault("loss_normalization", "legacy_batch_mean_v1")
+    training = SFTConfig.model_validate(values)
+    if checkpoint.get("loss_normalization", training.loss_normalization) != (
+        training.loss_normalization
+    ):
+        raise ValueError("checkpoint loss normalization metadata does not match")
+    return training
+
+
 def _model_from_checkpoint(path: Path, device: torch.device) -> tuple[TinyCausalLM, dict[str, Any]]:
     checkpoint = cast(dict[str, Any], torch.load(path, map_location="cpu", weights_only=True))
     model_config = TinyModelConfig.model_validate(checkpoint["model_config"])
-    training_config = SFTConfig.model_validate(checkpoint["training_config"])
+    training_config = _checkpoint_training_config(checkpoint)
     model = TinyCausalLM(model_config)
     apply_adapters(
         model,
@@ -450,8 +496,11 @@ def run_sft(
             model, resumed = _model_from_checkpoint(resume_checkpoint, device)
             if resumed["dataset_manifest_sha256"] != manifest.manifest_sha256:
                 raise ValueError("resume checkpoint dataset hash does not match")
-            if SFTConfig.model_validate(resumed["training_config"]).mode != config.mode:
+            resumed_config = _checkpoint_training_config(resumed)
+            if resumed_config.mode != config.mode:
                 raise ValueError("resume checkpoint training mode does not match")
+            if resumed_config.loss_normalization != config.loss_normalization:
+                raise ValueError("resume checkpoint loss normalization does not match")
             completed_epochs = int(resumed["completed_epochs"])
             optimizer_steps = int(resumed["optimizer_steps"])
             base_sha = cast(str | None, resumed.get("base_checkpoint_sha256"))
@@ -475,9 +524,13 @@ def run_sft(
             optimizer.load_state_dict(resumed["optimizer_state"])
             generator.set_state(resumed["generator_state"])
 
-        initial_validation = evaluate_loss(model, validation_rows, device=device)
+        initial_validation = evaluate_loss(
+            model, validation_rows, device=device, normalization=config.loss_normalization
+        )
         mixed_effective = config.mixed_precision and device.type == "cuda"
         run_id = f"sft-{config.mode}-{manifest.manifest_sha256[:12]}-s{config.seed}"
+        if config.loss_normalization == "supervised_token_mean_v2":
+            run_id += "-tokens-v2"
         log_path = output_root / run_id / "metrics.jsonl"
         log_path.parent.mkdir(parents=True, exist_ok=True)
         log_mode = "a" if resume_checkpoint is not None else "w"
@@ -486,33 +539,57 @@ def run_sft(
             for epoch in range(completed_epochs, config.epochs):
                 model.train()
                 epoch_losses: list[float] = []
-                batches = list(_batches(train_rows, config.batch_size, generator))
-                for batch_index, (tokens, labels) in enumerate(batches):
-                    autocast = (
-                        torch.autocast(device_type="cuda", dtype=torch.bfloat16)
-                        if mixed_effective
-                        else nullcontext()
-                    )
-                    with autocast:
-                        loss = _loss(model, tokens.to(device), labels.to(device))
-                        scaled_loss = loss / config.gradient_accumulation_steps
-                    scaled_loss.backward()  # type: ignore[no-untyped-call]
-                    epoch_losses.append(float(loss.detach().cpu().item()))
-                    should_step = (
-                        (batch_index + 1) % config.gradient_accumulation_steps == 0
-                        or batch_index + 1 == len(batches)
-                    )
-                    if should_step:
-                        nn.utils.clip_grad_norm_(trainable, config.gradient_clip_norm)
-                        optimizer.step()
-                        optimizer.zero_grad(set_to_none=True)
-                        optimizer_steps += 1
+                epoch_tokens = 0
+                batches = iter(_batches(train_rows, config.batch_size, generator))
+                while True:
+                    # Materialize only one optimizer window. Padding every batch
+                    # in the epoch up front needlessly retains corpus-sized tensors.
+                    window = list(islice(batches, config.gradient_accumulation_steps))
+                    if not window:
+                        break
+                    token_counts = [_supervised_token_count(labels) for _, labels in window]
+                    window_tokens = sum(token_counts)
+                    for (tokens, labels), token_count in zip(window, token_counts, strict=True):
+                        autocast = (
+                            torch.autocast(device_type="cuda", dtype=torch.bfloat16)
+                            if mixed_effective
+                            else nullcontext()
+                        )
+                        with autocast:
+                            if config.loss_normalization == "supervised_token_mean_v2":
+                                loss = _loss(
+                                    model, tokens.to(device), labels.to(device), reduction="sum"
+                                )
+                                # Normalize before clipping, using the actual
+                                # supervised target count even for partial tails.
+                                scaled_loss = loss / window_tokens
+                            else:
+                                loss = _loss(model, tokens.to(device), labels.to(device))
+                                scaled_loss = loss / config.gradient_accumulation_steps
+                        scaled_loss.backward()  # type: ignore[no-untyped-call]
+                        loss_value = float(loss.detach().cpu().item())
+                        epoch_losses.append(loss_value)
+                        epoch_tokens += token_count
+                    nn.utils.clip_grad_norm_(trainable, config.gradient_clip_norm)
+                    optimizer.step()
+                    optimizer.zero_grad(set_to_none=True)
+                    optimizer_steps += 1
+                    # Release this window before constructing the next one.
+                    del window, tokens, labels
                 completed_epochs = epoch + 1
-                validation_loss = evaluate_loss(model, validation_rows, device=device)
+                validation_loss = evaluate_loss(
+                    model, validation_rows, device=device, normalization=config.loss_normalization
+                )
                 record = {
                     "epoch": completed_epochs,
                     "optimizer_steps": optimizer_steps,
-                    "train_loss": sum(epoch_losses) / len(epoch_losses),
+                    "train_loss": (
+                        sum(epoch_losses) / epoch_tokens
+                        if config.loss_normalization == "supervised_token_mean_v2"
+                        else sum(epoch_losses) / len(epoch_losses)
+                    ),
+                    "train_supervised_tokens": epoch_tokens,
+                    "loss_normalization": config.loss_normalization,
                     "validation_loss": validation_loss,
                     "validation_perplexity": math.exp(min(validation_loss, 20.0)),
                 }
@@ -520,10 +597,13 @@ def run_sft(
                 log.flush()
                 os.fsync(log.fileno())
 
-        final_validation = evaluate_loss(model, validation_rows, device=device)
+        final_validation = evaluate_loss(
+            model, validation_rows, device=device, normalization=config.loss_normalization
+        )
         checkpoint_path = output_root / run_id / "checkpoint.pt"
         checkpoint_payload: dict[str, Any] = {
-            "schema_version": 1,
+            "schema_version": 2,
+            "loss_normalization": config.loss_normalization,
             "run_id": run_id,
             "model_config": config.model.model_dump(mode="json"),
             "training_config": config.model_dump(mode="json"),
@@ -548,7 +628,8 @@ def run_sft(
             _atomic_torch_save(
                 adapter_path,
                 {
-                    "schema_version": 1,
+                    "schema_version": 2,
+                    "loss_normalization": config.loss_normalization,
                     "mode": config.mode,
                     "rank": config.lora_rank,
                     "alpha": config.lora_alpha,
@@ -581,4 +662,5 @@ def run_sft(
             elapsed_seconds=time.perf_counter() - start,
             preflight_memory=governor.preflight.as_dict() if governor.preflight else {},
             final_memory=memory_snapshot().as_dict(),
+            loss_normalization=config.loss_normalization,
         )
