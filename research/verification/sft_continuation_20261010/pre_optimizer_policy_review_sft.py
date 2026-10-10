@@ -9,7 +9,6 @@ import random
 import time
 from collections.abc import Iterable, Iterator
 from contextlib import contextmanager, nullcontext
-from itertools import islice
 from pathlib import Path
 from tempfile import NamedTemporaryFile, mkdtemp
 from typing import Any, Literal, cast
@@ -52,21 +51,6 @@ def _checkpoint_counter(checkpoint: dict[str, Any], name: str) -> int:
     if type(value) is not int or value < 0:
         raise ValueError(f"checkpoint {name} must be an exact nonnegative integer")
     return value
-
-
-def _validate_optimizer_policy(state: Any, optimizer: torch.optim.AdamW) -> None:
-    # load_state_dict replaces all parameter-group options, including the learning
-    # rate and AdamW defaults. Admit only the policy and parameter order that this
-    # run actually declared; do not silently relabel a different update rule.
-    if not isinstance(state, dict):
-        raise ValueError("checkpoint optimizer policy is malformed")
-    expected = optimizer.state_dict()["param_groups"]
-    try:
-        actual_policy = json.dumps(state.get("param_groups"), sort_keys=True, allow_nan=False)
-    except (TypeError, ValueError) as error:
-        raise ValueError("checkpoint optimizer policy is malformed") from error
-    if actual_policy != json.dumps(expected, sort_keys=True, allow_nan=False):
-        raise ValueError("checkpoint optimizer policy does not match the declared configuration")
 
 
 def _sha256(path: Path) -> str:
@@ -688,7 +672,6 @@ def run_sft(
         )
         if resume_checkpoint is not None:
             _require_finite(resumed["optimizer_state"], "checkpoint optimizer state")
-            _validate_optimizer_policy(resumed["optimizer_state"], optimizer)
             optimizer.load_state_dict(resumed["optimizer_state"])
             for parameter in trainable:
                 state = optimizer.state.get(parameter, {})
@@ -725,48 +708,50 @@ def run_sft(
                     model.train()
                     epoch_losses: list[float] = []
                     epoch_tokens = 0
-                    batches = iter(_batches(train_rows, config.batch_size, generator))
-                    while True:
-                        # Preserve the parent trainer's bounded padded-tensor window.
-                        window = list(islice(batches, config.gradient_accumulation_steps))
-                        if not window:
-                            break
-                        token_counts = [_supervised_token_count(labels) for _, labels in window]
-                        window_tokens = sum(token_counts)
-                        for (tokens, labels), token_count in zip(window, token_counts, strict=True):
-                            autocast = (
-                                torch.autocast(device_type="cuda", dtype=torch.bfloat16)
-                                if mixed_effective
-                                else nullcontext()
-                            )
-                            with autocast:
-                                if config.loss_normalization == "supervised_token_mean_v2":
-                                    loss = _loss(
-                                        model, tokens.to(device), labels.to(device), reduction="sum"
-                                    )
-                                    # Normalize before clipping, using the actual
-                                    # supervised target count even for partial tails.
-                                    scaled_loss = loss / window_tokens
-                                else:
-                                    loss = _loss(model, tokens.to(device), labels.to(device))
-                                    scaled_loss = loss / config.gradient_accumulation_steps
-                            _require_finite(loss, "training loss")
-                            scaled_loss.backward()  # type: ignore[no-untyped-call]
-                            loss_value = float(loss.detach().cpu().item())
-                            epoch_losses.append(loss_value)
-                            epoch_tokens += token_count
-                        for parameter in trainable:
-                            _require_finite(parameter.grad, "training gradient")
-                        nn.utils.clip_grad_norm_(
-                            trainable, config.gradient_clip_norm, error_if_nonfinite=True
+                    batches = list(_batches(train_rows, config.batch_size, generator))
+                    token_counts = [_supervised_token_count(labels) for _, labels in batches]
+                    window_tokens = 0
+                    for batch_index, (tokens, labels) in enumerate(batches):
+                        if batch_index % config.gradient_accumulation_steps == 0:
+                            window_tokens = sum(token_counts[
+                                batch_index : batch_index + config.gradient_accumulation_steps
+                            ])
+                        autocast = (
+                            torch.autocast(device_type="cuda", dtype=torch.bfloat16)
+                            if mixed_effective
+                            else nullcontext()
                         )
-                        optimizer.step()
-                        _require_finite(model.state_dict(), "updated model state")
-                        _require_finite(optimizer.state_dict(), "updated optimizer state")
-                        optimizer.zero_grad(set_to_none=True)
-                        optimizer_steps += 1
-                        # Release this window before constructing the next one.
-                        del window, tokens, labels
+                        with autocast:
+                            if config.loss_normalization == "supervised_token_mean_v2":
+                                loss = _loss(
+                                    model, tokens.to(device), labels.to(device), reduction="sum"
+                                )
+                                # Normalize the entire optimizer window before clipping.
+                                # The final partial window uses its actual target count.
+                                scaled_loss = loss / window_tokens
+                            else:
+                                loss = _loss(model, tokens.to(device), labels.to(device))
+                                scaled_loss = loss / config.gradient_accumulation_steps
+                        _require_finite(loss, "training loss")
+                        scaled_loss.backward()  # type: ignore[no-untyped-call]
+                        loss_value = float(loss.detach().cpu().item())
+                        epoch_losses.append(loss_value)
+                        epoch_tokens += token_counts[batch_index]
+                        should_step = (
+                            (batch_index + 1) % config.gradient_accumulation_steps == 0
+                            or batch_index + 1 == len(batches)
+                        )
+                        if should_step:
+                            for parameter in trainable:
+                                _require_finite(parameter.grad, "training gradient")
+                            nn.utils.clip_grad_norm_(
+                                trainable, config.gradient_clip_norm, error_if_nonfinite=True
+                            )
+                            optimizer.step()
+                            _require_finite(model.state_dict(), "updated model state")
+                            _require_finite(optimizer.state_dict(), "updated optimizer state")
+                            optimizer.zero_grad(set_to_none=True)
+                            optimizer_steps += 1
                     completed_epochs = epoch + 1
                     validation_loss = evaluate_loss(
                         model, validation_rows, device=device,

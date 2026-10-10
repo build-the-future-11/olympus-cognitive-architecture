@@ -1,0 +1,88 @@
+E501 Line too long (155 > 100)
+  --> research/verification/sft_continuation_20261010/review_optimizer_policy.py:60:101
+   |
+58 | …
+59 | …
+60 | …jected by the existing >=16 validation before training; fixture changed to admitted width16.",
+   |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+61 | …rtificial epoch; real Foundry modules; optional top-level web API bypassed",
+62 | …arning_rate"],
+   |
+
+E501 Line too long (137 > 100)
+  --> research/verification/sft_continuation_20261010/review_optimizer_policy.py:61:101
+   |
+59 | …
+60 | …=8 was rejected by the existing >=16 validation before training; fixture changed to admitted width16.",
+61 | …itional artificial epoch; real Foundry modules; optional top-level web API bypassed",
+   |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+62 | …fig"]["learning_rate"],
+63 | …"param_groups"][0]["lr"],
+   |
+
+E501 Line too long (155 > 100)
+  --> research/verification/sft_continuation_20261010/review_optimizer_policy_after.py:60:101
+   |
+58 | …
+59 | …
+60 | …jected by the existing >=16 validation before training; fixture changed to admitted width16.",
+   |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+61 | …rtificial epoch; real Foundry modules; optional top-level web API bypassed",
+62 | …arning_rate"],
+   |
+
+E501 Line too long (137 > 100)
+  --> research/verification/sft_continuation_20261010/review_optimizer_policy_after.py:61:101
+   |
+59 | …
+60 | …=8 was rejected by the existing >=16 validation before training; fixture changed to admitted width16.",
+61 | …itional artificial epoch; real Foundry modules; optional top-level web API bypassed",
+   |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+62 | …fig"]["learning_rate"],
+63 | …"param_groups"][0]["lr"],
+   |
+
+E731 Do not assign a `lambda` expression, use a `def`
+  --> research/verification/sft_continuation_20261010/root_review_recheck.py:87:5
+   |
+85 |         manifest, tmp / "split", config=extended, resume_checkpoint=Path(first.checkpoint_path)
+86 |     )
+87 |     load = lambda path: torch.load(path, map_location="cpu", weights_only=True)
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+88 |     actual, expected = load(resumed.checkpoint_path), load(full.checkpoint_path)
+89 |     for key in (
+   |
+help: Rewrite `load` as a `def`
+   |
+86 |     )
+   -     load = lambda path: torch.load(path, map_location="cpu", weights_only=True)
+87 +     def load(path):
+88 +         return torch.load(path, map_location="cpu", weights_only=True)
+89 |     actual, expected = load(resumed.checkpoint_path), load(full.checkpoint_path)
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+E501 Line too long (148 > 100)
+   --> research/verification/sft_continuation_20261010/root_review_recheck.py:149:101
+    |
+147 | …
+148 | …
+149 | …y import harness; artificial data; no API integration, GPU or scientific efficacy claim.",
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+150 | …he earlier NaN COMPLETED and fractional epoch admission witnesses.",
+151 | …
+    |
+
+E501 Line too long (126 > 100)
+   --> research/verification/sft_continuation_20261010/root_review_recheck.py:150:101
+    |
+148 |     "checks": checks,
+149 |     "scope": "Real CPU Foundry modules using namespace-only import harness; artificial data; no API integration, GPU or scientific ef…
+150 |     "prior_failures": "root_review_findings.json retains the earlier NaN COMPLETED and fractional epoch admission witnesses.",
+    |                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+151 | }
+152 | Path(__file__).with_name("root_review_recheck.json").write_text(
+    |
+
+Found 7 errors.
+1 unsafe fix available with `--fix --unsafe-fixes`.
