@@ -67,3 +67,14 @@ establish model capability, scientific novelty, a better empirical metric, or
 research completion. No protected outcome was inspected, no paid run was started,
 and no frozen study or historical artifact was regenerated. Integration into the
 default branch and exact-commit hosted release checks are reported separately.
+
+## Completed hosted release verification
+
+The exact integration commit `03417515ad566fb8e53cc4621b8391087ca2b391`
+passed [release run 38043569652](https://github.com/build-the-future-11/olympus-cognitive-architecture/actions/runs/38043569652).
+Python 3.14.8 passed all **220 tests in 7.07 seconds**, with **87.58%**
+branch-enabled total coverage. Ruff, Mypy (81 files), the Foundry golden path,
+dependency audit, distribution metadata and bundled-corpus checks passed.
+The web job passed tests, dependency audit and production build. Both jobs
+checked out and asserted the exact source SHA. This later receipt changes
+only state and documentation; it does not add a scientific result.
