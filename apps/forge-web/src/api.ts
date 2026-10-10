@@ -46,13 +46,13 @@ export type ChatCompletion = {
   choices: Array<{
     index: number;
     message: { role: "assistant"; content: string };
-    finish_reason: string;
+    finish_reason: "stop" | "length";
   }>;
   usage: {
     prompt_tokens: number;
     completion_tokens: number;
     total_tokens: number;
-    unit: string;
+    unit: "characters";
   };
   evidence: Record<string, unknown>;
 };
@@ -72,7 +72,7 @@ function isDemoRecord(value: unknown): value is DemoRecord {
     (record.passed === undefined || typeof record.passed === "boolean") &&
     (record.detail === undefined || typeof record.detail === "string") &&
     (record.response === undefined || typeof record.response === "string") &&
-    (record.confidence === undefined || typeof record.confidence === "number") &&
+    (record.confidence === undefined || isNumber(record.confidence)) &&
     (record.category === undefined || typeof record.category === "string")
   );
 }
@@ -123,6 +123,14 @@ function isNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);
 }
 
+function isCount(value: unknown): value is number {
+  return typeof value === "number" && Number.isSafeInteger(value) && value >= 0;
+}
+
+function isNonemptyString(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -132,15 +140,16 @@ function isStringArray(value: unknown): value is string[] {
 }
 
 export async function fetchFoundryStatus(signal?: AbortSignal): Promise<FoundryStatus> {
-  const payload = (await (await apiFetch("/api/foundry/status", { signal })).json()) as Partial<FoundryStatus>;
+  const payload: unknown = await (await apiFetch("/api/foundry/status", { signal })).json();
   if (
+    !isObject(payload) ||
     payload.integrity !== "ok" ||
-    !isNumber(payload.datasets) ||
-    !isNumber(payload.experiments) ||
-    !isNumber(payload.checkpoints) ||
-    !isNumber(payload.evaluations) ||
-    !isNumber(payload.models) ||
-    !isNumber(payload.evidence_events)
+    !isCount(payload.datasets) ||
+    !isCount(payload.experiments) ||
+    !isCount(payload.checkpoints) ||
+    !isCount(payload.evaluations) ||
+    !isCount(payload.models) ||
+    !isCount(payload.evidence_events)
   ) {
     throw new Error("The API returned an invalid Foundry status");
   }
@@ -148,17 +157,15 @@ export async function fetchFoundryStatus(signal?: AbortSignal): Promise<FoundryS
 }
 
 export async function fetchFoundryModels(signal?: AbortSignal): Promise<FoundryModel[]> {
-  const payload = (await (await apiFetch("/api/v1/models", { signal })).json()) as {
-    data?: unknown;
-  };
-  if (!Array.isArray(payload.data)) {
+  const payload: unknown = await (await apiFetch("/api/v1/models", { signal })).json();
+  if (!isObject(payload) || !Array.isArray(payload.data)) {
     throw new Error("The API returned an invalid model registry");
   }
   if (
     payload.data.some(
       (model) =>
         !isObject(model) ||
-        typeof model.id !== "string" ||
+        !isNonemptyString(model.id) ||
         model.object !== "model" ||
         typeof model.owned_by !== "string" ||
         typeof model.status !== "string" ||
@@ -166,6 +173,10 @@ export async function fetchFoundryModels(signal?: AbortSignal): Promise<FoundryM
         !isStringArray(model.limitations)
     )
   ) {
+    throw new Error("The API returned an invalid model registry");
+  }
+  // Registry identifiers drive selection; duplicates make that binding ambiguous.
+  if (new Set(payload.data.map((model) => model.id)).size !== payload.data.length) {
     throw new Error("The API returned an invalid model registry");
   }
   return payload.data as FoundryModel[];
@@ -220,20 +231,23 @@ export async function generateWithFoundry(
   ).json();
   if (
     !isObject(payload) ||
-    typeof payload.id !== "string" ||
+    !isNonemptyString(payload.id) ||
     payload.object !== "chat.completion" ||
-    typeof payload.model !== "string" ||
+    payload.model !== model ||
     !Array.isArray(payload.choices) ||
-    payload.choices.length < 1 ||
+    payload.choices.length !== 1 ||
     !isObject(payload.choices[0]) ||
+    payload.choices[0].index !== 0 ||
+    (payload.choices[0].finish_reason !== "stop" && payload.choices[0].finish_reason !== "length") ||
     !isObject(payload.choices[0].message) ||
     payload.choices[0].message.role !== "assistant" ||
     typeof payload.choices[0].message.content !== "string" ||
     !isObject(payload.usage) ||
-    !isNumber(payload.usage.prompt_tokens) ||
-    !isNumber(payload.usage.completion_tokens) ||
-    !isNumber(payload.usage.total_tokens) ||
-    typeof payload.usage.unit !== "string" ||
+    !isCount(payload.usage.prompt_tokens) ||
+    !isCount(payload.usage.completion_tokens) ||
+    !isCount(payload.usage.total_tokens) ||
+    payload.usage.total_tokens !== payload.usage.prompt_tokens + payload.usage.completion_tokens ||
+    payload.usage.unit !== "characters" ||
     !isObject(payload.evidence)
   ) {
     throw new Error("The API returned an invalid chat completion");
@@ -242,10 +256,15 @@ export async function generateWithFoundry(
 }
 
 export async function fetchOllamaHealth(signal?: AbortSignal): Promise<OllamaHealth> {
-  const payload = (await (
+  const payload: unknown = await (
     await apiFetch("/api/foundry/providers/ollama", { signal })
-  ).json()) as Partial<OllamaHealth>;
-  if (payload.status !== "ok" || payload.provider !== "ollama" || !isStringArray(payload.models)) {
+  ).json();
+  if (
+    !isObject(payload) ||
+    payload.status !== "ok" ||
+    payload.provider !== "ollama" ||
+    !isStringArray(payload.models)
+  ) {
     throw new Error("The API returned an invalid Ollama health response");
   }
   return payload as OllamaHealth;
