@@ -1,7 +1,7 @@
 {
   "study_id": "sft-continuation-v3-20261010",
   "date": "2026-10-10",
-  "status": "ENGINEERING_VERIFIED_DRAFT_INTEGRATION_PENDING",
+  "status": "LOCAL_AND_HOSTED_ENGINEERING_VERIFIED",
   "question": "Can the actual SFT trainer continue an unchanged schedule without changing its optimizer trajectory or overwriting prior attempts?",
   "hypothesis": "Restore the consumed stochastic state, admit exact configuration/optimizer policy/counters, and own a fresh immutable attempt directory.",
   "falsifiers": [
@@ -125,7 +125,7 @@
     "approved_fallback": "Namespace-only package harness loads actual unmodified Foundry/core implementations; no model stand-ins.",
     "ordinary_package_api_cli_local": "UNVERIFIED",
     "accelerator_paths": "CUDA/MPS RNG capture/restore unexercised locally; no cross-runtime reproducibility claim.",
-    "hosted_workflow": "Existing .github/workflows/ci.yml unchanged; exact proposed-source hosted result pending."
+    "hosted_workflow": "Unchanged normal exact-source Python/web workflow passed on7eb82b96632561f7cb0c670c0116fe774e7a1797; see hosted_verification."
   },
   "research_boundary": {
     "scientific_outcomes_created": false,
@@ -292,5 +292,50 @@
       "sha256": "96cd494c911281ce446a1d221d8f98add34ad6eb4197faf535910c31c8268f2d",
       "bytes": 7780
     }
-  ]
+  ],
+  "hosted_verification": {
+    "status": "PASS",
+    "validated_head": "7eb82b96632561f7cb0c670c0116fe774e7a1797",
+    "validated_tree": "d766487dbdd302a8b550b1c54b7408d358633fa4",
+    "source_sha256": "6cd3d7b33002f6c4ff69137e42f4985bbeb6c9d907e37acab470b5089c643d27",
+    "run_id": 38044670634,
+    "run_url": "https://github.com/build-the-future-11/olympus-cognitive-architecture/actions/runs/38044670634",
+    "python": "3.14.8",
+    "tests_passed": 276,
+    "pytest_seconds": 13.33,
+    "branch_enabled_total_coverage_percent": 87.27,
+    "required_coverage_percent": 85.0,
+    "mypy_source_files": 82,
+    "web_test_files": 2,
+    "web_tests_passed": 6,
+    "jobs": [
+      {
+        "name": "python",
+        "id": 114191678488,
+        "conclusion": "success"
+      },
+      {
+        "name": "web",
+        "id": 114191678643,
+        "conclusion": "success"
+      }
+    ],
+    "source_binding": "Existing workflow checks out EXPECTED_SOURCE_SHA and verifies git HEAD equality before checks; both jobs passed for the proposed implementation head.",
+    "gates": [
+      "normal package and release tooling install",
+      "full repository Ruff",
+      "strict MyPy82files",
+      "full276test suite with branch-enabled coverage",
+      "Foundry CLI golden path/status/dataset preparation",
+      "Python dependency audit",
+      "distribution build/metadata and bundled corpus checks",
+      "web locked install/tests/dependency audit/production build"
+    ],
+    "raw_logs": {
+      "hosted_web_job_114191678643.log": "e92e2edea1496a401d32fee1108c1924904996094a78623451093dc00b46ef6c",
+      "hosted_python_job_114191678488.log": "797a11f5533665ecbe8b47f9ce7daec556f5670f5e20fb15b67925ae6114c314"
+    },
+    "local_limit_preserved": "Local ordinary package/API imports remained unavailable after automatic rejection of local installation; the unchanged hosted workflow supplies the separate normal integration evidence.",
+    "scope": "Engineering release correctness; no scientific capability, model promotion or protected campaign."
+  }
 }
