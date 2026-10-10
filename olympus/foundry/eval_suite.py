@@ -14,7 +14,7 @@ import torch
 from pydantic import Field
 
 from olympus.core.schemas import StrictModel
-from olympus.foundry.data_pipeline import InstructionExample, verify_dataset_manifest
+from olympus.foundry.data_pipeline import InstructionExample, load_verified_dataset
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.sft import (
     SFTConfig,
@@ -84,19 +84,10 @@ class HeldOutEvaluation(StrictModel):
 
 
 def _load_test_examples(manifest_path: Path) -> tuple[str, list[InstructionExample]]:
-    manifest = verify_dataset_manifest(manifest_path)
+    manifest, examples_by_split = load_verified_dataset(manifest_path)
     if manifest.manifest_sha256 is None:
         raise ValueError("dataset manifest has no hash")
-    descriptor = next(split for split in manifest.splits if split.name == "test")
-    split_path = Path(descriptor.path)
-    if not split_path.is_absolute():
-        split_path = manifest_path.parent / split_path
-    examples = [
-        InstructionExample.model_validate_json(line)
-        for line in split_path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
-    return manifest.manifest_sha256, examples
+    return manifest.manifest_sha256, examples_by_split["test"]
 
 
 def _baseline_model(

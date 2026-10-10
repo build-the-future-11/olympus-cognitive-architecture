@@ -19,9 +19,8 @@ from torch.nn import functional as F
 
 from olympus.core.schemas import StrictModel
 from olympus.foundry.data_pipeline import (
-    DatasetManifestV2,
     InstructionExample,
-    verify_dataset_manifest,
+    load_verified_dataset,
 )
 from olympus.foundry.resources import ResourceGovernor, memory_snapshot
 
@@ -284,20 +283,6 @@ def apply_adapters(model: nn.Module, mode: AdapterMode, rank: int, alpha: float)
             parameter.requires_grad = False
 
 
-def _load_examples(
-    manifest: DatasetManifestV2, split_name: str, manifest_root: Path
-) -> list[InstructionExample]:
-    descriptor = next(split for split in manifest.splits if split.name == split_name)
-    path = Path(descriptor.path)
-    if not path.is_absolute():
-        path = manifest_root / path
-    return [
-        InstructionExample.model_validate_json(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
-
-
 def _encode_examples(
     examples: list[InstructionExample], config: SFTConfig
 ) -> list[tuple[list[int], list[int]]]:
@@ -443,7 +428,7 @@ def run_sft(
         raise ValueError("LoRA and QLoRA require a base checkpoint or resume checkpoint")
     if config.mode == "full" and base_checkpoint is not None:
         raise ValueError("full SFT does not accept a base checkpoint")
-    manifest = verify_dataset_manifest(manifest_path)
+    manifest, examples_by_split = load_verified_dataset(manifest_path)
     if manifest.manifest_sha256 is None:
         raise ValueError("dataset manifest has no immutable hash")
     output_root = output_root.resolve()
@@ -454,12 +439,9 @@ def run_sft(
         torch.manual_seed(config.seed)
         generator = torch.Generator().manual_seed(config.seed)
         device = _resolve_device(config.device)
-        train_rows = _encode_examples(
-            _load_examples(manifest, "train", manifest_path.parent), config
-        )
-        validation_rows = _encode_examples(
-            _load_examples(manifest, "validation", manifest_path.parent), config
-        )
+        train_rows = _encode_examples(examples_by_split["train"], config)
+        validation_rows = _encode_examples(examples_by_split["validation"], config)
+        del examples_by_split
         base_sha: str | None = None
         completed_epochs = 0
         optimizer_steps = 0
