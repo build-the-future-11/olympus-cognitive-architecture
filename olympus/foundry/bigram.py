@@ -145,14 +145,7 @@ class CharacterBigramModel:
             if temperature == 0:
                 next_index = max(range(len(probabilities)), key=probabilities.__getitem__)
             else:
-                # A common log-weight offset cancels during normalization. The
-                # largest weight is exactly one, even at subnormal temperatures,
-                # so valid low-temperature requests cannot underflow every weight.
-                log_probabilities = [math.log(probability) for probability in probabilities]
-                maximum = max(log_probabilities)
-                weights = [
-                    math.exp((value - maximum) / temperature) for value in log_probabilities
-                ]
+                weights = [probability ** (1.0 / temperature) for probability in probabilities]
                 next_index = random.choices(range(len(weights)), weights=weights, k=1)[0]
             current = self.checkpoint.alphabet[next_index]
             generated.append(current)

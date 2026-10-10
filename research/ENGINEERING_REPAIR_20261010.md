@@ -1,57 +1,56 @@
-# Dataset admission and character sampling repair — 10 October 2026
+# Checkpoint alphabet validation — narrowed repair, 10 October 2026
 
-This development repair starts from main `88cc23517e758e4fcd48d5bf08e269973a36f125`.
-Read `REALITY_LEDGER.md` and `../OLYMPUS_MODEL_FOUNDRY_LEDGER.md` for the retained
-model evidence and negative capability findings. The prior Ollama, UI and timing
-PRs are separate work; this patch does not replace their evidence.
+This revision retains only the independent character-alphabet validation from
+PR #24. Duplicate symbols collapse entries in the character-to-index mapping;
+empty or multi-character symbols violate the generated-character length
+contract. The model constructor now requires unique strings of exactly one
+Python character. Valid checkpoint bytes and model numerical behavior are
+unchanged.
 
-## Defects and corrected behavior
+## Concurrent work and superseded scope
 
-Dataset verification previously validated hashes and record counts but trusted
-the stored quality summary. Re-sealing an incomplete, duplicate or contaminated
-dataset could therefore pass the consumption gate despite violating preparation's
-rules. Preparation and verification now share one quality validator. Consumption
-requires all three splits, complete category coverage, disjoint record IDs,
-normalized deduplication, the existing cross-split eight-token rule, and an exact
-quality-summary match. The original dataset bytes, manifest schema and valid
-prepared-dataset identity remain unchanged.
+The original PR #24 revision (`080103654a2d5dfdbfcdb04e71b1a1bc73385f3a`)
+combined dataset consumption, low-temperature sampling and alphabet checks.
+A subsequent overlap audit identified dedicated concurrent PRs:
 
-Character sampling previously raised an exception when every `p ** (1 / T)`
-weight underflowed at a valid, positive temperature. Sampling now subtracts the
-maximum log probability before division by temperature. This common factor
-cancels in normalization and leaves at least one weight equal to one; tied
-maxima still sample randomly. Temperature zero remains greedy. Checkpoint
-alphabets now reject duplicate, empty or multi-character symbols, which broke
-the character-index and output-length contract.
+- [PR #23](https://github.com/build-the-future-11/olympus-cognitive-architecture/pull/23)
+  supplies the complete dataset contract and additionally binds preparation to
+  a single source-byte snapshot.
+- [PR #25](https://github.com/build-the-future-11/olympus-cognitive-architecture/pull/25)
+  supplies the sampling repair, including zero-probability and near-maximum
+  floating-point cases beyond the original PR #24 implementation.
 
-## Verification
+The duplicated dataset and sampling changes, their tests and the previous
+ledger update were removed from PR #24's current diff. Their old 184-test result
+belongs to the original commit, not this narrower tree. Those two features must
+be attributed to PRs #23 and #25 instead of counted again here. Historical
+research records remain unchanged.
 
-- The new 24-case set produced **20 failures and 4 passes** against unchanged
-  product source before the repair, then **24 passes** after it.
-- Full Python suite: **184 passed**, no skipped cases.
-- Branch-aware coverage: **87.45%**, above the unchanged 85% requirement.
-- Scoped Ruff, strict Mypy and patch-whitespace checks passed.
-- The new tests use modified temporary copies of the repository's existing
-  36-record engineering fixture and small in-memory character models. The full
-  suite retains its existing bounded synthetic training fixtures.
+## Shared dependency correction
 
-Local runtime: CPython 3.12.14, PyTorch 2.5.1+cpu, NumPy 2.5.3, Pydantic 2.14.0,
-pytest 9.1.1. This is a compatibility test environment; the declared release
-environment remains Python >=3.14 and PyTorch >=2.11. Hosted CI must verify that
-release environment on the published commit.
+This revision reuses the exact `source-map-js` 1.2.2 lockfile blob
+`ee06243f97684b4be861530b9b218caae4ec9ab0` from canonical
+[PR #17](https://github.com/build-the-future-11/olympus-cognitive-architecture/pull/17),
+also inherited or reused by PRs #18–21, #23 and #25. Only that package's version,
+resolved URL and integrity record differ from main. This is a credited existing
+dependency repair, not an additional independently discovered improvement.
 
-Reproduce in the declared project environment:
+## Verification of the narrowed source
 
-```sh
-python -m pytest tests/test_dataset_consumption.py tests/test_bigram_sampling.py -q
-python -m pytest --cov=olympus --cov-branch --cov-report=term-missing -q
-python -m ruff check olympus/foundry/bigram.py olympus/foundry/data_pipeline.py tests/test_bigram_sampling.py tests/test_dataset_consumption.py
-```
+- New alphabet regressions against unchanged main: **three failed, two passed**.
+- Narrowed full Python suite: **165 passed, no skips**, with **87.37%**
+  branch-aware coverage against the unchanged 85% gate.
+- The five new cases reject duplicate, empty and multi-character symbols and
+  preserve ASCII/Unicode checkpoint serialization and seeded generation.
+- Scoped Ruff, strict Mypy and patch-whitespace checks pass.
+- The reused lockfile's Git blob hash matches canonical PR #17 exactly.
 
-## Research disposition
+Local runtime: Python 3.12.14, PyTorch 2.5.1+cpu, NumPy 2.5.3,
+Pydantic 2.14.0 and pytest 9.1.1. Hosted release checks must verify the final
+published head under the declared Python 3.14 environment; the current PR body
+records their result separately.
 
-These are implementation and evidence-admission corrections. They do not train
-Hermes, establish task competence, measure live-provider performance, promote a
-model, or complete the frozen scientific program. Existing negative results,
-dataset scale requirements, licensing, real-workload evaluation and serving
-gates remain the canonical blockers. No protected campaign or paid job ran.
+These small generated-model fixtures establish input-contract behavior only.
+No research campaign, real-model training, model promotion, release or paid
+workload was performed. Retained capability findings and scientific blockers
+are not revised.

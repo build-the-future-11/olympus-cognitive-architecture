@@ -7,7 +7,7 @@ import re
 from collections import Counter
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Literal
+from typing import Literal, cast
 
 from pydantic import Field, model_validator
 
@@ -185,9 +185,16 @@ def load_source_examples(source_path: Path) -> list[InstructionExample]:
     return examples
 
 
-def _dataset_quality(examples: list[InstructionExample]) -> QualityReport:
-    """Apply the same admission rules when preparing and consuming a dataset."""
-
+def prepare_instruction_dataset(
+    source_path: Path,
+    output_root: Path,
+    *,
+    dataset_id: str = "olympus-foundry-instructions",
+    version: str = "1.0.0",
+    source_uri: str = "repository://datasets/hermes-smoke/source.jsonl",
+) -> DatasetManifestV2:
+    source_payload = source_path.read_bytes()
+    examples = load_source_examples(source_path)
     ids = [example.id for example in examples]
     duplicate_ids = len(ids) - len(set(ids))
     if duplicate_ids:
@@ -207,30 +214,6 @@ def _dataset_quality(examples: list[InstructionExample]) -> QualityReport:
     if missing:
         raise ValueError(f"required category/split coverage missing: {', '.join(missing)}")
 
-    return QualityReport(
-        input_records=len(examples),
-        accepted_records=len(examples),
-        duplicate_ids=duplicate_ids,
-        normalized_duplicates=normalized_duplicates,
-        pii_or_secret_hits=0,
-        split_leakage_hits=leakage_hits,
-        missing_category_split_pairs=missing,
-        mean_prompt_characters=sum(len(item.prompt) for item in examples) / len(examples),
-        mean_response_characters=sum(len(item.response) for item in examples) / len(examples),
-    )
-
-
-def prepare_instruction_dataset(
-    source_path: Path,
-    output_root: Path,
-    *,
-    dataset_id: str = "olympus-foundry-instructions",
-    version: str = "1.0.0",
-    source_uri: str = "repository://datasets/hermes-smoke/source.jsonl",
-) -> DatasetManifestV2:
-    source_payload = source_path.read_bytes()
-    examples = load_source_examples(source_path)
-    report = _dataset_quality(examples)
     output_root = output_root.resolve()
     descriptors: list[SplitDescriptor] = []
     for split in ("train", "validation", "test"):
@@ -243,7 +226,7 @@ def prepare_instruction_dataset(
         _atomic_write(path, payload)
         descriptors.append(
             SplitDescriptor(
-                name=split,
+                name=cast(SplitName, split),
                 path=f"splits/{split}.jsonl",
                 sha256=sha256_bytes(payload),
                 records=len(selected),
@@ -251,6 +234,17 @@ def prepare_instruction_dataset(
             )
         )
 
+    report = QualityReport(
+        input_records=len(examples),
+        accepted_records=len(examples),
+        duplicate_ids=duplicate_ids,
+        normalized_duplicates=normalized_duplicates,
+        pii_or_secret_hits=0,
+        split_leakage_hits=leakage_hits,
+        missing_category_split_pairs=missing,
+        mean_prompt_characters=sum(len(item.prompt) for item in examples) / len(examples),
+        mean_response_characters=sum(len(item.response) for item in examples) / len(examples),
+    )
     manifest = DatasetManifestV2(
         dataset_id=dataset_id,
         version=version,
@@ -297,11 +291,8 @@ def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
     split_names = [split.name for split in manifest.splits]
     if len(split_names) != len(set(split_names)):
         raise ValueError("dataset manifest contains duplicate split descriptors")
-    if set(split_names) != {"train", "validation", "test"}:
-        raise ValueError("dataset manifest must contain exactly train, validation, and test splits")
 
     verified_records = 0
-    all_examples: list[InstructionExample] = []
     for split in manifest.splits:
         path = Path(split.path)
         if not path.is_absolute():
@@ -338,7 +329,6 @@ def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
         if actual_categories != dict(sorted(split.categories.items())):
             raise ValueError(f"dataset split category counts mismatch: {split.name}")
         verified_records += actual_records
-        all_examples.extend(examples)
 
     if verified_records != manifest.source.record_count:
         raise ValueError(
@@ -350,8 +340,4 @@ def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
             "dataset quality accepted-record count mismatch: "
             f"manifest={manifest.quality.accepted_records} actual={verified_records}"
         )
-    # Hashes bind bytes, not dataset validity. Re-sealed artifacts must still
-    # satisfy preparation's deduplication, contamination and coverage contract.
-    if manifest.quality != _dataset_quality(all_examples):
-        raise ValueError("dataset quality report mismatch")
     return manifest

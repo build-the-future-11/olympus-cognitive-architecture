@@ -60,13 +60,3 @@ and its int4/int8 artifacts preserved loss within 2%. It nevertheless scored
 No artifact may use Hermes, Prometheus, Perseus, Atlas, or Kronos as its model
 identity until a real immutable checkpoint exists and passes the family-specific
 evaluation and deployment gates.
-
-## Development engineering update — 10 October 2026
-
-The dataset-consumption gate now recomputes preparation's quality rules after
-checking artifact hashes, and low-temperature character sampling uses stable
-log weights. Malformed character alphabets are rejected at model load. The
-bounded local suite passed 184 tests, including 24 new regressions; full-model
-readiness and the historical capability findings above are unchanged. See
-`ENGINEERING_REPAIR_20261010.md` for the failure cases, reproduction commands and
-the local-versus-release runtime distinction.
