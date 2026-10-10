@@ -55,6 +55,10 @@ class CharacterBigramModel:
 
     def __init__(self, checkpoint: BigramCheckpoint) -> None:
         size = len(checkpoint.alphabet)
+        if len(set(checkpoint.alphabet)) != size or any(
+            len(character) != 1 for character in checkpoint.alphabet
+        ):
+            raise ValueError("checkpoint alphabet must contain unique single characters")
         if len(checkpoint.counts) != size or any(len(row) != size for row in checkpoint.counts):
             raise ValueError("checkpoint count matrix does not match alphabet")
         if any(value < 0 for row in checkpoint.counts for value in row):
@@ -141,7 +145,14 @@ class CharacterBigramModel:
             if temperature == 0:
                 next_index = max(range(len(probabilities)), key=probabilities.__getitem__)
             else:
-                weights = [probability ** (1.0 / temperature) for probability in probabilities]
+                # A common log-weight offset cancels during normalization. The
+                # largest weight is exactly one, even at subnormal temperatures,
+                # so valid low-temperature requests cannot underflow every weight.
+                log_probabilities = [math.log(probability) for probability in probabilities]
+                maximum = max(log_probabilities)
+                weights = [
+                    math.exp((value - maximum) / temperature) for value in log_probabilities
+                ]
                 next_index = random.choices(range(len(weights)), weights=weights, k=1)[0]
             current = self.checkpoint.alphabet[next_index]
             generated.append(current)
