@@ -30,6 +30,14 @@ class FixedLogits(nn.Module):
         return self.bias.expand(*tokens.shape, -1)
 
 
+class Float64TinyCausalLM(sft.TinyCausalLM):
+    """Same initialized model and optimizer, higher precision for the oracle."""
+
+    def __init__(self, config: sft.TinyModelConfig) -> None:
+        super().__init__(config)
+        self.double()
+
+
 def analytic_rows() -> list[Row]:
     # Nonmasked first-column labels still have no next-token prediction. Their
     # values must never enter either the numerator or the denominator.
@@ -135,6 +143,11 @@ def test_actual_training_matches_unsplit_batch_gradients_including_short_tail(
     manifest_path: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
     batch_size: int, accumulation: int,
 ) -> None:
+    # The exact attention key-bias gradient is zero. Float32 cancellation can
+    # create tiny gradients that AdamW amplifies through its epsilon, obscuring
+    # the partition identity in saved parameters. Use float64 for this strict
+    # optimizer oracle; the separate tail and end-to-end tests retain float32.
+    monkeypatch.setattr(sft, "TinyCausalLM", Float64TinyCausalLM)
     gradients = record_gradients(monkeypatch)
     config = small_config(batch_size=batch_size, gradient_accumulation_steps=accumulation)
     accumulated = sft.run_sft(manifest_path, tmp_path / "microbatches", config=config)
@@ -149,12 +162,14 @@ def test_actual_training_matches_unsplit_batch_gradients_including_short_tail(
     )
     assert len(micro_gradients) == len(gradients) == accumulated.optimizer_steps
     for micro, unsplit in zip(micro_gradients, gradients, strict=True):
-        torch.testing.assert_close(micro, unsplit, rtol=1e-4, atol=2e-6)
+        assert micro.dtype == unsplit.dtype == torch.float64
+        torch.testing.assert_close(micro, unsplit, rtol=1e-7, atol=1e-10)
     micro_checkpoint = checkpoint(accumulated.checkpoint_path)
     reference_checkpoint = checkpoint(reference.checkpoint_path)
     for name, value in micro_checkpoint["model_state"].items():
         torch.testing.assert_close(value, reference_checkpoint["model_state"][name],
-                                   rtol=1e-4, atol=1e-5)
+                                   rtol=1e-8, atol=1e-9,
+                                   msg=f"model state differs for {name}")
     micro_log = json.loads(Path(accumulated.log_path).read_text())
     reference_log = json.loads(Path(reference.log_path).read_text())
     assert micro_log["train_loss"] == pytest.approx(reference_log["train_loss"], rel=1e-6)

@@ -56,8 +56,10 @@ unequal answer lengths, full and partial accumulation windows, gradients before
 clipping, actual AdamW parameter updates, versioned paths and receipts, legacy
 checkpoint loading/resumption, cross-version rejection, and held-out/quantization
 propagation. Paired training uses the actual 14,192-parameter transformer and
-existing reviewed infrastructure fixture with dropout disabled; comparisons
-allow ordinary float32 rounding and do not claim bitwise or stochastic-backend
+existing reviewed infrastructure fixture with dropout disabled. The strict
+gradient/AdamW-parameter identity oracle uses float64; the separate equal-answer
+tail, ordinary training, resumption, held-out evaluation and quantization tests
+retain float32. These fixtures do not claim bitwise or stochastic-backend
 equivalence.
 
 The five initial reproduction/control cases on unchanged PR #23 source produced
@@ -65,10 +67,23 @@ The five initial reproduction/control cases on unchanged PR #23 source produced
 the correction and passed afterward. Numerical comparisons use an independent
 analytic log-partition reference and actual unsplit-batch gradients.
 
-All **19 new regressions** pass in the complete **198-test** Python suite.
-Branch-aware coverage is **87.54%**, above the unchanged **85%** requirement.
-Whole-repository Ruff checks pass, and strict mypy reports no issues in all
-78 source files.
+The initial complete local suite passed **198 tests**, including all **19 new
+regressions**, with **87.54%** branch-aware coverage above the unchanged **85%**
+requirement. Whole-repository Ruff checks passed, and strict mypy reported no
+issues in all 78 source files.
+
+The first hosted Python 3.14 run at `e19f2c3ab71db0c50170491bc55f59bd6c4ef77a`
+passed lint/type checks and 197 tests, but one float32 optimizer comparison
+exceeded its absolute parameter tolerance: one attention projection bias
+coordinate differed by `1.3772398233413696e-5`. Every pre-clipping gradient
+comparison passed. The key-bias gradient is mathematically zero by softmax
+translation invariance; float32 cancellation differences can be amplified by
+AdamW's epsilon. The strict optimizer oracle now casts the same initialized tiny
+model to float64 and tightens gradient tolerances to `rtol=1e-7, atol=1e-10` and
+parameter tolerances to `rtol=1e-8, atol=1e-9`. Production code, optimizer settings
+and release gates are unchanged. All 19 revised regressions pass locally; the
+analytic/control and three high-precision accumulation cases still produce
+4 failures and 1 pass on unchanged PR #23 source.
 
 Verification commands:
 
