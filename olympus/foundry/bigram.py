@@ -55,6 +55,10 @@ class CharacterBigramModel:
 
     def __init__(self, checkpoint: BigramCheckpoint) -> None:
         size = len(checkpoint.alphabet)
+        if len(set(checkpoint.alphabet)) != size or any(
+            len(character) != 1 for character in checkpoint.alphabet
+        ):
+            raise ValueError("checkpoint alphabet must contain unique single characters")
         if len(checkpoint.counts) != size or any(len(row) != size for row in checkpoint.counts):
             raise ValueError("checkpoint count matrix does not match alphabet")
         if any(value < 0 for row in checkpoint.counts for value in row):
