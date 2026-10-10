@@ -141,7 +141,16 @@ class CharacterBigramModel:
             if temperature == 0:
                 next_index = max(range(len(probabilities)), key=probabilities.__getitem__)
             else:
-                weights = [probability ** (1.0 / temperature) for probability in probabilities]
+                # Common positive rescaling leaves the categorical law unchanged.
+                # Divide before taking logs to retain distinct near-maximum floats.
+                # At least one weight is 1 even when every p**(1/T) would underflow.
+                maximum_probability = max(probabilities)
+                weights = [
+                    0.0
+                    if probability == 0.0
+                    else math.exp(math.log(probability / maximum_probability) / temperature)
+                    for probability in probabilities
+                ]
                 next_index = random.choices(range(len(weights)), weights=weights, k=1)[0]
             current = self.checkpoint.alphabet[next_index]
             generated.append(current)
