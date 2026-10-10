@@ -13,7 +13,11 @@ from pydantic import ValidationError
 from torch import nn
 
 from olympus.foundry import sft
-from olympus.foundry.data_pipeline import prepare_instruction_dataset, verify_dataset_manifest
+from olympus.foundry.data_pipeline import (
+    load_verified_dataset,
+    prepare_instruction_dataset,
+    verify_dataset_manifest,
+)
 from olympus.foundry.eval_suite import HeldOutEvaluation, evaluate_checkpoint
 from olympus.foundry.quantization import QuantizationReport, quantize_checkpoint
 
@@ -187,8 +191,8 @@ def test_short_window_is_not_scaled_down_even_when_answer_lengths_are_equal(
     weights = {item["category"]: float(item["category"] in {"extraction", "agent_behavior"})
                for item in examples}
     config = small_config(category_mix_weights=weights, gradient_accumulation_steps=5)
-    manifest = verify_dataset_manifest(manifest_path)
-    rows = sft._encode_examples(sft._load_examples(manifest, "train", manifest_path.parent), config)
+    _, examples_by_split = load_verified_dataset(manifest_path)
+    rows = sft._encode_examples(examples_by_split["train"], config)
     assert [sum(label != -100 for label in labels[1:]) for _, labels in rows] == [46, 46]
     gradients = record_gradients(monkeypatch)
     short = sft.run_sft(manifest_path, tmp_path / "short", config=config)

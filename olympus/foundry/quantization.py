@@ -12,7 +12,7 @@ import torch
 from pydantic import Field
 
 from olympus.core.schemas import StrictModel
-from olympus.foundry.data_pipeline import InstructionExample, verify_dataset_manifest
+from olympus.foundry.data_pipeline import load_verified_dataset
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.sft import (
     LossNormalization,
@@ -165,6 +165,11 @@ def quantize_checkpoint(
     training = _checkpoint_training_config(checkpoint)
     if training.mode != "full":
         raise ValueError("post-training quantization currently requires a merged full checkpoint")
+    manifest, examples_by_split = load_verified_dataset(manifest_path)
+    if checkpoint.get("dataset_manifest_sha256") != manifest.manifest_sha256:
+        raise ValueError("checkpoint and quantization dataset hashes do not match")
+    examples = examples_by_split["test"]
+    del examples_by_split
     output_root.mkdir(parents=True, exist_ok=True)
     float_path = output_root / "float32-model.pt"
     _atomic_torch_save(float_path, source.state_dict())
@@ -187,16 +192,6 @@ def quantize_checkpoint(
     quantized = load_quantized_model(artifact)
     startup_ms = (time.perf_counter() - start) * 1_000
 
-    manifest = verify_dataset_manifest(manifest_path)
-    test_descriptor = next(split for split in manifest.splits if split.name == "test")
-    test_path = Path(test_descriptor.path)
-    if not test_path.is_absolute():
-        test_path = manifest_path.parent / test_path
-    examples = [
-        InstructionExample.model_validate_json(line)
-        for line in test_path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
     eval_config = training.model_copy(update={"pack_sequences": False})
     rows = _encode_examples(examples, eval_config)
     source_loss = evaluate_loss(
