@@ -32,3 +32,12 @@ python -m pytest tests/test_dataset_manifest_integrity.py tests/test_deep_foundr
 The change is an engineering correction to the documented dataset contract. It
 does not establish model capability, alter held-out records, run a scientific
 campaign, or promote a model. Previously retained artifacts remain untouched.
+
+## Web dependency gate
+
+The first hosted revision passed the Python gate but failed the unchanged web
+dependency audit on `source-map-js` 1.2.1. The follow-up lockfile correction updates
+that single transitive package to 1.2.2; no direct dependency ranges change.
+`npm ci`, all 6 web tests, and the production build pass locally. The complete
+web audit reports zero vulnerabilities at verification time. The audit threshold
+and all release-gate checks remain enabled.
