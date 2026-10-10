@@ -15,9 +15,10 @@ from olympus.core.schemas import StrictModel
 from olympus.foundry.data_pipeline import InstructionExample, verify_dataset_manifest
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.sft import (
-    SFTConfig,
+    LossNormalization,
     TinyCausalLM,
     TinyModelConfig,
+    _checkpoint_training_config,
     _encode_examples,
     _model_from_checkpoint,
     _pack_nibbles,
@@ -85,6 +86,7 @@ class QuantizationReport(StrictModel):
     tool_exact_match_rate: float = Field(ge=0.0, le=1.0)
     peak_rss_bytes: int = Field(ge=0)
     passed_quality_gate: bool
+    loss_normalization: LossNormalization = "legacy_batch_mean_v1"
 
 
 def _quantize_tensor(tensor: torch.Tensor, bits: QuantizationBits) -> dict[str, Any]:
@@ -160,7 +162,7 @@ def quantize_checkpoint(
     bits: QuantizationBits,
 ) -> QuantizationReport:
     source, checkpoint = _model_from_checkpoint(checkpoint_path, torch.device("cpu"))
-    training = SFTConfig.model_validate(checkpoint["training_config"])
+    training = _checkpoint_training_config(checkpoint)
     if training.mode != "full":
         raise ValueError("post-training quantization currently requires a merged full checkpoint")
     output_root.mkdir(parents=True, exist_ok=True)
@@ -197,8 +199,12 @@ def quantize_checkpoint(
     ]
     eval_config = training.model_copy(update={"pack_sequences": False})
     rows = _encode_examples(examples, eval_config)
-    source_loss = evaluate_loss(source, rows, device=torch.device("cpu"))
-    quantized_loss = evaluate_loss(quantized, rows, device=torch.device("cpu"))
+    source_loss = evaluate_loss(
+        source, rows, device=torch.device("cpu"), normalization=training.loss_normalization
+    )
+    quantized_loss = evaluate_loss(
+        quantized, rows, device=torch.device("cpu"), normalization=training.loss_normalization
+    )
     prompt = "List the safe steps before starting a memory-heavy local model workload."
     source_latency = _latency(source, prompt)
     quantized_latency = _latency(quantized, prompt)
@@ -219,6 +225,7 @@ def quantize_checkpoint(
     quantized_size = artifact.stat().st_size
     loss_change = (quantized_loss - source_loss) / max(source_loss, 1e-12)
     report = QuantizationReport(
+        loss_normalization=training.loss_normalization,
         format=f"olympus-symmetric-int{bits}-v1",
         bits=bits,
         source_checkpoint_sha256=_sha256(checkpoint_path),
