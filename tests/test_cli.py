@@ -87,6 +87,18 @@ def test_forge_workspace_and_demo_commands(tmp_path: Path) -> None:
     assert demos["forge"]["passed"] is True
 
 
+def test_bu1ld_specifications_command_is_explicitly_non_promotional() -> None:
+    specifications = json.loads(_invoke("bu1ld", "specs"))
+    assert [item["family_id"] for item in specifications] == [
+        "hermes",
+        "prometheus",
+        "perseus",
+        "atlas",
+        "kronos",
+    ]
+    assert all(item["capability_claimed"] is False for item in specifications)
+
+
 def test_labos_read_run_and_report_commands(tmp_path: Path) -> None:
     workspace, artifacts = _workspace(tmp_path)
     common = ("--workspace", str(workspace), "--artifacts", str(artifacts))

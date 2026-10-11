@@ -23,23 +23,144 @@ from olympus.foundry.service import FoundryService
 from olympus.foundry.sft import SFTConfig, TinyModelConfig, run_sft
 from olympus.labos.manifest import ProjectRecord, ResourceProfile
 from olympus.labos.portfolio import PortfolioService
+from olympus.models.encoder_quantization import EncoderQuantizationConfig
+from olympus.models.spatiotemporal_lazy import (
+    SpatiotemporalParameterStore,
+    SpatiotemporalQuery,
+)
+from olympus.models.specifications import BU1LD_MODEL_SPECS
+from olympus.training.encoder_quantization import (
+    EncoderQuantizationTrainingConfig,
+    train_encoder_quantizer,
+)
+from olympus.upscaler.jepa import JEPAUpscalerConfig
+from olympus.upscaler.training import JEPAUpscalerTrainingConfig, train_jepa_upscaler
 
 app = typer.Typer(help="Olympus command line interface.")
 demo_app = typer.Typer(help="Run built-in Olympus demos.")
 forge_app = typer.Typer(help="Compile and execute behaviors.")
 labos_app = typer.Typer(help="Discover, validate, and run portfolio projects.")
 foundry_app = typer.Typer(help="Operate the durable Olympus Model Foundry.")
+bu1ld_app = typer.Typer(help="Operate evidence-bound BU1LD model pathways.")
 app.add_typer(demo_app, name="demo")
 app.add_typer(forge_app, name="forge")
 app.add_typer(labos_app, name="labos")
 app.add_typer(foundry_app, name="foundry")
+app.add_typer(bu1ld_app, name="bu1ld")
 console = Console()
 
 
-def _default_instruction_source() -> Path:
-    repository_source = (
-        Path(__file__).resolve().parents[1] / "datasets/hermes-smoke/source.jsonl"
+@bu1ld_app.command("specs")
+def bu1ld_specs() -> None:
+    """Print target specifications without asserting that target models exist."""
+
+    console.print_json(json.dumps([spec.model_dump(mode="json") for spec in BU1LD_MODEL_SPECS]))
+
+
+@bu1ld_app.command("train-encoder-quantizer")
+def bu1ld_train_encoder_quantizer(
+    manifest: Path,
+    output: Path,
+    steps: int = 1_000,
+    batch_size: int = 8,
+    learning_rate: float = 1e-3,
+    seed: int = 20261011,
+    input_dim: int = 768,
+    hidden_dim: int = 1_024,
+    latent_dim: int = 256,
+    codebook_size: int = 1_024,
+    residual_codebooks: int = 4,
+) -> None:
+    """Train one hash-bound encoder-quantizer development candidate."""
+
+    encoder = EncoderQuantizationConfig(
+        input_dim=input_dim,
+        hidden_dim=hidden_dim,
+        latent_dim=latent_dim,
+        codebook_size=codebook_size,
+        residual_codebooks=residual_codebooks,
     )
+    config = EncoderQuantizationTrainingConfig(
+        seed=seed,
+        steps=steps,
+        batch_size=batch_size,
+        learning_rate=learning_rate,
+        encoder=encoder,
+    )
+    report = train_encoder_quantizer(
+        manifest.resolve(),
+        output.resolve(),
+        config=config,
+    )
+    console.print_json(report.model_dump_json())
+
+
+@bu1ld_app.command("train-jepa-upscaler")
+def bu1ld_train_jepa_upscaler(
+    manifest: Path,
+    output: Path,
+    steps: int = 1_000,
+    batch_size: int = 4,
+    learning_rate: float = 2e-4,
+    seed: int = 20261011,
+    scale: int = 2,
+    feature_channels: int = 48,
+    residual_blocks: int = 4,
+) -> None:
+    """Train one source-disjoint JEPA upscaler development candidate."""
+
+    model = JEPAUpscalerConfig(
+        scale=scale,
+        feature_channels=feature_channels,
+        residual_blocks=residual_blocks,
+    )
+    config = JEPAUpscalerTrainingConfig(
+        seed=seed,
+        steps=steps,
+        batch_size=batch_size,
+        learning_rate=learning_rate,
+        model=model,
+    )
+    report = train_jepa_upscaler(
+        manifest.resolve(),
+        output.resolve(),
+        config=config,
+    )
+    console.print_json(report.model_dump_json())
+
+
+@bu1ld_app.command("lazy-plan")
+def bu1ld_lazy_plan(
+    manifest: Path,
+    budget_bytes: int,
+    x: float,
+    y: float,
+    z: float,
+    timestamp: float,
+    resolution: float,
+    velocity_x: float = 0.0,
+    velocity_y: float = 0.0,
+    velocity_z: float = 0.0,
+    lookahead_seconds: float = 0.0,
+) -> None:
+    """Plan parameter residency without reading any unselected shard."""
+
+    store = SpatiotemporalParameterStore(manifest.resolve(), cache_budget_bytes=budget_bytes)
+    plan = store.plan(
+        SpatiotemporalQuery(
+            position=(x, y, z),
+            timestamp=timestamp,
+            resolution=resolution,
+            velocity=(velocity_x, velocity_y, velocity_z),
+            lookahead_seconds=lookahead_seconds,
+        ),
+        budget_bytes=budget_bytes,
+    )
+    console.print_json(plan.model_dump_json())
+
+
+def _default_instruction_source() -> Path:
+    repository_source = Path(__file__).resolve().parents[1] / "datasets/hermes-smoke/source.jsonl"
     if repository_source.is_file():
         return repository_source
     return Path(sys.prefix) / "share/olympus/datasets/source.jsonl"
@@ -339,9 +460,7 @@ def validate(
     _print_records_table(records)
     for record in records:
         for issue in record.validation.issues:
-            console.print(
-                f"[{issue.severity}] {record.manifest.project_id}: {issue.message}"
-            )
+            console.print(f"[{issue.severity}] {record.manifest.project_id}: {issue.message}")
 
 
 @labos_app.command("run-smoke")

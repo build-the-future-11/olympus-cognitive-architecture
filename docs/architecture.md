@@ -18,9 +18,16 @@ Olympus is organized around six collaborating layers:
    The `olympus.models` package contains a deterministic Hermes Nano integration
    fixture. Despite its historical name, it is not a trained language model and
    is not a Hermes checkpoint.
+   The BU1LD target programme also includes executable research primitives for
+   masked residual encoder quantization and hash-bound spatiotemporal parameter
+   residency. The latter ranks lazy shards using position, velocity, time, and
+   resolution while enforcing containment and content identity.
 6. Interfaces.
    FastAPI lives in `olympus.api`, Typer CLI lives in `olympus.cli`, and the React dashboard lives in `apps/forge-web`.
 
 The current implementation is intentionally small-scale but real. The Foundry
 verification model proves infrastructure behavior only; future Olympus family
 names are not registered until a real checkpoint passes its declared gates.
+The image upscaler successor in `olympus.upscaler` uses an EMA-target JEPA
+objective with spatial/time conditioning and a bicubic residual path. These are
+mechanisms, not promoted families or target-scale capability evidence.

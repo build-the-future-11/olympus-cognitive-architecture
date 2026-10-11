@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "source_head": "88cc23517e758e4fcd48d5bf08e269973a36f125",
+  "status": "ENGINEERING_PATHWAYS_IMPLEMENTED_AND_LOCALLY_VERIFIED",
+  "capability_status": "NO_TARGET_SCALE_MODEL_TRAINED_OR_PROMOTED",
+  "scope": {
+    "implemented": [
+      "five-family BU1LD target specification and capability gates",
+      "masked differentiable residual-vector-quantization encoder and autoencoder",
+      "hash-bound source-disjoint encoder-quantizer training and held-out evaluation",
+      "geometry-and-time-conditioned EMA-target JEPA upscaler",
+      "hash-bound source-disjoint JEPA upscaler training and bicubic comparison",
+      "hash-bound spatiotemporal lazy parameter residency, LRU cache, and meta-module materialization",
+      "BU1LD CLI commands for specifications, both training paths, and lazy residency planning"
+    ],
+    "not_claimed": [
+      "12B, 128B, 1.024T, Atlas, or 8T checkpoints",
+      "perfect assistant, specialist, generalist, sentience, or AGI",
+      "JEPA upscaler superiority on natural images",
+      "target-scale training, serving, promotion, or independent reproduction"
+    ]
+  },
+  "source_sha256": {
+    "olympus/models/specifications.py": "d3463fc0debe27731c7988f1a97107d6c49bbb69a12e35ec2d8fa9038edc5ca0",
+    "olympus/models/encoder_quantization.py": "047d212d11bed763cc79405adda670efb5fa406c5cb85350551fe526f92073b3",
+    "olympus/models/spatiotemporal_lazy.py": "09c7a7aa4a1edcf19f3e4c4084e44d627dc606a43172e8853c02d3fa59fff939",
+    "olympus/training/encoder_quantization.py": "24e07232438cc59503081c381bbf81023dd51b331b6c50fadd7e73d7bb6f9803",
+    "olympus/upscaler/jepa.py": "ea256d6cb7a69fab9d177381366757ce33f58c2705df8cea420e12afdeb5a200",
+    "olympus/upscaler/training.py": "3a7a46728ec599c0237591e800a23aa24637947182a319bcb6eb8ff6652e98a0",
+    "olympus/cli.py": "09cfefd965a6f7ae9f9367cf2b2beccc3b7b72e9d2bbfcd1087a5fad28788b95",
+    "tests/test_bu1ld_model_pathways.py": "9eb1b6c6b1a1faab21734c379007df388754f13ed3ab4940229db338b3ae9d9b",
+    "tests/test_cli.py": "e6e2df4add7bfc8ea7c9bcbd5aa0d289135b5e3cda5d011c782293ec7788048a",
+    "research/BU1LD_MODEL_SPECIFICATIONS.md": "a7d53b477d56c4ecae4d4ad778f3f7b22ab24928c6f401f8b563b3ce1a038e2a",
+    "docs/architecture.md": "e6a8b82c00404fd8f116631b1568332a5a285babf74c53f8d0da6b9f62aaec2d"
+  },
+  "verification": {
+    "targeted_tests": "11 passed",
+    "full_tests": "168 passed",
+    "full_test_blocker": null,
+    "observed_branch_coverage_percent": 87.08,
+    "coverage_gate_percent": 85.0,
+    "coverage_gate_status": "PASSED",
+    "ruff_lint": "passed for olympus and tests",
+    "ruff_format": "passed for all 10 changed Python files",
+    "strict_mypy": "passed for 84 source files",
+    "cli_help_and_specs": "passed",
+    "wheel_build": "passed",
+    "sdist_build": "passed",
+    "wheel_archive_integrity": "passed",
+    "twine_check": "passed for wheel and source distribution"
+  },
+  "resource_snapshot": {
+    "total_bytes": 17179869184,
+    "available_bytes": 3061841920,
+    "swap_total_bytes": 6174015488,
+    "swap_used_bytes": 5465964544,
+    "swap_fraction": 0.8853175951086957
+  },
+  "artifacts": {
+    "wheel": {
+      "path": "/tmp/olympus-bu1ld-dist-20261011-complete/olympus_cognitive_architecture-0.2.0-py3-none-any.whl",
+      "sha256": "a97f3347a3254fda8fc64c3a56befe86df03402eccea1e89003cc3d794ae1b66"
+    },
+    "sdist": {
+      "path": "/tmp/olympus-bu1ld-dist-20261011-complete/olympus_cognitive_architecture-0.2.0.tar.gz",
+      "sha256": "5c2dce5dcda20d1de1a943e0ed30f6c6738c27635585478e92f0e94a26d562b8"
+    }
+  },
+  "worktree_boundary": "The checkout began with two pre-existing untracked .DS_Store files. No target-scale model artifacts, natural-image evaluation, protected evaluation, promotion, or external publication was created."
+}
