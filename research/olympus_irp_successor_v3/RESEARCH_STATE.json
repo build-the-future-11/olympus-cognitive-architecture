@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "project_id": "olympus-reliability-fusion-successor-v3",
+  "created_date": "2026-10-11",
+  "updated_date": "2026-10-11",
+  "current_phase": "TERMINAL_NEGATIVE_ARXIV_PACKAGE_READY_EXTERNAL_REVIEW_PENDING",
+  "research_question": "Does explicit per-component reliability supervision with fixed uniform shrinkage improve corrupted-regime selective accuracy over matched semantic routing?",
+  "hypothesis": "Reliability-supervised shrinkage routing improves corrupted-test selective accuracy at 50 percent coverage over semantic routing by at least 0.02 with a paired bootstrap 95 percent interval above zero.",
+  "falsifier": "The interval includes zero, the mean gain is below 0.02, or a risk-monotonicity or transition-legality violation occurs.",
+  "intended_contribution": "An auditable Olympus-specific reliability routing mechanism and successor-study protocol after a preserved negative predecessor.",
+  "scope": "Controlled synthetic mechanism evidence only.",
+  "development_budget": {
+    "variants": 5,
+    "seeds_per_variant": 5,
+    "steps_per_run": 300,
+    "maximum_fits": 25
+  },
+  "compute_budget": {
+    "device": "cpu",
+    "minimum_available_bytes": 2147483648,
+    "maximum_swap_fraction": 0.9,
+    "guard_may_be_weakened": false
+  },
+  "protected_evaluation_boundary": {
+    "dataset_version": "olympus-reliability-fusion/3.0.0",
+    "protected_splits": [
+      "clean_test",
+      "corrupted_test",
+      "ood_test"
+    ],
+    "may_be_observed_after": "SCIENTIFIC_FREEZE.json exists after all 25 development fits",
+    "v2_protected_evidence_reused": false
+  },
+  "repositories": [
+    "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture"
+  ],
+  "datasets": [
+    {
+      "id": "olympus-reliability-fusion",
+      "version": "3.0.0",
+      "license": "CC-BY-4.0",
+      "records": 1408,
+      "source_overlap_count": 0,
+      "status": "MATERIALIZED_HASH_BOUND_AND_EVALUATED_AFTER_FREEZE"
+    }
+  ],
+  "artifacts": [
+    "research/olympus_irp_successor_v3/PROTOCOL.md",
+    "research/olympus_irp_successor_v3/PAPER_SPEC.md",
+    "olympus/models/reliability_fusion.py",
+    "olympus/data/reliability_fusion.py",
+    "scripts/run_reliability_fusion_study.py",
+    "tests/test_reliability_fusion.py",
+    "artifacts/data/olympus-reliability-v3/receipt.json",
+    "artifacts/runs/olympus-reliability-v3/campaign_contract.json",
+    "artifacts/runs/olympus-reliability-v3/SCIENTIFIC_FREEZE.json",
+    "artifacts/runs/olympus-reliability-v3/EVIDENCE_SUMMARY.json",
+    "research/olympus_irp_successor_v3/FULL_EVIDENCE_AUDIT.json",
+    "research/olympus_irp_successor_v3/RESULTS.md",
+    "research/olympus_irp_successor_v3/VERIFICATION_RECEIPT.json",
+    "artifacts/runs/olympus-reliability-v3/coverage.json",
+    "research/olympus_irp_successor_v3/paper/main.tex",
+    "research/olympus_irp_successor_v3/RELEASE_RECEIPT_20261011.json",
+    "output/pdf/olympus-reliability-supervised-shrinkage-negative-v3.pdf",
+    "output/pdf/olympus-reliability-supervised-shrinkage-negative-v3-arxiv.tar.gz"
+  ],
+  "claims": [
+    {
+      "claim": "The v3 implementation exists and is backward-additive.",
+      "status": "IMPLEMENTED_FULL_SUITE_STATIC_AND_COVERAGE_CHECKS_PASS"
+    },
+    {
+      "claim": "v3 improves robust fusion.",
+      "status": "REJECTED_BY_PREREGISTERED_PRIMARY_ENDPOINT"
+    },
+    {
+      "claim": "v3 transfers to natural data or JEPA.",
+      "status": "NOT_CLAIMED"
+    }
+  ],
+  "decisions": [
+    "Preserve v2 as a terminal negative predecessor.",
+    "Use fresh dataset and training seeds because v3 was designed after v2 protected outcomes.",
+    "Instantiate reliability heads in every control for parameter and forward-compute matching.",
+    "Fix adaptive mass at 0.75 and reliability strength at 1.0 before protected evaluation.",
+    "Do not weaken the resource preflight."
+  ],
+  "failures": [
+    {
+      "source": "olympus_irp_successor_v2",
+      "result": "NEGATIVE",
+      "preserved": true,
+      "summary": "Learned fusion did not beat matched controls and underperformed on corrupted selective accuracy."
+    },
+    {
+      "date": "2026-10-11",
+      "result": "RESOURCE_NOT_ADMITTED",
+      "preserved": true,
+      "summary": "An initial snapshot showed approximately 95.5 percent swap utilization; execution waited until the unchanged resource gate admitted the workload."
+    },
+    {
+      "date": "2026-10-11",
+      "result": "NEGATIVE",
+      "preserved": true,
+      "summary": "Full reliability-supervised shrinkage routing underperformed semantic routing by 0.0125 on the primary corrupted selective endpoint; paired bootstrap 95 percent CI was [-0.028125, 0.003125]."
+    }
+  ],
+  "history": [
+    {
+      "date": "2026-10-11",
+      "event": "Initialized separately versioned v3 successor from the v2 negative mechanism audit."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Specified, implemented, and preregistered reliability-supervised shrinkage routing and matched controls."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Materialized 1,408 fresh source-disjoint examples and retained SHA-256 identities for five splits."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Completed all 25 development fits, froze contract, code, data, and checkpoints, then opened all 75 protected evaluations."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Locked a NEGATIVE primary result with zero host-risk monotonicity and zero transition-legality violations across protected receipts."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Completed local verification: 188 tests passed, branch coverage was 86.7487 percent, Ruff passed, and strict mypy passed across 103 source files."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Generated a five-page negative-result paper, visually inspected every rendered page, and clean-compiled the arXiv source package from extraction."
+    }
+  ],
+  "checkpoint_status": {
+    "1_idea_ready": "PASS_FOR_CONTROLLED_SYNTHETIC_SCOPE",
+    "2_model_specification_ready": "PASS",
+    "3_methodology_ready": "FROZEN_BEFORE_PROTECTED_INSPECTION",
+    "4_model_implemented": "PASS",
+    "5_experiment_system_implemented": "PASS",
+    "6_run_ready": "PASS",
+    "7_confirmatory_protocol_frozen": "PASS",
+    "8_evidence_locked": "PASS_NEGATIVE",
+    "9_verified": "PASS_LOCAL_FULL_SUITE_STATIC_COVERAGE_EXTERNAL_INDEPENDENT_REPRODUCTION_PENDING",
+    "10_research_complete": "TERMINAL_NEGATIVE_WITHIN_SYNTHETIC_SCOPE_ARXIV_PACKAGE_READY_NOT_SUBMITTED"
+  },
+  "next_admissible_action": "Independent review or user-authorized external submission; do not reopen the negative hypothesis. Any natural-data or alternative-router study must be a separately preregistered successor.",
+  "terminal_disposition": "NEGATIVE",
+  "promotion_authorized": false
+}

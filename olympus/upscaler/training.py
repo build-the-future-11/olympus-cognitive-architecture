@@ -61,6 +61,8 @@ class JEPAUpscalerTrainingConfig(StrictModel):
     batch_size: int = Field(default=4, ge=1, le=1_024)
     learning_rate: float = Field(default=2e-4, gt=0.0, le=0.1)
     gradient_clip_norm: float = Field(default=1.0, gt=0.0, le=100.0)
+    mask_ratio: float = Field(default=0.5, ge=0.0, le=0.95)
+    mask_block_size: int = Field(default=2, ge=1, le=64)
     model: JEPAUpscalerConfig = Field(default_factory=JEPAUpscalerConfig)
 
 
@@ -71,14 +73,19 @@ class UpscalerEvaluation(StrictModel):
     psnr_improvement: float
     model_edge_error: float
     bicubic_edge_error: float
+    model_ssim: float
+    bicubic_ssim: float
+    model_frequency_error: float
+    bicubic_frequency_error: float
 
 
 class JEPAUpscalerTrainingReport(StrictModel):
-    schema_version: int = 1
+    schema_version: int = 3
     status: str
     dataset_manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     completed_steps: int = Field(ge=1)
     final_training_loss: float
+    final_loss_components: dict[str, float]
     checkpoint_path: str
     checkpoint_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     evaluation: UpscalerEvaluation
@@ -190,6 +197,28 @@ def _edge_error(prediction: Tensor, target: Tensor) -> Tensor:
     return nn.functional.l1_loss(pred_x, target_x) + nn.functional.l1_loss(pred_y, target_y)
 
 
+def _frequency_error(prediction: Tensor, target: Tensor) -> Tensor:
+    prediction_spectrum = torch.fft.rfft2(prediction.float(), norm="ortho").abs()
+    target_spectrum = torch.fft.rfft2(target.float(), norm="ortho").abs()
+    return nn.functional.l1_loss(torch.log1p(prediction_spectrum), torch.log1p(target_spectrum))
+
+
+def _ssim(prediction: Tensor, target: Tensor) -> Tensor:
+    mean_prediction = nn.functional.avg_pool2d(prediction, 3, stride=1, padding=1)
+    mean_target = nn.functional.avg_pool2d(target, 3, stride=1, padding=1)
+    variance_prediction = nn.functional.avg_pool2d(prediction.square(), 3, 1, 1)
+    variance_prediction = (variance_prediction - mean_prediction.square()).clamp_min(0.0)
+    variance_target = nn.functional.avg_pool2d(target.square(), 3, 1, 1)
+    variance_target = (variance_target - mean_target.square()).clamp_min(0.0)
+    covariance = nn.functional.avg_pool2d(prediction * target, 3, 1, 1)
+    covariance = covariance - mean_prediction * mean_target
+    numerator = (2.0 * mean_prediction * mean_target + 0.01**2) * (2.0 * covariance + 0.03**2)
+    denominator = (mean_prediction.square() + mean_target.square() + 0.01**2) * (
+        variance_prediction + variance_target + 0.03**2
+    )
+    return (numerator / denominator.clamp_min(1e-12)).mean().clamp(-1.0, 1.0)
+
+
 def _evaluate(model: JEPAUpscaler, low: Tensor, high: Tensor) -> UpscalerEvaluation:
     model.eval()
     with torch.inference_mode():
@@ -208,7 +237,38 @@ def _evaluate(model: JEPAUpscaler, low: Tensor, high: Tensor) -> UpscalerEvaluat
             psnr_improvement=model_psnr - bicubic_psnr,
             model_edge_error=float(_edge_error(prediction, high).item()),
             bicubic_edge_error=float(_edge_error(bicubic, high).item()),
+            model_ssim=float(_ssim(prediction, high).item()),
+            bicubic_ssim=float(_ssim(bicubic, high).item()),
+            model_frequency_error=float(_frequency_error(prediction, high).item()),
+            bicubic_frequency_error=float(_frequency_error(bicubic, high).item()),
         )
+
+
+def _context_mask(
+    batch: int,
+    height: int,
+    width: int,
+    *,
+    ratio: float,
+    block_size: int,
+    generator: torch.Generator,
+) -> Tensor:
+    if ratio == 0.0:
+        return torch.zeros((batch, height, width), dtype=torch.bool)
+    coarse_height = math.ceil(height / block_size)
+    coarse_width = math.ceil(width / block_size)
+    coarse = torch.rand((batch, 1, coarse_height, coarse_width), generator=generator) < ratio
+    mask = nn.functional.interpolate(coarse.float(), scale_factor=block_size, mode="nearest").to(
+        dtype=torch.bool
+    )
+    mask = mask[:, 0, :height, :width]
+    flat = mask.flatten(1)
+    for row in flat:
+        if not bool(row.any()):
+            row[0] = True
+        if bool(row.all()):
+            row[-1] = False
+    return mask
 
 
 def train_jepa_upscaler(
@@ -244,14 +304,25 @@ def train_jepa_upscaler(
     model = JEPAUpscaler(config.model)
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.learning_rate)
     final_loss = math.nan
+    final_components: dict[str, float] = {}
     model.train()
     for _step in range(config.steps):
         indices = torch.randint(train_low.shape[0], (config.batch_size,), generator=generator)
         low = train_low[indices]
         high = train_high[indices]
         timestamp = indices.float() / max(train_low.shape[0] - 1, 1)
+        context_mask = _context_mask(
+            low.shape[0],
+            low.shape[2],
+            low.shape[3],
+            ratio=config.mask_ratio,
+            block_size=config.mask_block_size,
+            generator=generator,
+        )
         optimizer.zero_grad(set_to_none=True)
-        losses = jepa_upscaler_loss(model(low, high, timestamp=timestamp), high)
+        losses = jepa_upscaler_loss(
+            model(low, high, timestamp=timestamp, context_mask=context_mask), high
+        )
         if not torch.isfinite(losses.total):
             raise FloatingPointError("non-finite JEPA upscaler loss")
         losses.total.backward()  # type: ignore[no-untyped-call]
@@ -261,10 +332,21 @@ def train_jepa_upscaler(
         optimizer.step()
         model.update_target_encoder()
         final_loss = float(losses.total.detach().item())
+        final_components = {
+            "reconstruction": float(losses.reconstruction.detach().item()),
+            "edge": float(losses.edge.detach().item()),
+            "joint_embedding": float(losses.joint_embedding.detach().item()),
+            "latent_geometry": float(losses.latent_geometry.detach().item()),
+            "variance": float(losses.variance.detach().item()),
+            "frequency": float(losses.frequency.detach().item()),
+            "structure": float(losses.structure.detach().item()),
+            "pyramid": float(losses.pyramid.detach().item()),
+            "spectral_coherence": float(losses.spectral_coherence.detach().item()),
+        }
 
     evaluation = _evaluate(model, evaluation_low, evaluation_high)
     checkpoint = {
-        "schema_version": 1,
+        "schema_version": 3,
         "dataset_manifest_sha256": _sha256_bytes(manifest_bytes),
         "config": config.model_dump(mode="json"),
         "model_state": model.state_dict(),
@@ -280,6 +362,7 @@ def train_jepa_upscaler(
         dataset_manifest_sha256=_sha256_bytes(manifest_bytes),
         completed_steps=config.steps,
         final_training_loss=final_loss,
+        final_loss_components=final_components,
         checkpoint_path=str(checkpoint_path.resolve()),
         checkpoint_sha256=checkpoint_sha,
         evaluation=evaluation,
@@ -291,3 +374,30 @@ def train_jepa_upscaler(
     )
     _atomic_json(report_path, report.model_dump(mode="json"))
     return report
+
+
+def load_jepa_upscaler_checkpoint(
+    checkpoint_path: Path,
+    *,
+    expected_sha256: str | None = None,
+) -> tuple[JEPAUpscaler, JEPAUpscalerTrainingConfig]:
+    """Load an immutable development checkpoint with optional digest pinning."""
+
+    if checkpoint_path.is_symlink() or not checkpoint_path.is_file():
+        raise ValueError("checkpoint must be a regular non-symlink file")
+    content = checkpoint_path.read_bytes()
+    observed_sha256 = _sha256_bytes(content)
+    if expected_sha256 is not None and observed_sha256 != expected_sha256:
+        raise ValueError("checkpoint digest does not match the expected SHA-256")
+    payload: Any = torch.load(io.BytesIO(content), map_location="cpu", weights_only=True)
+    if not isinstance(payload, dict) or payload.get("schema_version") not in {2, 3}:
+        raise ValueError("checkpoint has an unsupported schema")
+    raw_config = payload.get("config")
+    raw_state = payload.get("model_state")
+    if not isinstance(raw_config, dict) or not isinstance(raw_state, dict):
+        raise ValueError("checkpoint is missing its configuration or model state")
+    config = JEPAUpscalerTrainingConfig.model_validate(raw_config)
+    model = JEPAUpscaler(config.model)
+    model.load_state_dict(cast(dict[str, Tensor], raw_state), strict=True)
+    model.eval()
+    return model, config

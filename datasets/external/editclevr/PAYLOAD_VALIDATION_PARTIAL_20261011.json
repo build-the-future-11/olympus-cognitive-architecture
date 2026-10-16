@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "dataset": "torux/EditCLEVR",
+  "revision": "734efa9b0164ba742cd2c39b9c2945c494497c23",
+  "status": "PARTIAL_DOWNLOAD_NOT_ADMITTED",
+  "complete_archives": {
+    "editclevr_cogent_ood.tar.gz": {
+      "compressed_bytes": 568788167,
+      "uncompressed_bytes": 612737406,
+      "sha256": "0e2601daf5ec90b10f6f37b384050b4ea9e7d138f588dc0d3d68de9634026e0d",
+      "hash_matches_upstream_manifest": true,
+      "directory_count": 22001,
+      "file_count": 20000,
+      "unique_member_count": 20000,
+      "member_types": {
+        ".json": 8000,
+        ".npz": 4000,
+        ".png": 8000
+      },
+      "unsafe_member_count": 0
+    }
+  },
+  "incomplete_archives": {
+    "editclevr_atomic_id.tar.gz": {
+      "expected_bytes": 3996651313,
+      "retained_partial_bytes": 2627235161
+    },
+    "editclevr_hard_distractor.tar.gz": {
+      "expected_bytes": 650415087,
+      "retained_partial_bytes": 202014537
+    },
+    "editclevr_no_edit.tar.gz": {
+      "expected_bytes": 570931863,
+      "retained_partial_bytes": 0
+    }
+  },
+  "resource_stop": {
+    "reason": "Concurrent repository test training observed 93.9 percent swap utilization against the unchanged 90.0 percent ceiling.",
+    "download_resumable": true,
+    "partial_bytes_deleted": 0,
+    "guard_weakened": false
+  },
+  "admission": {
+    "authorized_for_extraction": false,
+    "authorized_for_training": false,
+    "required_next_gate": "All four suite archives must match UPSTREAM_MANIFEST.json and every split-referenced path must pass scripts/validate_editclevr_payload.py."
+  }
+}

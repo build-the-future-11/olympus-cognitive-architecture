@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "dataset": "torux/EditCLEVR",
+  "revision": "734efa9b0164ba742cd2c39b9c2945c494497c23",
+  "last_modified": "2026-06-14T18:52:10.000Z",
+  "license": "CC-BY-4.0",
+  "observed_at": "2026-10-11",
+  "source_api": "https://huggingface.co/api/datasets/torux/EditCLEVR/revision/734efa9b0164ba742cd2c39b9c2945c494497c23?blobs=true",
+  "files": {
+    "editclevr_atomic_id.tar.gz": {
+      "size_bytes": 3996651313,
+      "sha256": "b0f188e2f2e8b32b54416cfefa43740e976157345c1ea0186411e7082de48c4f"
+    },
+    "editclevr_cogent_ood.tar.gz": {
+      "size_bytes": 568788167,
+      "sha256": "0e2601daf5ec90b10f6f37b384050b4ea9e7d138f588dc0d3d68de9634026e0d"
+    },
+    "editclevr_hard_distractor.tar.gz": {
+      "size_bytes": 650415087,
+      "sha256": "458b4dcb4be6393c8dd943f0671dd89786d57af6cf88d1880506450ad1b0d73b"
+    },
+    "editclevr_no_edit.tar.gz": {
+      "size_bytes": 570931863,
+      "sha256": "b6c133ff5e39370e1e339a3ac77b34ff46218524ca161e06feac790663ac81be"
+    },
+    "editclevr_splits.tar.gz": {
+      "size_bytes": 9711965,
+      "sha256": "170a29a91bfe24515916c5da744c2dfb61b882637232090ff4e8d1113b02eb5f"
+    }
+  }
+}

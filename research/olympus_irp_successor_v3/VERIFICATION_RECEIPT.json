@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "status": "LOCAL_VERIFICATION_PASS",
+  "tests": {
+    "command": ".venv/bin/python -m pytest -q --cov=olympus --cov-branch --cov-report=term-missing --cov-report=json:artifacts/runs/olympus-reliability-v3/coverage.json",
+    "passed": 188,
+    "failed": 0,
+    "branch_coverage_percent": 86.74869853289162,
+    "required_percent": 85.0,
+    "coverage_sha256": "23d3582b6457ed73bc129abb8d5e1895ffa72ef02c1b2a762b29f24924fb634a"
+  },
+  "static_checks": {
+    "ruff": "PASS",
+    "mypy": "PASS_103_SOURCE_FILES",
+    "git_diff_check": "PASS"
+  },
+  "evidence_integrity": {
+    "development_reports": 25,
+    "protected_receipts": 75,
+    "checkpoint_bindings": 25,
+    "parameter_matched": true,
+    "parameter_count": 27962,
+    "risk_monotonicity_violations": 0,
+    "transition_legality_violations": 0,
+    "dataset_receipt_sha256": "365333ff3c4549de8fc78b6ae08237ef9d00ff72950e6c30df80d1e6f982e067",
+    "scientific_freeze_sha256": "7f63f48ba222ea822698102effe62899a956deb6439eecce6f4c6f292e479f82",
+    "primary_evidence_sha256": "35fd28a25b0ec5cf526fce01ceeabb6d19c0c8a8dc1ff3c3b6d8f5aa3f452174",
+    "full_audit_sha256": "4472d8478fb69b96f08eda67b710c889016a5c9a44f05d98ca28d14dd75cb3f8",
+    "results_sha256": "9c0363ede98479f82d6f0c07ae2adf37baa24a65462e5069457448b890614f05"
+  },
+  "limits": [
+    "This is local verification, not independent reproduction.",
+    "No external release, deployment, or model promotion was performed.",
+    "The result is controlled synthetic evidence and does not validate JEPA or natural-data performance."
+  ]
+}

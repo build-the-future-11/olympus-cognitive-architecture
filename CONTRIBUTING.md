@@ -4,8 +4,8 @@ Use Python 3.14 and Node.js 22. Install the Python and web dependencies from
 their locked or declared manifests:
 
 ```bash
-python3.14 -m venv .venv
-.venv/bin/pip install -e ".[dev]"
+export SOURCE_DATE_EPOCH="$(git show -s --format=%ct HEAD)"
+uv sync --locked --all-extras
 cd apps/forge-web
 npm ci
 ```
@@ -13,10 +13,10 @@ npm ci
 Before submitting a change, run the same checks enforced by CI:
 
 ```bash
-.venv/bin/ruff check .
-.venv/bin/mypy olympus tests
-.venv/bin/pytest -q
-.venv/bin/python -m build
+uv run --locked python -m ruff check .
+uv run --locked python -m mypy olympus scripts tests
+uv run --locked python -m pytest -q
+uv run --locked python -m build --no-isolation
 cd apps/forge-web
 npm test
 npm run build

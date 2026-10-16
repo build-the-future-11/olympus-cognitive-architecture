@@ -11,6 +11,7 @@ from rich.table import Table
 
 from olympus.api import demos
 from olympus.core.workspace import LatentWorkspace
+from olympus.data.olympus_dataset import load_olympus_dataset
 from olympus.forge.compiler import NaturalLanguageBehaviorCompiler
 from olympus.forge.runtime import ForgeRuntime
 from olympus.foundry.data_pipeline import prepare_instruction_dataset
@@ -24,6 +25,13 @@ from olympus.foundry.sft import SFTConfig, TinyModelConfig, run_sft
 from olympus.labos.manifest import ProjectRecord, ResourceProfile
 from olympus.labos.portfolio import PortfolioService
 from olympus.models.encoder_quantization import EncoderQuantizationConfig
+from olympus.models.olympus_system import OlympusSystemConfig
+from olympus.models.reference_families import build_reference_model, default_reference_configs
+from olympus.models.runtime import (
+    OlympusRuntimeConfig,
+    OlympusSystemRuntime,
+    load_olympus_checkpoint,
+)
 from olympus.models.spatiotemporal_lazy import (
     SpatiotemporalParameterStore,
     SpatiotemporalQuery,
@@ -32,6 +40,10 @@ from olympus.models.specifications import BU1LD_MODEL_SPECS
 from olympus.training.encoder_quantization import (
     EncoderQuantizationTrainingConfig,
     train_encoder_quantizer,
+)
+from olympus.training.olympus_system import (
+    OlympusSystemTrainingConfig,
+    train_olympus_system,
 )
 from olympus.upscaler.jepa import JEPAUpscalerConfig
 from olympus.upscaler.training import JEPAUpscalerTrainingConfig, train_jepa_upscaler
@@ -55,6 +67,25 @@ def bu1ld_specs() -> None:
     """Print target specifications without asserting that target models exist."""
 
     console.print_json(json.dumps([spec.model_dump(mode="json") for spec in BU1LD_MODEL_SPECS]))
+
+
+@bu1ld_app.command("reference-models")
+def bu1ld_reference_models() -> None:
+    """Inspect bounded executable references without claiming family checkpoints."""
+
+    summaries: list[dict[str, object]] = []
+    for config in default_reference_configs():
+        model = build_reference_model(config)
+        summaries.append(
+            {
+                "family_id": config.family_id,
+                "implementation": type(model).__name__,
+                "reference_parameters": sum(parameter.numel() for parameter in model.parameters()),
+                "status": "REFERENCE_IMPLEMENTATION_NOT_PROMOTED",
+                "target_capability_claimed": False,
+            }
+        )
+    console.print_json(json.dumps(summaries))
 
 
 @bu1ld_app.command("train-encoder-quantizer")
@@ -127,6 +158,137 @@ def bu1ld_train_jepa_upscaler(
         config=config,
     )
     console.print_json(report.model_dump_json())
+
+
+@bu1ld_app.command("train-olympus-system")
+def bu1ld_train_olympus_system(
+    manifest: Path,
+    model_config: Path,
+    output: Path,
+    steps: int = 1_000,
+    batch_size: int = 8,
+    learning_rate: float = 3e-4,
+    warmup_steps: int = 0,
+    seed: int = 20261011,
+    device: str = "auto",
+    workload_lock: Path = Path("artifacts/locks/olympus-system-training.lock"),
+) -> None:
+    """Train and diagnose one hash-bound composed Olympus development candidate."""
+
+    if device not in {"auto", "cpu", "cuda", "mps"}:
+        raise typer.BadParameter("device must be auto, cpu, cuda, or mps")
+    resolved_config = model_config.resolve()
+    if model_config.is_symlink() or not resolved_config.is_file():
+        raise typer.BadParameter("model config must be a regular non-symlink JSON file")
+    model = OlympusSystemConfig.model_validate_json(resolved_config.read_bytes())
+    config = OlympusSystemTrainingConfig(
+        seed=seed,
+        steps=steps,
+        batch_size=batch_size,
+        learning_rate=learning_rate,
+        warmup_steps=warmup_steps,
+        device=device,  # type: ignore[arg-type]
+        workload_lock=workload_lock.resolve(),
+        model=model,
+    )
+    report = train_olympus_system(
+        manifest.resolve(),
+        output.resolve(),
+        config=config,
+    )
+    console.print_json(report.model_dump_json())
+
+
+@bu1ld_app.command("verify-olympus-dataset")
+def bu1ld_verify_olympus_dataset(manifest: Path) -> None:
+    """Verify every aligned tensor, digest, split identity, and schema before a run."""
+
+    loaded = load_olympus_dataset(manifest.resolve())
+    console.print_json(
+        json.dumps(
+            {
+                "status": "VERIFIED_REFERENCE_DATASET_NOT_SCIENTIFICALLY_QUALIFIED",
+                "dataset_id": loaded.manifest.dataset_id,
+                "version": loaded.manifest.version,
+                "manifest_sha256": loaded.manifest.manifest_sha256,
+                "train_examples": len(loaded.manifest.train.source_ids),
+                "evaluation_examples": len(loaded.manifest.evaluation.source_ids),
+                "extensions": loaded.manifest.extensions,
+                "train_shapes": loaded.manifest.train.shapes,
+                "evaluation_shapes": loaded.manifest.evaluation.shapes,
+            }
+        )
+    )
+
+
+@bu1ld_app.command("run-olympus-dataset")
+def bu1ld_run_olympus_dataset(
+    manifest: Path,
+    checkpoint: Path,
+    checkpoint_sha256: str,
+    device: str = "auto",
+    mixed_precision: bool = True,
+) -> None:
+    """Run digest-pinned reference inference over a verified evaluation split."""
+
+    if device not in {"auto", "cpu", "cuda", "mps"}:
+        raise typer.BadParameter("device must be auto, cpu, cuda, or mps")
+    loaded = load_olympus_dataset(manifest.resolve())
+    model, record = load_olympus_checkpoint(checkpoint.resolve(), expected_sha256=checkpoint_sha256)
+    if set(model.extension_names) != set(loaded.manifest.extensions):
+        raise typer.BadParameter("checkpoint and dataset extension names do not match")
+    batch = loaded.evaluation
+    input_names = {
+        "tokens",
+        "image",
+        "states",
+        "actions",
+        "allowed_transitions",
+        "risk_score",
+        "attention_mask",
+        "domain_ids",
+        "temporal_mask",
+        "timestamp",
+    }
+    inputs: dict[str, object] = {
+        name: value for name, value in batch.items() if name in input_names
+    }
+    inputs["extension_features"] = {
+        name: batch[f"extension__{name}"] for name in loaded.manifest.extensions
+    }
+    runtime = OlympusSystemRuntime(
+        model,
+        OlympusRuntimeConfig(
+            device=device,  # type: ignore[arg-type]
+            mixed_precision=mixed_precision,
+        ),
+    )
+    result = runtime.infer(inputs)  # type: ignore[arg-type]
+    output = result.output
+    console.print_json(
+        json.dumps(
+            {
+                "status": "COMPLETED_REFERENCE_INFERENCE_NOT_PROMOTED",
+                "dataset_manifest_sha256": loaded.manifest.manifest_sha256,
+                "checkpoint_sha256": record.sha256,
+                "examples": output.raw_decision_logits.shape[0],
+                "device": result.device,
+                "mixed_precision_effective": result.mixed_precision_effective,
+                "elapsed_seconds": result.elapsed_seconds,
+                "forced_stop_examples": int(output.aion.forced_stop.sum().item()),
+                "mean_effective_risk": float(output.effective_risk.mean().item()),
+                "mean_family_gates": {
+                    name: float(weight)
+                    for name, weight in zip(
+                        output.component_names,
+                        output.family_gates.mean(dim=0).tolist(),
+                        strict=True,
+                    )
+                },
+                "promotion_authorized": False,
+            }
+        )
+    )
 
 
 @bu1ld_app.command("lazy-plan")
@@ -324,6 +486,13 @@ def foundry_train_sft(
     sequence_tokens: int = 192,
     batch_size: int = 4,
     gradient_accumulation_steps: int = 2,
+    learning_rate: float = 3e-3,
+    warmup_optimizer_steps: int = 0,
+    minimum_learning_rate_ratio: float = 0.1,
+    weight_decay: float = 0.01,
+    early_stopping_patience: int = 0,
+    early_stopping_min_delta: float = 0.0,
+    restore_best_validation: bool = True,
 ) -> None:
     if mode not in {"full", "lora", "qlora"}:
         raise typer.BadParameter("mode must be full, lora, or qlora")
@@ -338,7 +507,14 @@ def foundry_train_sft(
         seed=seed,
         epochs=epochs,
         batch_size=batch_size,
+        learning_rate=learning_rate,
+        warmup_optimizer_steps=warmup_optimizer_steps,
+        minimum_learning_rate_ratio=minimum_learning_rate_ratio,
         gradient_accumulation_steps=gradient_accumulation_steps,
+        weight_decay=weight_decay,
+        early_stopping_patience=early_stopping_patience,
+        early_stopping_min_delta=early_stopping_min_delta,
+        restore_best_validation=restore_best_validation,
         model=model,
     )
     summary = run_sft(

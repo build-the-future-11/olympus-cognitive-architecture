@@ -1,0 +1,34 @@
+{
+  "hermes": {
+    "family_id": "hermes",
+    "backbone": {"vocab_size": 256, "model_dim": 32, "layers": 2, "heads": 4, "feedforward_dim": 64, "max_sequence_length": 128, "dropout": 0.0},
+    "tool_count": 8
+  },
+  "prometheus": {
+    "family_id": "prometheus",
+    "backbone": {"vocab_size": 256, "model_dim": 32, "layers": 2, "heads": 4, "feedforward_dim": 64, "max_sequence_length": 128, "dropout": 0.0},
+    "domains": 4,
+    "adapter_dim": 16,
+    "evidence_classes": 3
+  },
+  "perseus": {
+    "family_id": "perseus",
+    "backbone": {"vocab_size": 256, "model_dim": 32, "layers": 2, "heads": 4, "feedforward_dim": 64, "max_sequence_length": 128, "dropout": 0.0},
+    "experts": 4,
+    "active_experts": 2,
+    "expert_dim": 64
+  },
+  "atlas": {
+    "family_id": "atlas",
+    "backbone": {"vocab_size": 256, "model_dim": 32, "layers": 2, "heads": 4, "feedforward_dim": 64, "max_sequence_length": 128, "dropout": 0.0},
+    "image_channels": 3,
+    "patch_size": 4,
+    "retrieval_dim": 16
+  },
+  "kronos": {"family_id": "kronos", "state_dim": 16, "action_dim": 8, "hidden_dim": 32, "discrete_actions": 6, "planning_horizon": 4},
+  "aion": {"family_id": "aion", "state_dim": 16, "hidden_dim": 32, "research_stages": 8, "stop_stage": 7, "kill_threshold": 0.8},
+  "fusion_dim": 32,
+  "decision_classes": 8,
+  "gate_temperature": 1.0,
+  "extension_dims": {}
+}

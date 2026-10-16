@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "project_id": "olympus-controlled-fusion-v2",
+  "date": "2026-10-11",
+  "disposition": "NEGATIVE",
+  "scope": "controlled synthetic reliability-shift study only",
+  "checks": {
+    "training_runs": "25/25 complete",
+    "protected_evaluations": "75/75 complete",
+    "risk_monotonicity_violations": 0,
+    "transition_legality_violations": 0,
+    "pytest": "184 passed",
+    "branch_coverage": "86.41 percent",
+    "ruff": "PASS",
+    "strict_mypy": "PASS",
+    "pdf_pages": 10,
+    "pdf_visual_inspection": "PASS_ALL_PAGES",
+    "arxiv_clean_extract_compile": "PASS",
+    "external_submission": "NOT_PERFORMED",
+    "independent_external_reproduction": "NOT_PERFORMED"
+  },
+  "sha256": {
+    "scientific_freeze": "11294e7e2478e95e033c4fa064a87fbfdba9d14a6326a68ea18456f4319f08ef",
+    "confirmatory_summary": "407d72b93a210aefa2b6fce4cdd40e9d84095e77e19fa7b0713c134a733e774b",
+    "render_receipt": "c2a1e4535362b14f429dd5782bd3445c5618222b94acf6cae7d237e51d04fb73",
+    "paper_source": "950006a74a80161b67130f20bb713ddd1e311e0a13b6e9a4ecbb79255c9590e9",
+    "result_audit": "d7f4b0c612098c1887baac6ca1086b46f172b9216ad607845502d8491de55599",
+    "evidence_map": "7cb3fad58b942c9648ab5d2734571cf312100223ed92e83dc95ac216f62456c4",
+    "pdf": "ca9a200ab07da328e635d604342f2c5c7ec6ae5f0b684df1083cd1a119c81410",
+    "arxiv_source_package": "fbc905a02950498e226c7659162fe69009c62b7b89347a58ff7491f3a575ab65"
+  },
+  "claim_boundary": "The negative result is terminal only for the registered controlled synthetic hypothesis. It does not establish natural-data, deployment, target-scale, or JEPA performance."
+}

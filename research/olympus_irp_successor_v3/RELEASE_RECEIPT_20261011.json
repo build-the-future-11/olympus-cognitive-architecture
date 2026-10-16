@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "status": "ARXIV_PACKAGE_READY_NOT_SUBMITTED",
+  "disposition": "NEGATIVE",
+  "paper": {
+    "path": "output/pdf/olympus-reliability-supervised-shrinkage-negative-v3.pdf",
+    "sha256": "fb55e19d71f66d99e9ba4d0d4c59cce6ef0f8b1828fbcd9a35f9239251b3325d",
+    "pages": 5,
+    "page_size": "US Letter",
+    "visual_inspection": "PASS_ALL_5_PAGES"
+  },
+  "source": {
+    "path": "research/olympus_irp_successor_v3/paper/main.tex",
+    "sha256": "3dfe963ff5afa8879ab46f4c3c5fba3865d1638083cb670bb488a01e0eefe421"
+  },
+  "arxiv_package": {
+    "path": "output/pdf/olympus-reliability-supervised-shrinkage-negative-v3-arxiv.tar.gz",
+    "sha256": "cc3286113db9a840a04434ec0ff35be15ff988d69e4c7790f207daf2e1733dd0",
+    "clean_extraction_compile": "PASS_TECTONIC"
+  },
+  "external_actions": {
+    "submitted_to_arxiv": false,
+    "uploaded": false,
+    "commit_created": false,
+    "pushed": false
+  },
+  "claim_boundary": "Controlled synthetic negative result; no natural-data, target-scale, deployment, safety, or JEPA conclusion."
+}

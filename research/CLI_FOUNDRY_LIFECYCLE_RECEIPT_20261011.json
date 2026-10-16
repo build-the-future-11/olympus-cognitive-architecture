@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "status": "PASS_LOCAL_DIRTY_TREE",
+  "source_head": "20a5687d041859e888bf21390a37483177177dd8",
+  "dirty_tree_preserved": true,
+  "demos": {
+    "command": ".venv/bin/python -m olympus.cli demo run-all",
+    "passed": [
+      "ambiguous_interpretation",
+      "retrodiction",
+      "learned_transform",
+      "representation_selection",
+      "division_reassembly",
+      "forge"
+    ],
+    "failures": 0
+  },
+  "foundry": {
+    "root": "artifacts/release-audit-20261011/foundry-final",
+    "integrity": "ok",
+    "datasets": 1,
+    "experiments": 1,
+    "checkpoints": 1,
+    "evaluations": 1,
+    "models": 1,
+    "evidence_events": 5,
+    "experiment_status": "VERIFIED",
+    "checkpoint_sha256": "1f6144cab3eb5e6d6df435431e9860b55aeb4bee0026a42eeeefd2769f15c738",
+    "export_manifest_sha256": "b74c2d6835d5307f98c0a6346c67a849edcc593c4acd261e0e0bb420eca9ef86",
+    "candidate_negative_log_likelihood": 1.9001575710987069,
+    "baseline_negative_log_likelihood": 3.1780538303479458,
+    "candidate_perplexity": 6.686948029017607,
+    "baseline_perplexity": 24.0,
+    "candidate_top1_accuracy": 0.3925925925925926,
+    "baseline_top1_accuracy": 0.041666666666666664
+  },
+  "instruction_dataset": {
+    "root": "artifacts/release-audit-20261011/foundry-dataset-final",
+    "manifest_internal_sha256": "f64a41e9d3d79d5911e5abcf34e635bb76582abbdbb5d858b6405a1921c89285",
+    "manifest_file_sha256": "bad8ffc42be3d6bd034788b1c7cebe99e9c94181efaea2900e7df3b88cd87cd9",
+    "records": 36,
+    "train": 12,
+    "validation": 12,
+    "test": 12,
+    "duplicate_ids": 0,
+    "normalized_duplicates": 0,
+    "pii_or_secret_hits": 0,
+    "split_leakage_hits": 0,
+    "missing_category_split_pairs": 0
+  },
+  "final_resource_snapshot": {
+    "total_bytes": 17179869184,
+    "available_bytes": 3705389056,
+    "swap_total_bytes": 10737418240,
+    "swap_used_bytes": 9412542464,
+    "swap_fraction": 0.876611328125,
+    "process_peak_rss_bytes": 256278528
+  },
+  "claim_boundary": "The Foundry result verifies a deterministic character-bigram lifecycle and repository-owned smoke dataset. It is not Hermes, a frontier capability result, a promoted model, or scientific validation of Olympus fusion or JEPA."
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "status": "PASS_BOUNDED_LOADER_SMOKE",
+  "dataset": "torux/EditCLEVR",
+  "revision": "734efa9b0164ba742cd2c39b9c2945c494497c23",
+  "split": "test_cogent",
+  "records_verified": 2000,
+  "sample": {
+    "pair_id": "CLEVR_editclevr_cogent_b_000000_color_4",
+    "before_image_shape": [3, 240, 320],
+    "after_image_shape": [3, 240, 320],
+    "image_dtype": "torch.float32",
+    "image_range": [0.0, 1.0],
+    "scene_json_before": "PASS_OBJECT",
+    "scene_json_after": "PASS_OBJECT",
+    "instance_masks_before": "PASS_NPZ_NO_PICKLE",
+    "instance_masks_after": "PASS_NPZ_NO_PICKLE"
+  },
+  "bindings": {
+    "validation_sha256": "a329f9df42468db22cb44a158673450548ebadb40455f7717c54835738f8b74a",
+    "materialization_marker_sha256": "540216ef434350f3fa0915ccd42aa2b9d5a9cabf243603d41226283df202942a",
+    "split_registry_sha256": "af652307e6e2bf078820ccfcdeb1b5d0efc1a9515f716c78d96c2953343371db"
+  },
+  "final_memory": {
+    "total_bytes": 17179869184,
+    "available_bytes": 3813031936,
+    "swap_total_bytes": 10737418240,
+    "swap_used_bytes": 9563537408,
+    "swap_fraction": 0.890673828125,
+    "process_peak_rss_bytes": 238223360
+  },
+  "claim_boundary": "This receipt proves bounded loader execution on one materialized split and one decoded pair. It is not a training run, benchmark result, JEPA efficacy result, or protected Olympus confirmation."
+}

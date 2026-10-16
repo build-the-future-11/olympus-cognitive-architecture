@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "status": "EXPLORATORY_TRAINING_COMPLETED_SMOKE_GATE_PASSED_NOT_PROMOTED",
+  "trainer_upgrades": [
+    "configuration-hash run identities",
+    "immutable artifact overwrite refusal",
+    "resume configuration compatibility enforcement",
+    "optimizer-step warmup and cosine learning-rate decay",
+    "validation early stopping",
+    "self-consistent best model, optimizer, generator, epoch, and step restoration"
+  ],
+  "dataset": {
+    "manifest_sha256": "dde28b2e08a1763ab77d179b519c6d60ae8d3abd3094850cb8bcc48ecda694c7",
+    "records": 36,
+    "train_records": 12,
+    "validation_records": 12,
+    "protected_test_records": 12
+  },
+  "training": {
+    "run_id": "sft-full-dde28b2e08a1-ce5a03758c0-s20261012",
+    "training_config_sha256": "e5a03758c0012b1f0bb3745eaa1c1316416d7c7c12b1a39c9f72a4a4fb07e1e4",
+    "seed": 20261012,
+    "parameters": 884480,
+    "width": 128,
+    "layers": 4,
+    "heads": 8,
+    "sequence_tokens": 192,
+    "batch_size": 3,
+    "gradient_accumulation_steps": 2,
+    "learning_rate": 0.001,
+    "warmup_optimizer_steps": 10,
+    "minimum_learning_rate_ratio": 0.05,
+    "early_stopping_patience": 12,
+    "early_stopping_min_delta": 0.001,
+    "attempted_epochs": 30,
+    "restored_best_epoch": 18,
+    "restored_optimizer_steps": 36,
+    "attempted_optimizer_steps": 60,
+    "restored_learning_rate": 0.0009567781041483522,
+    "initial_validation_loss": 5.75672721862793,
+    "best_validation_loss": 2.9625799655914307,
+    "best_validation_perplexity": 19.347824139681897,
+    "early_stopped": true,
+    "elapsed_seconds": 25.1787426249939
+  },
+  "checkpoint": {
+    "path": "artifacts/foundry/deep/improved-training-20261011/sft-full-dde28b2e08a1-ce5a03758c0-s20261012/checkpoint.pt",
+    "sha256": "e95ff77e5465707a49dbd08b43077108bbff373979fb834e1c29593015102eaa"
+  },
+  "metrics": {
+    "path": "artifacts/foundry/deep/improved-training-20261011/sft-full-dde28b2e08a1-ce5a03758c0-s20261012/metrics.jsonl",
+    "sha256": "8cf0448ddd094882588720d682ea9d68f3f105d5289adff720a4bd7272dd435f"
+  },
+  "held_out_evaluation": {
+    "path": "artifacts/foundry/deep/improved-training-20261011/evaluation.json",
+    "sha256": "f29a3774bbd84bc1a7fa8b89012e9a6aa512545f8c318cbbf75e35c7a58918c6",
+    "baseline_loss": 5.75433349609375,
+    "candidate_loss": 3.1643561124801636,
+    "baseline_perplexity": 315.5551586736049,
+    "candidate_perplexity": 23.673496055705645,
+    "category_regressions": 0,
+    "exact_match_rate": 0.0,
+    "format_compliance_rate": 0.8333333333333334,
+    "all_workflow_outputs_nonempty": true,
+    "median_generation_latency_ms": 615.5224375106627,
+    "generated_bytes_per_second": 73.19618462902443,
+    "passed_infrastructure_smoke_gate": true
+  },
+  "quantization": {
+    "int4": {
+      "artifact_sha256": "0e35c4146ef5fd9bf2a689feaa3ab15539b4e2483b784e88090ada12d65c2781",
+      "report_sha256": "5abe74e5089b5d62ff658dae6aca03a5cd4077904cdb1936309b686a2ab50daf",
+      "quantized_bytes": 496699,
+      "size_reduction_fraction": 0.8603504768673909,
+      "loss_change_fraction": -0.000643522097931767,
+      "passed_quality_gate": true
+    },
+    "int8": {
+      "artifact_sha256": "c400e15d61a06d2c146b4a14356a9157859c09a16ac8942fa25cb80620546c97",
+      "report_sha256": "88814f53835afd25c20d6202989ebe4c9ad4808e820494a5c944e1ddd090d7a8",
+      "quantized_bytes": 939067,
+      "size_reduction_fraction": 0.7359763987051114,
+      "loss_change_fraction": 0.00012288778149241447,
+      "passed_quality_gate": true
+    },
+    "tool_exact_match_rate": 0.0
+  },
+  "resource_admission": {
+    "available_bytes": 4280713216,
+    "swap_fraction": 0.7972875975538045,
+    "peak_rss_bytes": 408616960,
+    "admitted": true
+  },
+  "verification": {
+    "python_tests": 181,
+    "branch_coverage_percent": 86.08,
+    "ruff": "passed",
+    "strict_mypy_source_files": 75,
+    "strict_mypy": "passed"
+  },
+  "source_sha256": {
+    "olympus/foundry/sft.py": "334804a7c152f90cfb167fa89b46ffd2a9ac3143352ad67a39b2f04eab750ba7",
+    "olympus/cli.py": "ec668293e80d8489510261d994123bf52ffda174f882a13d12f3b99f7f594c36",
+    "tests/test_deep_foundry.py": "29c849649c83e17d7c4b36a44372d5fcd8e515b8c98bd78872c3cb33b64c16a8"
+  },
+  "promotion_authorized": false,
+  "scientific_claim_authorized": false,
+  "boundary": "The candidate passed an infrastructure smoke gate on twelve held-out examples. It has zero exact and tool matches, is slower than the smaller candidate, and does not satisfy data-scale, capability, external-base, deployment, or independent-reproduction gates."
+}

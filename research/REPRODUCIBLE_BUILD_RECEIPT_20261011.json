@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "status": "PASS_BYTE_IDENTICAL_WHEEL_FROM_SDIST",
+  "source_head": "20a5687d041859e888bf21390a37483177177dd8",
+  "source_date_epoch": 1791692886,
+  "lock": {
+    "path": "uv.lock",
+    "packages": 110,
+    "sha256": "5631a669ae92dc7cc6db076cbf41c14dc1067b76a58b17dec4ee4e168f0d9bf1"
+  },
+  "build_environment": {
+    "python": "3.14.0",
+    "build": "1.6.1",
+    "setuptools": "84.0.0",
+    "wheel": "0.48.0"
+  },
+  "direct_build": {
+    "wheel": "artifacts/release-audit-20261011/dist-repro-final/olympus_cognitive_architecture-0.2.0-py3-none-any.whl",
+    "wheel_sha256": "b917c69dd0527cbc90c13ca59ca5b947c8b979cde76db0009500e27c93789cab",
+    "sdist": "artifacts/release-audit-20261011/dist-repro-final/olympus_cognitive_architecture-0.2.0.tar.gz",
+    "sdist_sha256": "70c419ca241c77b505370a78ccff79d16487c153f01af62b1a78ce8f92d2345c",
+    "twine": "PASS"
+  },
+  "clean_sdist_rebuild": {
+    "root": "/tmp/olympus-sdist-repro-epoch-20261011/olympus_cognitive_architecture-0.2.0",
+    "wheel_sha256": "b917c69dd0527cbc90c13ca59ca5b947c8b979cde76db0009500e27c93789cab",
+    "matches_direct_wheel": true,
+    "twine": "PASS"
+  },
+  "installed_final_wheel": {
+    "environment": "/tmp/olympus-locked-final-env-v2",
+    "dependencies": "EXACT_LOCK_110_PACKAGES",
+    "version_import": "PASS_0.2.0",
+    "pillow_import": "PASS_12.3.0",
+    "torch_import": "PASS_2.14.1",
+    "editclevr_loader_import": "PASS",
+    "all_demos": "PASS"
+  },
+  "claim_boundary": "Byte identity is established for the normalized wheel rebuilt from this sdist under the recorded environment and SOURCE_DATE_EPOCH. This is packaging reproducibility, not scientific or deployment validation."
+}

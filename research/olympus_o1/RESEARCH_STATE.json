@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "project_id": "olympus-o1-v1",
+  "title": "Olympus O1 Controlled Learned Baseline",
+  "initialized_at": "2026-08-29",
+  "migrated_at": "2026-10-11",
+  "updated_at": "2026-10-11",
+  "canonical": true,
+  "current_phase": "MIGRATED_PREREGISTRATION_NOT_RUN_UNFROZEN_DO_NOT_RUN",
+  "research_question": "Does explicit hypothesis to falsification to execution decomposition improve reliable task completion over a monolithic agent when the same learned provider, task set, context, tool access, and budget are used?",
+  "hypothesis": "Full Olympus improves paired reliable completion by at least five percentage points over the monolithic arm with a paired-bootstrap 95 percent confidence interval lower bound above zero, subject to frozen efficiency and ablation gates.",
+  "intended_contribution": "A paired four-arm test of the Prometheus to Perseus to Hermes runtime decomposition, falsification, and evidence-enforcement mechanisms under matched information and resource budgets.",
+  "scope": {
+    "arms": [
+      "monolithic",
+      "olympus_full_prometheus_perseus_hermes",
+      "olympus_without_perseus",
+      "olympus_without_evidence_enforcement"
+    ],
+    "task_count": 100,
+    "minimum_task_families": 2,
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260829
+  },
+  "development_budget": {
+    "post_outcome_protocol_revisions": 0,
+    "note": "Corrections require a new protocol version and complete rerun."
+  },
+  "compute_budget": {
+    "status": "UNFROZEN",
+    "maximum_parallel_jobs": null,
+    "provider": null,
+    "runtime": null,
+    "wall_clock_limit_seconds": null,
+    "token_limit": null
+  },
+  "protected_evaluation_boundary": {
+    "status": "NO_OUTCOME_RUN_RECORDED",
+    "task_manifest_present": false,
+    "outcomes_observed": false,
+    "execution_authorized": false
+  },
+  "repositories": [
+    {
+      "path": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture",
+      "role": "canonical continuation owner"
+    },
+    {
+      "name": "vertex-studyAI/vertexED.ai",
+      "source_pull_request": 653,
+      "source_head": "bc22ecc73201659cf099a20b6d038675b7307f28",
+      "role": "immutable historical evidence and archive surface"
+    }
+  ],
+  "datasets": [],
+  "artifacts": [
+    "research/olympus_o1/MIGRATION_PROVENANCE.json",
+    "research/olympus_o1/upstream/OLYMPUS_O1_PREREGISTRATION_20260829.md",
+    "research/olympus_o1/upstream/olympus_o1_protocol_v1.json",
+    "research/olympus_o1/upstream/olympus_o1_arm_config_template_v1.json",
+    "research/olympus_o1/upstream/olympus_o1_artifact_schema_v1.json",
+    "research/olympus_o1/upstream/olympus_o1_execution_freeze_template_v1.json",
+    "research/olympus_o1/upstream/olympus_o1_analyze_v1.py",
+    "research/olympus_o1/upstream/olympus_o1_validate_manifest_v1.py"
+  ],
+  "claims": [
+    {
+      "claim": "The historical O1 protocol has been migrated without scientific-content changes.",
+      "status": "BYTE_EXACT_SHA256_VERIFIED"
+    },
+    {
+      "claim": "O1 improves reliable task completion.",
+      "status": "NOT_EVALUATED"
+    }
+  ],
+  "decisions": [
+    "Treat VertexED Olympus PRs as immutable archive/evidence surfaces, not the active implementation branch.",
+    "Do not populate missing task, provider, runtime, prompt, decoding, or budget identities by inference.",
+    "Do not execute any outcome-bearing arm without a separately reviewed immutable freeze and explicit authorization.",
+    "Synthetic contract tests are engineering checks and never O1 evidence."
+  ],
+  "failures": [],
+  "checkpoint_status": {
+    "1_idea_ready": "HISTORICALLY_PREREGISTERED",
+    "2_model_specification_ready": "RUNTIME_ROLE_CONTRACT_ONLY",
+    "3_methodology_ready": "BLOCKED_MISSING_TASK_AND_EXECUTION_FREEZE",
+    "4_model_implemented": "NOT_CLAIMED_BY_MIGRATION",
+    "5_experiment_system_implemented": "PARTIAL_VALIDATOR_AND_ANALYSIS_ONLY",
+    "6_run_ready": "NO",
+    "7_confirmatory_protocol_frozen": "NO",
+    "8_evidence_locked": "NO_OUTCOME_EVIDENCE",
+    "9_verified": "PASS_FOR_BYTE_EXACT_MIGRATION_AND_SYNTHETIC_CONTRACTS_ONLY",
+    "10_research_complete": "NO"
+  },
+  "history": [
+    {
+      "date": "2026-08-29",
+      "event": "Historical four-arm O1 protocol was preregistered in VertexED without an outcome run."
+    },
+    {
+      "date": "2026-09-01",
+      "event": "The cumulative nine-file readiness stack was reconciled in VertexED PR 653 at bc22ecc73201659cf099a20b6d038675b7307f28; the PR later closed unmerged."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "All nine historical files were copied byte-for-byte into the canonical Olympus repository, bound to SHA-256, and their ten synthetic contract tests passed. Execution remained unauthorized because no task or execution freeze exists."
+    }
+  ]
+}

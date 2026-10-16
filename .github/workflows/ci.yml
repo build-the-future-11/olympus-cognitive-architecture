@@ -29,33 +29,46 @@ jobs:
       - name: Verify exact source binding
         shell: bash
         run: test "$(git rev-parse HEAD)" = "${EXPECTED_SOURCE_SHA}"
+      - name: Bind reproducible build epoch
+        shell: bash
+        run: echo "SOURCE_DATE_EPOCH=$(git show -s --format=%ct HEAD)" >> "${GITHUB_ENV}"
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.14"
-          cache: pip
-      - name: Install package and release tooling
-        run: python -m pip install --upgrade pip && python -m pip install -e ".[dev]"
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+        with:
+          version: "0.12.5"
+          enable-cache: true
+      - name: Verify and install locked Python environment
+        run: uv sync --locked --all-extras
       - name: Lint
-        run: python -m ruff check .
+        run: uv run --locked python -m ruff check .
       - name: Type check
-        run: python -m mypy olympus tests
+        run: uv run --locked python -m mypy olympus scripts tests
       - name: Test with branch coverage
-        run: python -m pytest --cov=olympus --cov-branch --cov-report=term-missing -q
+        run: uv run --locked python -m pytest --cov=olympus --cov-branch --cov-report=term-missing -q
       - name: Verify Foundry golden path
         run: |
-          python -m olympus.cli foundry verify-pipeline --root artifacts/ci-foundry
-          python -m olympus.cli foundry status --root artifacts/ci-foundry
-          python -m olympus.cli foundry prepare-dataset --output artifacts/ci-deep-dataset
+          uv run --locked python -m olympus.cli foundry verify-pipeline --root artifacts/ci-foundry
+          uv run --locked python -m olympus.cli foundry status --root artifacts/ci-foundry
+          uv run --locked python -m olympus.cli foundry prepare-dataset --output artifacts/ci-deep-dataset
       - name: Audit Python dependencies
-        run: python -m pip_audit --strict .
+        run: |
+          uv export --locked --all-extras --no-emit-project --no-hashes --format requirements-txt --output-file /tmp/olympus-locked-requirements.txt
+          uv run --locked python -m pip_audit --strict -r /tmp/olympus-locked-requirements.txt
       - name: Build distributions
-        run: python -m build
+        run: uv run --locked python -m build --no-isolation
       - name: Validate distribution metadata
-        run: python -m twine check dist/*
+        run: uv run --locked python -m twine check dist/*
       - name: Verify bundled Foundry corpus
         run: |
           unzip -l dist/*.whl | grep 'olympus/foundry/foundry_verification.txt'
           unzip -l dist/*.whl | grep 'share/olympus/datasets/source.jsonl'
+          tar -tzf dist/*.tar.gz | grep 'scripts/validate_editclevr_payload.py'
+          if tar -tzf dist/*.tar.gz | grep -q 'datasets/external/'; then
+            echo 'external research data must not be bundled in the source distribution'
+            exit 1
+          fi
 
   web:
     runs-on: ubuntu-24.04

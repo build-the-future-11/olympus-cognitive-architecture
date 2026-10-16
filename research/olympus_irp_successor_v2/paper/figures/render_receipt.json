@@ -1,0 +1,11 @@
+{
+  "confirmatory_summary_sha256": "407d72b93a210aefa2b6fce4cdd40e9d84095e77e19fa7b0713c134a733e774b",
+  "outputs": {
+    "confirmatory_accuracy.png": "8979af75196acc71b0cbdb397c0932d35a9cafd886cb07dfd2da570e6bee26c8",
+    "confirmatory_metrics.csv": "ee2cd469395df1bd9c72e06c561c3b6d5d69cbbdc27a462bee9378aa099fd7e0",
+    "corrupted_gate_weights.png": "281e834c3c1e68a282795403c299c8c99121d7a5ac40c04b8550236a2f60fd24"
+  },
+  "schema_version": 1,
+  "scientific_freeze_sha256": "11294e7e2478e95e033c4fa064a87fbfdba9d14a6326a68ea18456f4319f08ef",
+  "status": "RENDERED_FROM_LOCKED_EVIDENCE"
+}

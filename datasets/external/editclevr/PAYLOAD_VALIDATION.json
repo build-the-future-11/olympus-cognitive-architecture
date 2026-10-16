@@ -1,0 +1,137 @@
+{
+  "archive_reports": {
+    "atomic_id": {
+      "archive": "editclevr_atomic_id.tar.gz",
+      "compressed_bytes": 3996651313,
+      "directory_count": 154001,
+      "expected_sha256": "b0f188e2f2e8b32b54416cfefa43740e976157345c1ea0186411e7082de48c4f",
+      "expected_size_bytes": 3996651313,
+      "file_count": 140000,
+      "hash_matches": true,
+      "member_types": {
+        ".json": 56000,
+        ".npz": 28000,
+        ".png": 56000
+      },
+      "safe": true,
+      "sha256": "b0f188e2f2e8b32b54416cfefa43740e976157345c1ea0186411e7082de48c4f",
+      "size_matches": true,
+      "uncompressed_bytes": 4303914763,
+      "unsafe_member_count": 0,
+      "unsafe_member_samples": []
+    },
+    "cogent_ood": {
+      "archive": "editclevr_cogent_ood.tar.gz",
+      "compressed_bytes": 568788167,
+      "directory_count": 22001,
+      "expected_sha256": "0e2601daf5ec90b10f6f37b384050b4ea9e7d138f588dc0d3d68de9634026e0d",
+      "expected_size_bytes": 568788167,
+      "file_count": 20000,
+      "hash_matches": true,
+      "member_types": {
+        ".json": 8000,
+        ".npz": 4000,
+        ".png": 8000
+      },
+      "safe": true,
+      "sha256": "0e2601daf5ec90b10f6f37b384050b4ea9e7d138f588dc0d3d68de9634026e0d",
+      "size_matches": true,
+      "uncompressed_bytes": 612737406,
+      "unsafe_member_count": 0,
+      "unsafe_member_samples": []
+    },
+    "hard_distractor": {
+      "archive": "editclevr_hard_distractor.tar.gz",
+      "compressed_bytes": 650415087,
+      "directory_count": 27403,
+      "expected_sha256": "458b4dcb4be6393c8dd943f0671dd89786d57af6cf88d1880506450ad1b0d73b",
+      "expected_size_bytes": 650415087,
+      "file_count": 22835,
+      "hash_matches": true,
+      "member_types": {
+        ".json": 9134,
+        ".npz": 4567,
+        ".png": 9134
+      },
+      "safe": true,
+      "sha256": "458b4dcb4be6393c8dd943f0671dd89786d57af6cf88d1880506450ad1b0d73b",
+      "size_matches": true,
+      "uncompressed_bytes": 697494578,
+      "unsafe_member_count": 0,
+      "unsafe_member_samples": []
+    },
+    "no_edit": {
+      "archive": "editclevr_no_edit.tar.gz",
+      "compressed_bytes": 570931863,
+      "directory_count": 22001,
+      "expected_sha256": "b6c133ff5e39370e1e339a3ac77b34ff46218524ca161e06feac790663ac81be",
+      "expected_size_bytes": 570931863,
+      "file_count": 20000,
+      "hash_matches": true,
+      "member_types": {
+        ".json": 8000,
+        ".npz": 4000,
+        ".png": 8000
+      },
+      "safe": true,
+      "sha256": "b6c133ff5e39370e1e339a3ac77b34ff46218524ca161e06feac790663ac81be",
+      "size_matches": true,
+      "uncompressed_bytes": 614820364,
+      "unsafe_member_count": 0,
+      "unsafe_member_samples": []
+    },
+    "splits": {
+      "archive": "editclevr_splits.tar.gz",
+      "archived_splits_sha256": "af652307e6e2bf078820ccfcdeb1b5d0efc1a9515f716c78d96c2953343371db",
+      "compressed_bytes": 9711965,
+      "directory_count": 0,
+      "expected_members": [
+        "phase1_manifest.json",
+        "splits.json",
+        "validation_report.json"
+      ],
+      "expected_sha256": "170a29a91bfe24515916c5da744c2dfb61b882637232090ff4e8d1113b02eb5f",
+      "expected_size_bytes": 9711965,
+      "file_count": 3,
+      "hash_matches": true,
+      "member_types": {
+        ".json": 3
+      },
+      "members_match": true,
+      "safe": true,
+      "sha256": "170a29a91bfe24515916c5da744c2dfb61b882637232090ff4e8d1113b02eb5f",
+      "size_matches": true,
+      "staged_splits_match": true,
+      "staged_splits_sha256": "af652307e6e2bf078820ccfcdeb1b5d0efc1a9515f716c78d96c2953343371db",
+      "uncompressed_bytes": 199746465,
+      "unsafe_member_count": 0,
+      "unsafe_member_samples": []
+    }
+  },
+  "dataset": "torux/EditCLEVR",
+  "errors": [],
+  "revision": "734efa9b0164ba742cd2c39b9c2945c494497c23",
+  "split_registry": {
+    "invalid_record_count": 0,
+    "invalid_record_samples": [],
+    "missing_path_count": 0,
+    "missing_path_samples": [],
+    "pair_id_count": 20000,
+    "referenced_path_count": 120000,
+    "split_counts": {
+      "test_cogent": 2000,
+      "test_hard": 2000,
+      "test_id": 3000,
+      "test_noop": 2000,
+      "train": 10000,
+      "val": 1000
+    },
+    "suite_counts": {
+      "atomic_id": 14000,
+      "cogent_ood": 2000,
+      "hard_distractor": 2000,
+      "no_edit": 2000
+    }
+  },
+  "status": "PASS"
+}

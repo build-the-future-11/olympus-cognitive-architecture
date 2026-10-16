@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "source_parent_head": "20a5687d041859e888bf21390a37483177177dd8",
+  "status": "OLYMPUS_SIX_FAMILY_COMPOSITION_IMPLEMENTED_AND_VERIFIED",
+  "capability_status": "REFERENCE_SYSTEM_ONLY_NO_DATASET_TRAINING_OR_PROMOTION",
+  "scope": {
+    "implemented": [
+      "trainable OlympusReferenceSystem composing Hermes, Prometheus, Perseus, Atlas, Kronos, and Aion",
+      "explicit five-family capability gate and shared fusion state",
+      "host-supplied Aion transition mask and risk score",
+      "fail-closed Aion STOP behavior that suppresses exposed decision logits",
+      "auditable raw decision logits retained separately from exposed decisions",
+      "joint decision, transition, temporal, uncertainty, and gate-balance loss",
+      "gradient-flow verification through every family backbone, fusion layer, and Aion"
+    ],
+    "not_claimed": [
+      "target-scale family checkpoints or production performance",
+      "assistant, specialist, generalist, multimodal, AGI, or autonomous-research capability",
+      "safety sufficiency from the reference STOP rule",
+      "dataset training, benchmark superiority, family promotion, deployment, independent reproduction, or publication readiness"
+    ]
+  },
+  "source_sha256": {
+    "olympus/models/olympus_system.py": "3bab9dd4de57779d42616885408e91cfeb80d3fd882592970db59866b7ccd515",
+    "olympus/models/__init__.py": "711c97df6abb7ba178674d6e404a85239713a0e5036adcec4caa30324a3c49c3",
+    "tests/test_olympus_system.py": "91883ade0d2359d7a9517b387a50b60ffbaf8f90984d2ac063900e7f838590ac",
+    "docs/olympus-system.md": "fa82173c213f3e34418cc49d6148da2b84989727de750792ded50344bfd27111",
+    "docs/architecture.md": "8cc4db02fe2012bf13ad89eff1d0056f3b722bc1cd07da95bf48b1b1261d4619",
+    "research/BU1LD_MODEL_SPECIFICATIONS.md": "05572f0e4add14a24aa6eab48758b679abf59cdbcb0ca108448da2e67cb37836",
+    "README.md": "d65d3f8b9e4f68a6dd1382b18ce2d70fd65af4f377b1c4529a2f37342c5b97d9",
+    "research/REALITY_LEDGER.md": "ce3a768ba5304e66e865cd771f587d681702490202028a9d25d096474afbad66",
+    "CHANGELOG.md": "0e8c067716940a9dfcb1ec2c657f9664cf4302845c9e001e2b290846b5f28b17"
+  },
+  "verification": {
+    "focused_system_tests": "2 passed",
+    "full_tests": "173 passed",
+    "observed_branch_coverage_percent": 87.12,
+    "coverage_gate_percent": 85.0,
+    "coverage_gate_status": "PASSED",
+    "olympus_system_module_coverage_percent": 88.0,
+    "ruff_lint": "passed for olympus and tests",
+    "strict_mypy": "passed for 87 source files",
+    "wheel_build": "passed",
+    "sdist_build": "passed",
+    "wheel_archive_contains_olympus_system_and_reference_families": true,
+    "twine_check": "passed for wheel and source distribution"
+  },
+  "resource_snapshot": {
+    "total_bytes": 17179869184,
+    "available_bytes": 3446145024,
+    "swap_total_bytes": 4294967296,
+    "swap_used_bytes": 3477728133,
+    "swap_fraction": 0.8097216796595603,
+    "process_peak_rss_bytes": 244563968
+  },
+  "artifacts": {
+    "wheel": {
+      "path": "/tmp/olympus-system-final-20261011.NUxhZ5/olympus_cognitive_architecture-0.2.0-py3-none-any.whl",
+      "sha256": "fa481bf39ec779b624a565f4483ce5a782d3fcaec1a08992d043155611fe89b0"
+    },
+    "sdist": {
+      "path": "/tmp/olympus-system-final-20261011.NUxhZ5/olympus_cognitive_architecture-0.2.0.tar.gz",
+      "sha256": "726953c4f91e9bfb54d30b081a6bfb80bdd2ff5ebc4eea0b078924e5918d6912"
+    }
+  },
+  "worktree_boundary": "The checkout remains one existing commit ahead of origin/main. Two pre-existing untracked .DS_Store files remain untouched. The earlier six-family and JEPA receipt remains preserved. No dataset training, target-scale run, promotion, deployment, commit, or push occurred."
+}

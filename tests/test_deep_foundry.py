@@ -33,6 +33,7 @@ from olympus.foundry.sft import (
     SFTConfig,
     TinyCausalLM,
     TinyModelConfig,
+    _learning_rate,
     _pack_nibbles,
     _unpack_nibbles,
     generate_text,
@@ -191,6 +192,17 @@ def test_tokenizer_model_and_nibble_quantization_are_real() -> None:
     output.sum().backward()
     assert qlora.lora_a.grad is not None
 
+    scheduled = SFTConfig(
+        epochs=4,
+        learning_rate=0.01,
+        warmup_optimizer_steps=2,
+        minimum_learning_rate_ratio=0.1,
+    )
+    rates = [_learning_rate(scheduled, step, 8) for step in range(1, 9)]
+    assert rates[:2] == [0.005, 0.01]
+    assert rates[-1] == pytest.approx(0.001)
+    assert all(left >= right for left, right in zip(rates[1:-1], rates[2:], strict=True))
+
 
 @pytest.fixture(scope="module")
 def trained_foundry(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Path]:
@@ -251,6 +263,30 @@ def test_sft_full_lora_qlora_checkpoint_resume_and_generation(
             trained_foundry["root"] / "invalid-full",
             config=_small_config(),
             base_checkpoint=trained_foundry["full"],
+        )
+    incompatible = _small_config(epochs=3).model_copy(
+        update={
+            "model": TinyModelConfig(
+                width=64,
+                layers=1,
+                heads=4,
+                max_sequence_tokens=160,
+            )
+        }
+    )
+    with pytest.raises(ValueError, match="may change only the target epoch count"):
+        run_sft(
+            trained_foundry["manifest"],
+            trained_foundry["root"] / "incompatible-resume",
+            config=incompatible,
+            resume_checkpoint=trained_foundry["full"],
+        )
+    with pytest.raises(FileExistsError, match="refusing to overwrite"):
+        run_sft(
+            trained_foundry["manifest"],
+            trained_foundry["root"] / "training",
+            config=_small_config(epochs=2),
+            resume_checkpoint=trained_foundry["full"],
         )
 
 

@@ -6,7 +6,10 @@ from olympus.upscaler.jepa import (
     JEPAUpscalerLoss,
     JEPAUpscalerOutput,
     jepa_upscaler_loss,
+    upscale_self_ensemble,
+    upscale_tiled,
 )
+from olympus.upscaler.training import load_jepa_upscaler_checkpoint
 
 __all__ = [
     "JEPAUpscaler",
@@ -14,4 +17,7 @@ __all__ = [
     "JEPAUpscalerLoss",
     "JEPAUpscalerOutput",
     "jepa_upscaler_loss",
+    "load_jepa_upscaler_checkpoint",
+    "upscale_self_ensemble",
+    "upscale_tiled",
 ]

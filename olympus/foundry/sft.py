@@ -8,6 +8,7 @@ import random
 import time
 from collections.abc import Iterable
 from contextlib import nullcontext
+from copy import deepcopy
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any, Literal, cast
@@ -37,6 +38,8 @@ def _sha256(path: Path) -> str:
 
 
 def _atomic_torch_save(path: Path, payload: dict[str, Any]) -> None:
+    if path.exists():
+        raise FileExistsError(f"refusing to overwrite immutable training artifact: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
     with NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", delete=False) as handle:
         temporary = Path(handle.name)
@@ -87,6 +90,8 @@ class SFTConfig(StrictModel):
     epochs: int = Field(default=2, ge=1, le=100)
     batch_size: int = Field(default=4, ge=1, le=128)
     learning_rate: float = Field(default=3e-3, gt=0.0, le=1.0)
+    warmup_optimizer_steps: int = Field(default=0, ge=0)
+    minimum_learning_rate_ratio: float = Field(default=0.1, ge=0.0, le=1.0)
     gradient_accumulation_steps: int = Field(default=2, ge=1, le=128)
     gradient_clip_norm: float = Field(default=1.0, gt=0.0, le=100.0)
     weight_decay: float = Field(default=0.01, ge=0.0, le=1.0)
@@ -95,6 +100,9 @@ class SFTConfig(StrictModel):
     lora_rank: int = Field(default=4, ge=1, le=128)
     lora_alpha: float = Field(default=8.0, gt=0.0, le=1_024.0)
     category_mix_weights: dict[str, float] = Field(default_factory=dict)
+    early_stopping_patience: int = Field(default=0, ge=0, le=100)
+    early_stopping_min_delta: float = Field(default=0.0, ge=0.0)
+    restore_best_validation: bool = True
     device: Literal["auto", "cpu", "cuda", "mps"] = "cpu"
     model: TinyModelConfig = Field(default_factory=TinyModelConfig)
 
@@ -110,14 +118,20 @@ class TrainingSummary(StrictModel):
     adapter_sha256: str | None
     log_path: str
     completed_epochs: int
+    attempted_epochs: int
     optimizer_steps: int
     trainable_parameters: int
     total_parameters: int
     initial_validation_loss: float
+    best_validation_loss: float
+    best_epoch: int
     final_validation_loss: float
     final_validation_perplexity: float
     mixed_precision_requested: bool
     mixed_precision_effective: bool
+    early_stopped: bool
+    final_learning_rate: float
+    training_config_sha256: str
     elapsed_seconds: float
     preflight_memory: dict[str, int | float]
     final_memory: dict[str, int | float]
@@ -186,9 +200,9 @@ class QLoRALinear(nn.Module):
         nn.init.kaiming_uniform_(self.lora_a, a=math.sqrt(5))
 
     def _weight(self, dtype: torch.dtype) -> torch.Tensor:
-        values = _unpack_nibbles(
-            self.packed_weight, self.in_features * self.out_features
-        ).reshape(self.out_features, self.in_features)
+        values = _unpack_nibbles(self.packed_weight, self.in_features * self.out_features).reshape(
+            self.out_features, self.in_features
+        )
         signed = values.to(torch.int8) - 8
         return signed.to(dtype) * self.row_scale.to(dtype)[:, None]
 
@@ -221,9 +235,7 @@ class CausalSelfAttention(nn.Module):
             dropout_p=self.dropout if self.training else 0.0,
             is_causal=True,
         )
-        projected = self.output(
-            attended.transpose(1, 2).contiguous().reshape(batch, length, width)
-        )
+        projected = self.output(attended.transpose(1, 2).contiguous().reshape(batch, length, width))
         return cast(torch.Tensor, projected)
 
 
@@ -357,6 +369,25 @@ def _loss(model: TinyCausalLM, tokens: torch.Tensor, labels: torch.Tensor) -> to
     )
 
 
+def _learning_rate(config: SFTConfig, optimizer_step: int, total_steps: int) -> float:
+    """Warm up, then decay with a cosine curve to a non-negative floor."""
+
+    if total_steps < 1 or optimizer_step < 1:
+        raise ValueError("optimizer and total steps must be positive")
+    warmup = min(config.warmup_optimizer_steps, total_steps)
+    if warmup and optimizer_step <= warmup:
+        scale = optimizer_step / warmup
+    elif total_steps == warmup:
+        scale = 1.0
+    else:
+        progress = (optimizer_step - warmup) / (total_steps - warmup)
+        progress = min(max(progress, 0.0), 1.0)
+        cosine = 0.5 * (1.0 + math.cos(math.pi * progress))
+        floor = config.minimum_learning_rate_ratio
+        scale = floor + (1.0 - floor) * cosine
+    return config.learning_rate * scale
+
+
 def evaluate_loss(
     model: TinyCausalLM,
     rows: list[tuple[list[int], list[int]]],
@@ -447,6 +478,16 @@ def run_sft(
     if manifest.manifest_sha256 is None:
         raise ValueError("dataset manifest has no immutable hash")
     output_root = output_root.resolve()
+    serialized_config = json.dumps(
+        config.model_dump(mode="json"), sort_keys=True, separators=(",", ":")
+    ).encode()
+    config_sha256 = hashlib.sha256(serialized_config).hexdigest()
+    run_id = (
+        f"sft-{config.mode}-{manifest.manifest_sha256[:12]}-c{config_sha256[:10]}-s{config.seed}"
+    )
+    run_directory = output_root / run_id
+    if run_directory.exists():
+        raise FileExistsError("refusing to overwrite an existing SFT run")
     governor = ResourceGovernor(output_root / ".workload.lock")
     start = time.perf_counter()
     with governor:
@@ -468,10 +509,16 @@ def run_sft(
             model, resumed = _model_from_checkpoint(resume_checkpoint, device)
             if resumed["dataset_manifest_sha256"] != manifest.manifest_sha256:
                 raise ValueError("resume checkpoint dataset hash does not match")
-            if SFTConfig.model_validate(resumed["training_config"]).mode != config.mode:
+            resumed_config = SFTConfig.model_validate(resumed["training_config"])
+            if resumed_config.mode != config.mode:
                 raise ValueError("resume checkpoint training mode does not match")
             completed_epochs = int(resumed["completed_epochs"])
             optimizer_steps = int(resumed["optimizer_steps"])
+            if config.epochs <= completed_epochs:
+                raise ValueError("resume target epochs must exceed completed epochs")
+            compatible_config = resumed_config.model_copy(update={"epochs": config.epochs})
+            if compatible_config != config:
+                raise ValueError("resume configuration may change only the target epoch count")
             base_sha = cast(str | None, resumed.get("base_checkpoint_sha256"))
         elif base_checkpoint is not None:
             base_model, _ = _model_from_checkpoint(base_checkpoint, device)
@@ -495,10 +542,24 @@ def run_sft(
 
         initial_validation = evaluate_loss(model, validation_rows, device=device)
         mixed_effective = config.mixed_precision and device.type == "cuda"
-        run_id = f"sft-{config.mode}-{manifest.manifest_sha256[:12]}-s{config.seed}"
-        log_path = output_root / run_id / "metrics.jsonl"
+        log_path = run_directory / "metrics.jsonl"
         log_path.parent.mkdir(parents=True, exist_ok=True)
-        log_mode = "a" if resume_checkpoint is not None else "w"
+        log_mode = "w"
+        batches_per_epoch = math.ceil(len(train_rows) / config.batch_size)
+        optimizer_steps_per_epoch = math.ceil(
+            batches_per_epoch / config.gradient_accumulation_steps
+        )
+        total_optimizer_steps = config.epochs * optimizer_steps_per_epoch
+        best_validation = initial_validation
+        best_epoch = completed_epochs
+        best_optimizer_steps = optimizer_steps
+        best_model_state = deepcopy(model.state_dict())
+        best_optimizer_state = deepcopy(optimizer.state_dict())
+        best_generator_state = generator.get_state().clone()
+        attempted_epochs = completed_epochs
+        stale_epochs = 0
+        early_stopped = False
+        final_learning_rate = float(optimizer.param_groups[0]["lr"])
         optimizer.zero_grad(set_to_none=True)
         with log_path.open(log_mode, encoding="utf-8") as log:
             for epoch in range(completed_epochs, config.epochs):
@@ -517,34 +578,70 @@ def run_sft(
                     scaled_loss.backward()  # type: ignore[no-untyped-call]
                     epoch_losses.append(float(loss.detach().cpu().item()))
                     should_step = (
-                        (batch_index + 1) % config.gradient_accumulation_steps == 0
-                        or batch_index + 1 == len(batches)
-                    )
+                        batch_index + 1
+                    ) % config.gradient_accumulation_steps == 0 or batch_index + 1 == len(batches)
                     if should_step:
                         nn.utils.clip_grad_norm_(trainable, config.gradient_clip_norm)
+                        next_optimizer_step = optimizer_steps + 1
+                        final_learning_rate = _learning_rate(
+                            config, next_optimizer_step, total_optimizer_steps
+                        )
+                        for group in optimizer.param_groups:
+                            group["lr"] = final_learning_rate
                         optimizer.step()
                         optimizer.zero_grad(set_to_none=True)
                         optimizer_steps += 1
                 completed_epochs = epoch + 1
+                attempted_epochs = completed_epochs
                 validation_loss = evaluate_loss(model, validation_rows, device=device)
+                improved = validation_loss < best_validation - config.early_stopping_min_delta
+                if improved:
+                    best_validation = validation_loss
+                    best_epoch = completed_epochs
+                    best_optimizer_steps = optimizer_steps
+                    best_model_state = deepcopy(model.state_dict())
+                    best_optimizer_state = deepcopy(optimizer.state_dict())
+                    best_generator_state = generator.get_state().clone()
+                    stale_epochs = 0
+                else:
+                    stale_epochs += 1
                 record = {
                     "epoch": completed_epochs,
                     "optimizer_steps": optimizer_steps,
                     "train_loss": sum(epoch_losses) / len(epoch_losses),
                     "validation_loss": validation_loss,
                     "validation_perplexity": math.exp(min(validation_loss, 20.0)),
+                    "learning_rate": final_learning_rate,
+                    "best_validation_loss": best_validation,
+                    "improved": improved,
                 }
                 log.write(json.dumps(record, sort_keys=True) + "\n")
                 log.flush()
                 os.fsync(log.fileno())
 
+                if (
+                    config.early_stopping_patience
+                    and stale_epochs >= config.early_stopping_patience
+                ):
+                    early_stopped = True
+                    break
+
+        if config.restore_best_validation:
+            model.load_state_dict(best_model_state)
+            optimizer.load_state_dict(best_optimizer_state)
+            generator.set_state(best_generator_state)
+            completed_epochs = best_epoch
+            optimizer_steps = best_optimizer_steps
+            final_learning_rate = float(optimizer.param_groups[0]["lr"])
+
         final_validation = evaluate_loss(model, validation_rows, device=device)
-        checkpoint_path = output_root / run_id / "checkpoint.pt"
+        checkpoint_path = run_directory / "checkpoint.pt"
         checkpoint_payload: dict[str, Any] = {
             "schema_version": 1,
             "run_id": run_id,
             "model_config": config.model.model_dump(mode="json"),
             "training_config": config.model_dump(mode="json"),
+            "training_config_sha256": config_sha256,
             "dataset_manifest_sha256": manifest.manifest_sha256,
             "base_checkpoint_sha256": base_sha,
             "model_state": model.state_dict(),
@@ -553,11 +650,15 @@ def run_sft(
             "optimizer_steps": optimizer_steps,
             "generator_state": generator.get_state(),
             "validation_loss": final_validation,
+            "best_validation_loss": best_validation,
+            "best_epoch": best_epoch,
+            "attempted_epochs": attempted_epochs,
+            "early_stopped": early_stopped,
         }
         _atomic_torch_save(checkpoint_path, checkpoint_payload)
         adapter_path: Path | None = None
         if config.mode != "full":
-            adapter_path = output_root / run_id / "adapter.pt"
+            adapter_path = run_directory / "adapter.pt"
             adapter_state = {
                 name: tensor.detach().cpu()
                 for name, tensor in model.state_dict().items()
@@ -588,14 +689,20 @@ def run_sft(
             adapter_sha256=_sha256(adapter_path) if adapter_path else None,
             log_path=str(log_path),
             completed_epochs=completed_epochs,
+            attempted_epochs=attempted_epochs,
             optimizer_steps=optimizer_steps,
             trainable_parameters=trainable_parameters,
             total_parameters=total_parameters,
             initial_validation_loss=initial_validation,
+            best_validation_loss=best_validation,
+            best_epoch=best_epoch,
             final_validation_loss=final_validation,
             final_validation_perplexity=math.exp(min(final_validation, 20.0)),
             mixed_precision_requested=config.mixed_precision,
             mixed_precision_effective=mixed_effective,
+            early_stopped=early_stopped,
+            final_learning_rate=final_learning_rate,
+            training_config_sha256=config_sha256,
             elapsed_seconds=time.perf_counter() - start,
             preflight_memory=governor.preflight.as_dict() if governor.preflight else {},
             final_memory=memory_snapshot().as_dict(),

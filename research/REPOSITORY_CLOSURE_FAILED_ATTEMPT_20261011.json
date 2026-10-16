@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "status": "RESOURCE_REJECTED_RETAINED",
+  "scope": "repository-wide Python test and branch-coverage gate",
+  "command": ".venv/bin/python -m pytest --cov=olympus --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage-repository-closure-20261011.json",
+  "outcome": {
+    "passed": 185,
+    "setup_errors": 3,
+    "coverage_percent": 80.41,
+    "coverage_threshold_percent": 85.0,
+    "coverage_artifact": "artifacts/coverage-repository-closure-20261011.json"
+  },
+  "cause": "The deep-Foundry training fixture was refused by ResourceGovernor because swap utilization was 93.9 percent, above the unchanged 90.0 percent ceiling, while the pinned EditCLEVR transfer was active.",
+  "response": "The transfer was stopped; the guard was not weakened. After resource admission recovered, a separate full rerun passed.",
+  "claim_boundary": "This is a retained failed attempt, not evidence of a software defect in the three tests and not a successful release gate."
+}

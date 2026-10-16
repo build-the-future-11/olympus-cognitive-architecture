@@ -101,13 +101,22 @@ promotion controls on hardware that cannot safely train a large model.
 .venv/bin/olympus foundry train-sft \
   artifacts/foundry/deep/dataset/manifest.json \
   --output artifacts/foundry/deep/training \
-  --mode full --epochs 4 --width 48 --layers 2 --heads 4
+  --mode full --epochs 100 --width 128 --layers 4 --heads 8 \
+  --learning-rate 0.001 --warmup-optimizer-steps 10 \
+  --minimum-learning-rate-ratio 0.05 \
+  --early-stopping-patience 12 --early-stopping-min-delta 0.001
 ```
 
 `train-sft` also accepts `--mode lora` and `--mode qlora` with an exact
 `--base-checkpoint`. QLoRA uses frozen symmetric 4-bit bases stored as packed
 nibbles, not an int8 substitute. `--resume-checkpoint` restores model,
 optimizer, completed epoch/step counters, and deterministic generator state.
+Resume now rejects every configuration change except a larger target epoch
+count. Runs have configuration-hash identities and refuse overwrite. Training
+uses an optional optimizer-step warmup followed by cosine decay, records every
+learning rate, stops after a configured validation plateau, and restores a
+self-consistent best-validation model, optimizer, generator, epoch, and step
+state before writing the immutable checkpoint.
 
 ```bash
 .venv/bin/olympus foundry evaluate-checkpoint CHECKPOINT MANIFEST REPORT

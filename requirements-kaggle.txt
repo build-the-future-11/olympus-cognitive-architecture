@@ -1,0 +1,9 @@
+# Minimal source-checkout campaign environment, Python >=3.11.
+# Keep the image's CUDA-enabled torch (>=2.4); intentionally DO NOT install torch here.
+# First run the read-only preflight. Install only missing dependencies in an isolated
+# environment with access to the image's packages; do not replace its CUDA wheel.
+# This is a compatibility envelope, not a numerically validated cross-version lock.
+numpy>=1.26,<3
+pydantic>=2.10,<3
+Pillow>=10,<13
+pytest>=8,<10

@@ -1,0 +1,583 @@
+{
+  "status": "DRY_RUN_NO_EXECUTION",
+  "campaign_id": "olympus-kaggle-development-v1",
+  "purpose": "development",
+  "run_root": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture/artifacts/engineering/kaggle-readiness-20261016/dry-run",
+  "max_wall_seconds": 14400.0,
+  "stop_reserve_seconds": 60.0,
+  "source_sha256": "e84eb1d70e4c61bbca374e69dc3d488a4030c28c37c79a6359d67012eff5e508",
+  "cells": [
+    {
+      "id": "learned-2026101621",
+      "dataset": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture/configs/kaggle/data/manifest_development.json",
+      "data_status": "NOT_PREPARED",
+      "training_config": {
+        "seed": 2026101621,
+        "steps": 300,
+        "batch_size": 32,
+        "learning_rate": 0.0005,
+        "warmup_steps": 20,
+        "device": "cuda",
+        "precision": "fp32",
+        "cpu_threads": 1,
+        "evaluation_interval": 50,
+        "checkpoint_interval_seconds": 120,
+        "deterministic": true,
+        "model": {
+          "hermes": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "tool_count": 4
+          },
+          "prometheus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "domains": 3,
+            "adapter_dim": 8,
+            "evidence_classes": 4
+          },
+          "perseus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "experts": 4,
+            "active_experts": 2,
+            "expert_dim": 32
+          },
+          "atlas": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "image_channels": 3,
+            "patch_size": 2,
+            "retrieval_dim": 12
+          },
+          "kronos": {
+            "state_dim": 5,
+            "action_dim": 3,
+            "hidden_dim": 12,
+            "discrete_actions": 4,
+            "planning_horizon": 4
+          },
+          "aion": {
+            "state_dim": 8,
+            "hidden_dim": 12,
+            "research_stages": 4,
+            "stop_stage": 3,
+            "kill_threshold": 0.85
+          },
+          "fusion_dim": 16,
+          "decision_classes": 4,
+          "fusion_strategy": "learned",
+          "disagreement_risk": true,
+          "extension_dims": {}
+        }
+      },
+      "config_sha256_before_default_expansion": "94ba78a77c6799cf4e213018ac481b0714e44498e6c76997359a8b0729201c90",
+      "estimated_seconds": null
+    },
+    {
+      "id": "learned-2026101622",
+      "dataset": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture/configs/kaggle/data/manifest_development.json",
+      "data_status": "NOT_PREPARED",
+      "training_config": {
+        "seed": 2026101622,
+        "steps": 300,
+        "batch_size": 32,
+        "learning_rate": 0.0005,
+        "warmup_steps": 20,
+        "device": "cuda",
+        "precision": "fp32",
+        "cpu_threads": 1,
+        "evaluation_interval": 50,
+        "checkpoint_interval_seconds": 120,
+        "deterministic": true,
+        "model": {
+          "hermes": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "tool_count": 4
+          },
+          "prometheus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "domains": 3,
+            "adapter_dim": 8,
+            "evidence_classes": 4
+          },
+          "perseus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "experts": 4,
+            "active_experts": 2,
+            "expert_dim": 32
+          },
+          "atlas": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "image_channels": 3,
+            "patch_size": 2,
+            "retrieval_dim": 12
+          },
+          "kronos": {
+            "state_dim": 5,
+            "action_dim": 3,
+            "hidden_dim": 12,
+            "discrete_actions": 4,
+            "planning_horizon": 4
+          },
+          "aion": {
+            "state_dim": 8,
+            "hidden_dim": 12,
+            "research_stages": 4,
+            "stop_stage": 3,
+            "kill_threshold": 0.85
+          },
+          "fusion_dim": 16,
+          "decision_classes": 4,
+          "fusion_strategy": "learned",
+          "disagreement_risk": true,
+          "extension_dims": {}
+        }
+      },
+      "config_sha256_before_default_expansion": "aea658cb99fa6328cf3db5a271aaf3388f045c4a73cd5c1323438016e1da496d",
+      "estimated_seconds": null
+    },
+    {
+      "id": "learned-2026101623",
+      "dataset": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture/configs/kaggle/data/manifest_development.json",
+      "data_status": "NOT_PREPARED",
+      "training_config": {
+        "seed": 2026101623,
+        "steps": 300,
+        "batch_size": 32,
+        "learning_rate": 0.0005,
+        "warmup_steps": 20,
+        "device": "cuda",
+        "precision": "fp32",
+        "cpu_threads": 1,
+        "evaluation_interval": 50,
+        "checkpoint_interval_seconds": 120,
+        "deterministic": true,
+        "model": {
+          "hermes": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "tool_count": 4
+          },
+          "prometheus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "domains": 3,
+            "adapter_dim": 8,
+            "evidence_classes": 4
+          },
+          "perseus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "experts": 4,
+            "active_experts": 2,
+            "expert_dim": 32
+          },
+          "atlas": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "image_channels": 3,
+            "patch_size": 2,
+            "retrieval_dim": 12
+          },
+          "kronos": {
+            "state_dim": 5,
+            "action_dim": 3,
+            "hidden_dim": 12,
+            "discrete_actions": 4,
+            "planning_horizon": 4
+          },
+          "aion": {
+            "state_dim": 8,
+            "hidden_dim": 12,
+            "research_stages": 4,
+            "stop_stage": 3,
+            "kill_threshold": 0.85
+          },
+          "fusion_dim": 16,
+          "decision_classes": 4,
+          "fusion_strategy": "learned",
+          "disagreement_risk": true,
+          "extension_dims": {}
+        }
+      },
+      "config_sha256_before_default_expansion": "63a95f28c5a55bd70939ebf14fc076523c67e1727e21d4fc044b07bc5b4fe78d",
+      "estimated_seconds": null
+    },
+    {
+      "id": "uniform-2026101621",
+      "dataset": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture/configs/kaggle/data/manifest_development.json",
+      "data_status": "NOT_PREPARED",
+      "training_config": {
+        "seed": 2026101621,
+        "steps": 300,
+        "batch_size": 32,
+        "learning_rate": 0.0005,
+        "warmup_steps": 20,
+        "device": "cuda",
+        "precision": "fp32",
+        "cpu_threads": 1,
+        "evaluation_interval": 50,
+        "checkpoint_interval_seconds": 120,
+        "deterministic": true,
+        "model": {
+          "hermes": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "tool_count": 4
+          },
+          "prometheus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "domains": 3,
+            "adapter_dim": 8,
+            "evidence_classes": 4
+          },
+          "perseus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "experts": 4,
+            "active_experts": 2,
+            "expert_dim": 32
+          },
+          "atlas": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "image_channels": 3,
+            "patch_size": 2,
+            "retrieval_dim": 12
+          },
+          "kronos": {
+            "state_dim": 5,
+            "action_dim": 3,
+            "hidden_dim": 12,
+            "discrete_actions": 4,
+            "planning_horizon": 4
+          },
+          "aion": {
+            "state_dim": 8,
+            "hidden_dim": 12,
+            "research_stages": 4,
+            "stop_stage": 3,
+            "kill_threshold": 0.85
+          },
+          "fusion_dim": 16,
+          "decision_classes": 4,
+          "fusion_strategy": "uniform",
+          "disagreement_risk": true,
+          "extension_dims": {}
+        }
+      },
+      "config_sha256_before_default_expansion": "2fd54528f62bbd83e68542b5b79b023fb1da818dedb8ecb81a88e5ebd8910f16",
+      "estimated_seconds": null
+    },
+    {
+      "id": "uniform-2026101622",
+      "dataset": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture/configs/kaggle/data/manifest_development.json",
+      "data_status": "NOT_PREPARED",
+      "training_config": {
+        "seed": 2026101622,
+        "steps": 300,
+        "batch_size": 32,
+        "learning_rate": 0.0005,
+        "warmup_steps": 20,
+        "device": "cuda",
+        "precision": "fp32",
+        "cpu_threads": 1,
+        "evaluation_interval": 50,
+        "checkpoint_interval_seconds": 120,
+        "deterministic": true,
+        "model": {
+          "hermes": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "tool_count": 4
+          },
+          "prometheus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "domains": 3,
+            "adapter_dim": 8,
+            "evidence_classes": 4
+          },
+          "perseus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "experts": 4,
+            "active_experts": 2,
+            "expert_dim": 32
+          },
+          "atlas": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "image_channels": 3,
+            "patch_size": 2,
+            "retrieval_dim": 12
+          },
+          "kronos": {
+            "state_dim": 5,
+            "action_dim": 3,
+            "hidden_dim": 12,
+            "discrete_actions": 4,
+            "planning_horizon": 4
+          },
+          "aion": {
+            "state_dim": 8,
+            "hidden_dim": 12,
+            "research_stages": 4,
+            "stop_stage": 3,
+            "kill_threshold": 0.85
+          },
+          "fusion_dim": 16,
+          "decision_classes": 4,
+          "fusion_strategy": "uniform",
+          "disagreement_risk": true,
+          "extension_dims": {}
+        }
+      },
+      "config_sha256_before_default_expansion": "799d5fe11b72fa2becdfab7db7c7b064fb6d5a4b3cfd42a706df95e592e31d2b",
+      "estimated_seconds": null
+    },
+    {
+      "id": "uniform-2026101623",
+      "dataset": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture/configs/kaggle/data/manifest_development.json",
+      "data_status": "NOT_PREPARED",
+      "training_config": {
+        "seed": 2026101623,
+        "steps": 300,
+        "batch_size": 32,
+        "learning_rate": 0.0005,
+        "warmup_steps": 20,
+        "device": "cuda",
+        "precision": "fp32",
+        "cpu_threads": 1,
+        "evaluation_interval": 50,
+        "checkpoint_interval_seconds": 120,
+        "deterministic": true,
+        "model": {
+          "hermes": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "tool_count": 4
+          },
+          "prometheus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "domains": 3,
+            "adapter_dim": 8,
+            "evidence_classes": 4
+          },
+          "perseus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "experts": 4,
+            "active_experts": 2,
+            "expert_dim": 32
+          },
+          "atlas": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "image_channels": 3,
+            "patch_size": 2,
+            "retrieval_dim": 12
+          },
+          "kronos": {
+            "state_dim": 5,
+            "action_dim": 3,
+            "hidden_dim": 12,
+            "discrete_actions": 4,
+            "planning_horizon": 4
+          },
+          "aion": {
+            "state_dim": 8,
+            "hidden_dim": 12,
+            "research_stages": 4,
+            "stop_stage": 3,
+            "kill_threshold": 0.85
+          },
+          "fusion_dim": 16,
+          "decision_classes": 4,
+          "fusion_strategy": "uniform",
+          "disagreement_risk": true,
+          "extension_dims": {}
+        }
+      },
+      "config_sha256_before_default_expansion": "1ee47989d1b41759a8d33f5a7d0fca91c9f9ece6d28c8a04b42d5981b692b434",
+      "estimated_seconds": null
+    }
+  ],
+  "promotion_authorized": false,
+  "claim_boundary": "Synthetic or user-supplied development engineering evidence only; no confirmatory hypothesis, natural-data capability, calibration, safety, or promotion is established."
+}

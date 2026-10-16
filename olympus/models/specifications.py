@@ -8,7 +8,7 @@ from pydantic import Field
 
 from olympus.core.schemas import StrictModel
 
-ModelFamilyId = Literal["hermes", "prometheus", "perseus", "atlas", "kronos"]
+ModelFamilyId = Literal["hermes", "prometheus", "perseus", "atlas", "kronos", "aion"]
 
 
 class ModelTargetSpecification(StrictModel):
@@ -92,6 +92,21 @@ BU1LD_MODEL_SPECS: tuple[ModelTargetSpecification, ...] = (
             "continual-learning retention and rollback",
             "independent safety and autonomy evaluation",
             "distributed-training, serving, and cost evidence",
+        ],
+    ),
+    ModelTargetSpecification(
+        family_id="aion",
+        display_name="Aion",
+        target_parameters=None,
+        intended_role=(
+            "Governed research-protocol orchestration with deterministic authority boundaries "
+            "and an optional learned transition router."
+        ),
+        capability_gates=[
+            "frozen-protocol and evidence-lineage integrity",
+            "human authority for execution and promotion transitions",
+            "budget, kill-rule, and illegal-transition enforcement",
+            "advantage over the deterministic controller without false promotion",
         ],
     ),
 )

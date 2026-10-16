@@ -1,0 +1,583 @@
+{
+  "splits": {
+    "train": {
+      "count": 10000,
+      "balance": {
+        "edit_factor": {
+          "color": 2498,
+          "material": 2503,
+          "shape": 2501,
+          "size": 2498
+        },
+        "num_objects": {
+          "3": 2500,
+          "4": 2500,
+          "5": 2501,
+          "6": 2499
+        },
+        "edit_factor_num_objects": {
+          "color": {
+            "3": 625,
+            "4": 625,
+            "5": 624,
+            "6": 624
+          },
+          "material": {
+            "3": 626,
+            "4": 625,
+            "5": 626,
+            "6": 626
+          },
+          "shape": {
+            "3": 626,
+            "4": 625,
+            "5": 625,
+            "6": 625
+          },
+          "size": {
+            "3": 623,
+            "4": 625,
+            "5": 626,
+            "6": 624
+          }
+        },
+        "edit_transition": {
+          "blue_to_brown": 89,
+          "blue_to_cyan": 15,
+          "blue_to_gray": 84,
+          "blue_to_green": 11,
+          "blue_to_purple": 16,
+          "blue_to_red": 14,
+          "blue_to_yellow": 87,
+          "brown_to_blue": 83,
+          "brown_to_cyan": 18,
+          "brown_to_gray": 72,
+          "brown_to_green": 18,
+          "brown_to_purple": 21,
+          "brown_to_red": 21,
+          "brown_to_yellow": 72,
+          "cube_to_sphere": 814,
+          "cyan_to_blue": 17,
+          "cyan_to_brown": 12,
+          "cyan_to_gray": 15,
+          "cyan_to_green": 67,
+          "cyan_to_purple": 88,
+          "cyan_to_red": 85,
+          "cyan_to_yellow": 20,
+          "cylinder_to_sphere": 832,
+          "gray_to_blue": 62,
+          "gray_to_brown": 92,
+          "gray_to_cyan": 11,
+          "gray_to_green": 10,
+          "gray_to_purple": 18,
+          "gray_to_red": 20,
+          "gray_to_yellow": 74,
+          "green_to_blue": 18,
+          "green_to_brown": 15,
+          "green_to_cyan": 107,
+          "green_to_gray": 15,
+          "green_to_purple": 73,
+          "green_to_red": 72,
+          "green_to_yellow": 16,
+          "large_to_small": 1223,
+          "metal_to_rubber": 1227,
+          "purple_to_blue": 19,
+          "purple_to_brown": 17,
+          "purple_to_cyan": 108,
+          "purple_to_gray": 13,
+          "purple_to_green": 76,
+          "purple_to_red": 82,
+          "purple_to_yellow": 19,
+          "red_to_blue": 17,
+          "red_to_brown": 14,
+          "red_to_cyan": 92,
+          "red_to_gray": 10,
+          "red_to_green": 89,
+          "red_to_purple": 92,
+          "red_to_yellow": 10,
+          "rubber_to_metal": 1276,
+          "small_to_large": 1275,
+          "sphere_to_cube": 434,
+          "sphere_to_cylinder": 421,
+          "yellow_to_blue": 86,
+          "yellow_to_brown": 83,
+          "yellow_to_cyan": 13,
+          "yellow_to_gray": 83,
+          "yellow_to_green": 12,
+          "yellow_to_purple": 15,
+          "yellow_to_red": 20
+        },
+        "cogent_core": {
+          "eligible": 0,
+          "total": 0
+        }
+      }
+    },
+    "val": {
+      "count": 1000,
+      "balance": {
+        "edit_factor": {
+          "color": 252,
+          "material": 249,
+          "shape": 248,
+          "size": 251
+        },
+        "num_objects": {
+          "3": 250,
+          "4": 250,
+          "5": 249,
+          "6": 251
+        },
+        "edit_factor_num_objects": {
+          "color": {
+            "3": 63,
+            "4": 63,
+            "5": 63,
+            "6": 63
+          },
+          "material": {
+            "3": 62,
+            "4": 63,
+            "5": 62,
+            "6": 62
+          },
+          "shape": {
+            "3": 61,
+            "4": 62,
+            "5": 62,
+            "6": 63
+          },
+          "size": {
+            "3": 64,
+            "4": 62,
+            "5": 62,
+            "6": 63
+          }
+        },
+        "edit_transition": {
+          "blue_to_brown": 5,
+          "blue_to_gray": 13,
+          "blue_to_purple": 1,
+          "blue_to_red": 2,
+          "blue_to_yellow": 10,
+          "brown_to_blue": 7,
+          "brown_to_cyan": 1,
+          "brown_to_gray": 9,
+          "brown_to_green": 1,
+          "brown_to_purple": 1,
+          "brown_to_red": 3,
+          "brown_to_yellow": 10,
+          "cube_to_sphere": 89,
+          "cyan_to_blue": 1,
+          "cyan_to_brown": 2,
+          "cyan_to_gray": 4,
+          "cyan_to_green": 8,
+          "cyan_to_purple": 13,
+          "cyan_to_red": 14,
+          "cylinder_to_sphere": 82,
+          "gray_to_blue": 7,
+          "gray_to_brown": 6,
+          "gray_to_cyan": 1,
+          "gray_to_green": 1,
+          "gray_to_yellow": 9,
+          "green_to_blue": 2,
+          "green_to_brown": 1,
+          "green_to_cyan": 4,
+          "green_to_purple": 4,
+          "green_to_red": 12,
+          "green_to_yellow": 1,
+          "large_to_small": 117,
+          "metal_to_rubber": 133,
+          "purple_to_brown": 2,
+          "purple_to_cyan": 12,
+          "purple_to_gray": 1,
+          "purple_to_green": 6,
+          "purple_to_red": 8,
+          "purple_to_yellow": 1,
+          "red_to_blue": 2,
+          "red_to_brown": 2,
+          "red_to_cyan": 13,
+          "red_to_gray": 2,
+          "red_to_green": 9,
+          "red_to_purple": 8,
+          "rubber_to_metal": 116,
+          "small_to_large": 134,
+          "sphere_to_cube": 31,
+          "sphere_to_cylinder": 46,
+          "yellow_to_blue": 5,
+          "yellow_to_brown": 13,
+          "yellow_to_cyan": 2,
+          "yellow_to_gray": 9,
+          "yellow_to_green": 3,
+          "yellow_to_red": 1
+        },
+        "cogent_core": {
+          "eligible": 0,
+          "total": 0
+        }
+      }
+    },
+    "test_id": {
+      "count": 3000,
+      "balance": {
+        "edit_factor": {
+          "color": 750,
+          "material": 748,
+          "shape": 751,
+          "size": 751
+        },
+        "num_objects": {
+          "3": 750,
+          "4": 750,
+          "5": 750,
+          "6": 750
+        },
+        "edit_factor_num_objects": {
+          "color": {
+            "3": 187,
+            "4": 187,
+            "5": 188,
+            "6": 188
+          },
+          "material": {
+            "3": 187,
+            "4": 187,
+            "5": 187,
+            "6": 187
+          },
+          "shape": {
+            "3": 188,
+            "4": 188,
+            "5": 188,
+            "6": 187
+          },
+          "size": {
+            "3": 188,
+            "4": 188,
+            "5": 187,
+            "6": 188
+          }
+        },
+        "edit_transition": {
+          "blue_to_brown": 21,
+          "blue_to_cyan": 6,
+          "blue_to_gray": 28,
+          "blue_to_green": 2,
+          "blue_to_purple": 2,
+          "blue_to_red": 4,
+          "blue_to_yellow": 34,
+          "brown_to_blue": 32,
+          "brown_to_cyan": 6,
+          "brown_to_gray": 31,
+          "brown_to_green": 7,
+          "brown_to_purple": 4,
+          "brown_to_red": 5,
+          "brown_to_yellow": 19,
+          "cube_to_sphere": 250,
+          "cyan_to_blue": 6,
+          "cyan_to_brown": 3,
+          "cyan_to_gray": 4,
+          "cyan_to_green": 24,
+          "cyan_to_purple": 36,
+          "cyan_to_red": 18,
+          "cyan_to_yellow": 1,
+          "cylinder_to_sphere": 264,
+          "gray_to_blue": 35,
+          "gray_to_brown": 22,
+          "gray_to_cyan": 6,
+          "gray_to_green": 3,
+          "gray_to_purple": 5,
+          "gray_to_red": 3,
+          "gray_to_yellow": 15,
+          "green_to_blue": 9,
+          "green_to_brown": 4,
+          "green_to_cyan": 29,
+          "green_to_gray": 9,
+          "green_to_purple": 30,
+          "green_to_red": 22,
+          "green_to_yellow": 6,
+          "large_to_small": 375,
+          "metal_to_rubber": 360,
+          "purple_to_blue": 4,
+          "purple_to_brown": 9,
+          "purple_to_cyan": 38,
+          "purple_to_gray": 5,
+          "purple_to_green": 18,
+          "purple_to_red": 19,
+          "purple_to_yellow": 3,
+          "red_to_blue": 8,
+          "red_to_brown": 2,
+          "red_to_cyan": 21,
+          "red_to_gray": 5,
+          "red_to_green": 23,
+          "red_to_purple": 21,
+          "red_to_yellow": 5,
+          "rubber_to_metal": 388,
+          "small_to_large": 376,
+          "sphere_to_cube": 119,
+          "sphere_to_cylinder": 118,
+          "yellow_to_blue": 28,
+          "yellow_to_brown": 22,
+          "yellow_to_cyan": 4,
+          "yellow_to_gray": 17,
+          "yellow_to_green": 3,
+          "yellow_to_purple": 3,
+          "yellow_to_red": 1
+        },
+        "cogent_core": {
+          "eligible": 0,
+          "total": 0
+        }
+      }
+    },
+    "test_noop": {
+      "count": 2000,
+      "balance": {
+        "edit_factor": {
+          "none": 2000
+        },
+        "num_objects": {
+          "3": 500,
+          "4": 500,
+          "5": 500,
+          "6": 500
+        },
+        "edit_factor_num_objects": {
+          "none": {
+            "3": 500,
+            "4": 500,
+            "5": 500,
+            "6": 500
+          }
+        },
+        "edit_transition": {
+          "none_to_none": 2000
+        },
+        "cogent_core": {
+          "eligible": 0,
+          "total": 0
+        }
+      }
+    },
+    "test_hard": {
+      "count": 2000,
+      "balance": {
+        "edit_factor": {
+          "color": 500,
+          "material": 500,
+          "shape": 500,
+          "size": 500
+        },
+        "num_objects": {
+          "3": 500,
+          "4": 500,
+          "5": 500,
+          "6": 500
+        },
+        "edit_factor_num_objects": {
+          "color": {
+            "3": 125,
+            "4": 125,
+            "5": 125,
+            "6": 125
+          },
+          "material": {
+            "3": 125,
+            "4": 125,
+            "5": 125,
+            "6": 125
+          },
+          "shape": {
+            "3": 125,
+            "4": 125,
+            "5": 125,
+            "6": 125
+          },
+          "size": {
+            "3": 125,
+            "4": 125,
+            "5": 125,
+            "6": 125
+          }
+        },
+        "edit_transition": {
+          "blue_to_brown": 14,
+          "blue_to_cyan": 1,
+          "blue_to_gray": 21,
+          "blue_to_green": 6,
+          "blue_to_red": 3,
+          "blue_to_yellow": 13,
+          "brown_to_blue": 15,
+          "brown_to_cyan": 4,
+          "brown_to_gray": 14,
+          "brown_to_green": 2,
+          "brown_to_purple": 5,
+          "brown_to_red": 4,
+          "brown_to_yellow": 16,
+          "cube_to_sphere": 174,
+          "cyan_to_blue": 4,
+          "cyan_to_brown": 3,
+          "cyan_to_gray": 6,
+          "cyan_to_green": 15,
+          "cyan_to_purple": 11,
+          "cyan_to_red": 20,
+          "cyan_to_yellow": 4,
+          "cylinder_to_sphere": 181,
+          "gray_to_blue": 15,
+          "gray_to_brown": 14,
+          "gray_to_cyan": 1,
+          "gray_to_green": 3,
+          "gray_to_purple": 6,
+          "gray_to_red": 4,
+          "gray_to_yellow": 16,
+          "green_to_brown": 3,
+          "green_to_cyan": 14,
+          "green_to_gray": 2,
+          "green_to_purple": 14,
+          "green_to_red": 16,
+          "green_to_yellow": 4,
+          "large_to_small": 257,
+          "metal_to_rubber": 253,
+          "purple_to_blue": 2,
+          "purple_to_brown": 5,
+          "purple_to_cyan": 19,
+          "purple_to_gray": 3,
+          "purple_to_green": 17,
+          "purple_to_red": 19,
+          "red_to_blue": 5,
+          "red_to_brown": 3,
+          "red_to_cyan": 17,
+          "red_to_gray": 2,
+          "red_to_green": 18,
+          "red_to_purple": 16,
+          "red_to_yellow": 1,
+          "rubber_to_metal": 247,
+          "small_to_large": 243,
+          "sphere_to_cube": 75,
+          "sphere_to_cylinder": 70,
+          "yellow_to_blue": 22,
+          "yellow_to_brown": 21,
+          "yellow_to_cyan": 3,
+          "yellow_to_gray": 27,
+          "yellow_to_green": 5,
+          "yellow_to_purple": 1,
+          "yellow_to_red": 1
+        },
+        "cogent_core": {
+          "eligible": 0,
+          "total": 0
+        }
+      }
+    },
+    "test_cogent": {
+      "count": 2000,
+      "balance": {
+        "edit_factor": {
+          "color": 500,
+          "material": 500,
+          "shape": 500,
+          "size": 500
+        },
+        "num_objects": {
+          "3": 500,
+          "4": 500,
+          "5": 500,
+          "6": 500
+        },
+        "edit_factor_num_objects": {
+          "color": {
+            "3": 125,
+            "4": 125,
+            "5": 125,
+            "6": 125
+          },
+          "material": {
+            "3": 125,
+            "4": 125,
+            "5": 125,
+            "6": 125
+          },
+          "shape": {
+            "3": 125,
+            "4": 125,
+            "5": 125,
+            "6": 125
+          },
+          "size": {
+            "3": 125,
+            "4": 125,
+            "5": 125,
+            "6": 125
+          }
+        },
+        "edit_transition": {
+          "blue_to_brown": 20,
+          "blue_to_cyan": 2,
+          "blue_to_gray": 17,
+          "blue_to_green": 2,
+          "blue_to_purple": 4,
+          "blue_to_yellow": 22,
+          "brown_to_blue": 21,
+          "brown_to_cyan": 2,
+          "brown_to_gray": 11,
+          "brown_to_green": 1,
+          "brown_to_purple": 3,
+          "brown_to_red": 3,
+          "brown_to_yellow": 16,
+          "cube_to_sphere": 184,
+          "cyan_to_brown": 2,
+          "cyan_to_gray": 3,
+          "cyan_to_green": 15,
+          "cyan_to_purple": 20,
+          "cyan_to_red": 18,
+          "cyan_to_yellow": 6,
+          "cylinder_to_sphere": 156,
+          "gray_to_blue": 14,
+          "gray_to_brown": 15,
+          "gray_to_cyan": 1,
+          "gray_to_green": 2,
+          "gray_to_purple": 1,
+          "gray_to_red": 1,
+          "gray_to_yellow": 13,
+          "green_to_blue": 3,
+          "green_to_brown": 5,
+          "green_to_cyan": 19,
+          "green_to_purple": 27,
+          "green_to_red": 15,
+          "green_to_yellow": 1,
+          "large_to_small": 242,
+          "metal_to_rubber": 239,
+          "purple_to_blue": 4,
+          "purple_to_brown": 7,
+          "purple_to_cyan": 17,
+          "purple_to_gray": 1,
+          "purple_to_green": 9,
+          "purple_to_red": 14,
+          "purple_to_yellow": 3,
+          "red_to_blue": 7,
+          "red_to_brown": 3,
+          "red_to_cyan": 14,
+          "red_to_gray": 5,
+          "red_to_green": 16,
+          "red_to_purple": 26,
+          "red_to_yellow": 6,
+          "rubber_to_metal": 261,
+          "small_to_large": 258,
+          "sphere_to_cube": 90,
+          "sphere_to_cylinder": 70,
+          "yellow_to_blue": 16,
+          "yellow_to_brown": 16,
+          "yellow_to_cyan": 3,
+          "yellow_to_gray": 19,
+          "yellow_to_green": 4,
+          "yellow_to_purple": 3,
+          "yellow_to_red": 2
+        },
+        "cogent_core": {
+          "eligible": 342,
+          "total": 2000
+        }
+      }
+    }
+  }
+}

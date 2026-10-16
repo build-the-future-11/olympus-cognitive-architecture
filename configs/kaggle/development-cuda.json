@@ -1,0 +1,561 @@
+{
+  "schema_version": 1,
+  "campaign_id": "olympus-kaggle-development-v1",
+  "purpose": "development",
+  "max_wall_seconds": 14400,
+  "stop_reserve_seconds": 60,
+  "cells": [
+    {
+      "id": "learned-2026101621",
+      "dataset": "data/manifest_development.json",
+      "training_config": {
+        "seed": 2026101621,
+        "steps": 300,
+        "batch_size": 32,
+        "learning_rate": 0.0005,
+        "warmup_steps": 20,
+        "device": "cuda",
+        "precision": "fp32",
+        "cpu_threads": 1,
+        "evaluation_interval": 50,
+        "checkpoint_interval_seconds": 120,
+        "deterministic": true,
+        "model": {
+          "hermes": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "tool_count": 4
+          },
+          "prometheus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "domains": 3,
+            "adapter_dim": 8,
+            "evidence_classes": 4
+          },
+          "perseus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "experts": 4,
+            "active_experts": 2,
+            "expert_dim": 32
+          },
+          "atlas": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "image_channels": 3,
+            "patch_size": 2,
+            "retrieval_dim": 12
+          },
+          "kronos": {
+            "state_dim": 5,
+            "action_dim": 3,
+            "hidden_dim": 12,
+            "discrete_actions": 4,
+            "planning_horizon": 4
+          },
+          "aion": {
+            "state_dim": 8,
+            "hidden_dim": 12,
+            "research_stages": 4,
+            "stop_stage": 3,
+            "kill_threshold": 0.85
+          },
+          "fusion_dim": 16,
+          "decision_classes": 4,
+          "fusion_strategy": "learned",
+          "disagreement_risk": true,
+          "extension_dims": {}
+        }
+      }
+    },
+    {
+      "id": "learned-2026101622",
+      "dataset": "data/manifest_development.json",
+      "training_config": {
+        "seed": 2026101622,
+        "steps": 300,
+        "batch_size": 32,
+        "learning_rate": 0.0005,
+        "warmup_steps": 20,
+        "device": "cuda",
+        "precision": "fp32",
+        "cpu_threads": 1,
+        "evaluation_interval": 50,
+        "checkpoint_interval_seconds": 120,
+        "deterministic": true,
+        "model": {
+          "hermes": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "tool_count": 4
+          },
+          "prometheus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "domains": 3,
+            "adapter_dim": 8,
+            "evidence_classes": 4
+          },
+          "perseus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "experts": 4,
+            "active_experts": 2,
+            "expert_dim": 32
+          },
+          "atlas": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "image_channels": 3,
+            "patch_size": 2,
+            "retrieval_dim": 12
+          },
+          "kronos": {
+            "state_dim": 5,
+            "action_dim": 3,
+            "hidden_dim": 12,
+            "discrete_actions": 4,
+            "planning_horizon": 4
+          },
+          "aion": {
+            "state_dim": 8,
+            "hidden_dim": 12,
+            "research_stages": 4,
+            "stop_stage": 3,
+            "kill_threshold": 0.85
+          },
+          "fusion_dim": 16,
+          "decision_classes": 4,
+          "fusion_strategy": "learned",
+          "disagreement_risk": true,
+          "extension_dims": {}
+        }
+      }
+    },
+    {
+      "id": "learned-2026101623",
+      "dataset": "data/manifest_development.json",
+      "training_config": {
+        "seed": 2026101623,
+        "steps": 300,
+        "batch_size": 32,
+        "learning_rate": 0.0005,
+        "warmup_steps": 20,
+        "device": "cuda",
+        "precision": "fp32",
+        "cpu_threads": 1,
+        "evaluation_interval": 50,
+        "checkpoint_interval_seconds": 120,
+        "deterministic": true,
+        "model": {
+          "hermes": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "tool_count": 4
+          },
+          "prometheus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "domains": 3,
+            "adapter_dim": 8,
+            "evidence_classes": 4
+          },
+          "perseus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "experts": 4,
+            "active_experts": 2,
+            "expert_dim": 32
+          },
+          "atlas": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "image_channels": 3,
+            "patch_size": 2,
+            "retrieval_dim": 12
+          },
+          "kronos": {
+            "state_dim": 5,
+            "action_dim": 3,
+            "hidden_dim": 12,
+            "discrete_actions": 4,
+            "planning_horizon": 4
+          },
+          "aion": {
+            "state_dim": 8,
+            "hidden_dim": 12,
+            "research_stages": 4,
+            "stop_stage": 3,
+            "kill_threshold": 0.85
+          },
+          "fusion_dim": 16,
+          "decision_classes": 4,
+          "fusion_strategy": "learned",
+          "disagreement_risk": true,
+          "extension_dims": {}
+        }
+      }
+    },
+    {
+      "id": "uniform-2026101621",
+      "dataset": "data/manifest_development.json",
+      "training_config": {
+        "seed": 2026101621,
+        "steps": 300,
+        "batch_size": 32,
+        "learning_rate": 0.0005,
+        "warmup_steps": 20,
+        "device": "cuda",
+        "precision": "fp32",
+        "cpu_threads": 1,
+        "evaluation_interval": 50,
+        "checkpoint_interval_seconds": 120,
+        "deterministic": true,
+        "model": {
+          "hermes": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "tool_count": 4
+          },
+          "prometheus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "domains": 3,
+            "adapter_dim": 8,
+            "evidence_classes": 4
+          },
+          "perseus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "experts": 4,
+            "active_experts": 2,
+            "expert_dim": 32
+          },
+          "atlas": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "image_channels": 3,
+            "patch_size": 2,
+            "retrieval_dim": 12
+          },
+          "kronos": {
+            "state_dim": 5,
+            "action_dim": 3,
+            "hidden_dim": 12,
+            "discrete_actions": 4,
+            "planning_horizon": 4
+          },
+          "aion": {
+            "state_dim": 8,
+            "hidden_dim": 12,
+            "research_stages": 4,
+            "stop_stage": 3,
+            "kill_threshold": 0.85
+          },
+          "fusion_dim": 16,
+          "decision_classes": 4,
+          "fusion_strategy": "uniform",
+          "disagreement_risk": true,
+          "extension_dims": {}
+        }
+      }
+    },
+    {
+      "id": "uniform-2026101622",
+      "dataset": "data/manifest_development.json",
+      "training_config": {
+        "seed": 2026101622,
+        "steps": 300,
+        "batch_size": 32,
+        "learning_rate": 0.0005,
+        "warmup_steps": 20,
+        "device": "cuda",
+        "precision": "fp32",
+        "cpu_threads": 1,
+        "evaluation_interval": 50,
+        "checkpoint_interval_seconds": 120,
+        "deterministic": true,
+        "model": {
+          "hermes": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "tool_count": 4
+          },
+          "prometheus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "domains": 3,
+            "adapter_dim": 8,
+            "evidence_classes": 4
+          },
+          "perseus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "experts": 4,
+            "active_experts": 2,
+            "expert_dim": 32
+          },
+          "atlas": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "image_channels": 3,
+            "patch_size": 2,
+            "retrieval_dim": 12
+          },
+          "kronos": {
+            "state_dim": 5,
+            "action_dim": 3,
+            "hidden_dim": 12,
+            "discrete_actions": 4,
+            "planning_horizon": 4
+          },
+          "aion": {
+            "state_dim": 8,
+            "hidden_dim": 12,
+            "research_stages": 4,
+            "stop_stage": 3,
+            "kill_threshold": 0.85
+          },
+          "fusion_dim": 16,
+          "decision_classes": 4,
+          "fusion_strategy": "uniform",
+          "disagreement_risk": true,
+          "extension_dims": {}
+        }
+      }
+    },
+    {
+      "id": "uniform-2026101623",
+      "dataset": "data/manifest_development.json",
+      "training_config": {
+        "seed": 2026101623,
+        "steps": 300,
+        "batch_size": 32,
+        "learning_rate": 0.0005,
+        "warmup_steps": 20,
+        "device": "cuda",
+        "precision": "fp32",
+        "cpu_threads": 1,
+        "evaluation_interval": 50,
+        "checkpoint_interval_seconds": 120,
+        "deterministic": true,
+        "model": {
+          "hermes": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "tool_count": 4
+          },
+          "prometheus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "domains": 3,
+            "adapter_dim": 8,
+            "evidence_classes": 4
+          },
+          "perseus": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "experts": 4,
+            "active_experts": 2,
+            "expert_dim": 32
+          },
+          "atlas": {
+            "backbone": {
+              "vocab_size": 32,
+              "model_dim": 16,
+              "layers": 1,
+              "heads": 4,
+              "feedforward_dim": 32,
+              "max_sequence_length": 8,
+              "dropout": 0.0
+            },
+            "image_channels": 3,
+            "patch_size": 2,
+            "retrieval_dim": 12
+          },
+          "kronos": {
+            "state_dim": 5,
+            "action_dim": 3,
+            "hidden_dim": 12,
+            "discrete_actions": 4,
+            "planning_horizon": 4
+          },
+          "aion": {
+            "state_dim": 8,
+            "hidden_dim": 12,
+            "research_stages": 4,
+            "stop_stage": 3,
+            "kill_threshold": 0.85
+          },
+          "fusion_dim": 16,
+          "decision_classes": 4,
+          "fusion_strategy": "uniform",
+          "disagreement_risk": true,
+          "extension_dims": {}
+        }
+      }
+    }
+  ]
+}
