@@ -55,6 +55,10 @@ class CharacterBigramModel:
 
     def __init__(self, checkpoint: BigramCheckpoint) -> None:
         size = len(checkpoint.alphabet)
+        if len(set(checkpoint.alphabet)) != size or any(
+            len(character) != 1 for character in checkpoint.alphabet
+        ):
+            raise ValueError("checkpoint alphabet must contain unique single characters")
         if len(checkpoint.counts) != size or any(len(row) != size for row in checkpoint.counts):
             raise ValueError("checkpoint count matrix does not match alphabet")
         if any(value < 0 for row in checkpoint.counts for value in row):
@@ -141,7 +145,16 @@ class CharacterBigramModel:
             if temperature == 0:
                 next_index = max(range(len(probabilities)), key=probabilities.__getitem__)
             else:
-                weights = [probability ** (1.0 / temperature) for probability in probabilities]
+                # Common positive rescaling leaves the categorical law unchanged.
+                # Divide before taking logs to retain distinct near-maximum floats.
+                # At least one weight is 1 even when every p**(1/T) would underflow.
+                maximum_probability = max(probabilities)
+                weights = [
+                    0.0
+                    if probability == 0.0
+                    else math.exp(math.log(probability / maximum_probability) / temperature)
+                    for probability in probabilities
+                ]
                 next_index = random.choices(range(len(weights)), weights=weights, k=1)[0]
             current = self.checkpoint.alphabet[next_index]
             generated.append(current)

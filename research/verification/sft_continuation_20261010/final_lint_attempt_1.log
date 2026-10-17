@@ -1,0 +1,173 @@
+E501 Line too long (161 > 100)
+  --> research/verification/sft_continuation_20261010/review_optimizer_policy.py:43:101
+   |
+41 | …
+42 | …
+43 | … rejected by the existing >=16 validation before training; fixture changed to admitted width16.',
+   |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+44 | …l artificial epoch; real Foundry modules; optional top-level web API bypassed',
+45 | …'learning_rate'],
+   |
+
+E501 Line too long (143 > 100)
+  --> research/verification/sft_continuation_20261010/review_optimizer_policy.py:44:101
+   |
+42 | …fixture),
+43 | …dth=8 was rejected by the existing >=16 validation before training; fixture changed to admitted width16.',
+44 | …additional artificial epoch; real Foundry modules; optional top-level web API bypassed',
+   |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+45 | …config']['learning_rate'],
+46 | …']['param_groups'][0]['lr']}
+   |
+
+E501 Line too long (102 > 100)
+  --> research/verification/sft_continuation_20261010/review_optimizer_policy.py:49:101
+   |
+47 | try:
+48 |     continuation = sft.run_sft(manifest, fixture / 'resumed',
+49 |                               config=cfg.model_copy(update={'epochs': 2}), resume_checkpoint=tampered)
+   |                                                                                                     ^^
+50 |     actual = torch.load(continuation.checkpoint_path, map_location='cpu', weights_only=True)
+51 |     status = json.loads(Path(continuation.attempt_path).read_text())
+   |
+
+E501 Line too long (108 > 100)
+  --> research/verification/sft_continuation_20261010/review_optimizer_policy.py:62:101
+   |
+60 | except Exception as error:
+61 |     result.update(admitted=False, error_type=type(error).__name__, error=str(error))
+62 | result['source_unchanged_during_execution'] = hashlib.sha256(source.read_bytes()).hexdigest() == source_hash
+   |                                                                                                     ^^^^^^^^
+63 | Path('/tmp/olympus_optimizer_models_next_review.json').write_text(json.dumps(result, indent=2) + '\n')
+64 | print(json.dumps(result, indent=2))
+   |
+
+E501 Line too long (102 > 100)
+  --> research/verification/sft_continuation_20261010/review_optimizer_policy.py:63:101
+   |
+61 |     result.update(admitted=False, error_type=type(error).__name__, error=str(error))
+62 | result['source_unchanged_during_execution'] = hashlib.sha256(source.read_bytes()).hexdigest() == source_hash
+63 | Path('/tmp/olympus_optimizer_models_next_review.json').write_text(json.dumps(result, indent=2) + '\n')
+   |                                                                                                     ^^
+64 | print(json.dumps(result, indent=2))
+   |
+
+E501 Line too long (161 > 100)
+  --> research/verification/sft_continuation_20261010/review_optimizer_policy_after.py:43:101
+   |
+41 | …
+42 | …
+43 | … rejected by the existing >=16 validation before training; fixture changed to admitted width16.',
+   |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+44 | …l artificial epoch; real Foundry modules; optional top-level web API bypassed',
+45 | …'learning_rate'],
+   |
+
+E501 Line too long (143 > 100)
+  --> research/verification/sft_continuation_20261010/review_optimizer_policy_after.py:44:101
+   |
+42 | …fixture),
+43 | …dth=8 was rejected by the existing >=16 validation before training; fixture changed to admitted width16.',
+44 | …additional artificial epoch; real Foundry modules; optional top-level web API bypassed',
+   |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+45 | …config']['learning_rate'],
+46 | …']['param_groups'][0]['lr']}
+   |
+
+E501 Line too long (102 > 100)
+  --> research/verification/sft_continuation_20261010/review_optimizer_policy_after.py:49:101
+   |
+47 | try:
+48 |     continuation = sft.run_sft(manifest, fixture / 'resumed',
+49 |                               config=cfg.model_copy(update={'epochs': 2}), resume_checkpoint=tampered)
+   |                                                                                                     ^^
+50 |     actual = torch.load(continuation.checkpoint_path, map_location='cpu', weights_only=True)
+51 |     status = json.loads(Path(continuation.attempt_path).read_text())
+   |
+
+E501 Line too long (108 > 100)
+  --> research/verification/sft_continuation_20261010/review_optimizer_policy_after.py:62:101
+   |
+60 | except Exception as error:
+61 |     result.update(admitted=False, error_type=type(error).__name__, error=str(error))
+62 | result['source_unchanged_during_execution'] = hashlib.sha256(source.read_bytes()).hexdigest() == source_hash
+   |                                                                                                     ^^^^^^^^
+63 | Path('/tmp/olympus_optimizer_models_next_review_after.json').write_text(json.dumps(result, indent=2) + '\n')
+64 | print(json.dumps(result, indent=2))
+   |
+
+E501 Line too long (108 > 100)
+  --> research/verification/sft_continuation_20261010/review_optimizer_policy_after.py:63:101
+   |
+61 |     result.update(admitted=False, error_type=type(error).__name__, error=str(error))
+62 | result['source_unchanged_during_execution'] = hashlib.sha256(source.read_bytes()).hexdigest() == source_hash
+63 | Path('/tmp/olympus_optimizer_models_next_review_after.json').write_text(json.dumps(result, indent=2) + '\n')
+   |                                                                                                     ^^^^^^^^
+64 | print(json.dumps(result, indent=2))
+   |
+
+E731 Do not assign a `lambda` expression, use a `def`
+  --> research/verification/sft_continuation_20261010/root_review_recheck.py:74:5
+   |
+72 |     resumed = sft.run_sft(manifest, tmp / "split", config=extended,
+73 |                           resume_checkpoint=Path(first.checkpoint_path))
+74 |     load = lambda path: torch.load(path, map_location="cpu", weights_only=True)
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+75 |     actual, expected = load(resumed.checkpoint_path), load(full.checkpoint_path)
+76 |     for key in ("model_state", "optimizer_state", "generator_state", "rng_state",
+   |
+help: Rewrite `load` as a `def`
+   |
+73 |                           resume_checkpoint=Path(first.checkpoint_path))
+   -     load = lambda path: torch.load(path, map_location="cpu", weights_only=True)
+74 +     def load(path):
+75 +         return torch.load(path, map_location="cpu", weights_only=True)
+76 |     actual, expected = load(resumed.checkpoint_path), load(full.checkpoint_path)
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+E501 Line too long (115 > 100)
+  --> research/verification/sft_continuation_20261010/root_review_recheck.py:83:101
+   |
+81 |     assert Path(resumed.log_path).read_text().splitlines() == full_metrics[1:]
+82 |     checks.append({"check": "independent legacy-objective dropout continuation",
+83 |                    "status": "PASS", "scope": "bitwise model/optimizer/RNG/metrics; earlier checkpoint preserved"})
+   |                                                                                                     ^^^^^^^^^^^^^^^
+84 |     parent = load(first.checkpoint_path)
+85 |     for name in ("nonfinite_model", "fractional_epochs", "boolean_steps",
+   |
+
+E501 Line too long (148 > 100)
+   --> research/verification/sft_continuation_20261010/root_review_recheck.py:119:101
+    |
+117 | …
+118 | …
+119 | …y import harness; artificial data; no API integration, GPU or scientific efficacy claim.",
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+120 | …he earlier NaN COMPLETED and fractional epoch admission witnesses.",
+121 | …
+    |
+
+E501 Line too long (126 > 100)
+   --> research/verification/sft_continuation_20261010/root_review_recheck.py:120:101
+    |
+118 |     "checks": checks,
+119 |     "scope": "Real CPU Foundry modules using namespace-only import harness; artificial data; no API integration, GPU or scientific ef…
+120 |     "prior_failures": "root_review_findings.json retains the earlier NaN COMPLETED and fractional epoch admission witnesses.",
+    |                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+121 | }
+122 | Path(__file__).with_name("root_review_recheck.json").write_text(json.dumps(receipt, indent=2) + "\n")
+    |
+
+E501 Line too long (101 > 100)
+   --> research/verification/sft_continuation_20261010/root_review_recheck.py:122:101
+    |
+120 |     "prior_failures": "root_review_findings.json retains the earlier NaN COMPLETED and fractional epoch admission witnesses.",
+121 | }
+122 | Path(__file__).with_name("root_review_recheck.json").write_text(json.dumps(receipt, indent=2) + "\n")
+    |                                                                                                     ^
+123 | print(json.dumps(receipt, indent=2))
+    |
+
+Found 15 errors.
+1 unsafe fix available with `--fix --unsafe-fixes`.
