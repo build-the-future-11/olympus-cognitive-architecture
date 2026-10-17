@@ -107,9 +107,18 @@ afterEach(() => {
 });
 
 describe("exact-source model registry admission review", () => {
-  it("does not submit an empty model ID returned by the registry", async () => {
-    const state = fixture([""]);
-    await showApp();
+  it.each([
+    { label: "empty", ids: [""] },
+    { label: "whitespace-only", ids: ["   "] },
+    { label: "duplicate", ids: ["model-alpha", "model-alpha"] }
+  ])("does not submit from a registry with $label model IDs", async ({ ids }) => {
+    const state = fixture(ids);
+    render(<App />);
+    expect(await screen.findByRole("alert")).toHaveTextContent("invalid model registry");
+    expect(screen.getByText("Registry unavailable")).toBeInTheDocument();
+    expect(screen.queryByText("Registry healthy")).not.toBeInTheDocument();
+    expect(screen.queryByText("0 available")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Model")).toBeDisabled();
     expect(screen.getByLabelText("Model")).toHaveValue("");
 
     await clickGenerate();
@@ -163,7 +172,7 @@ describe("exact-source model registry admission review", () => {
     state.registryFails = true;
     fireEvent.click(screen.getByRole("button", { name: "Refresh live state" }));
     await screen.findByRole("alert");
-    expect(screen.getByText("0 available")).toBeInTheDocument();
+    expect(screen.getByText("Registry unavailable")).toBeInTheDocument();
     expect(screen.getByLabelText("Model")).toBeDisabled();
     await clickGenerate();
 

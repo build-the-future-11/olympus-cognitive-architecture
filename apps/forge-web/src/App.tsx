@@ -257,9 +257,19 @@ export function App(): ReactElement {
             <p className="eyebrow">Percy contract</p>
             <h2 id="models-heading">Verified model registry</h2>
           </div>
-          <span>{models.length} available</span>
+          <span>
+            {foundryState.loading
+              ? "Checking registry"
+              : foundryState.error
+                ? "Registry unavailable"
+                : `${models.length} available`}
+          </span>
         </div>
-        {models.length === 0 && !foundryState.loading ? (
+        {foundryState.error ? (
+          <p className="empty-state">
+            Model availability could not be verified. Use Retry above to check again.
+          </p>
+        ) : models.length === 0 && !foundryState.loading ? (
           <p className="empty-state">
             No model has passed promotion gates. Run the verified pipeline above to create the
             bounded infrastructure-verification model.
