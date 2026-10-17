@@ -164,6 +164,14 @@
         "pr28": 39040732862
       },
       "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-17",
+      "kind": "reviewed_pr_integration",
+      "event": "PR24 alphabet validation passed fresh required release run39041484835 and reached main. Integrating the separately reviewed PR25 low-temperature bigram sampler without changing its numerical source or tests; the merged alphabet check is retained. Fresh combined release verification is pending.",
+      "main_commit": "9bdf374834ce088c91793eb46a8c76fcb4b25a3b",
+      "sampling_head": "0409d8f54e20b21e1bfe30c695fba60bc1fe6559",
+      "scientific_outcomes_created": false
     }
   ],
   "verification": {
@@ -266,12 +274,13 @@
     "date": "2026-10-17",
     "merged_prs": [
       23,
+      24,
       26,
       27,
       28
     ],
-    "current_change": "PR24 unique single-character checkpoint alphabet validation",
-    "verification": "Prior exact-head Python/web release checks passed; current-main integration checks pending.",
+    "current_change": "PR25 stable low-temperature reference-model sampling",
+    "verification": "Alphabet integration release run39041484835 passed all Python/web steps; fresh sampling integration checks pending.",
     "scientific_disposition": "Historical NOT_PROMOTED and frozen outcomes preserved."
   }
 }
