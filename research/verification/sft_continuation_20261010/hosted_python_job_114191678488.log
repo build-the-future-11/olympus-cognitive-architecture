@@ -1,0 +1,1385 @@
+2026-10-10T10:22:31.0486262Z Current runner version: '2.337.0'
+2026-10-10T10:22:31.0511558Z ##[group]Runner Image Provisioner
+2026-10-10T10:22:31.0512566Z Hosted Compute Agent
+2026-10-10T10:22:31.0513205Z Version: 20261002.596
+2026-10-10T10:22:31.0513844Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-10T10:22:31.0514710Z Build Date: 2026-10-02T22:28:27Z
+2026-10-10T10:22:31.0515423Z Worker ID: {414ed024-c362-4a6e-a3b8-5af5b1aa8e5a}
+2026-10-10T10:22:31.0516233Z Region: westus
+2026-10-10T10:22:31.0516825Z Cloud: Azure
+2026-10-10T10:22:31.0517580Z ##[endgroup]
+2026-10-10T10:22:31.0519177Z ##[group]Operating System
+2026-10-10T10:22:31.0519847Z Ubuntu
+2026-10-10T10:22:31.0520560Z 24.04.5
+2026-10-10T10:22:31.0521128Z LTS
+2026-10-10T10:22:31.0521665Z ##[endgroup]
+2026-10-10T10:22:31.0522298Z ##[group]Runner Image
+2026-10-10T10:22:31.0522922Z Image: ubuntu-24.04
+2026-10-10T10:22:31.0523549Z Version: 20261004.327.1
+2026-10-10T10:22:31.0524926Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-10T10:22:31.0526625Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-10T10:22:31.0528181Z ##[endgroup]
+2026-10-10T10:22:31.0529465Z ##[group]GITHUB_TOKEN Permissions
+2026-10-10T10:22:31.0531658Z Contents: read
+2026-10-10T10:22:31.0532399Z Metadata: read
+2026-10-10T10:22:31.0533000Z ##[endgroup]
+2026-10-10T10:22:31.0535146Z Secret source: Actions
+2026-10-10T10:22:31.0536223Z Cache mode: write
+2026-10-10T10:22:31.0536956Z Prepare workflow directory
+2026-10-10T10:22:31.1134561Z Prepare all required actions
+2026-10-10T10:22:31.1183131Z Getting action download info
+2026-10-10T10:22:31.4546772Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-10T10:22:31.5779635Z Download action repository 'actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97' (SHA:5fda3b95a4ea91299a34e894583c3862153e4b97)
+2026-10-10T10:22:31.7801577Z Complete job name: python
+2026-10-10T10:22:31.8559764Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-10T10:22:31.8560975Z with:
+2026-10-10T10:22:31.8561478Z   ref: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:31.8562111Z   persist-credentials: false
+2026-10-10T10:22:31.8562786Z   repository: build-the-future-11/olympus-cognitive-architecture
+2026-10-10T10:22:31.8567293Z   token: ***
+2026-10-10T10:22:31.8567754Z   ssh-strict: true
+2026-10-10T10:22:31.8568215Z   ssh-user: git
+2026-10-10T10:22:31.8568655Z   clean: true
+2026-10-10T10:22:31.8569126Z   sparse-checkout-cone-mode: true
+2026-10-10T10:22:31.8569675Z   fetch-depth: 1
+2026-10-10T10:22:31.8570119Z   fetch-tags: false
+2026-10-10T10:22:31.8570634Z   show-progress: true
+2026-10-10T10:22:31.8571100Z   lfs: false
+2026-10-10T10:22:31.8571537Z   submodules: false
+2026-10-10T10:22:31.8572005Z   set-safe-directory: true
+2026-10-10T10:22:31.8572534Z   allow-unsafe-pr-checkout: false
+2026-10-10T10:22:31.8573372Z env:
+2026-10-10T10:22:31.8574006Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:31.8574691Z ##[endgroup]
+2026-10-10T10:22:31.9582938Z Syncing repository: build-the-future-11/olympus-cognitive-architecture
+2026-10-10T10:22:31.9585093Z ##[group]Getting Git version info
+2026-10-10T10:22:31.9586330Z Working directory is '/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture'
+2026-10-10T10:22:31.9587960Z [command]/usr/bin/git version
+2026-10-10T10:22:31.9680018Z git version 2.55.0
+2026-10-10T10:22:31.9714452Z ##[endgroup]
+2026-10-10T10:22:31.9726245Z Temporarily overriding HOME='/home/runner/work/_temp/61a08126-f2cd-4909-8258-0804ae0bd8e6' before making global git config changes
+2026-10-10T10:22:31.9729128Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T10:22:31.9733592Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+2026-10-10T10:22:31.9786841Z Deleting the contents of '/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture'
+2026-10-10T10:22:31.9792039Z ##[group]Determining repository object format
+2026-10-10T10:22:31.9793585Z ##[endgroup]
+2026-10-10T10:22:31.9794897Z ##[group]Initializing the repository
+2026-10-10T10:22:31.9798546Z [command]/usr/bin/git init /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+2026-10-10T10:22:31.9913781Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-10T10:22:31.9915853Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-10T10:22:31.9917852Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-10T10:22:31.9919501Z hint: call:
+2026-10-10T10:22:31.9921993Z hint:
+2026-10-10T10:22:31.9923099Z hint: 	git config --global init.defaultBranch <name>
+2026-10-10T10:22:31.9924490Z hint:
+2026-10-10T10:22:31.9925779Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-10T10:22:31.9928136Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-10T10:22:31.9929746Z hint:
+2026-10-10T10:22:31.9930723Z hint: 	git branch -m <name>
+2026-10-10T10:22:31.9931706Z hint:
+2026-10-10T10:22:31.9932985Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-10T10:22:31.9935824Z Initialized empty Git repository in /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/
+2026-10-10T10:22:31.9940348Z [command]/usr/bin/git remote add origin https://github.com/build-the-future-11/olympus-cognitive-architecture
+2026-10-10T10:22:31.9995877Z ##[endgroup]
+2026-10-10T10:22:31.9997248Z ##[group]Disabling automatic garbage collection
+2026-10-10T10:22:32.0000680Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-10T10:22:32.0037279Z ##[endgroup]
+2026-10-10T10:22:32.0039045Z ##[group]Setting up auth
+2026-10-10T10:22:32.0040212Z Removing SSH command configuration
+2026-10-10T10:22:32.0044031Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T10:22:32.0081220Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-10T10:22:32.0482844Z Removing HTTP extra header
+2026-10-10T10:22:32.0489058Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T10:22:32.0526230Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-10T10:22:32.0751471Z Removing includeIf entries pointing to credentials config files
+2026-10-10T10:22:32.0755511Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T10:22:32.0791854Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-10T10:22:32.1019608Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-50667417-5a7e-4f32-8ad3-1c4d5709e352.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-10T10:22:32.1062742Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path /home/runner/work/_temp/git-credentials-50667417-5a7e-4f32-8ad3-1c4d5709e352.config
+2026-10-10T10:22:32.1098838Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-50667417-5a7e-4f32-8ad3-1c4d5709e352.config
+2026-10-10T10:22:32.1139313Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-50667417-5a7e-4f32-8ad3-1c4d5709e352.config
+2026-10-10T10:22:32.1188058Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-50667417-5a7e-4f32-8ad3-1c4d5709e352.config
+2026-10-10T10:22:32.1222720Z ##[endgroup]
+2026-10-10T10:22:32.1224224Z ##[group]Fetching the repository
+2026-10-10T10:22:32.1230818Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:32.7609860Z From https://github.com/build-the-future-11/olympus-cognitive-architecture
+2026-10-10T10:22:32.7612497Z  * branch            7eb82b96632561f7cb0c670c0116fe774e7a1797 -> FETCH_HEAD
+2026-10-10T10:22:32.7619218Z [command]/usr/bin/git rev-parse --verify --quiet 7eb82b96632561f7cb0c670c0116fe774e7a1797^{object}
+2026-10-10T10:22:32.7649394Z 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:32.7655343Z ##[endgroup]
+2026-10-10T10:22:32.7656594Z ##[group]Determining the checkout info
+2026-10-10T10:22:32.7658754Z ##[endgroup]
+2026-10-10T10:22:32.7660249Z [command]/usr/bin/git sparse-checkout disable
+2026-10-10T10:22:32.7722109Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-10T10:22:32.7756422Z ##[group]Checking out the ref
+2026-10-10T10:22:32.7762411Z [command]/usr/bin/git checkout --progress --force 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:32.7913684Z Note: switching to '7eb82b96632561f7cb0c670c0116fe774e7a1797'.
+2026-10-10T10:22:32.7914698Z 
+2026-10-10T10:22:32.7915279Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-10T10:22:32.7916517Z changes and commit them, and you can discard any commits you make in this
+2026-10-10T10:22:32.7918086Z state without impacting any branches by switching back to a branch.
+2026-10-10T10:22:32.7918809Z 
+2026-10-10T10:22:32.7919428Z If you want to create a new branch to retain commits you create, you may
+2026-10-10T10:22:32.7921788Z do so (now or later) by using -c with the switch command. Example:
+2026-10-10T10:22:32.7923673Z 
+2026-10-10T10:22:32.7924558Z   git switch -c <new-branch-name>
+2026-10-10T10:22:32.7925711Z 
+2026-10-10T10:22:32.7926503Z Or undo this operation with:
+2026-10-10T10:22:32.7927825Z 
+2026-10-10T10:22:32.7928626Z   git switch -
+2026-10-10T10:22:32.7929653Z 
+2026-10-10T10:22:32.7930886Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-10T10:22:32.7932465Z 
+2026-10-10T10:22:32.7933655Z HEAD is now at 7eb82b9 Preserve exact SFT continuation and failed attempt history
+2026-10-10T10:22:32.7939078Z ##[endgroup]
+2026-10-10T10:22:32.7973274Z [command]/usr/bin/git log -1 --format=%H
+2026-10-10T10:22:32.8001705Z 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:32.8012600Z ##[group]Removing auth
+2026-10-10T10:22:32.8014644Z Removing SSH command configuration
+2026-10-10T10:22:32.8017434Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T10:22:32.8053704Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-10T10:22:32.8280539Z Removing HTTP extra header
+2026-10-10T10:22:32.8284187Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T10:22:32.8397722Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-10T10:22:32.8560667Z Removing includeIf entries pointing to credentials config files
+2026-10-10T10:22:32.8562306Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T10:22:32.8592671Z includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path
+2026-10-10T10:22:32.8596546Z includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path
+2026-10-10T10:22:32.8600287Z includeif.gitdir:/github/workspace/.git.path
+2026-10-10T10:22:32.8602502Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-10T10:22:32.8608190Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path
+2026-10-10T10:22:32.8631954Z /home/runner/work/_temp/git-credentials-50667417-5a7e-4f32-8ad3-1c4d5709e352.config
+2026-10-10T10:22:32.8643782Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-50667417\-5a7e\-4f32\-8ad3\-1c4d5709e352\.config
+2026-10-10T10:22:32.8687209Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path
+2026-10-10T10:22:32.8712634Z /home/runner/work/_temp/git-credentials-50667417-5a7e-4f32-8ad3-1c4d5709e352.config
+2026-10-10T10:22:32.8721387Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-50667417\-5a7e\-4f32\-8ad3\-1c4d5709e352\.config
+2026-10-10T10:22:32.8759320Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-10T10:22:32.8785272Z /github/runner_temp/git-credentials-50667417-5a7e-4f32-8ad3-1c4d5709e352.config
+2026-10-10T10:22:32.8798956Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-50667417\-5a7e\-4f32\-8ad3\-1c4d5709e352\.config
+2026-10-10T10:22:32.8884245Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-10T10:22:32.8912334Z /github/runner_temp/git-credentials-50667417-5a7e-4f32-8ad3-1c4d5709e352.config
+2026-10-10T10:22:32.8920089Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-50667417\-5a7e\-4f32\-8ad3\-1c4d5709e352\.config
+2026-10-10T10:22:32.8956202Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-10T10:22:32.9176906Z Removing credentials config '/home/runner/work/_temp/git-credentials-50667417-5a7e-4f32-8ad3-1c4d5709e352.config'
+2026-10-10T10:22:32.9185155Z ##[endgroup]
+2026-10-10T10:22:32.9414425Z ##[group]Run test "$(git rev-parse HEAD)" = "${EXPECTED_SOURCE_SHA}"
+2026-10-10T10:22:32.9415865Z [36;1mtest "$(git rev-parse HEAD)" = "${EXPECTED_SOURCE_SHA}"[0m
+2026-10-10T10:22:32.9674193Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-10T10:22:32.9675482Z env:
+2026-10-10T10:22:32.9676587Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:32.9678110Z ##[endgroup]
+2026-10-10T10:22:33.0033020Z ##[group]Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+2026-10-10T10:22:33.0034198Z with:
+2026-10-10T10:22:33.0034940Z   python-version: 3.14
+2026-10-10T10:22:33.0035737Z   cache: pip
+2026-10-10T10:22:33.0036486Z   check-latest: false
+2026-10-10T10:22:33.0041448Z   token: ***
+2026-10-10T10:22:33.0042244Z   update-environment: true
+2026-10-10T10:22:33.0043095Z   allow-prereleases: false
+2026-10-10T10:22:33.0043914Z   freethreaded: false
+2026-10-10T10:22:33.0044679Z env:
+2026-10-10T10:22:33.0045544Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:33.0046568Z ##[endgroup]
+2026-10-10T10:22:33.1261851Z ##[group]Installed versions
+2026-10-10T10:22:33.1829490Z Successfully set up CPython (3.14.8)
+2026-10-10T10:22:33.1831939Z ##[endgroup]
+2026-10-10T10:22:33.2989068Z [command]/opt/hostedtoolcache/Python/3.14.8/x64/bin/pip cache dir
+2026-10-10T10:22:35.0968488Z /home/runner/.cache/pip
+2026-10-10T10:22:35.3668495Z pip cache is not found
+2026-10-10T10:22:35.3803002Z ##[group]Run python -m pip install --upgrade pip && python -m pip install -e ".[dev]"
+2026-10-10T10:22:35.3803676Z [36;1mpython -m pip install --upgrade pip && python -m pip install -e ".[dev]"[0m
+2026-10-10T10:22:35.3874929Z shell: /usr/bin/bash -e {0}
+2026-10-10T10:22:35.3875268Z env:
+2026-10-10T10:22:35.3875618Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:35.3876128Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:22:35.3876684Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+2026-10-10T10:22:35.3877511Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:22:35.3877993Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:22:35.3878486Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:22:35.3878966Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+2026-10-10T10:22:35.3879377Z ##[endgroup]
+2026-10-10T10:22:36.8689921Z Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.14.8/x64/lib/python3.14/site-packages (26.2.1)
+2026-10-10T10:22:37.9969764Z Obtaining file:///home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+2026-10-10T10:22:37.9987586Z   Installing build dependencies: started
+2026-10-10T10:22:39.2766698Z   Installing build dependencies: finished with status 'done'
+2026-10-10T10:22:39.2773029Z   Checking if build backend supports build_editable: started
+2026-10-10T10:22:39.7137588Z   Checking if build backend supports build_editable: finished with status 'done'
+2026-10-10T10:22:39.7145730Z   Getting requirements to build editable: started
+2026-10-10T10:22:40.1253841Z   Getting requirements to build editable: finished with status 'done'
+2026-10-10T10:22:40.1262478Z   Preparing editable metadata (pyproject.toml): started
+2026-10-10T10:22:40.3448939Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+2026-10-10T10:22:40.4513240Z Collecting fastapi>=0.139.0 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:40.4995135Z   Downloading fastapi-0.143.0-py3-none-any.whl.metadata (26 kB)
+2026-10-10T10:22:40.5259559Z Collecting httpx>=0.28.1 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:40.5286597Z   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+2026-10-10T10:22:40.7252125Z Collecting numpy>=2.5.1 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:40.7290043Z   Downloading numpy-2.5.3-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+2026-10-10T10:22:40.8278448Z Collecting pydantic>=2.13.4 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:40.8309168Z   Downloading pydantic-2.14.0-py3-none-any.whl.metadata (131 kB)
+2026-10-10T10:22:40.8788171Z Collecting PyYAML>=6.0.3 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:40.8814828Z   Downloading pyyaml-6.0.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+2026-10-10T10:22:40.9066038Z Collecting rich>=15.0.0 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:40.9102754Z   Downloading rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+2026-10-10T10:22:40.9574417Z Collecting torch>=2.11.0 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:40.9624374Z   Downloading torch-2.14.1-cp314-cp314-manylinux_2_28_x86_64.whl.metadata (37 kB)
+2026-10-10T10:22:40.9824589Z Collecting typer>=0.26.8 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:40.9862261Z   Downloading typer-0.27.3-py3-none-any.whl.metadata (16 kB)
+2026-10-10T10:22:41.0068121Z Collecting uvicorn>=0.51.0 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.0094895Z   Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+2026-10-10T10:22:41.0250985Z Collecting build>=1.3.0 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.0280630Z   Downloading build-1.6.1-py3-none-any.whl.metadata (5.6 kB)
+2026-10-10T10:22:41.1268864Z Collecting mypy>=2.3.0 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.1307559Z   Downloading mypy-2.4.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+2026-10-10T10:22:41.1471261Z Collecting pip-audit<3,>=2.10.1 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.1499118Z   Downloading pip_audit-2.10.1-py3-none-any.whl.metadata (28 kB)
+2026-10-10T10:22:41.1753639Z Collecting pytest>=9.1.1 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.1780444Z   Downloading pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
+2026-10-10T10:22:41.1924023Z Collecting pytest-cov<8,>=7.1.0 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.1954349Z   Downloading pytest_cov-7.1.0-py3-none-any.whl.metadata (32 kB)
+2026-10-10T10:22:41.5137488Z Collecting ruff>=0.15.21 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.5168081Z   Downloading ruff-0.17.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (20 kB)
+2026-10-10T10:22:41.5359726Z Collecting twine<7,>=6.2.0 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.5387154Z   Downloading twine-6.2.0-py3-none-any.whl.metadata (3.6 kB)
+2026-10-10T10:22:41.5534453Z Collecting types-PyYAML>=6.0.12.20250915 (from olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.5561403Z   Downloading types_pyyaml-6.0.12.20260906-py3-none-any.whl.metadata (1.8 kB)
+2026-10-10T10:22:41.5694158Z Collecting CacheControl>=0.13.0 (from CacheControl[filecache]>=0.13.0->pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.5720117Z   Downloading cachecontrol-0.14.4-py3-none-any.whl.metadata (3.1 kB)
+2026-10-10T10:22:41.5984426Z Collecting cyclonedx-python-lib<12,>=5 (from pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.6013212Z   Downloading cyclonedx_python_lib-11.12.0-py3-none-any.whl.metadata (6.9 kB)
+2026-10-10T10:22:41.6121957Z Collecting packaging>=23.0.0 (from pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.6133096Z   Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+2026-10-10T10:22:41.6235169Z Collecting pip-api>=0.0.28 (from pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.6262780Z   Downloading pip_api-0.0.35-py3-none-any.whl.metadata (17 kB)
+2026-10-10T10:22:41.6375869Z Collecting pip-requirements-parser>=32.0.0 (from pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.6402781Z   Downloading pip_requirements_parser-32.0.1-py3-none-any.whl.metadata (9.3 kB)
+2026-10-10T10:22:41.6601252Z Collecting requests>=2.31.0 (from pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.6628484Z   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+2026-10-10T10:22:41.6905723Z Collecting tomli>=2.2.1 (from pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.6932577Z   Downloading tomli-2.5.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (10 kB)
+2026-10-10T10:22:41.7035158Z Collecting tomli-w>=1.2.0 (from pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.7063706Z   Downloading tomli_w-1.2.0-py3-none-any.whl.metadata (5.7 kB)
+2026-10-10T10:22:41.7236932Z Collecting platformdirs>=4.2.0 (from pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.7285426Z   Downloading platformdirs-4.12.4-py3-none-any.whl.metadata (5.5 kB)
+2026-10-10T10:22:41.7430486Z Collecting license-expression<31,>=30 (from cyclonedx-python-lib<12,>=5->pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.7456864Z   Downloading license_expression-30.4.4-py3-none-any.whl.metadata (11 kB)
+2026-10-10T10:22:41.7645879Z Collecting packageurl-python<2,>=0.11 (from cyclonedx-python-lib<12,>=5->pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.7672253Z   Downloading packageurl_python-0.17.6-py3-none-any.whl.metadata (5.1 kB)
+2026-10-10T10:22:41.7826404Z Collecting py-serializable<3.0.0,>=2.1.0 (from cyclonedx-python-lib<12,>=5->pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.7853185Z   Downloading py_serializable-2.1.0-py3-none-any.whl.metadata (4.3 kB)
+2026-10-10T10:22:41.7965517Z Collecting sortedcontainers<3.0.0,>=2.4.0 (from cyclonedx-python-lib<12,>=5->pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.7992429Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl.metadata (10 kB)
+2026-10-10T10:22:41.8108305Z Collecting boolean.py>=4.0 (from license-expression<31,>=30->cyclonedx-python-lib<12,>=5->pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.8136647Z   Downloading boolean_py-5.0-py3-none-any.whl.metadata (2.3 kB)
+2026-10-10T10:22:41.8271981Z Collecting defusedxml<0.8.0,>=0.7.1 (from py-serializable<3.0.0,>=2.1.0->cyclonedx-python-lib<12,>=5->pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:41.8304732Z   Downloading defusedxml-0.7.1-py2.py3-none-any.whl.metadata (32 kB)
+2026-10-10T10:22:42.2553034Z Collecting coverage>=7.10.6 (from coverage[toml]>=7.10.6->pytest-cov<8,>=7.1.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.2584330Z   Downloading coverage-7.16.2-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (8.2 kB)
+2026-10-10T10:22:42.2713030Z Collecting pluggy>=1.2 (from pytest-cov<8,>=7.1.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.2739937Z   Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+2026-10-10T10:22:42.2891207Z Collecting readme-renderer>=35.0 (from twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.2917352Z   Downloading readme_renderer-46.0-py3-none-any.whl.metadata (3.0 kB)
+2026-10-10T10:22:42.3037845Z Collecting requests-toolbelt!=0.9.0,>=0.8.0 (from twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.3064717Z   Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl.metadata (14 kB)
+2026-10-10T10:22:42.3254666Z Collecting urllib3>=1.26.0 (from twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.3281086Z   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+2026-10-10T10:22:42.3550357Z Collecting keyring>=21.2.0 (from twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.3576945Z   Downloading keyring-25.7.0-py3-none-any.whl.metadata (21 kB)
+2026-10-10T10:22:42.3704909Z Collecting rfc3986>=1.4.0 (from twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.3729930Z   Downloading rfc3986-2.0.0-py2.py3-none-any.whl.metadata (6.6 kB)
+2026-10-10T10:22:42.3852006Z Collecting id (from twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.3882448Z   Downloading id-1.6.1-py3-none-any.whl.metadata (5.1 kB)
+2026-10-10T10:22:42.4016268Z Collecting pyproject_hooks (from build>=1.3.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.4046229Z   Downloading pyproject_hooks-1.3.3-py3-none-any.whl.metadata (1.3 kB)
+2026-10-10T10:22:42.4814898Z Collecting msgpack<2.0.0,>=0.5.2 (from CacheControl>=0.13.0->CacheControl[filecache]>=0.13.0->pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.4844995Z   Downloading msgpack-1.2.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.3 kB)
+2026-10-10T10:22:42.5110352Z Collecting filelock>=3.8.0 (from CacheControl[filecache]>=0.13.0->pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.5145686Z   Downloading filelock-4.1.0-py3-none-any.whl.metadata (2.0 kB)
+2026-10-10T10:22:42.5422268Z Collecting starlette>=0.46.0 (from fastapi>=0.139.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.5453995Z   Downloading starlette-1.7.0-py3-none-any.whl.metadata (6.6 kB)
+2026-10-10T10:22:42.5619548Z Collecting typing-extensions>=4.8.0 (from fastapi>=0.139.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.5648333Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-10-10T10:22:42.5748525Z Collecting typing-inspection>=0.4.2 (from fastapi>=0.139.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.5776944Z   Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T10:22:42.5872971Z Collecting annotated-doc>=0.0.2 (from fastapi>=0.139.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.5901101Z   Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+2026-10-10T10:22:42.6061922Z Collecting opentelemetry-api>=1.44.0 (from fastapi>=0.139.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.6090056Z   Downloading opentelemetry_api-1.45.1-py3-none-any.whl.metadata (1.4 kB)
+2026-10-10T10:22:42.6281338Z Collecting anyio (from httpx>=0.28.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.6307446Z   Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+2026-10-10T10:22:42.6479375Z Collecting certifi (from httpx>=0.28.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.6524787Z   Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+2026-10-10T10:22:42.6663575Z Collecting httpcore==1.* (from httpx>=0.28.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.6691972Z   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+2026-10-10T10:22:42.6841412Z Collecting idna (from httpx>=0.28.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.6869093Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-10-10T10:22:42.7000034Z Collecting h11>=0.16 (from httpcore==1.*->httpx>=0.28.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.7026698Z   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-10-10T10:22:42.7154464Z Collecting SecretStorage>=3.2 (from keyring>=21.2.0->twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.7184070Z   Downloading secretstorage-3.5.0-py3-none-any.whl.metadata (4.0 kB)
+2026-10-10T10:22:42.7290070Z Collecting jeepney>=0.4.2 (from keyring>=21.2.0->twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.7314462Z   Downloading jeepney-0.9.0-py3-none-any.whl.metadata (1.2 kB)
+2026-10-10T10:22:42.7435406Z Collecting jaraco.classes (from keyring>=21.2.0->twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.7463846Z   Downloading jaraco.classes-3.4.0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T10:22:42.7613018Z Collecting jaraco.functools (from keyring>=21.2.0->twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.7639105Z   Downloading jaraco_functools-4.6.0-py3-none-any.whl.metadata (2.9 kB)
+2026-10-10T10:22:42.7763008Z Collecting jaraco.context (from keyring>=21.2.0->twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.7789667Z   Downloading jaraco_context-6.1.2-py3-none-any.whl.metadata (4.2 kB)
+2026-10-10T10:22:42.7914544Z Collecting mypy_extensions>=1.0.0 (from mypy>=2.3.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.7941105Z   Downloading mypy_extensions-1.1.0-py3-none-any.whl.metadata (1.1 kB)
+2026-10-10T10:22:42.8049128Z Collecting pathspec>=1.0.0 (from mypy>=2.3.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.8077790Z   Downloading pathspec-1.1.1-py3-none-any.whl.metadata (14 kB)
+2026-10-10T10:22:42.9331048Z Collecting librt>=0.16.0 (from mypy>=2.3.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.9364037Z   Downloading librt-0.16.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (1.3 kB)
+2026-10-10T10:22:42.9810946Z Collecting ast-serialize<1.0.0,>=0.11.2 (from mypy>=2.3.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:42.9850082Z   Downloading ast_serialize-0.12.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.4 kB)
+2026-10-10T10:22:42.9944343Z Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.14.8/x64/lib/python3.14/site-packages (from pip-api>=0.0.28->pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0) (26.2.1)
+2026-10-10T10:22:43.0136433Z Collecting pyparsing (from pip-requirements-parser>=32.0.0->pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:43.0162200Z   Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+2026-10-10T10:22:43.0283584Z Collecting annotated-types>=0.6.0 (from pydantic>=2.13.4->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:43.0312301Z   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+2026-10-10T10:22:43.6595851Z Collecting pydantic-core==2.50.0 (from pydantic>=2.13.4->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:43.6630458Z   Downloading pydantic_core-2.50.0-cp314-cp314-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.5 kB)
+2026-10-10T10:22:43.6764581Z Collecting iniconfig>=1.0.1 (from pytest>=9.1.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:43.6790899Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+2026-10-10T10:22:43.6969743Z Collecting pygments>=2.7.2 (from pytest>=9.1.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:43.6998912Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-10-10T10:22:43.7375437Z Collecting nh3>=0.2.14 (from readme-renderer>=35.0->twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:43.7404680Z   Downloading nh3-0.3.7-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.0 kB)
+2026-10-10T10:22:43.7537951Z Collecting docutils>=0.21.2 (from readme-renderer>=35.0->twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:43.7563866Z   Downloading docutils-0.23-py3-none-any.whl.metadata (15 kB)
+2026-10-10T10:22:43.8776637Z Collecting charset_normalizer<4,>=2 (from requests>=2.31.0->pip-audit<3,>=2.10.1->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:43.8811570Z   Downloading charset_normalizer-3.5.2-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+2026-10-10T10:22:43.9090460Z Collecting markdown-it-py>=2.2.0 (from rich>=15.0.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:43.9117588Z   Downloading markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+2026-10-10T10:22:43.9258743Z Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=15.0.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:43.9283822Z   Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+2026-10-10T10:22:44.1059676Z Collecting cryptography>=2.0 (from SecretStorage>=3.2->keyring>=21.2.0->twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.1092682Z   Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.4 kB)
+2026-10-10T10:22:44.2095935Z Collecting cffi>=2.0.0 (from cryptography>=2.0->SecretStorage>=3.2->keyring>=21.2.0->twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.2124910Z   Downloading cffi-2.1.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+2026-10-10T10:22:44.2240576Z Collecting pycparser (from cffi>=2.0.0->cryptography>=2.0->SecretStorage>=3.2->keyring>=21.2.0->twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.2265940Z   Downloading pycparser-3.11-py3-none-any.whl.metadata (8.2 kB)
+2026-10-10T10:22:44.2961633Z Collecting setuptools>=77.0.3 (from torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.2974001Z   Using cached setuptools-84.0.0-py3-none-any.whl.metadata (6.6 kB)
+2026-10-10T10:22:44.3135601Z Collecting sympy>=1.13.3 (from torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.3162999Z   Downloading sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+2026-10-10T10:22:44.3360731Z Collecting networkx>=2.5.1 (from torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.3391253Z   Downloading networkx-3.7-py3-none-any.whl.metadata (6.7 kB)
+2026-10-10T10:22:44.3580920Z Collecting jinja2 (from torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.3608708Z   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+2026-10-10T10:22:44.4249166Z Collecting fsspec>=0.8.5 (from torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.4280819Z   Downloading fsspec-2026.9.0-py3-none-any.whl.metadata (10 kB)
+2026-10-10T10:22:44.4550775Z Collecting cuda-toolkit==13.0.3 (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.4579026Z   Downloading cuda_toolkit-13.0.3.0-py2.py3-none-any.whl.metadata (17 kB)
+2026-10-10T10:22:44.5061944Z Collecting cuda-bindings<14,>=13.0.3 (from torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.5098646Z   Downloading cuda_bindings-13.4.3-cp314-cp314-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+2026-10-10T10:22:44.5254481Z Collecting nvidia-cudnn-cu13==9.24.0.43 (from torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.5281984Z   Downloading nvidia_cudnn_cu13-9.24.0.43-py3-none-manylinux_2_27_x86_64.whl.metadata (1.9 kB)
+2026-10-10T10:22:44.5374516Z Collecting nvidia-cusparselt-cu13==0.8.1 (from torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.5402809Z   Downloading nvidia_cusparselt_cu13-0.8.1-py3-none-manylinux2014_x86_64.whl.metadata (12 kB)
+2026-10-10T10:22:44.5500799Z Collecting nvidia-nccl-cu13==2.30.7 (from torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.5529133Z   Downloading nvidia_nccl_cu13-2.30.7-py3-none-manylinux_2_18_x86_64.whl.metadata (2.1 kB)
+2026-10-10T10:22:44.5622317Z Collecting nvidia-nvshmem-cu13==3.4.5 (from torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.5649422Z   Downloading nvidia_nvshmem_cu13-3.4.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.1 kB)
+2026-10-10T10:22:44.5809148Z Collecting triton~=3.8.0 (from torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.5849521Z   Downloading triton-3.8.0-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (978 bytes)
+2026-10-10T10:22:44.6025948Z Collecting nvidia-cublas==13.1.1.3.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.6054416Z   Downloading nvidia_cublas-13.1.1.3-py3-none-manylinux_2_27_x86_64.whl.metadata (1.8 kB)
+2026-10-10T10:22:44.6171209Z Collecting nvidia-cuda-nvrtc==13.0.88.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.6198701Z   Downloading nvidia_cuda_nvrtc-13.0.88-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl.metadata (1.7 kB)
+2026-10-10T10:22:44.6319175Z Collecting nvidia-cuda-runtime==13.0.96.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.6346236Z   Downloading nvidia_cuda_runtime-13.0.96-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.7 kB)
+2026-10-10T10:22:44.6482099Z Collecting nvidia-cufft==12.0.0.61.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.6499919Z   Downloading nvidia_cufft-12.0.0.61-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.8 kB)
+2026-10-10T10:22:44.6613825Z Collecting nvidia-nvjitlink<14,>=13.0.88 (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.6639583Z   Downloading nvidia_nvjitlink-13.4.92-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl.metadata (1.8 kB)
+2026-10-10T10:22:44.6744902Z Collecting nvidia-cufile==1.15.1.6.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.6770996Z   Downloading nvidia_cufile-1.15.1.6-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.7 kB)
+2026-10-10T10:22:44.6894112Z Collecting nvidia-cuda-cupti==13.0.85.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.6921165Z   Downloading nvidia_cuda_cupti-13.0.85-py3-none-manylinux_2_25_x86_64.whl.metadata (1.7 kB)
+2026-10-10T10:22:44.7034471Z Collecting nvidia-curand==10.4.0.35.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.7062200Z   Downloading nvidia_curand-10.4.0.35-py3-none-manylinux_2_27_x86_64.whl.metadata (1.7 kB)
+2026-10-10T10:22:44.7189777Z Collecting nvidia-cusolver==12.0.4.66.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.7216678Z   Downloading nvidia_cusolver-12.0.4.66-py3-none-manylinux_2_27_x86_64.whl.metadata (1.8 kB)
+2026-10-10T10:22:44.7332428Z Collecting nvidia-cusparse==12.6.3.3.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.7359407Z   Downloading nvidia_cusparse-12.6.3.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.8 kB)
+2026-10-10T10:22:44.7512520Z Collecting nvidia-nvtx==13.0.85.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.7539322Z   Downloading nvidia_nvtx-13.0.85-py3-none-manylinux1_x86_64.manylinux_2_5_x86_64.whl.metadata (1.8 kB)
+2026-10-10T10:22:44.7691676Z Collecting cuda-pathfinder>=1.4.2 (from cuda-bindings<14,>=13.0.3->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.7720143Z   Downloading cuda_pathfinder-1.8.3-py3-none-any.whl.metadata (1.9 kB)
+2026-10-10T10:22:44.7996723Z Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.8024266Z   Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+2026-10-10T10:22:44.8167318Z Collecting shellingham>=1.3.0 (from typer>=0.26.8->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.8193678Z   Downloading shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
+2026-10-10T10:22:44.8414562Z Collecting click>=7.0 (from uvicorn>=0.51.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.8440839Z   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T10:22:44.8649825Z Collecting more-itertools (from jaraco.classes->keyring>=21.2.0->twine<7,>=6.2.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.8681367Z   Downloading more_itertools-11.1.0-py3-none-any.whl.metadata (41 kB)
+2026-10-10T10:22:44.9232990Z Collecting MarkupSafe>=2.0 (from jinja2->torch>=2.11.0->olympus-cognitive-architecture==0.2.0)
+2026-10-10T10:22:44.9262045Z   Downloading markupsafe-3.0.4-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+2026-10-10T10:22:44.9394689Z Downloading pip_audit-2.10.1-py3-none-any.whl (62 kB)
+2026-10-10T10:22:44.9444720Z Downloading cyclonedx_python_lib-11.12.0-py3-none-any.whl (529 kB)
+2026-10-10T10:22:44.9559691Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 529.5/529.5 kB 52.3 MB/s  0:00:00
+2026-10-10T10:22:44.9613902Z Downloading license_expression-30.4.4-py3-none-any.whl (120 kB)
+2026-10-10T10:22:44.9664126Z Downloading packageurl_python-0.17.6-py3-none-any.whl (36 kB)
+2026-10-10T10:22:44.9710954Z Downloading py_serializable-2.1.0-py3-none-any.whl (23 kB)
+2026-10-10T10:22:44.9756639Z Downloading defusedxml-0.7.1-py2.py3-none-any.whl (25 kB)
+2026-10-10T10:22:44.9802115Z Downloading pytest_cov-7.1.0-py3-none-any.whl (22 kB)
+2026-10-10T10:22:44.9848634Z Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+2026-10-10T10:22:44.9892852Z Downloading twine-6.2.0-py3-none-any.whl (42 kB)
+2026-10-10T10:22:44.9937224Z Downloading boolean_py-5.0-py3-none-any.whl (26 kB)
+2026-10-10T10:22:44.9984012Z Downloading build-1.6.1-py3-none-any.whl (31 kB)
+2026-10-10T10:22:45.0028503Z Downloading cachecontrol-0.14.4-py3-none-any.whl (22 kB)
+2026-10-10T10:22:45.0071464Z Downloading msgpack-1.2.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (462 kB)
+2026-10-10T10:22:45.0159409Z Downloading coverage-7.16.2-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (258 kB)
+2026-10-10T10:22:45.0217909Z Downloading fastapi-0.143.0-py3-none-any.whl (144 kB)
+2026-10-10T10:22:45.0265324Z Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+2026-10-10T10:22:45.0309511Z Downloading filelock-4.1.0-py3-none-any.whl (133 kB)
+2026-10-10T10:22:45.0354883Z Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+2026-10-10T10:22:45.0401990Z Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+2026-10-10T10:22:45.0447489Z Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2026-10-10T10:22:45.0492950Z Downloading keyring-25.7.0-py3-none-any.whl (39 kB)
+2026-10-10T10:22:45.0535758Z Downloading jeepney-0.9.0-py3-none-any.whl (49 kB)
+2026-10-10T10:22:45.0586821Z Downloading mypy-2.4.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (15.4 MB)
+2026-10-10T10:22:45.1496135Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.4/15.4 MB 177.8 MB/s  0:00:00
+2026-10-10T10:22:45.1526038Z Downloading ast_serialize-0.12.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.3 MB)
+2026-10-10T10:22:45.1602250Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 191.3 MB/s  0:00:00
+2026-10-10T10:22:45.1645596Z Downloading librt-0.16.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (523 kB)
+2026-10-10T10:22:45.1713704Z Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+2026-10-10T10:22:45.1769770Z Downloading numpy-2.5.3-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+2026-10-10T10:22:45.2463359Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.7/16.7 MB 245.5 MB/s  0:00:00
+2026-10-10T10:22:45.2492511Z Downloading opentelemetry_api-1.45.1-py3-none-any.whl (60 kB)
+2026-10-10T10:22:45.2526464Z Using cached packaging-26.3-py3-none-any.whl (129 kB)
+2026-10-10T10:22:45.2553604Z Downloading pathspec-1.1.1-py3-none-any.whl (57 kB)
+2026-10-10T10:22:45.2601279Z Downloading pip_api-0.0.35-py3-none-any.whl (123 kB)
+2026-10-10T10:22:45.2650969Z Downloading pip_requirements_parser-32.0.1-py3-none-any.whl (35 kB)
+2026-10-10T10:22:45.2711925Z Downloading platformdirs-4.12.4-py3-none-any.whl (32 kB)
+2026-10-10T10:22:45.2758447Z Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+2026-10-10T10:22:45.2805644Z Downloading pydantic-2.14.0-py3-none-any.whl (487 kB)
+2026-10-10T10:22:45.2872897Z Downloading pydantic_core-2.50.0-cp314-cp314-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.2 MB)
+2026-10-10T10:22:45.2978028Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 228.5 MB/s  0:00:00
+2026-10-10T10:22:45.3007494Z Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+2026-10-10T10:22:45.3052202Z Downloading pytest-9.1.1-py3-none-any.whl (386 kB)
+2026-10-10T10:22:45.3104570Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+2026-10-10T10:22:45.3150856Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-10-10T10:22:45.3219634Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 208.2 MB/s  0:00:00
+2026-10-10T10:22:45.3247445Z Downloading pyyaml-6.0.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (794 kB)
+2026-10-10T10:22:45.3302200Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 794.2/794.2 kB 153.4 MB/s  0:00:00
+2026-10-10T10:22:45.3332301Z Downloading readme_renderer-46.0-py3-none-any.whl (14 kB)
+2026-10-10T10:22:45.3376195Z Downloading docutils-0.23-py3-none-any.whl (634 kB)
+2026-10-10T10:22:45.3432247Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 634.7/634.7 kB 110.2 MB/s  0:00:00
+2026-10-10T10:22:45.3459407Z Downloading nh3-0.3.7-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (832 kB)
+2026-10-10T10:22:45.3519561Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 832.2/832.2 kB 141.5 MB/s  0:00:00
+2026-10-10T10:22:45.3548629Z Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+2026-10-10T10:22:45.3598488Z Downloading charset_normalizer-3.5.2-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (255 kB)
+2026-10-10T10:22:45.3649174Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-10-10T10:22:45.3692350Z Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+2026-10-10T10:22:45.3737553Z Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+2026-10-10T10:22:45.3782156Z Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
+2026-10-10T10:22:45.3835180Z Downloading rfc3986-2.0.0-py2.py3-none-any.whl (31 kB)
+2026-10-10T10:22:45.3890043Z Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+2026-10-10T10:22:45.3950966Z Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+2026-10-10T10:22:45.3995831Z Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-10-10T10:22:45.4042670Z Downloading ruff-0.17.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (10.4 MB)
+2026-10-10T10:22:45.4516091Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.4/10.4 MB 225.1 MB/s  0:00:00
+2026-10-10T10:22:45.4545683Z Downloading secretstorage-3.5.0-py3-none-any.whl (15 kB)
+2026-10-10T10:22:45.4592574Z Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.8 MB)
+2026-10-10T10:22:45.4818199Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 221.2 MB/s  0:00:00
+2026-10-10T10:22:45.4846484Z Downloading cffi-2.1.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+2026-10-10T10:22:45.4896626Z Downloading starlette-1.7.0-py3-none-any.whl (78 kB)
+2026-10-10T10:22:45.4945462Z Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+2026-10-10T10:22:45.5001600Z Downloading tomli-2.5.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (283 kB)
+2026-10-10T10:22:45.5050440Z Downloading tomli_w-1.2.0-py3-none-any.whl (6.7 kB)
+2026-10-10T10:22:45.5141531Z Downloading torch-2.14.1-cp314-cp314-manylinux_2_28_x86_64.whl (554.6 MB)
+2026-10-10T10:22:49.1138760Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 554.6/554.6 MB 97.6 MB/s  0:00:03
+2026-10-10T10:22:49.1167439Z Downloading cuda_toolkit-13.0.3.0-py2.py3-none-any.whl (2.5 kB)
+2026-10-10T10:22:49.1211147Z Downloading nvidia_cudnn_cu13-9.24.0.43-py3-none-manylinux_2_27_x86_64.whl (553.1 MB)
+2026-10-10T10:22:53.0660412Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 553.1/553.1 MB 89.4 MB/s  0:00:03
+2026-10-10T10:22:53.0690594Z Downloading nvidia_cusparselt_cu13-0.8.1-py3-none-manylinux2014_x86_64.whl (170.1 MB)
+2026-10-10T10:22:53.8391552Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 170.1/170.1 MB 221.3 MB/s  0:00:00
+2026-10-10T10:22:53.8420209Z Downloading nvidia_nccl_cu13-2.30.7-py3-none-manylinux_2_18_x86_64.whl (216.0 MB)
+2026-10-10T10:22:55.1985411Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 216.0/216.0 MB 159.4 MB/s  0:00:01
+2026-10-10T10:22:55.2017909Z Downloading nvidia_nvshmem_cu13-3.4.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (60.4 MB)
+2026-10-10T10:22:55.4258340Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.4/60.4 MB 271.6 MB/s  0:00:00
+2026-10-10T10:22:55.4307814Z Downloading cuda_bindings-13.4.3-cp314-cp314-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (7.0 MB)
+2026-10-10T10:22:55.4602326Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.0/7.0 MB 247.6 MB/s  0:00:00
+2026-10-10T10:22:55.4634200Z Downloading nvidia_cublas-13.1.1.3-py3-none-manylinux_2_27_x86_64.whl (423.1 MB)
+2026-10-10T10:22:58.8082475Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 423.1/423.1 MB 90.2 MB/s  0:00:03
+2026-10-10T10:22:58.8116524Z Downloading nvidia_cuda_cupti-13.0.85-py3-none-manylinux_2_25_x86_64.whl (10.7 MB)
+2026-10-10T10:22:58.8515905Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.7/10.7 MB 278.7 MB/s  0:00:00
+2026-10-10T10:22:58.8549370Z Downloading nvidia_cuda_nvrtc-13.0.88-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (90.2 MB)
+2026-10-10T10:22:59.3959522Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.2/90.2 MB 167.1 MB/s  0:00:00
+2026-10-10T10:22:59.3994648Z Downloading nvidia_cuda_runtime-13.0.96-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.2 MB)
+2026-10-10T10:22:59.4120475Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 201.0 MB/s  0:00:00
+2026-10-10T10:22:59.4149081Z Downloading nvidia_cufft-12.0.0.61-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (214.1 MB)
+2026-10-10T10:23:01.0445061Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 214.1/214.1 MB 131.4 MB/s  0:00:01
+2026-10-10T10:23:01.0483780Z Downloading nvidia_cufile-1.15.1.6-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.2 MB)
+2026-10-10T10:23:01.0557906Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 202.5 MB/s  0:00:00
+2026-10-10T10:23:01.0587700Z Downloading nvidia_curand-10.4.0.35-py3-none-manylinux_2_27_x86_64.whl (59.5 MB)
+2026-10-10T10:23:01.2381093Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 59.5/59.5 MB 335.2 MB/s  0:00:00
+2026-10-10T10:23:01.2412880Z Downloading nvidia_cusolver-12.0.4.66-py3-none-manylinux_2_27_x86_64.whl (200.9 MB)
+2026-10-10T10:23:01.9881675Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 200.9/200.9 MB 269.6 MB/s  0:00:00
+2026-10-10T10:23:01.9914814Z Downloading nvidia_cusparse-12.6.3.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (145.9 MB)
+2026-10-10T10:23:02.4878252Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 145.9/145.9 MB 295.0 MB/s  0:00:00
+2026-10-10T10:23:02.4909305Z Downloading nvidia_nvjitlink-13.4.92-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (42.5 MB)
+2026-10-10T10:23:02.6863570Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 42.5/42.5 MB 220.1 MB/s  0:00:00
+2026-10-10T10:23:02.6897330Z Downloading nvidia_nvtx-13.0.85-py3-none-manylinux1_x86_64.manylinux_2_5_x86_64.whl (148 kB)
+2026-10-10T10:23:02.6956771Z Downloading triton-3.8.0-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (248.0 MB)
+2026-10-10T10:23:04.9485412Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 248.0/248.0 MB 110.1 MB/s  0:00:02
+2026-10-10T10:23:04.9518995Z Downloading cuda_pathfinder-1.8.3-py3-none-any.whl (62 kB)
+2026-10-10T10:23:04.9567370Z Downloading fsspec-2026.9.0-py3-none-any.whl (221 kB)
+2026-10-10T10:23:04.9624287Z Downloading networkx-3.7-py3-none-any.whl (2.1 MB)
+2026-10-10T10:23:04.9724909Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 246.0 MB/s  0:00:00
+2026-10-10T10:23:04.9736834Z Using cached setuptools-84.0.0-py3-none-any.whl (818 kB)
+2026-10-10T10:23:04.9772169Z Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+2026-10-10T10:23:05.0014578Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 276.2 MB/s  0:00:00
+2026-10-10T10:23:05.0047294Z Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+2026-10-10T10:23:05.0093345Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 108.4 MB/s  0:00:00
+2026-10-10T10:23:05.0123123Z Downloading typer-0.27.3-py3-none-any.whl (123 kB)
+2026-10-10T10:23:05.0174771Z Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+2026-10-10T10:23:05.0219039Z Downloading types_pyyaml-6.0.12.20260906-py3-none-any.whl (21 kB)
+2026-10-10T10:23:05.0267288Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-10T10:23:05.0313554Z Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+2026-10-10T10:23:05.0358477Z Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+2026-10-10T10:23:05.0446425Z Downloading click-8.5.0-py3-none-any.whl (125 kB)
+2026-10-10T10:23:05.0494568Z Downloading id-1.6.1-py3-none-any.whl (14 kB)
+2026-10-10T10:23:05.0541022Z Downloading jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB)
+2026-10-10T10:23:05.0590445Z Downloading jaraco_context-6.1.2-py3-none-any.whl (7.9 kB)
+2026-10-10T10:23:05.0633641Z Downloading jaraco_functools-4.6.0-py3-none-any.whl (11 kB)
+2026-10-10T10:23:05.0681156Z Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+2026-10-10T10:23:05.0736861Z Downloading markupsafe-3.0.4-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (23 kB)
+2026-10-10T10:23:05.0781610Z Downloading more_itertools-11.1.0-py3-none-any.whl (72 kB)
+2026-10-10T10:23:05.0826006Z Downloading pycparser-3.11-py3-none-any.whl (51 kB)
+2026-10-10T10:23:05.0871780Z Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+2026-10-10T10:23:05.0918646Z Downloading pyproject_hooks-1.3.3-py3-none-any.whl (10 kB)
+2026-10-10T10:23:07.5428960Z Building wheels for collected packages: olympus-cognitive-architecture
+2026-10-10T10:23:07.5437380Z   Building editable for olympus-cognitive-architecture (pyproject.toml): started
+2026-10-10T10:23:07.7883646Z   Building editable for olympus-cognitive-architecture (pyproject.toml): finished with status 'done'
+2026-10-10T10:23:07.7890214Z   Created wheel for olympus-cognitive-architecture: filename=olympus_cognitive_architecture-0.2.0-0.editable-py3-none-any.whl size=7080 sha256=39c1d9d93dd43645deb1b79838971031b2baeb33db387ea795b11d33b08b28c2
+2026-10-10T10:23:07.7891759Z   Stored in directory: /tmp/pip-ephem-wheel-cache-vihpwnoi/wheels/fa/ee/20/c24609d6ebaf6932fe3979d7c03962e848fc6bdd295898c61c
+2026-10-10T10:23:07.7913011Z Successfully built olympus-cognitive-architecture
+2026-10-10T10:23:08.0406887Z Installing collected packages: sortedcontainers, nvidia-cusparselt-cu13, mpmath, cuda-toolkit, boolean.py, urllib3, typing-extensions, types-PyYAML, triton, tomli-w, tomli, sympy, shellingham, setuptools, ruff, rfc3986, PyYAML, pyproject_hooks, pyparsing, pygments, pycparser, pluggy, platformdirs, pip-api, pathspec, packaging, packageurl-python, nvidia-nvtx, nvidia-nvshmem-cu13, nvidia-nvjitlink, nvidia-nccl-cu13, nvidia-curand, nvidia-cufile, nvidia-cuda-runtime, nvidia-cuda-nvrtc, nvidia-cuda-cupti, numpy, nh3, networkx, mypy_extensions, msgpack, more-itertools, mdurl, MarkupSafe, license-expression, librt, jeepney, jaraco.context, iniconfig, idna, h11, fsspec, filelock, docutils, defusedxml, cuda-pathfinder, coverage, click, charset_normalizer, certifi, ast-serialize, annotated-types, annotated-doc, uvicorn, typing-inspection, requests, readme-renderer, pytest, pydantic-core, py-serializable, pip-requirements-parser, opentelemetry-api, nvidia-cusparse, nvidia-cufft, nvidia-cublas, mypy, markdown-it-py, jinja2, jaraco.functools, jaraco.classes, id, httpcore, cuda-bindings, cffi, build, anyio, starlette, rich, requests-toolbelt, pytest-cov, pydantic, nvidia-cusolver, nvidia-cudnn-cu13, httpx, cyclonedx-python-lib, cryptography, CacheControl, typer, SecretStorage, fastapi, torch, pip-audit, keyring, twine, olympus-cognitive-architecture
+2026-10-10T10:23:57.4547662Z 
+2026-10-10T10:23:57.4639738Z Successfully installed CacheControl-0.14.4 MarkupSafe-3.0.4 PyYAML-6.0.3 SecretStorage-3.5.0 annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.15.1 ast-serialize-0.12.1 boolean.py-5.0 build-1.6.1 certifi-2026.7.22 cffi-2.1.1 charset_normalizer-3.5.2 click-8.5.0 coverage-7.16.2 cryptography-50.0.2 cuda-bindings-13.4.3 cuda-pathfinder-1.8.3 cuda-toolkit-13.0.3.0 cyclonedx-python-lib-11.12.0 defusedxml-0.7.1 docutils-0.23 fastapi-0.143.0 filelock-4.1.0 fsspec-2026.9.0 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 id-1.6.1 idna-3.20 iniconfig-2.3.1 jaraco.classes-3.4.0 jaraco.context-6.1.2 jaraco.functools-4.6.0 jeepney-0.9.0 jinja2-3.1.6 keyring-25.7.0 librt-0.16.0 license-expression-30.4.4 markdown-it-py-4.2.0 mdurl-0.1.2 more-itertools-11.1.0 mpmath-1.3.0 msgpack-1.2.3 mypy-2.4.0 mypy_extensions-1.1.0 networkx-3.7 nh3-0.3.7 numpy-2.5.3 nvidia-cublas-13.1.1.3 nvidia-cuda-cupti-13.0.85 nvidia-cuda-nvrtc-13.0.88 nvidia-cuda-runtime-13.0.96 nvidia-cudnn-cu13-9.24.0.43 nvidia-cufft-12.0.0.61 nvidia-cufile-1.15.1.6 nvidia-curand-10.4.0.35 nvidia-cusolver-12.0.4.66 nvidia-cusparse-12.6.3.3 nvidia-cusparselt-cu13-0.8.1 nvidia-nccl-cu13-2.30.7 nvidia-nvjitlink-13.4.92 nvidia-nvshmem-cu13-3.4.5 nvidia-nvtx-13.0.85 olympus-cognitive-architecture-0.2.0 opentelemetry-api-1.45.1 packageurl-python-0.17.6 packaging-26.3 pathspec-1.1.1 pip-api-0.0.35 pip-audit-2.10.1 pip-requirements-parser-32.0.1 platformdirs-4.12.4 pluggy-1.6.0 py-serializable-2.1.0 pycparser-3.11 pydantic-2.14.0 pydantic-core-2.50.0 pygments-2.21.0 pyparsing-3.3.3 pyproject_hooks-1.3.3 pytest-9.1.1 pytest-cov-7.1.0 readme-renderer-46.0 requests-2.34.2 requests-toolbelt-1.0.0 rfc3986-2.0.0 rich-15.0.0 ruff-0.17.0 setuptools-84.0.0 shellingham-1.5.4 sortedcontainers-2.4.0 starlette-1.7.0 sympy-1.14.0 tomli-2.5.0 tomli-w-1.2.0 torch-2.14.1 triton-3.8.0 twine-6.2.0 typer-0.27.3 types-PyYAML-6.0.12.20260906 typing-extensions-4.16.0 typing-inspection-0.4.4 urllib3-2.8.0 uvicorn-0.54.0
+2026-10-10T10:23:57.9949031Z ##[group]Run python -m ruff check .
+2026-10-10T10:23:57.9949402Z [36;1mpython -m ruff check .[0m
+2026-10-10T10:23:58.0011972Z shell: /usr/bin/bash -e {0}
+2026-10-10T10:23:58.0012293Z env:
+2026-10-10T10:23:58.0012650Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:23:58.0013192Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:23:58.0013756Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+2026-10-10T10:23:58.0014307Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:23:58.0014802Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:23:58.0015308Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:23:58.0015821Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+2026-10-10T10:23:58.0016250Z ##[endgroup]
+2026-10-10T10:23:58.0568420Z All checks passed!
+2026-10-10T10:23:58.0607393Z ##[group]Run python -m mypy olympus tests
+2026-10-10T10:23:58.0607797Z [36;1mpython -m mypy olympus tests[0m
+2026-10-10T10:23:58.0670547Z shell: /usr/bin/bash -e {0}
+2026-10-10T10:23:58.0670988Z env:
+2026-10-10T10:23:58.0671260Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:23:58.0671676Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:23:58.0672103Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+2026-10-10T10:23:58.0672523Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:23:58.0672904Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:23:58.0673297Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:23:58.0673675Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+2026-10-10T10:23:58.0673996Z ##[endgroup]
+2026-10-10T10:24:15.7809615Z Success: no issues found in 82 source files
+2026-10-10T10:24:15.8485094Z ##[group]Run python -m pytest --cov=olympus --cov-branch --cov-report=term-missing -q
+2026-10-10T10:24:15.8485829Z [36;1mpython -m pytest --cov=olympus --cov-branch --cov-report=term-missing -q[0m
+2026-10-10T10:24:15.8549161Z shell: /usr/bin/bash -e {0}
+2026-10-10T10:24:15.8549474Z env:
+2026-10-10T10:24:15.8549810Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:24:15.8550332Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:15.8550880Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+2026-10-10T10:24:15.8551430Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:15.8551911Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:15.8552396Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:15.8552887Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+2026-10-10T10:24:15.8553304Z ##[endgroup]
+2026-10-10T10:24:24.7431197Z ........................................................................ [ 26%]
+2026-10-10T10:24:25.5714785Z ........................................................................ [ 52%]
+2026-10-10T10:24:27.1963380Z ........................................................................ [ 78%]
+2026-10-10T10:24:30.9214929Z ............................................................             [100%]
+2026-10-10T10:24:30.9216003Z ================================ tests coverage ================================
+2026-10-10T10:24:30.9217599Z _______________ coverage: platform linux, python 3.14.8-final-0 ________________
+2026-10-10T10:24:30.9218618Z 
+2026-10-10T10:24:30.9219072Z Name                               Stmts   Miss Branch BrPart  Cover   Missing
+2026-10-10T10:24:30.9220432Z ------------------------------------------------------------------------------
+2026-10-10T10:24:30.9222104Z olympus/api.py                       126     25      2      0    79%   80-81, 86, 95-99, 112-120, 175, 185-186, 225-226, 255-256, 264-277
+2026-10-10T10:24:30.9224545Z olympus/cli.py                       225     47     30      5    76%   45, 95, 103-106, 111-112, 117-118, 132-140, 151-165, 170, 181-188, 208-236, 247-254, 264-272, 286-296, 416-417, 430-432, 446-448, 508
+2026-10-10T10:24:30.9225941Z olympus/core/interpretation.py        67      2     12      3    94%   95->99, 102, 149->151, 185
+2026-10-10T10:24:30.9226867Z olympus/core/security.py              13      2      0      0    85%   18-19
+2026-10-10T10:24:30.9228007Z olympus/core/sqlite_journal.py        15      1      4      2    84%   17->22, 26
+2026-10-10T10:24:30.9228899Z olympus/core/workspace.py             60      7      2      0    85%   74-83, 86-88
+2026-10-10T10:24:30.9229888Z olympus/data/ingestion.py            121     13     30      5    87%   62-64, 83, 130, 139, 146-148, 154-155, 157, 190
+2026-10-10T10:24:30.9230611Z olympus/data/retrieval.py             32      7      8      0    72%   39-45
+2026-10-10T10:24:30.9231169Z olympus/forge/compiler.py             31      3      8      2    87%   53-61, 81
+2026-10-10T10:24:30.9231737Z olympus/forge/language.py             58      6      4      0    90%   65, 68-70, 82-83
+2026-10-10T10:24:30.9232310Z olympus/forge/runtime.py              52      2     14      2    94%   73-77, 92->37
+2026-10-10T10:24:30.9233232Z olympus/foundry/bigram.py            103      7     32      7    90%   59, 61, 70, 100, 136, 153, 155
+2026-10-10T10:24:30.9234026Z olympus/foundry/data_pipeline.py     208     15     60     12    90%   90, 96, 178, 184, 189, 307, 311, 320->322, 323, 331, 334-335, 339, 352, 358, 363
+2026-10-10T10:24:30.9234808Z olympus/foundry/eval_suite.py        133      5     14      3    95%   91, 99-100, 118, 162
+2026-10-10T10:24:30.9235456Z olympus/foundry/ollama.py             59     10     26     10    76%   20, 22, 34, 41, 45, 64, 66, 72, 75, 94
+2026-10-10T10:24:30.9236090Z olympus/foundry/quantization.py      147      2     16      2    98%   95, 124
+2026-10-10T10:24:30.9236937Z olympus/foundry/resources.py         107     22     24      4    74%   38-39, 48-67, 93, 96, 112, 159->exit
+2026-10-10T10:24:30.9238115Z olympus/foundry/service.py           187     20     40     15    85%   66, 114, 116, 119-120, 122, 126, 127->129, 165, 351-354, 396, 399, 402, 431, 472, 475, 479-480
+2026-10-10T10:24:30.9239210Z olympus/foundry/sft.py               579     41    170     21    90%   41, 62, 66-67, 198, 350, 353, 365->367, 456, 462-466, 468, 470, 478, 529, 531, 544, 549-553, 559, 561-569, 588-590, 629, 649, 652, 685
+2026-10-10T10:24:30.9240355Z olympus/foundry/store.py             136      7     20      5    92%   38-42, 124->147, 226, 247, 278, 294
+2026-10-10T10:24:30.9241868Z olympus/labos/discovery.py           280     64    158     69    69%   30, 32, 35-37, 112, 122->120, 124, 129->128, 131, 149, 152-154, 180->193, 182->193, 197, 214->221, 222, 231, 239, 247, 260, 262, 264, 270, 277, 279, 281, 283, 294, 302, 304, 306, 308, 310, 312, 314, 323, 325, 333, 335, 337, 372, 377, 383, 385, 400->402, 403, 404->406, 407, 413, 435, 445, 457, 459, 468, 471, 476->478, 478->480, 481, 483, 495, 497, 512, 516, 531, 537, 551, 570, 576, 612, 618
+2026-10-10T10:24:30.9243327Z olympus/labos/manifest.py            111      1      0      0    99%   139
+2026-10-10T10:24:30.9243988Z olympus/labos/portfolio.py           111     27     50     13    69%   25-26, 29, 32, 50, 58, 64, 72, 78, 113-115, 120, 161, 167, 169, 171, 184, 217-225
+2026-10-10T10:24:30.9244809Z olympus/labos/reports.py             146     28     66     10    77%   26, 170, 318-319, 340->345, 390, 394, 396, 401, 417, 422, 424, 429-445, 453-542
+2026-10-10T10:24:30.9245498Z olympus/labos/runner.py              137      7     34      3    93%   67-68, 150, 178, 273-275
+2026-10-10T10:24:30.9246065Z olympus/labos/scheduler.py            25      2     12      4    84%   26, 28->30, 30->32, 33
+2026-10-10T10:24:30.9246619Z olympus/labos/validation.py           20      3     12      2    78%   12, 30-31
+2026-10-10T10:24:30.9247381Z olympus/sdk.py                        45      4     14      4    86%   41, 58, 71, 73
+2026-10-10T10:24:30.9247894Z olympus/training/synthetic.py          8      1      0      0    88%   7
+2026-10-10T10:24:30.9248383Z ------------------------------------------------------------------------------
+2026-10-10T10:24:30.9248825Z TOTAL                               4187    381    920    203    87%
+2026-10-10T10:24:30.9249071Z 
+2026-10-10T10:24:30.9249197Z 33 files skipped due to complete coverage.
+2026-10-10T10:24:30.9249634Z Required test coverage of 85.0% reached. Total coverage: 87.27%
+2026-10-10T10:24:30.9250016Z 276 passed in 13.33s
+2026-10-10T10:24:31.7172167Z ##[group]Run python -m olympus.cli foundry verify-pipeline --root artifacts/ci-foundry
+2026-10-10T10:24:31.7172864Z [36;1mpython -m olympus.cli foundry verify-pipeline --root artifacts/ci-foundry[0m
+2026-10-10T10:24:31.7173444Z [36;1mpython -m olympus.cli foundry status --root artifacts/ci-foundry[0m
+2026-10-10T10:24:31.7174059Z [36;1mpython -m olympus.cli foundry prepare-dataset --output artifacts/ci-deep-dataset[0m
+2026-10-10T10:24:31.7238571Z shell: /usr/bin/bash -e {0}
+2026-10-10T10:24:31.7238876Z env:
+2026-10-10T10:24:31.7239217Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:24:31.7239743Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:31.7240473Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+2026-10-10T10:24:31.7241014Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:31.7241494Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:31.7242011Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:31.7242503Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+2026-10-10T10:24:31.7242920Z ##[endgroup]
+2026-10-10T10:24:33.5355942Z {
+2026-10-10T10:24:33.5356461Z   "dataset": {
+2026-10-10T10:24:33.5357449Z     "dataset_id": "foundry-verification-corpus",
+2026-10-10T10:24:33.5358089Z     "version": "1.0.0",
+2026-10-10T10:24:33.5358892Z     "sha256": "6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab",
+2026-10-10T10:24:33.5360789Z     "materialized_path": "/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/artifacts/ci-foundry/datasets/foundry-verification-corpus/1.0.0-6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab.txt",
+2026-10-10T10:24:33.5363540Z     "source": "repository://olympus/foundry/foundry_verification.txt",
+2026-10-10T10:24:33.5364282Z     "owner": "BU1LD Olympus",
+2026-10-10T10:24:33.5364808Z     "license": "LicenseRef-Proprietary",
+2026-10-10T10:24:33.5366560Z     "provenance": "Deterministic repository-owned synthetic corpus written specifically to verify Foundry infrastructure; it is not capability-training data.",
+2026-10-10T10:24:33.5368088Z     "privacy_classification": "internal",
+2026-10-10T10:24:33.5368741Z     "synthetic": true,
+2026-10-10T10:24:33.5369298Z     "generator": "Human-authored deterministic Foundry verification fixture v1",
+2026-10-10T10:24:33.5369825Z     "byte_count": 674,
+2026-10-10T10:24:33.5370242Z     "character_count": 674,
+2026-10-10T10:24:33.5424792Z     "created_at": "2026-10-10T10:24:33.512994+00:00"
+2026-10-10T10:24:33.5425136Z   },
+2026-10-10T10:24:33.5425340Z   "experiment": {
+2026-10-10T10:24:33.5425807Z     "experiment_id": "FND_20261010T102433514071",
+2026-10-10T10:24:33.5426660Z     "hypothesis": "A trained character-bigram model will outperform a frozen uniform baseline on held-out transitions from the structured verification corpus.",
+2026-10-10T10:24:33.5427639Z     "model_family": "FoundryVerificationBigram",
+2026-10-10T10:24:33.5428016Z     "dataset_id": "foundry-verification-corpus",
+2026-10-10T10:24:33.5428352Z     "dataset_version": "1.0.0",
+2026-10-10T10:24:33.5428808Z     "dataset_sha256": "6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab",
+2026-10-10T10:24:33.5429284Z     "seed": 7,
+2026-10-10T10:24:33.5429486Z     "config": {
+2026-10-10T10:24:33.5429716Z       "model_type": "character-bigram",
+2026-10-10T10:24:33.5430019Z       "train_fraction": 0.8,
+2026-10-10T10:24:33.5430273Z       "smoothing": 0.25,
+2026-10-10T10:24:33.5430521Z       "training_characters": 539,
+2026-10-10T10:24:33.5430806Z       "evaluation_characters": 136
+2026-10-10T10:24:33.5431072Z     },
+2026-10-10T10:24:33.5431336Z     "code_commit": "7eb82b96632561f7cb0c670c0116fe774e7a1797",
+2026-10-10T10:24:33.5431682Z     "hardware": {
+2026-10-10T10:24:33.5431986Z       "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+2026-10-10T10:24:33.5432356Z       "machine": "x86_64",
+2026-10-10T10:24:33.5433023Z       "python": "3.14.8",
+2026-10-10T10:24:33.5433282Z       "processor": "x86_64"
+2026-10-10T10:24:33.5433522Z     },
+2026-10-10T10:24:33.5433720Z     "status": "VERIFIED",
+2026-10-10T10:24:33.5433961Z     "failure_reason": null,
+2026-10-10T10:24:33.5434242Z     "created_at": "2026-10-10T10:24:33.514071+00:00",
+2026-10-10T10:24:33.5434588Z     "updated_at": "2026-10-10T10:24:33.529908+00:00"
+2026-10-10T10:24:33.5434884Z   },
+2026-10-10T10:24:33.5435075Z   "checkpoint": {
+2026-10-10T10:24:33.5435320Z     "checkpoint_id": "ckpt_9c5a495f9a84d8f4",
+2026-10-10T10:24:33.5435644Z     "experiment_id": "FND_20261010T102433514071",
+2026-10-10T10:24:33.5436100Z     "sha256": "9c5a495f9a84d8f44da7a919a735ebd473384b45ce7c5eccc84cf7adb1aa2bec",
+2026-10-10T10:24:33.5437438Z     "path": "/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/artifacts/ci-foundry/checkpoints/ckpt_9c5a495f9a84d8f4.json",
+2026-10-10T10:24:33.5438235Z     "format": "olympus-character-bigram-v1",
+2026-10-10T10:24:33.5438555Z     "byte_count": 1712,
+2026-10-10T10:24:33.5438785Z     "metrics": {
+2026-10-10T10:24:33.5439034Z       "negative_log_likelihood": 1.7720865936513397,
+2026-10-10T10:24:33.5439353Z       "perplexity": 5.883116236103429,
+2026-10-10T10:24:33.5439614Z       "top1_accuracy": 0.3940520446096654,
+2026-10-10T10:24:33.5439885Z       "evaluated_transitions": 538.0
+2026-10-10T10:24:33.5440128Z     },
+2026-10-10T10:24:33.5440328Z     "created_at": "2026-10-10T10:24:33.525116+00:00"
+2026-10-10T10:24:33.5440592Z   },
+2026-10-10T10:24:33.5440764Z   "evaluation": {
+2026-10-10T10:24:33.5440990Z     "evaluation_id": "eval_d21e01387ffbda6d",
+2026-10-10T10:24:33.5441278Z     "checkpoint_id": "ckpt_9c5a495f9a84d8f4",
+2026-10-10T10:24:33.5441573Z     "suite": "held-out-character-model-v1",
+2026-10-10T10:24:33.5442005Z     "dataset_sha256": "6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab",
+2026-10-10T10:24:33.5442425Z     "baseline_metrics": {
+2026-10-10T10:24:33.5442766Z       "negative_log_likelihood": 3.1780538303479458,
+2026-10-10T10:24:33.5443084Z       "perplexity": 24.0,
+2026-10-10T10:24:33.5443318Z       "top1_accuracy": 0.041666666666666664,
+2026-10-10T10:24:33.5443582Z       "evaluated_transitions": 135.0
+2026-10-10T10:24:33.5443822Z     },
+2026-10-10T10:24:33.5444005Z     "candidate_metrics": {
+2026-10-10T10:24:33.5444252Z       "negative_log_likelihood": 1.9001575710987069,
+2026-10-10T10:24:33.5444531Z       "perplexity": 6.686948029017607,
+2026-10-10T10:24:33.5444794Z       "top1_accuracy": 0.3925925925925926,
+2026-10-10T10:24:33.5445064Z       "evaluated_transitions": 135.0
+2026-10-10T10:24:33.5445304Z     },
+2026-10-10T10:24:33.5445481Z     "passed": true,
+2026-10-10T10:24:33.5445942Z     "decision": "Candidate beat the frozen uniform baseline on held-out negative log-likelihood and perplexity.",
+2026-10-10T10:24:33.5446470Z     "created_at": "2026-10-10T10:24:33.527327+00:00"
+2026-10-10T10:24:33.5446742Z   },
+2026-10-10T10:24:33.5446929Z   "model": {
+2026-10-10T10:24:33.5447337Z     "model_id": "foundry-verification-bigram-9c5a495f",
+2026-10-10T10:24:33.5447667Z     "family": "FoundryVerificationBigram",
+2026-10-10T10:24:33.5447936Z     "version": "9c5a495f9a84",
+2026-10-10T10:24:33.5448188Z     "checkpoint_id": "ckpt_9c5a495f9a84d8f4",
+2026-10-10T10:24:33.5448458Z     "status": "VERIFIED",
+2026-10-10T10:24:33.5448703Z     "runtime": "olympus-character-bigram-v1",
+2026-10-10T10:24:33.5448994Z     "capabilities": [
+2026-10-10T10:24:33.5449208Z       "text-generation",
+2026-10-10T10:24:33.5449450Z       "foundry-lifecycle-verification"
+2026-10-10T10:24:33.5449699Z     ],
+2026-10-10T10:24:33.5450224Z     "intended_use": "Low-cost verification of the Olympus dataset, experiment, checkpoint, evaluation, export, registry, and serving lifecycle.",
+2026-10-10T10:24:33.5450836Z     "limitations": [
+2026-10-10T10:24:33.5451131Z       "Character bigram model; not an assistant or reasoning model.",
+2026-10-10T10:24:33.5451590Z       "Must not be presented as Hermes or as evidence of frontier capability."
+2026-10-10T10:24:33.5452126Z     ],
+2026-10-10T10:24:33.5452343Z     "created_at": "2026-10-10T10:24:33.529399+00:00"
+2026-10-10T10:24:33.5452620Z   },
+2026-10-10T10:24:33.5453246Z   "export_path": "/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/artifacts/ci-foundry/exports/ckpt_9c5a495f9a84d8f4/model.json"
+2026-10-10T10:24:33.5453945Z }
+2026-10-10T10:24:35.7035391Z {
+2026-10-10T10:24:35.7036008Z   "integrity": "ok",
+2026-10-10T10:24:35.7036700Z   "datasets": 1,
+2026-10-10T10:24:35.7037832Z   "experiments": 1,
+2026-10-10T10:24:35.7038470Z   "checkpoints": 1,
+2026-10-10T10:24:35.7039087Z   "evaluations": 1,
+2026-10-10T10:24:35.7039640Z   "models": 1,
+2026-10-10T10:24:35.7040483Z   "evidence_events": 5
+2026-10-10T10:24:35.7041012Z }
+2026-10-10T10:24:37.8235616Z {
+2026-10-10T10:24:37.8236076Z   "schema_version": 2,
+2026-10-10T10:24:37.8236548Z   "dataset_id": "olympus-foundry-instructions",
+2026-10-10T10:24:37.8237285Z   "version": "1.0.0",
+2026-10-10T10:24:37.8237624Z   "source": {
+2026-10-10T10:24:37.8238136Z     "uri": "repository://datasets/hermes-smoke/source.jsonl",
+2026-10-10T10:24:37.8238921Z     "sha256": "9cd0e6455b45b40f4d222b6b9dc4d8be35a2fccb80c7793c4cb45615c5ec3e4f",
+2026-10-10T10:24:37.8239631Z     "license": "LicenseRef-Proprietary",
+2026-10-10T10:24:37.8240048Z     "owner": "BU1LD Olympus",
+2026-10-10T10:24:37.8240398Z     "record_count": 36
+2026-10-10T10:24:37.8240702Z   },
+2026-10-10T10:24:37.8240979Z   "transformations": [
+2026-10-10T10:24:37.8241371Z     "UTF-8 decode and strict schema validation",
+2026-10-10T10:24:37.8241973Z     "Unicode-preserving whitespace trim during training serialization",
+2026-10-10T10:24:37.8242653Z     "Stable lexical ordering by record ID within explicit splits"
+2026-10-10T10:24:37.8243154Z   ],
+2026-10-10T10:24:37.8244127Z   "split_policy": "Human-authored disjoint train/validation/test assignments; every capability category occurs in every split. Test records are never used for optimization.",
+2026-10-10T10:24:37.8245447Z   "deduplication": "Exact record-ID and normalized prompt-plus-response rejection.",
+2026-10-10T10:24:37.8246661Z   "quality_policy": "Reject empty, oversized, malformed, NUL-bearing, unlicensed, PII-bearing, secret-bearing, duplicate, or category-incomplete records.",
+2026-10-10T10:24:37.8248339Z   "contamination_policy": "Reject any exact normalized duplicate or shared contiguous 8-token sequence across split boundaries.",
+2026-10-10T10:24:37.8249435Z   "pii_policy": "Reject email, phone-like, API key, password, secret, and token patterns.",
+2026-10-10T10:24:37.8250074Z   "splits": [
+2026-10-10T10:24:37.8250347Z     {
+2026-10-10T10:24:37.8250619Z       "name": "train",
+2026-10-10T10:24:37.8250962Z       "path": "splits/train.jsonl",
+2026-10-10T10:24:37.8251558Z       "sha256": "42bcafc45c6b337125a54fd48a6bcf93fcf59aaa276c793d6323e96758aa1d8f",
+2026-10-10T10:24:37.8252157Z       "records": 12,
+2026-10-10T10:24:37.8252469Z       "categories": {
+2026-10-10T10:24:37.8252787Z         "agent_behavior": 1,
+2026-10-10T10:24:37.8253126Z         "code": 1,
+2026-10-10T10:24:37.8253422Z         "extraction": 1,
+2026-10-10T10:24:37.8253750Z         "instruction": 1,
+2026-10-10T10:24:37.8254076Z         "mathematics": 1,
+2026-10-10T10:24:37.8254397Z         "planning": 1,
+2026-10-10T10:24:37.8254715Z         "reasoning": 1,
+2026-10-10T10:24:37.8255033Z         "research": 1,
+2026-10-10T10:24:37.8255338Z         "safety": 1,
+2026-10-10T10:24:37.8255634Z         "science": 1,
+2026-10-10T10:24:37.8255949Z         "self_correction": 1,
+2026-10-10T10:24:37.8256301Z         "tool_use": 1
+2026-10-10T10:24:37.8256587Z       }
+2026-10-10T10:24:37.8256838Z     },
+2026-10-10T10:24:37.8257278Z     {
+2026-10-10T10:24:37.8257567Z       "name": "validation",
+2026-10-10T10:24:37.8257929Z       "path": "splits/validation.jsonl",
+2026-10-10T10:24:37.8258516Z       "sha256": "53f7e39591122b7f127d5229fc9008d9d7306b8fa2a5bd96043d79e3f9719d04",
+2026-10-10T10:24:37.8259169Z       "records": 12,
+2026-10-10T10:24:37.8259472Z       "categories": {
+2026-10-10T10:24:37.8260213Z         "agent_behavior": 1,
+2026-10-10T10:24:37.8260571Z         "code": 1,
+2026-10-10T10:24:37.8260866Z         "extraction": 1,
+2026-10-10T10:24:37.8261190Z         "instruction": 1,
+2026-10-10T10:24:37.8261514Z         "mathematics": 1,
+2026-10-10T10:24:37.8261842Z         "planning": 1,
+2026-10-10T10:24:37.8262174Z         "reasoning": 1,
+2026-10-10T10:24:37.8262519Z         "research": 1,
+2026-10-10T10:24:37.8262850Z         "safety": 1,
+2026-10-10T10:24:37.8263182Z         "science": 1,
+2026-10-10T10:24:37.8263512Z         "self_correction": 1,
+2026-10-10T10:24:37.8263905Z         "tool_use": 1
+2026-10-10T10:24:37.8264229Z       }
+2026-10-10T10:24:37.8264508Z     },
+2026-10-10T10:24:37.8265024Z     {
+2026-10-10T10:24:37.8265313Z       "name": "test",
+2026-10-10T10:24:37.8265681Z       "path": "splits/test.jsonl",
+2026-10-10T10:24:37.8266360Z       "sha256": "407fd360e882dd1e0274754a9d0ad1946cafc87304a2e1508deb7f458ae69bfc",
+2026-10-10T10:24:37.8267322Z       "records": 12,
+2026-10-10T10:24:37.8267697Z       "categories": {
+2026-10-10T10:24:37.8268053Z         "agent_behavior": 1,
+2026-10-10T10:24:37.8268424Z         "code": 1,
+2026-10-10T10:24:37.8268755Z         "extraction": 1,
+2026-10-10T10:24:37.8269123Z         "instruction": 1,
+2026-10-10T10:24:37.8269495Z         "mathematics": 1,
+2026-10-10T10:24:37.8269859Z         "planning": 1,
+2026-10-10T10:24:37.8270210Z         "reasoning": 1,
+2026-10-10T10:24:37.8270567Z         "research": 1,
+2026-10-10T10:24:37.8270896Z         "safety": 1,
+2026-10-10T10:24:37.8271224Z         "science": 1,
+2026-10-10T10:24:37.8271576Z         "self_correction": 1,
+2026-10-10T10:24:37.8271973Z         "tool_use": 1
+2026-10-10T10:24:37.8272316Z       }
+2026-10-10T10:24:37.8272600Z     }
+2026-10-10T10:24:37.8272875Z   ],
+2026-10-10T10:24:37.8273155Z   "quality": {
+2026-10-10T10:24:37.8273484Z     "input_records": 36,
+2026-10-10T10:24:37.8273869Z     "accepted_records": 36,
+2026-10-10T10:24:37.8274258Z     "duplicate_ids": 0,
+2026-10-10T10:24:37.8274650Z     "normalized_duplicates": 0,
+2026-10-10T10:24:37.8275061Z     "pii_or_secret_hits": 0,
+2026-10-10T10:24:37.8275451Z     "split_leakage_hits": 0,
+2026-10-10T10:24:37.8275859Z     "missing_category_split_pairs": [],
+2026-10-10T10:24:37.8276350Z     "mean_prompt_characters": 77.19444444444444,
+2026-10-10T10:24:37.8276863Z     "mean_response_characters": 91.41666666666667
+2026-10-10T10:24:37.8277541Z   },
+2026-10-10T10:24:37.8278114Z   "manifest_sha256": "f64a41e9d3d79d5911e5abcf34e635bb76582abbdbb5d858b6405a1921c89285"
+2026-10-10T10:24:37.8278820Z }
+2026-10-10T10:24:38.2304242Z ##[group]Run python -m pip_audit --strict .
+2026-10-10T10:24:38.2304625Z [36;1mpython -m pip_audit --strict .[0m
+2026-10-10T10:24:38.2367969Z shell: /usr/bin/bash -e {0}
+2026-10-10T10:24:38.2368276Z env:
+2026-10-10T10:24:38.2368614Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:24:38.2369140Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:38.2369689Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+2026-10-10T10:24:38.2370235Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:38.2370715Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:38.2371192Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:38.2371676Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+2026-10-10T10:24:38.2372088Z ##[endgroup]
+2026-10-10T10:24:45.6822150Z No known vulnerabilities found
+2026-10-10T10:24:45.7357688Z ##[group]Run python -m build
+2026-10-10T10:24:45.7358024Z [36;1mpython -m build[0m
+2026-10-10T10:24:45.7420103Z shell: /usr/bin/bash -e {0}
+2026-10-10T10:24:45.7420419Z env:
+2026-10-10T10:24:45.7420753Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:24:45.7421274Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:45.7421810Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+2026-10-10T10:24:45.7422353Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:45.7422827Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:45.7423303Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:45.7423786Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+2026-10-10T10:24:45.7424195Z ##[endgroup]
+2026-10-10T10:24:45.9033824Z * Creating isolated environment: venv+pip...
+2026-10-10T10:24:45.9068562Z * Installing packages in isolated environment:
+2026-10-10T10:24:45.9069165Z   - setuptools>=70
+2026-10-10T10:24:45.9069556Z   - wheel
+2026-10-10T10:24:46.6661717Z * Getting build dependencies for sdist...
+2026-10-10T10:24:47.2100754Z running egg_info
+2026-10-10T10:24:47.2116346Z writing olympus_cognitive_architecture.egg-info/PKG-INFO
+2026-10-10T10:24:47.2129976Z writing dependency_links to olympus_cognitive_architecture.egg-info/dependency_links.txt
+2026-10-10T10:24:47.2133732Z writing entry points to olympus_cognitive_architecture.egg-info/entry_points.txt
+2026-10-10T10:24:47.2141962Z writing requirements to olympus_cognitive_architecture.egg-info/requires.txt
+2026-10-10T10:24:47.2144729Z writing top-level names to olympus_cognitive_architecture.egg-info/top_level.txt
+2026-10-10T10:24:47.2212894Z reading manifest file 'olympus_cognitive_architecture.egg-info/SOURCES.txt'
+2026-10-10T10:24:47.2226401Z reading manifest template 'MANIFEST.in'
+2026-10-10T10:24:47.2249041Z adding license file 'LICENSE'
+2026-10-10T10:24:47.2265275Z writing manifest file 'olympus_cognitive_architecture.egg-info/SOURCES.txt'
+2026-10-10T10:24:47.2575894Z * Installed build dependency versions:
+2026-10-10T10:24:47.2576410Z   - setuptools==84.0.0
+2026-10-10T10:24:47.2576802Z   - wheel==0.48.0
+2026-10-10T10:24:47.2577277Z * Building sdist...
+2026-10-10T10:24:47.4249986Z running sdist
+2026-10-10T10:24:47.4250904Z running egg_info
+2026-10-10T10:24:47.4279302Z writing olympus_cognitive_architecture.egg-info/PKG-INFO
+2026-10-10T10:24:47.4292839Z writing dependency_links to olympus_cognitive_architecture.egg-info/dependency_links.txt
+2026-10-10T10:24:47.4296324Z writing entry points to olympus_cognitive_architecture.egg-info/entry_points.txt
+2026-10-10T10:24:47.4304298Z writing requirements to olympus_cognitive_architecture.egg-info/requires.txt
+2026-10-10T10:24:47.4307247Z writing top-level names to olympus_cognitive_architecture.egg-info/top_level.txt
+2026-10-10T10:24:47.4376697Z reading manifest file 'olympus_cognitive_architecture.egg-info/SOURCES.txt'
+2026-10-10T10:24:47.4390819Z reading manifest template 'MANIFEST.in'
+2026-10-10T10:24:47.4412449Z adding license file 'LICENSE'
+2026-10-10T10:24:47.4429065Z writing manifest file 'olympus_cognitive_architecture.egg-info/SOURCES.txt'
+2026-10-10T10:24:47.4431768Z running check
+2026-10-10T10:24:47.4464640Z creating olympus_cognitive_architecture-0.2.0
+2026-10-10T10:24:47.4467883Z creating olympus_cognitive_architecture-0.2.0/behaviors
+2026-10-10T10:24:47.4469477Z creating olympus_cognitive_architecture-0.2.0/datasets/hermes-smoke
+2026-10-10T10:24:47.4471390Z creating olympus_cognitive_architecture-0.2.0/datasets/manifests
+2026-10-10T10:24:47.4472817Z creating olympus_cognitive_architecture-0.2.0/datasets/samples
+2026-10-10T10:24:47.4474286Z creating olympus_cognitive_architecture-0.2.0/datasets/schemas
+2026-10-10T10:24:47.4475615Z creating olympus_cognitive_architecture-0.2.0/docs
+2026-10-10T10:24:47.4477212Z creating olympus_cognitive_architecture-0.2.0/examples
+2026-10-10T10:24:47.4479005Z creating olympus_cognitive_architecture-0.2.0/olympus
+2026-10-10T10:24:47.4480080Z creating olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4481521Z creating olympus_cognitive_architecture-0.2.0/olympus/data
+2026-10-10T10:24:47.4482867Z creating olympus_cognitive_architecture-0.2.0/olympus/evaluation
+2026-10-10T10:24:47.4484284Z creating olympus_cognitive_architecture-0.2.0/olympus/forge
+2026-10-10T10:24:47.4485757Z creating olympus_cognitive_architecture-0.2.0/olympus/foundry
+2026-10-10T10:24:47.4487287Z creating olympus_cognitive_architecture-0.2.0/olympus/labos
+2026-10-10T10:24:47.4488701Z creating olympus_cognitive_architecture-0.2.0/olympus/memory
+2026-10-10T10:24:47.4490058Z creating olympus_cognitive_architecture-0.2.0/olympus/models
+2026-10-10T10:24:47.4491405Z creating olympus_cognitive_architecture-0.2.0/olympus/training
+2026-10-10T10:24:47.4492907Z creating olympus_cognitive_architecture-0.2.0/olympus_cognitive_architecture.egg-info
+2026-10-10T10:24:47.4494035Z creating olympus_cognitive_architecture-0.2.0/research
+2026-10-10T10:24:47.4495357Z creating olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4496347Z copying files to olympus_cognitive_architecture-0.2.0...
+2026-10-10T10:24:47.4497442Z copying CHANGELOG.md -> olympus_cognitive_architecture-0.2.0
+2026-10-10T10:24:47.4499589Z copying CONTRIBUTING.md -> olympus_cognitive_architecture-0.2.0
+2026-10-10T10:24:47.4501073Z copying LICENSE -> olympus_cognitive_architecture-0.2.0
+2026-10-10T10:24:47.4502832Z copying MANIFEST.in -> olympus_cognitive_architecture-0.2.0
+2026-10-10T10:24:47.4504447Z copying OLYMPUS_MODEL_FOUNDRY_LEDGER.md -> olympus_cognitive_architecture-0.2.0
+2026-10-10T10:24:47.4505997Z copying README.md -> olympus_cognitive_architecture-0.2.0
+2026-10-10T10:24:47.4508146Z copying RELEASE.md -> olympus_cognitive_architecture-0.2.0
+2026-10-10T10:24:47.4509522Z copying SECURITY.md -> olympus_cognitive_architecture-0.2.0
+2026-10-10T10:24:47.4511001Z copying pyproject.toml -> olympus_cognitive_architecture-0.2.0
+2026-10-10T10:24:47.4512654Z copying behaviors/branching-example.yaml -> olympus_cognitive_architecture-0.2.0/behaviors
+2026-10-10T10:24:47.4514239Z copying datasets/hermes-smoke/source.jsonl -> olympus_cognitive_architecture-0.2.0/datasets/hermes-smoke
+2026-10-10T10:24:47.4515958Z copying datasets/manifests/olympus-synthetic.json -> olympus_cognitive_architecture-0.2.0/datasets/manifests
+2026-10-10T10:24:47.4517533Z copying datasets/samples/notes.txt -> olympus_cognitive_architecture-0.2.0/datasets/samples
+2026-10-10T10:24:47.4519769Z copying datasets/schemas/source-registry-schema.json -> olympus_cognitive_architecture-0.2.0/datasets/schemas
+2026-10-10T10:24:47.4520930Z copying docs/api.md -> olympus_cognitive_architecture-0.2.0/docs
+2026-10-10T10:24:47.4522698Z copying docs/architecture.md -> olympus_cognitive_architecture-0.2.0/docs
+2026-10-10T10:24:47.4524340Z copying docs/dataset-consumer-snapshot-20261010.md -> olympus_cognitive_architecture-0.2.0/docs
+2026-10-10T10:24:47.4525894Z copying docs/dataset-reverification-20261010.md -> olympus_cognitive_architecture-0.2.0/docs
+2026-10-10T10:24:47.4527834Z copying docs/demos.md -> olympus_cognitive_architecture-0.2.0/docs
+2026-10-10T10:24:47.4529402Z copying docs/foundry-window-and-dataset-20261010.md -> olympus_cognitive_architecture-0.2.0/docs
+2026-10-10T10:24:47.4530786Z copying docs/foundry.md -> olympus_cognitive_architecture-0.2.0/docs
+2026-10-10T10:24:47.4532352Z copying docs/labos.md -> olympus_cognitive_architecture-0.2.0/docs
+2026-10-10T10:24:47.4534023Z copying docs/sft-continuation-20261010.md -> olympus_cognitive_architecture-0.2.0/docs
+2026-10-10T10:24:47.4535526Z copying examples/forge_run.py -> olympus_cognitive_architecture-0.2.0/examples
+2026-10-10T10:24:47.4537157Z copying olympus/__init__.py -> olympus_cognitive_architecture-0.2.0/olympus
+2026-10-10T10:24:47.4539141Z copying olympus/api.py -> olympus_cognitive_architecture-0.2.0/olympus
+2026-10-10T10:24:47.4540745Z copying olympus/cli.py -> olympus_cognitive_architecture-0.2.0/olympus
+2026-10-10T10:24:47.4542906Z copying olympus/demos.py -> olympus_cognitive_architecture-0.2.0/olympus
+2026-10-10T10:24:47.4544183Z copying olympus/sdk.py -> olympus_cognitive_architecture-0.2.0/olympus
+2026-10-10T10:24:47.4545838Z copying olympus/core/__init__.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4547536Z copying olympus/core/budget.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4549533Z copying olympus/core/division.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4551091Z copying olympus/core/interpretation.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4552664Z copying olympus/core/mapping.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4554224Z copying olympus/core/modalities.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4555784Z copying olympus/core/observability.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4557623Z copying olympus/core/outcome.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4559260Z copying olympus/core/perspective.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4560909Z copying olympus/core/prediction.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4562469Z copying olympus/core/representation.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4564071Z copying olympus/core/retrodiction.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4565585Z copying olympus/core/schemas.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4567383Z copying olympus/core/security.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4569066Z copying olympus/core/sqlite_journal.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4570588Z copying olympus/core/transform.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4572152Z copying olympus/core/verification.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4573672Z copying olympus/core/workspace.py -> olympus_cognitive_architecture-0.2.0/olympus/core
+2026-10-10T10:24:47.4575197Z copying olympus/data/__init__.py -> olympus_cognitive_architecture-0.2.0/olympus/data
+2026-10-10T10:24:47.4576779Z copying olympus/data/ingestion.py -> olympus_cognitive_architecture-0.2.0/olympus/data
+2026-10-10T10:24:47.4578813Z copying olympus/data/manifests.py -> olympus_cognitive_architecture-0.2.0/olympus/data
+2026-10-10T10:24:47.4580235Z copying olympus/data/registry.py -> olympus_cognitive_architecture-0.2.0/olympus/data
+2026-10-10T10:24:47.4581776Z copying olympus/data/retrieval.py -> olympus_cognitive_architecture-0.2.0/olympus/data
+2026-10-10T10:24:47.4583402Z copying olympus/evaluation/__init__.py -> olympus_cognitive_architecture-0.2.0/olympus/evaluation
+2026-10-10T10:24:47.4584931Z copying olympus/evaluation/harness.py -> olympus_cognitive_architecture-0.2.0/olympus/evaluation
+2026-10-10T10:24:47.4586465Z copying olympus/forge/__init__.py -> olympus_cognitive_architecture-0.2.0/olympus/forge
+2026-10-10T10:24:47.4588344Z copying olympus/forge/compiler.py -> olympus_cognitive_architecture-0.2.0/olympus/forge
+2026-10-10T10:24:47.4589929Z copying olympus/forge/experiments.py -> olympus_cognitive_architecture-0.2.0/olympus/forge
+2026-10-10T10:24:47.4591419Z copying olympus/forge/language.py -> olympus_cognitive_architecture-0.2.0/olympus/forge
+2026-10-10T10:24:47.4592935Z copying olympus/forge/runtime.py -> olympus_cognitive_architecture-0.2.0/olympus/forge
+2026-10-10T10:24:47.4594488Z copying olympus/foundry/__init__.py -> olympus_cognitive_architecture-0.2.0/olympus/foundry
+2026-10-10T10:24:47.4596028Z copying olympus/foundry/bigram.py -> olympus_cognitive_architecture-0.2.0/olympus/foundry
+2026-10-10T10:24:47.4597653Z copying olympus/foundry/data_pipeline.py -> olympus_cognitive_architecture-0.2.0/olympus/foundry
+2026-10-10T10:24:47.4599621Z copying olympus/foundry/eval_suite.py -> olympus_cognitive_architecture-0.2.0/olympus/foundry
+2026-10-10T10:24:47.4601148Z copying olympus/foundry/foundry_verification.txt -> olympus_cognitive_architecture-0.2.0/olympus/foundry
+2026-10-10T10:24:47.4602582Z copying olympus/foundry/ollama.py -> olympus_cognitive_architecture-0.2.0/olympus/foundry
+2026-10-10T10:24:47.4604145Z copying olympus/foundry/promotion.py -> olympus_cognitive_architecture-0.2.0/olympus/foundry
+2026-10-10T10:24:47.4605772Z copying olympus/foundry/quantization.py -> olympus_cognitive_architecture-0.2.0/olympus/foundry
+2026-10-10T10:24:47.4607500Z copying olympus/foundry/resources.py -> olympus_cognitive_architecture-0.2.0/olympus/foundry
+2026-10-10T10:24:47.4609088Z copying olympus/foundry/schemas.py -> olympus_cognitive_architecture-0.2.0/olympus/foundry
+2026-10-10T10:24:47.4610629Z copying olympus/foundry/service.py -> olympus_cognitive_architecture-0.2.0/olympus/foundry
+2026-10-10T10:24:47.4612374Z copying olympus/foundry/sft.py -> olympus_cognitive_architecture-0.2.0/olympus/foundry
+2026-10-10T10:24:47.4614538Z copying olympus/foundry/store.py -> olympus_cognitive_architecture-0.2.0/olympus/foundry
+2026-10-10T10:24:47.4616071Z copying olympus/labos/__init__.py -> olympus_cognitive_architecture-0.2.0/olympus/labos
+2026-10-10T10:24:47.4617689Z copying olympus/labos/discovery.py -> olympus_cognitive_architecture-0.2.0/olympus/labos
+2026-10-10T10:24:47.4619464Z copying olympus/labos/manifest.py -> olympus_cognitive_architecture-0.2.0/olympus/labos
+2026-10-10T10:24:47.4621078Z copying olympus/labos/portfolio.py -> olympus_cognitive_architecture-0.2.0/olympus/labos
+2026-10-10T10:24:47.4622673Z copying olympus/labos/reports.py -> olympus_cognitive_architecture-0.2.0/olympus/labos
+2026-10-10T10:24:47.4624440Z copying olympus/labos/runner.py -> olympus_cognitive_architecture-0.2.0/olympus/labos
+2026-10-10T10:24:47.4626003Z copying olympus/labos/scheduler.py -> olympus_cognitive_architecture-0.2.0/olympus/labos
+2026-10-10T10:24:47.4627720Z copying olympus/labos/validation.py -> olympus_cognitive_architecture-0.2.0/olympus/labos
+2026-10-10T10:24:47.4629240Z copying olympus/memory/__init__.py -> olympus_cognitive_architecture-0.2.0/olympus/memory
+2026-10-10T10:24:47.4630753Z copying olympus/memory/store.py -> olympus_cognitive_architecture-0.2.0/olympus/memory
+2026-10-10T10:24:47.4632294Z copying olympus/models/__init__.py -> olympus_cognitive_architecture-0.2.0/olympus/models
+2026-10-10T10:24:47.4633852Z copying olympus/models/families.py -> olympus_cognitive_architecture-0.2.0/olympus/models
+2026-10-10T10:24:47.4635415Z copying olympus/training/__init__.py -> olympus_cognitive_architecture-0.2.0/olympus/training
+2026-10-10T10:24:47.4637096Z copying olympus/training/synthetic.py -> olympus_cognitive_architecture-0.2.0/olympus/training
+2026-10-10T10:24:47.4638726Z copying olympus/training/trainer.py -> olympus_cognitive_architecture-0.2.0/olympus/training
+2026-10-10T10:24:47.4640704Z copying olympus_cognitive_architecture.egg-info/PKG-INFO -> olympus_cognitive_architecture-0.2.0/olympus_cognitive_architecture.egg-info
+2026-10-10T10:24:47.4642475Z copying olympus_cognitive_architecture.egg-info/SOURCES.txt -> olympus_cognitive_architecture-0.2.0/olympus_cognitive_architecture.egg-info
+2026-10-10T10:24:47.4644069Z copying olympus_cognitive_architecture.egg-info/dependency_links.txt -> olympus_cognitive_architecture-0.2.0/olympus_cognitive_architecture.egg-info
+2026-10-10T10:24:47.4645593Z copying olympus_cognitive_architecture.egg-info/entry_points.txt -> olympus_cognitive_architecture-0.2.0/olympus_cognitive_architecture.egg-info
+2026-10-10T10:24:47.4647338Z copying olympus_cognitive_architecture.egg-info/requires.txt -> olympus_cognitive_architecture-0.2.0/olympus_cognitive_architecture.egg-info
+2026-10-10T10:24:47.4648938Z copying olympus_cognitive_architecture.egg-info/top_level.txt -> olympus_cognitive_architecture-0.2.0/olympus_cognitive_architecture.egg-info
+2026-10-10T10:24:47.4650328Z copying research/FUTURE_MODEL_FAMILY_ROADMAPS.md -> olympus_cognitive_architecture-0.2.0/research
+2026-10-10T10:24:47.4651758Z copying research/HERMES_BASE_CANDIDATES.md -> olympus_cognitive_architecture-0.2.0/research
+2026-10-10T10:24:47.4653274Z copying research/POST_TRAINING_STAGES.md -> olympus_cognitive_architecture-0.2.0/research
+2026-10-10T10:24:47.4654806Z copying research/REALITY_LEDGER.md -> olympus_cognitive_architecture-0.2.0/research
+2026-10-10T10:24:47.4656435Z copying research/SFT_TOKEN_NORMALIZATION_20261010.md -> olympus_cognitive_architecture-0.2.0/research
+2026-10-10T10:24:47.4658065Z copying research/model-cards.md -> olympus_cognitive_architecture-0.2.0/research
+2026-10-10T10:24:47.4659569Z copying tests/test_cli.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4661205Z copying tests/test_core_runtime.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4662752Z copying tests/test_data_memory_sdk.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4664407Z copying tests/test_dataset_consumer_snapshot.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4666009Z copying tests/test_dataset_manifest_integrity.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4667630Z copying tests/test_deep_foundry.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4669370Z copying tests/test_extended_runtime.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4670934Z copying tests/test_forge_and_api.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4672436Z copying tests/test_foundry.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4674145Z copying tests/test_ingestion_security.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4675636Z copying tests/test_labos.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4677494Z copying tests/test_learning_and_retrodiction.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4679005Z copying tests/test_memory_atomicity.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4680582Z copying tests/test_memory_concurrency.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4682224Z copying tests/test_packaging_metadata.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4683826Z copying tests/test_quantization_dataset_binding.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4685271Z copying tests/test_sft_continuation.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4687109Z copying tests/test_sft_token_normalization.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4689151Z copying tests/test_sft_window_memory.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4690627Z copying tests/test_sqlite_journal.py -> olympus_cognitive_architecture-0.2.0/tests
+2026-10-10T10:24:47.4703333Z Writing olympus_cognitive_architecture-0.2.0/setup.cfg
+2026-10-10T10:24:47.4705235Z Creating tar archive
+2026-10-10T10:24:47.5366386Z removing 'olympus_cognitive_architecture-0.2.0' (and everything under it)
+2026-10-10T10:24:47.6275892Z * Building wheel from sdist
+2026-10-10T10:24:47.6432623Z * Creating isolated environment: venv+pip...
+2026-10-10T10:24:47.6454134Z * Installing packages in isolated environment:
+2026-10-10T10:24:47.6454734Z   - setuptools>=70
+2026-10-10T10:24:47.6455101Z   - wheel
+2026-10-10T10:24:48.3931709Z * Getting build dependencies for wheel...
+2026-10-10T10:24:48.9357447Z running egg_info
+2026-10-10T10:24:48.9373376Z writing olympus_cognitive_architecture.egg-info/PKG-INFO
+2026-10-10T10:24:48.9386075Z writing dependency_links to olympus_cognitive_architecture.egg-info/dependency_links.txt
+2026-10-10T10:24:48.9389081Z writing entry points to olympus_cognitive_architecture.egg-info/entry_points.txt
+2026-10-10T10:24:48.9396256Z writing requirements to olympus_cognitive_architecture.egg-info/requires.txt
+2026-10-10T10:24:48.9397963Z writing top-level names to olympus_cognitive_architecture.egg-info/top_level.txt
+2026-10-10T10:24:48.9466026Z reading manifest file 'olympus_cognitive_architecture.egg-info/SOURCES.txt'
+2026-10-10T10:24:48.9480453Z reading manifest template 'MANIFEST.in'
+2026-10-10T10:24:48.9498116Z adding license file 'LICENSE'
+2026-10-10T10:24:48.9514646Z writing manifest file 'olympus_cognitive_architecture.egg-info/SOURCES.txt'
+2026-10-10T10:24:48.9815045Z * Installed build dependency versions:
+2026-10-10T10:24:48.9815625Z   - setuptools==84.0.0
+2026-10-10T10:24:48.9816034Z   - wheel==0.48.0
+2026-10-10T10:24:48.9816423Z * Building wheel...
+2026-10-10T10:24:49.1469528Z running bdist_wheel
+2026-10-10T10:24:49.1534108Z running build
+2026-10-10T10:24:49.1534678Z running build_py
+2026-10-10T10:24:49.1552824Z creating build/lib/olympus
+2026-10-10T10:24:49.1555558Z copying olympus/demos.py -> build/lib/olympus
+2026-10-10T10:24:49.1558604Z copying olympus/cli.py -> build/lib/olympus
+2026-10-10T10:24:49.1561261Z copying olympus/sdk.py -> build/lib/olympus
+2026-10-10T10:24:49.1563590Z copying olympus/__init__.py -> build/lib/olympus
+2026-10-10T10:24:49.1565972Z copying olympus/api.py -> build/lib/olympus
+2026-10-10T10:24:49.1569622Z creating build/lib/olympus/forge
+2026-10-10T10:24:49.1570989Z copying olympus/forge/compiler.py -> build/lib/olympus/forge
+2026-10-10T10:24:49.1573415Z copying olympus/forge/runtime.py -> build/lib/olympus/forge
+2026-10-10T10:24:49.1575673Z copying olympus/forge/language.py -> build/lib/olympus/forge
+2026-10-10T10:24:49.1578242Z copying olympus/forge/__init__.py -> build/lib/olympus/forge
+2026-10-10T10:24:49.1580448Z copying olympus/forge/experiments.py -> build/lib/olympus/forge
+2026-10-10T10:24:49.1583475Z creating build/lib/olympus/training
+2026-10-10T10:24:49.1584786Z copying olympus/training/trainer.py -> build/lib/olympus/training
+2026-10-10T10:24:49.1587342Z copying olympus/training/__init__.py -> build/lib/olympus/training
+2026-10-10T10:24:49.1589986Z copying olympus/training/synthetic.py -> build/lib/olympus/training
+2026-10-10T10:24:49.1592767Z creating build/lib/olympus/models
+2026-10-10T10:24:49.1594072Z copying olympus/models/families.py -> build/lib/olympus/models
+2026-10-10T10:24:49.1596564Z copying olympus/models/__init__.py -> build/lib/olympus/models
+2026-10-10T10:24:49.1599763Z creating build/lib/olympus/memory
+2026-10-10T10:24:49.1601031Z copying olympus/memory/store.py -> build/lib/olympus/memory
+2026-10-10T10:24:49.1603587Z copying olympus/memory/__init__.py -> build/lib/olympus/memory
+2026-10-10T10:24:49.1606620Z creating build/lib/olympus/data
+2026-10-10T10:24:49.1608140Z copying olympus/data/registry.py -> build/lib/olympus/data
+2026-10-10T10:24:49.1610685Z copying olympus/data/retrieval.py -> build/lib/olympus/data
+2026-10-10T10:24:49.1613047Z copying olympus/data/manifests.py -> build/lib/olympus/data
+2026-10-10T10:24:49.1615019Z copying olympus/data/__init__.py -> build/lib/olympus/data
+2026-10-10T10:24:49.1617390Z copying olympus/data/ingestion.py -> build/lib/olympus/data
+2026-10-10T10:24:49.1620602Z creating build/lib/olympus/evaluation
+2026-10-10T10:24:49.1622072Z copying olympus/evaluation/harness.py -> build/lib/olympus/evaluation
+2026-10-10T10:24:49.1624476Z copying olympus/evaluation/__init__.py -> build/lib/olympus/evaluation
+2026-10-10T10:24:49.1628508Z creating build/lib/olympus/core
+2026-10-10T10:24:49.1629726Z copying olympus/core/schemas.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1632227Z copying olympus/core/outcome.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1634450Z copying olympus/core/division.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1636700Z copying olympus/core/retrodiction.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1639174Z copying olympus/core/verification.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1641495Z copying olympus/core/budget.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1643748Z copying olympus/core/workspace.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1645570Z copying olympus/core/modalities.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1648206Z copying olympus/core/security.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1650682Z copying olympus/core/interpretation.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1652456Z copying olympus/core/sqlite_journal.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1654844Z copying olympus/core/mapping.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1657095Z copying olympus/core/prediction.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1659570Z copying olympus/core/observability.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1661551Z copying olympus/core/transform.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1663600Z copying olympus/core/__init__.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1677187Z copying olympus/core/representation.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1678238Z copying olympus/core/perspective.py -> build/lib/olympus/core
+2026-10-10T10:24:49.1678917Z creating build/lib/olympus/foundry
+2026-10-10T10:24:49.1679614Z copying olympus/foundry/data_pipeline.py -> build/lib/olympus/foundry
+2026-10-10T10:24:49.1680516Z copying olympus/foundry/eval_suite.py -> build/lib/olympus/foundry
+2026-10-10T10:24:49.1681338Z copying olympus/foundry/schemas.py -> build/lib/olympus/foundry
+2026-10-10T10:24:49.1682182Z copying olympus/foundry/quantization.py -> build/lib/olympus/foundry
+2026-10-10T10:24:49.1684988Z copying olympus/foundry/ollama.py -> build/lib/olympus/foundry
+2026-10-10T10:24:49.1686073Z copying olympus/foundry/resources.py -> build/lib/olympus/foundry
+2026-10-10T10:24:49.1687300Z copying olympus/foundry/sft.py -> build/lib/olympus/foundry
+2026-10-10T10:24:49.1688365Z copying olympus/foundry/bigram.py -> build/lib/olympus/foundry
+2026-10-10T10:24:49.1689370Z copying olympus/foundry/service.py -> build/lib/olympus/foundry
+2026-10-10T10:24:49.1690891Z copying olympus/foundry/promotion.py -> build/lib/olympus/foundry
+2026-10-10T10:24:49.1692928Z copying olympus/foundry/store.py -> build/lib/olympus/foundry
+2026-10-10T10:24:49.1695067Z copying olympus/foundry/__init__.py -> build/lib/olympus/foundry
+2026-10-10T10:24:49.1698022Z creating build/lib/olympus/labos
+2026-10-10T10:24:49.1699419Z copying olympus/labos/portfolio.py -> build/lib/olympus/labos
+2026-10-10T10:24:49.1701300Z copying olympus/labos/reports.py -> build/lib/olympus/labos
+2026-10-10T10:24:49.1703283Z copying olympus/labos/validation.py -> build/lib/olympus/labos
+2026-10-10T10:24:49.1705146Z copying olympus/labos/manifest.py -> build/lib/olympus/labos
+2026-10-10T10:24:49.1707250Z copying olympus/labos/discovery.py -> build/lib/olympus/labos
+2026-10-10T10:24:49.1709630Z copying olympus/labos/scheduler.py -> build/lib/olympus/labos
+2026-10-10T10:24:49.1711459Z copying olympus/labos/runner.py -> build/lib/olympus/labos
+2026-10-10T10:24:49.1713538Z copying olympus/labos/__init__.py -> build/lib/olympus/labos
+2026-10-10T10:24:49.1715081Z running egg_info
+2026-10-10T10:24:49.1729499Z writing olympus_cognitive_architecture.egg-info/PKG-INFO
+2026-10-10T10:24:49.1742929Z writing dependency_links to olympus_cognitive_architecture.egg-info/dependency_links.txt
+2026-10-10T10:24:49.1746590Z writing entry points to olympus_cognitive_architecture.egg-info/entry_points.txt
+2026-10-10T10:24:49.1754193Z writing requirements to olympus_cognitive_architecture.egg-info/requires.txt
+2026-10-10T10:24:49.1756756Z writing top-level names to olympus_cognitive_architecture.egg-info/top_level.txt
+2026-10-10T10:24:49.1797100Z reading manifest file 'olympus_cognitive_architecture.egg-info/SOURCES.txt'
+2026-10-10T10:24:49.1811512Z reading manifest template 'MANIFEST.in'
+2026-10-10T10:24:49.1829050Z adding license file 'LICENSE'
+2026-10-10T10:24:49.1845610Z writing manifest file 'olympus_cognitive_architecture.egg-info/SOURCES.txt'
+2026-10-10T10:24:49.1859937Z copying olympus/foundry/foundry_verification.txt -> build/lib/olympus/foundry
+2026-10-10T10:24:49.1893928Z installing to build/bdist.linux-x86_64/wheel
+2026-10-10T10:24:49.1894643Z running install
+2026-10-10T10:24:49.1964885Z running install_lib
+2026-10-10T10:24:49.1978982Z creating build/bdist.linux-x86_64/wheel
+2026-10-10T10:24:49.1981829Z creating build/bdist.linux-x86_64/wheel/olympus
+2026-10-10T10:24:49.1983222Z copying build/lib/olympus/demos.py -> build/bdist.linux-x86_64/wheel/./olympus
+2026-10-10T10:24:49.1985141Z copying build/lib/olympus/cli.py -> build/bdist.linux-x86_64/wheel/./olympus
+2026-10-10T10:24:49.1987627Z creating build/bdist.linux-x86_64/wheel/olympus/forge
+2026-10-10T10:24:49.1989421Z copying build/lib/olympus/forge/compiler.py -> build/bdist.linux-x86_64/wheel/./olympus/forge
+2026-10-10T10:24:49.1991093Z copying build/lib/olympus/forge/runtime.py -> build/bdist.linux-x86_64/wheel/./olympus/forge
+2026-10-10T10:24:49.1992767Z copying build/lib/olympus/forge/language.py -> build/bdist.linux-x86_64/wheel/./olympus/forge
+2026-10-10T10:24:49.1994185Z copying build/lib/olympus/forge/__init__.py -> build/bdist.linux-x86_64/wheel/./olympus/forge
+2026-10-10T10:24:49.1995863Z copying build/lib/olympus/forge/experiments.py -> build/bdist.linux-x86_64/wheel/./olympus/forge
+2026-10-10T10:24:49.1998198Z creating build/bdist.linux-x86_64/wheel/olympus/training
+2026-10-10T10:24:49.1999777Z copying build/lib/olympus/training/trainer.py -> build/bdist.linux-x86_64/wheel/./olympus/training
+2026-10-10T10:24:49.2001475Z copying build/lib/olympus/training/__init__.py -> build/bdist.linux-x86_64/wheel/./olympus/training
+2026-10-10T10:24:49.2003152Z copying build/lib/olympus/training/synthetic.py -> build/bdist.linux-x86_64/wheel/./olympus/training
+2026-10-10T10:24:49.2005077Z creating build/bdist.linux-x86_64/wheel/olympus/models
+2026-10-10T10:24:49.2006573Z copying build/lib/olympus/models/families.py -> build/bdist.linux-x86_64/wheel/./olympus/models
+2026-10-10T10:24:49.2008477Z copying build/lib/olympus/models/__init__.py -> build/bdist.linux-x86_64/wheel/./olympus/models
+2026-10-10T10:24:49.2010513Z creating build/bdist.linux-x86_64/wheel/olympus/memory
+2026-10-10T10:24:49.2011957Z copying build/lib/olympus/memory/store.py -> build/bdist.linux-x86_64/wheel/./olympus/memory
+2026-10-10T10:24:49.2013646Z copying build/lib/olympus/memory/__init__.py -> build/bdist.linux-x86_64/wheel/./olympus/memory
+2026-10-10T10:24:49.2015660Z creating build/bdist.linux-x86_64/wheel/olympus/data
+2026-10-10T10:24:49.2017261Z copying build/lib/olympus/data/registry.py -> build/bdist.linux-x86_64/wheel/./olympus/data
+2026-10-10T10:24:49.2019015Z copying build/lib/olympus/data/retrieval.py -> build/bdist.linux-x86_64/wheel/./olympus/data
+2026-10-10T10:24:49.2020666Z copying build/lib/olympus/data/manifests.py -> build/bdist.linux-x86_64/wheel/./olympus/data
+2026-10-10T10:24:49.2022253Z copying build/lib/olympus/data/__init__.py -> build/bdist.linux-x86_64/wheel/./olympus/data
+2026-10-10T10:24:49.2023900Z copying build/lib/olympus/data/ingestion.py -> build/bdist.linux-x86_64/wheel/./olympus/data
+2026-10-10T10:24:49.2025984Z creating build/bdist.linux-x86_64/wheel/olympus/evaluation
+2026-10-10T10:24:49.2027656Z copying build/lib/olympus/evaluation/harness.py -> build/bdist.linux-x86_64/wheel/./olympus/evaluation
+2026-10-10T10:24:49.2029368Z copying build/lib/olympus/evaluation/__init__.py -> build/bdist.linux-x86_64/wheel/./olympus/evaluation
+2026-10-10T10:24:49.2031383Z creating build/bdist.linux-x86_64/wheel/olympus/core
+2026-10-10T10:24:49.2032952Z copying build/lib/olympus/core/schemas.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2034622Z copying build/lib/olympus/core/outcome.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2036247Z copying build/lib/olympus/core/division.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2038202Z copying build/lib/olympus/core/retrodiction.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2039862Z copying build/lib/olympus/core/verification.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2041419Z copying build/lib/olympus/core/budget.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2043080Z copying build/lib/olympus/core/workspace.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2044883Z copying build/lib/olympus/core/modalities.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2046296Z copying build/lib/olympus/core/security.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2048263Z copying build/lib/olympus/core/interpretation.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2049916Z copying build/lib/olympus/core/sqlite_journal.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2051497Z copying build/lib/olympus/core/mapping.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2053145Z copying build/lib/olympus/core/prediction.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2054808Z copying build/lib/olympus/core/observability.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2056382Z copying build/lib/olympus/core/transform.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2058156Z copying build/lib/olympus/core/__init__.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2059844Z copying build/lib/olympus/core/representation.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2061455Z copying build/lib/olympus/core/perspective.py -> build/bdist.linux-x86_64/wheel/./olympus/core
+2026-10-10T10:24:49.2063020Z copying build/lib/olympus/sdk.py -> build/bdist.linux-x86_64/wheel/./olympus
+2026-10-10T10:24:49.2065175Z creating build/bdist.linux-x86_64/wheel/olympus/foundry
+2026-10-10T10:24:49.2066677Z copying build/lib/olympus/foundry/data_pipeline.py -> build/bdist.linux-x86_64/wheel/./olympus/foundry
+2026-10-10T10:24:49.2068844Z copying build/lib/olympus/foundry/eval_suite.py -> build/bdist.linux-x86_64/wheel/./olympus/foundry
+2026-10-10T10:24:49.2070464Z copying build/lib/olympus/foundry/schemas.py -> build/bdist.linux-x86_64/wheel/./olympus/foundry
+2026-10-10T10:24:49.2072117Z copying build/lib/olympus/foundry/quantization.py -> build/bdist.linux-x86_64/wheel/./olympus/foundry
+2026-10-10T10:24:49.2073761Z copying build/lib/olympus/foundry/ollama.py -> build/bdist.linux-x86_64/wheel/./olympus/foundry
+2026-10-10T10:24:49.2075369Z copying build/lib/olympus/foundry/resources.py -> build/bdist.linux-x86_64/wheel/./olympus/foundry
+2026-10-10T10:24:49.2077139Z copying build/lib/olympus/foundry/sft.py -> build/bdist.linux-x86_64/wheel/./olympus/foundry
+2026-10-10T10:24:49.2079586Z copying build/lib/olympus/foundry/foundry_verification.txt -> build/bdist.linux-x86_64/wheel/./olympus/foundry
+2026-10-10T10:24:49.2080995Z copying build/lib/olympus/foundry/bigram.py -> build/bdist.linux-x86_64/wheel/./olympus/foundry
+2026-10-10T10:24:49.2082691Z copying build/lib/olympus/foundry/service.py -> build/bdist.linux-x86_64/wheel/./olympus/foundry
+2026-10-10T10:24:49.2084420Z copying build/lib/olympus/foundry/promotion.py -> build/bdist.linux-x86_64/wheel/./olympus/foundry
+2026-10-10T10:24:49.2086034Z copying build/lib/olympus/foundry/store.py -> build/bdist.linux-x86_64/wheel/./olympus/foundry
+2026-10-10T10:24:49.2087859Z copying build/lib/olympus/foundry/__init__.py -> build/bdist.linux-x86_64/wheel/./olympus/foundry
+2026-10-10T10:24:49.2089501Z copying build/lib/olympus/__init__.py -> build/bdist.linux-x86_64/wheel/./olympus
+2026-10-10T10:24:49.2091092Z copying build/lib/olympus/api.py -> build/bdist.linux-x86_64/wheel/./olympus
+2026-10-10T10:24:49.2093290Z creating build/bdist.linux-x86_64/wheel/olympus/labos
+2026-10-10T10:24:49.2094753Z copying build/lib/olympus/labos/portfolio.py -> build/bdist.linux-x86_64/wheel/./olympus/labos
+2026-10-10T10:24:49.2096454Z copying build/lib/olympus/labos/reports.py -> build/bdist.linux-x86_64/wheel/./olympus/labos
+2026-10-10T10:24:49.2098816Z copying build/lib/olympus/labos/validation.py -> build/bdist.linux-x86_64/wheel/./olympus/labos
+2026-10-10T10:24:49.2100314Z copying build/lib/olympus/labos/manifest.py -> build/bdist.linux-x86_64/wheel/./olympus/labos
+2026-10-10T10:24:49.2102052Z copying build/lib/olympus/labos/discovery.py -> build/bdist.linux-x86_64/wheel/./olympus/labos
+2026-10-10T10:24:49.2103962Z copying build/lib/olympus/labos/scheduler.py -> build/bdist.linux-x86_64/wheel/./olympus/labos
+2026-10-10T10:24:49.2105378Z copying build/lib/olympus/labos/runner.py -> build/bdist.linux-x86_64/wheel/./olympus/labos
+2026-10-10T10:24:49.2107218Z copying build/lib/olympus/labos/__init__.py -> build/bdist.linux-x86_64/wheel/./olympus/labos
+2026-10-10T10:24:49.2108589Z running install_data
+2026-10-10T10:24:49.2135296Z creating build/bdist.linux-x86_64/wheel/olympus_cognitive_architecture-0.2.0.data/data
+2026-10-10T10:24:49.2138207Z creating build/bdist.linux-x86_64/wheel/olympus_cognitive_architecture-0.2.0.data/data/share/olympus/datasets
+2026-10-10T10:24:49.2140875Z copying datasets/hermes-smoke/source.jsonl -> build/bdist.linux-x86_64/wheel/olympus_cognitive_architecture-0.2.0.data/data/share/olympus/datasets
+2026-10-10T10:24:49.2142112Z running install_egg_info
+2026-10-10T10:24:49.2156269Z Copying olympus_cognitive_architecture.egg-info to build/bdist.linux-x86_64/wheel/./olympus_cognitive_architecture-0.2.0-py3.14.egg-info
+2026-10-10T10:24:49.2164643Z running install_scripts
+2026-10-10T10:24:49.2175999Z creating build/bdist.linux-x86_64/wheel/olympus_cognitive_architecture-0.2.0.dist-info/WHEEL
+2026-10-10T10:24:49.2180751Z creating '/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/dist/.tmp-bq7nd8zm/olympus_cognitive_architecture-0.2.0-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+2026-10-10T10:24:49.2183172Z adding 'olympus/__init__.py'
+2026-10-10T10:24:49.2187270Z adding 'olympus/api.py'
+2026-10-10T10:24:49.2192527Z adding 'olympus/cli.py'
+2026-10-10T10:24:49.2195226Z adding 'olympus/demos.py'
+2026-10-10T10:24:49.2197641Z adding 'olympus/sdk.py'
+2026-10-10T10:24:49.2200299Z adding 'olympus/core/__init__.py'
+2026-10-10T10:24:49.2202341Z adding 'olympus/core/budget.py'
+2026-10-10T10:24:49.2204338Z adding 'olympus/core/division.py'
+2026-10-10T10:24:49.2207270Z adding 'olympus/core/interpretation.py'
+2026-10-10T10:24:49.2209578Z adding 'olympus/core/mapping.py'
+2026-10-10T10:24:49.2211943Z adding 'olympus/core/modalities.py'
+2026-10-10T10:24:49.2213866Z adding 'olympus/core/observability.py'
+2026-10-10T10:24:49.2215823Z adding 'olympus/core/outcome.py'
+2026-10-10T10:24:49.2218203Z adding 'olympus/core/perspective.py'
+2026-10-10T10:24:49.2220316Z adding 'olympus/core/prediction.py'
+2026-10-10T10:24:49.2222568Z adding 'olympus/core/representation.py'
+2026-10-10T10:24:49.2224498Z adding 'olympus/core/retrodiction.py'
+2026-10-10T10:24:49.2226539Z adding 'olympus/core/schemas.py'
+2026-10-10T10:24:49.2228888Z adding 'olympus/core/security.py'
+2026-10-10T10:24:49.2230851Z adding 'olympus/core/sqlite_journal.py'
+2026-10-10T10:24:49.2233021Z adding 'olympus/core/transform.py'
+2026-10-10T10:24:49.2235255Z adding 'olympus/core/verification.py'
+2026-10-10T10:24:49.2237559Z adding 'olympus/core/workspace.py'
+2026-10-10T10:24:49.2239811Z adding 'olympus/data/__init__.py'
+2026-10-10T10:24:49.2243013Z adding 'olympus/data/ingestion.py'
+2026-10-10T10:24:49.2245007Z adding 'olympus/data/manifests.py'
+2026-10-10T10:24:49.2247014Z adding 'olympus/data/registry.py'
+2026-10-10T10:24:49.2249455Z adding 'olympus/data/retrieval.py'
+2026-10-10T10:24:49.2251729Z adding 'olympus/evaluation/__init__.py'
+2026-10-10T10:24:49.2253276Z adding 'olympus/evaluation/harness.py'
+2026-10-10T10:24:49.2255263Z adding 'olympus/forge/__init__.py'
+2026-10-10T10:24:49.2257530Z adding 'olympus/forge/compiler.py'
+2026-10-10T10:24:49.2260192Z adding 'olympus/forge/experiments.py'
+2026-10-10T10:24:49.2262194Z adding 'olympus/forge/language.py'
+2026-10-10T10:24:49.2264512Z adding 'olympus/forge/runtime.py'
+2026-10-10T10:24:49.2266610Z adding 'olympus/foundry/__init__.py'
+2026-10-10T10:24:49.2269917Z adding 'olympus/foundry/bigram.py'
+2026-10-10T10:24:49.2274931Z adding 'olympus/foundry/data_pipeline.py'
+2026-10-10T10:24:49.2278727Z adding 'olympus/foundry/eval_suite.py'
+2026-10-10T10:24:49.2280599Z adding 'olympus/foundry/foundry_verification.txt'
+2026-10-10T10:24:49.2283278Z adding 'olympus/foundry/ollama.py'
+2026-10-10T10:24:49.2286127Z adding 'olympus/foundry/promotion.py'
+2026-10-10T10:24:49.2290084Z adding 'olympus/foundry/quantization.py'
+2026-10-10T10:24:49.2292932Z adding 'olympus/foundry/resources.py'
+2026-10-10T10:24:49.2295473Z adding 'olympus/foundry/schemas.py'
+2026-10-10T10:24:49.2301373Z adding 'olympus/foundry/service.py'
+2026-10-10T10:24:49.2312717Z adding 'olympus/foundry/sft.py'
+2026-10-10T10:24:49.2316936Z adding 'olympus/foundry/store.py'
+2026-10-10T10:24:49.2319550Z adding 'olympus/labos/__init__.py'
+2026-10-10T10:24:49.2326244Z adding 'olympus/labos/discovery.py'
+2026-10-10T10:24:49.2329603Z adding 'olympus/labos/manifest.py'
+2026-10-10T10:24:49.2332791Z adding 'olympus/labos/portfolio.py'
+2026-10-10T10:24:49.2338753Z adding 'olympus/labos/reports.py'
+2026-10-10T10:24:49.2342192Z adding 'olympus/labos/runner.py'
+2026-10-10T10:24:49.2344241Z adding 'olympus/labos/scheduler.py'
+2026-10-10T10:24:49.2346381Z adding 'olympus/labos/validation.py'
+2026-10-10T10:24:49.2348663Z adding 'olympus/memory/__init__.py'
+2026-10-10T10:24:49.2351026Z adding 'olympus/memory/store.py'
+2026-10-10T10:24:49.2352989Z adding 'olympus/models/__init__.py'
+2026-10-10T10:24:49.2354902Z adding 'olympus/models/families.py'
+2026-10-10T10:24:49.2356822Z adding 'olympus/training/__init__.py'
+2026-10-10T10:24:49.2359081Z adding 'olympus/training/synthetic.py'
+2026-10-10T10:24:49.2360909Z adding 'olympus/training/trainer.py'
+2026-10-10T10:24:49.2366066Z adding 'olympus_cognitive_architecture-0.2.0.data/data/share/olympus/datasets/source.jsonl'
+2026-10-10T10:24:49.2369217Z adding 'olympus_cognitive_architecture-0.2.0.dist-info/licenses/LICENSE'
+2026-10-10T10:24:49.2372249Z adding 'olympus_cognitive_architecture-0.2.0.dist-info/METADATA'
+2026-10-10T10:24:49.2373594Z adding 'olympus_cognitive_architecture-0.2.0.dist-info/WHEEL'
+2026-10-10T10:24:49.2375047Z adding 'olympus_cognitive_architecture-0.2.0.dist-info/entry_points.txt'
+2026-10-10T10:24:49.2376366Z adding 'olympus_cognitive_architecture-0.2.0.dist-info/top_level.txt'
+2026-10-10T10:24:49.2380849Z adding 'olympus_cognitive_architecture-0.2.0.dist-info/RECORD'
+2026-10-10T10:24:49.2383025Z removing build/bdist.linux-x86_64/wheel
+2026-10-10T10:24:49.2871711Z Successfully built olympus_cognitive_architecture-0.2.0.tar.gz and olympus_cognitive_architecture-0.2.0-py3-none-any.whl
+2026-10-10T10:24:49.3090964Z ##[group]Run python -m twine check dist/*
+2026-10-10T10:24:49.3091361Z [36;1mpython -m twine check dist/*[0m
+2026-10-10T10:24:49.3154205Z shell: /usr/bin/bash -e {0}
+2026-10-10T10:24:49.3154499Z env:
+2026-10-10T10:24:49.3154838Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:24:49.3155370Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:49.3155919Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+2026-10-10T10:24:49.3156459Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:49.3156938Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:49.3157671Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:49.3158171Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+2026-10-10T10:24:49.3158588Z ##[endgroup]
+2026-10-10T10:24:49.5753687Z Checking dist/olympus_cognitive_architecture-0.2.0-py3-none-any.whl: [32mPASSED[0m
+2026-10-10T10:24:49.5896557Z Checking dist/olympus_cognitive_architecture-0.2.0.tar.gz: [32mPASSED[0m
+2026-10-10T10:24:49.6282402Z ##[group]Run unzip -l dist/*.whl | grep 'olympus/foundry/foundry_verification.txt'
+2026-10-10T10:24:49.6283025Z [36;1munzip -l dist/*.whl | grep 'olympus/foundry/foundry_verification.txt'[0m
+2026-10-10T10:24:49.6283542Z [36;1munzip -l dist/*.whl | grep 'share/olympus/datasets/source.jsonl'[0m
+2026-10-10T10:24:49.6345964Z shell: /usr/bin/bash -e {0}
+2026-10-10T10:24:49.6346285Z env:
+2026-10-10T10:24:49.6346636Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:24:49.6347314Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:49.6347878Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+2026-10-10T10:24:49.6348433Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:49.6348927Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:49.6349449Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+2026-10-10T10:24:49.6349979Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+2026-10-10T10:24:49.6350408Z ##[endgroup]
+2026-10-10T10:24:49.6454938Z       674  2026-10-10 10:22   olympus/foundry/foundry_verification.txt
+2026-10-10T10:24:49.6475240Z     12295  2026-10-10 10:22   olympus_cognitive_architecture-0.2.0.data/data/share/olympus/datasets/source.jsonl
+2026-10-10T10:24:49.6574887Z Post job cleanup.
+2026-10-10T10:24:49.7945641Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture --files-from manifest.txt --use-compress-program zstdmt
+2026-10-10T10:24:54.7973501Z Sent 0 of 2998152670 (0.0%), 0.0 MBs/sec
+2026-10-10T10:24:55.7942378Z Sent 335544320 of 2998152670 (11.2%), 159.9 MBs/sec
+2026-10-10T10:24:56.7934677Z Sent 536870912 of 2998152670 (17.9%), 170.6 MBs/sec
+2026-10-10T10:24:57.7985214Z Sent 1073741824 of 2998152670 (35.8%), 255.9 MBs/sec
+2026-10-10T10:24:58.7936147Z Sent 1610612736 of 2998152670 (53.7%), 307.1 MBs/sec
+2026-10-10T10:24:59.7932906Z Sent 1879048192 of 2998152670 (62.7%), 298.6 MBs/sec
+2026-10-10T10:25:00.7958619Z Sent 2147483648 of 2998152670 (71.6%), 292.5 MBs/sec
+2026-10-10T10:25:01.7975131Z Sent 2684354560 of 2998152670 (89.5%), 320.0 MBs/sec
+2026-10-10T10:25:02.7048025Z Sent 2998152670 of 2998152670 (100.0%), 320.8 MBs/sec
+2026-10-10T10:25:03.2044464Z Cache saved with the key: setup-python-Linux-x64-24.04-Ubuntu-python-3.14.8-pip-c30411c19ab6fa81d98baaeba50ff9458cd02002e4e8f828549202e3b0cea734
+2026-10-10T10:25:03.2206099Z Post job cleanup.
+2026-10-10T10:25:03.3037697Z [command]/usr/bin/git version
+2026-10-10T10:25:03.3083763Z git version 2.55.0
+2026-10-10T10:25:03.3121348Z Temporarily overriding HOME='/home/runner/work/_temp/a7e25b3b-4498-4e30-b424-889cadf687d8' before making global git config changes
+2026-10-10T10:25:03.3122672Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T10:25:03.3127772Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+2026-10-10T10:25:03.3161422Z Removing SSH command configuration
+2026-10-10T10:25:03.3168485Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T10:25:03.3205449Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-10T10:25:03.3451556Z Removing HTTP extra header
+2026-10-10T10:25:03.3457383Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T10:25:03.3495144Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-10T10:25:03.3771204Z Removing includeIf entries pointing to credentials config files
+2026-10-10T10:25:03.3777712Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T10:25:03.3817943Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-10T10:25:03.4223795Z Cleaning up orphan processes

@@ -130,13 +130,15 @@ def record_gradients(monkeypatch: pytest.MonkeyPatch) -> list[torch.Tensor]:
     gradients: list[torch.Tensor] = []
     original_clip = nn.utils.clip_grad_norm_
 
-    def capture_before_clipping(parameters: list[nn.Parameter], maximum: float) -> torch.Tensor:
+    def capture_before_clipping(
+        parameters: list[nn.Parameter], maximum: float, *, error_if_nonfinite: bool = False
+    ) -> torch.Tensor:
         pieces = []
         for parameter in parameters:
             assert parameter.grad is not None
             pieces.append(parameter.grad.detach().flatten().clone())
         gradients.append(torch.cat(pieces))
-        return original_clip(parameters, maximum)
+        return original_clip(parameters, maximum, error_if_nonfinite=error_if_nonfinite)
 
     monkeypatch.setattr(nn.utils, "clip_grad_norm_", capture_before_clipping)
     return gradients
@@ -221,10 +223,12 @@ def test_checkpoint_log_and_summary_bind_the_objective_and_keep_distinct_paths(
 ) -> None:
     legacy, current = trained_versions.values()
     assert legacy.checkpoint_path != current.checkpoint_path
-    assert current.run_id == legacy.run_id + "-tokens-v2"
+    assert current.run_id.split("-attempt-", 1)[0] == (
+        legacy.run_id.split("-attempt-", 1)[0] + "-tokens-v2"
+    )
     for normalization, summary in trained_versions.items():
         payload = checkpoint(summary.checkpoint_path)
-        assert payload["schema_version"] == 2
+        assert payload["schema_version"] == 3
         assert payload["loss_normalization"] == normalization
         assert payload["training_config"]["loss_normalization"] == normalization
         assert summary.loss_normalization == normalization
