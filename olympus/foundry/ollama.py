@@ -94,9 +94,10 @@ class OllamaClient:
             raise ValueError("Ollama chat response is malformed")
         if payload.get("done") is not True:
             raise ValueError("Ollama chat response is not complete")
-        # Older Ollama responses omit the optional reason or send an empty string.
-        done_reason = payload.get("done_reason", "")
-        if not isinstance(done_reason, str) or done_reason not in ("", "stop", "length"):
+        # Completion alone cannot establish how generation ended. Require an
+        # explicit reason instead of turning absent provider evidence into stop.
+        done_reason = payload.get("done_reason")
+        if not isinstance(done_reason, str) or done_reason not in ("stop", "length"):
             raise ValueError("Ollama chat response has an unsupported done_reason")
         content = message["content"]
         return GenerationResult(

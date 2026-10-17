@@ -25,8 +25,6 @@ def _client(completion: dict[str, object]) -> OllamaClient:
     [
         pytest.param({"done": True, "done_reason": "length"}, "length", id="token-limit"),
         pytest.param({"done": True, "done_reason": "stop"}, "stop", id="normal-stop"),
-        pytest.param({"done": True}, "stop", id="legacy-omitted-reason"),
-        pytest.param({"done": True, "done_reason": ""}, "stop", id="legacy-empty-reason"),
     ],
 )
 def test_generation_preserves_completed_response_reason(
@@ -41,6 +39,20 @@ def test_generation_preserves_completed_response_reason(
     assert result.evidence["done_reason"] == completion.get("done_reason")
     assert result.evidence["eval_count"] == 8
     assert result.model_dump(mode="json")["finish_reason"] == expected_reason
+
+
+@pytest.mark.parametrize(
+    "completion",
+    [
+        pytest.param({"done": True}, id="omitted-reason"),
+        pytest.param({"done": True, "done_reason": ""}, id="empty-reason"),
+    ],
+)
+def test_generation_rejects_responses_without_explicit_reason(
+    completion: dict[str, object],
+) -> None:
+    with pytest.raises(ValueError, match="Ollama chat response has an unsupported done_reason"):
+        _client(completion).generate(model="local-test-model", prompt="Explain café")
 
 
 @pytest.mark.parametrize(
@@ -91,6 +103,27 @@ def test_generation_rejects_unsupported_completion_reasons(reason: object) -> No
             id="token-limit-reaches-caller",
         ),
         pytest.param(
+            {"done": True, "done_reason": "stop"},
+            200,
+            "finish_reason",
+            "stop",
+            id="normal-stop-reaches-caller",
+        ),
+        pytest.param(
+            {"done": True},
+            503,
+            "detail",
+            "Ollama chat response has an unsupported done_reason",
+            id="omitted-reason-is-provider-error",
+        ),
+        pytest.param(
+            {"done": True, "done_reason": ""},
+            503,
+            "detail",
+            "Ollama chat response has an unsupported done_reason",
+            id="empty-reason-is-provider-error",
+        ),
+        pytest.param(
             {"done": False},
             503,
             "detail",
@@ -129,3 +162,6 @@ def test_ollama_api_preserves_completion_or_reports_provider_error(
     response = asyncio.run(request())
     assert response.status_code == status
     assert response.json()[body_key] == expected_value
+    if status == 503:
+        assert "finish_reason" not in response.json()
+        assert "content" not in response.json()
