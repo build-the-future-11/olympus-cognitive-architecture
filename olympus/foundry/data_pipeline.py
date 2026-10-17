@@ -292,7 +292,15 @@ def prepare_instruction_dataset(
     return manifest
 
 
-def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
+def load_verified_dataset(
+    manifest_path: Path,
+) -> tuple[DatasetManifestV2, dict[SplitName, list[InstructionExample]]]:
+    """Return the manifest and records parsed from the exact bytes verified below.
+
+    Consumers must use these records instead of reopening the split paths: a
+    later read may observe different data under the same manifest identity.
+    All split and whole-dataset checks finish before any records are returned.
+    """
     manifest = DatasetManifestV2.model_validate_json(manifest_path.read_bytes())
     expected = sha256_bytes(manifest.canonical_bytes(include_hash=False))
     if manifest.manifest_sha256 != expected:
@@ -306,6 +314,7 @@ def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
 
     verified_records = 0
     all_examples: list[InstructionExample] = []
+    examples_by_split: dict[SplitName, list[InstructionExample]] = {}
     for split in manifest.splits:
         path = Path(split.path)
         if not path.is_absolute():
@@ -343,6 +352,7 @@ def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
             raise ValueError(f"dataset split category counts mismatch: {split.name}")
         verified_records += actual_records
         all_examples.extend(examples)
+        examples_by_split[split.name] = examples
 
     if verified_records != manifest.source.record_count:
         raise ValueError(
@@ -357,4 +367,10 @@ def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
     actual_quality = _validate_examples(all_examples)
     if manifest.quality != actual_quality:
         raise ValueError("dataset quality report does not match verified records")
+    return manifest, examples_by_split
+
+
+def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
+    """Verify the complete dataset contract without retaining records for callers."""
+    manifest, _ = load_verified_dataset(manifest_path)
     return manifest

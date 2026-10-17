@@ -1,0 +1,62 @@
+{
+  "schema": "olympus.foundry-integration-receipt.v1",
+  "date": "2026-10-10",
+  "source_parents": [
+    "cbc54b95970891e54d658c085ead03714396aa13",
+    "2519ef345da556d210a1cb0f705077a835b6f8e6"
+  ],
+  "implementation_sha256": {
+    "olympus/foundry/data_pipeline.py": "782a443e233c5bbd8b96cbe4758e44b92498c2f581bdadd41fea5ba2c05b4d24",
+    "olympus/foundry/sft.py": "4beb6708918d1ec5406fb4f329fa64e2b4ceb963bc3f6d6e472614484d39e4ab",
+    "olympus/foundry/eval_suite.py": "4ed8843b36fe89a56334843e42b83b520f428ace8cb350bf3353c3115e89f151",
+    "olympus/foundry/quantization.py": "5f1a0a41a5d5920210b03c30f1027fb42579a33080188b2a08ba3721452ac0f1",
+    "tests/test_dataset_consumer_snapshot.py": "926a3144dadb1be35e4495e806ead0af86c102ad61fde0dc90bdf3147ee9778b",
+    "tests/test_sft_token_normalization.py": "b0dc71f5dc6d005cdbb1a6b4bae683b7dc901826f940405bd8404de5a51b330d",
+    "tests/test_sft_window_memory.py": "c43385eae37f44d0ae799d0267291c84c16d0cfb0df64fc0729842b58334a35b",
+    "tests/test_quantization_dataset_binding.py": "c41f8a452a52ec6233db94fe8b010887e6e8e47e79a12af33211f3a81ca446eb"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "torch": "2.14.1+cpu",
+    "device": "cpu"
+  },
+  "local_validation": {
+    "command": "python -m pytest --cov=olympus --cov-branch --cov-report=term-missing -q",
+    "passed": 220,
+    "seconds": 34.34,
+    "total_coverage_percent": 87.58,
+    "branch_measurement_enabled": true,
+    "ruff": "python -m ruff check .: passed",
+    "mypy": "python -m mypy --no-incremental --cache-dir=<fresh-cache> olympus tests: passed, 81 source files"
+  },
+  "baseline": {
+    "new_cases": 7,
+    "failed_before_repairs": 7,
+    "memory_failed": 4,
+    "quantization_failed": 3
+  },
+  "logs": {
+    "quantization_baseline.log": {
+      "sha256": "1990d09dc8d883f847fd6d8c97be0817d54238a168b113231d3875a4766dc65a",
+      "bytes": 8788
+    },
+    "full_local.log": {
+      "sha256": "b5f40cbdcb5ff4dac811ada1610cef1bc92f2d78b034f1c0750647fec756dca8",
+      "bytes": 4380
+    },
+    "memory_baseline.log": {
+      "sha256": "53d98043667874f99657e478f4a962f8be5651355bd9a3f1dcf32c79d0091d72",
+      "bytes": 15406
+    }
+  },
+  "independent_review": {
+    "reviewer": "jepa_astronomy",
+    "kind": "source-only",
+    "status": "no blocking findings",
+    "test_rerun": false
+  },
+  "scientific_outcomes_created": false,
+  "protected_evaluation_opened": false,
+  "hosted_release": "pending for newly published integration commit; prior source receipts remain historical",
+  "limitation": "Padded training tensors are bounded to one accumulation window. Encoded rows and permutation remain resident. Local Python 3.12 is not the Python 3.14 release gate."
+}
