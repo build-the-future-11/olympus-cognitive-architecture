@@ -203,9 +203,14 @@ def foundry_train_sft(
     sequence_tokens: int = 192,
     batch_size: int = 4,
     gradient_accumulation_steps: int = 2,
+    loss_normalization: str = "supervised_token_mean_v2",
 ) -> None:
     if mode not in {"full", "lora", "qlora"}:
         raise typer.BadParameter("mode must be full, lora, or qlora")
+    if loss_normalization not in {"legacy_batch_mean_v1", "supervised_token_mean_v2"}:
+        raise typer.BadParameter(
+            "loss normalization must be legacy_batch_mean_v1 or supervised_token_mean_v2"
+        )
     model = TinyModelConfig(
         width=width,
         layers=layers,
@@ -214,6 +219,7 @@ def foundry_train_sft(
     )
     config = SFTConfig(
         mode=mode,  # type: ignore[arg-type]
+        loss_normalization=loss_normalization,  # type: ignore[arg-type]
         seed=seed,
         epochs=epochs,
         batch_size=batch_size,
