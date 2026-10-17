@@ -1,0 +1,101 @@
+"""Independent bounded checkpoint/config contradiction witness; no package mocks."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import sys
+import tempfile
+import types
+from pathlib import Path
+
+import torch
+
+root = Path("/workspace/scratch/24ae2474e899/research_next/systems/Olympus")
+source = root / "olympus/foundry/sft.py"
+source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+package = types.ModuleType("olympus")
+package.__path__ = [str(root / "olympus")]
+sys.modules["olympus"] = package
+sys.path.insert(0, str(root))
+from olympus.foundry import sft  # noqa: E402
+from olympus.foundry.data_pipeline import REQUIRED_CATEGORIES, prepare_instruction_dataset  # noqa: E402
+
+fixture = Path(tempfile.mkdtemp(prefix="olympus-optimizer-config-review-"))
+rows = [
+    {
+        "id": f"{split}-{category}",
+        "category": category,
+        "prompt": f"Question {split} {category}",
+        "response": f"Answer {split} {category}",
+        "license": "MIT",
+        "source": "artificial://independent-optimizer-config",
+        "split": split,
+    }
+    for split in ("train", "validation", "test")
+    for category in REQUIRED_CATEGORIES
+]
+raw = fixture / "source.jsonl"
+raw.write_text("".join(json.dumps(row) + "\n" for row in rows))
+prepare_instruction_dataset(raw, fixture / "prepared")
+cfg = sft.SFTConfig(
+    seed=809,
+    epochs=1,
+    batch_size=4,
+    learning_rate=0.003,
+    gradient_accumulation_steps=2,
+    pack_sequences=False,
+    mixed_precision=False,
+    model=sft.TinyModelConfig(width=16, layers=1, heads=2, max_sequence_tokens=128, dropout=0.2),
+)
+manifest = fixture / "prepared/manifest.json"
+first = sft.run_sft(manifest, fixture / "first", config=cfg)
+parent = torch.load(first.checkpoint_path, map_location="cpu", weights_only=True)
+parent["optimizer_state"]["param_groups"][0]["lr"] = 0.0
+tampered = fixture / "optimizer-disagrees-with-training-config.pt"
+torch.save(parent, tampered)
+result = {
+    "source_sha256": source_hash,
+    "fixture": str(fixture),
+    "harness_history": (
+        "Initial witness config width=8 was rejected by the existing >=16 validation "
+        "before training; fixture changed to admitted width16."
+    ),
+    "scope": (
+        "one artificial first epoch and one additional artificial epoch; "
+        "real Foundry modules; optional top-level web API bypassed"
+    ),
+    "saved_training_config_lr": parent["training_config"]["learning_rate"],
+    "saved_optimizer_lr": parent["optimizer_state"]["param_groups"][0]["lr"],
+}
+try:
+    continuation = sft.run_sft(
+        manifest,
+        fixture / "resumed",
+        config=cfg.model_copy(update={"epochs": 2}),
+        resume_checkpoint=tampered,
+    )
+    actual = torch.load(continuation.checkpoint_path, map_location="cpu", weights_only=True)
+    status = json.loads(Path(continuation.attempt_path).read_text())
+    result.update(
+        admitted=True,
+        status=status["status"],
+        recorded_learning_rate=actual["training_config"]["learning_rate"],
+        actual_optimizer_learning_rate=actual["optimizer_state"]["param_groups"][0]["lr"],
+        all_model_weights_unchanged=all(
+            torch.equal(value, actual["model_state"][key])
+            for key, value in parent["model_state"].items()
+        ),
+        completed_epochs=actual["completed_epochs"],
+        optimizer_steps=actual["optimizer_steps"],
+        prior_optimizer_steps=parent["optimizer_steps"],
+    )
+except Exception as error:
+    result.update(admitted=False, error_type=type(error).__name__, error=str(error))
+result["source_unchanged_during_execution"] = (
+    hashlib.sha256(source.read_bytes()).hexdigest() == source_hash
+)
+Path("/tmp/olympus_optimizer_models_next_review_after.json").write_text(
+    json.dumps(result, indent=2) + "\n"
+)
+print(json.dumps(result, indent=2))
