@@ -10,10 +10,14 @@ authorize deployment.
 
 ## Frozen inputs and decision
 
-Thresholds are frozen in `configs/llm-readiness-v1.json`. Evidence conforms to
-`ReadinessEvidenceSet` in `olympus/foundry/readiness.py`. The evaluator always
-emits all eleven gates for all six canonical families. A family is ready only
-when every gate passes; the portfolio is ready only when all six families pass.
+Thresholds are frozen in `configs/llm-readiness-v1.json` and the evaluator
+rejects any byte-level change to that v1 policy hash. Evidence conforms to
+`ReadinessEvidenceSet` in `olympus/foundry/readiness.py`. The evaluator accepts
+only regular, non-symlink inputs and artifact paths contained by the evidence
+bundle. Evaluation, production, reproduction, and release-document evidence is
+bound to the selected checkpoint. The evaluator always emits all eleven gates
+for all six canonical families. A family is ready only when every gate passes;
+the portfolio is ready only when all six families pass.
 
 1. **Data receipt integrity:** the manifest exists and its SHA-256 matches.
 2. **Data quality:** approved rights and provenance, exact and normalized
@@ -41,7 +45,8 @@ when every gate passes; the portfolio is ready only when all six families pass.
 9. **Independent reproduction:** a different operator in a clean environment
    reproduces the exact source, dataset, checkpoint, and metrics.
 10. **Family-specific gates:** every gate in the canonical target specification
-    for that family passes.
+    for that family has a hash-bound receipt tied to the selected dataset and
+    checkpoint, and passes.
 11. **Release documentation:** exact model card, evaluation report, load/cost
     report, and safety/rollback report hashes are present.
 
@@ -58,5 +63,6 @@ when every gate passes; the portfolio is ready only when all six families pass.
 5. Give an independent operator only the protocol and immutable identities.
 6. Add the four release documents and run `olympus foundry readiness-check`.
 
-The current evidence file deliberately contains no candidate receipts. Its
-generated report is the honest baseline and lists every unresolved gate.
+The current evidence file contains only the verified Hermes smoke-dataset
+receipt; it contains no trained family candidate. Its generated report is the
+honest baseline and lists every unresolved gate.

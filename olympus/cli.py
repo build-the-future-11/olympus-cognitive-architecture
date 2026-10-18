@@ -334,6 +334,16 @@ def _default_instruction_source() -> Path:
 _DEFAULT_INSTRUCTION_SOURCE = _default_instruction_source()
 
 
+def _default_readiness_thresholds() -> Path:
+    repository_config = Path(__file__).resolve().parents[1] / "configs/llm-readiness-v1.json"
+    if repository_config.is_file():
+        return repository_config
+    return Path(sys.prefix) / "share/olympus/configs/llm-readiness-v1.json"
+
+
+_DEFAULT_READINESS_THRESHOLDS = _default_readiness_thresholds()
+
+
 @demo_app.command("run-all")
 def run_all_demos() -> None:
     console.print_json(json.dumps(demos()))
@@ -600,7 +610,7 @@ def foundry_audit_dataset_readiness(
 @foundry_app.command("readiness-check")
 def foundry_readiness_check(
     evidence: Path,
-    thresholds: Path = Path("configs/llm-readiness-v1.json"),
+    thresholds: Path = _DEFAULT_READINESS_THRESHOLDS,
     output: Path = Path("artifacts/readiness/portfolio-report.json"),
 ) -> None:
     """Evaluate all six families against immutable large-scale readiness evidence."""

@@ -164,8 +164,7 @@ def _assert_no_cross_split_contamination(examples: list[InstructionExample]) -> 
             if previous is not None and previous[0] != example.split:
                 hits += 1
                 raise ValueError(
-                    "cross-split 8-token contamination between "
-                    f"{previous[1]} and {example.id}"
+                    f"cross-split 8-token contamination between {previous[1]} and {example.id}"
                 )
             seen[gram] = (example.split, example.id)
     return hits
@@ -294,6 +293,9 @@ def prepare_instruction_dataset(
 
 def load_verified_dataset(
     manifest_path: Path,
+    *,
+    expected_manifest_file_sha256: str | None = None,
+    require_contained_splits: bool = False,
 ) -> tuple[DatasetManifestV2, dict[SplitName, list[InstructionExample]]]:
     """Return the manifest and records parsed from the exact bytes verified below.
 
@@ -301,7 +303,13 @@ def load_verified_dataset(
     later read may observe different data under the same manifest identity.
     All split and whole-dataset checks finish before any records are returned.
     """
-    manifest = DatasetManifestV2.model_validate_json(manifest_path.read_bytes())
+    manifest_payload = manifest_path.read_bytes()
+    if (
+        expected_manifest_file_sha256 is not None
+        and sha256_bytes(manifest_payload) != expected_manifest_file_sha256
+    ):
+        raise ValueError("dataset manifest file hash mismatch")
+    manifest = DatasetManifestV2.model_validate_json(manifest_payload)
     expected = sha256_bytes(manifest.canonical_bytes(include_hash=False))
     if manifest.manifest_sha256 != expected:
         raise ValueError("dataset manifest hash mismatch")
@@ -317,8 +325,18 @@ def load_verified_dataset(
     examples_by_split: dict[SplitName, list[InstructionExample]] = {}
     for split in manifest.splits:
         path = Path(split.path)
+        if require_contained_splits and (path.is_absolute() or path.is_symlink()):
+            raise ValueError(f"dataset split must be a contained regular file: {split.name}")
         if not path.is_absolute():
             path = manifest_path.parent / path
+        if require_contained_splits:
+            root = manifest_path.parent.resolve()
+            if path.is_symlink():
+                raise ValueError(f"dataset split must not be a symlink: {split.name}")
+            resolved = path.resolve()
+            if not resolved.is_relative_to(root):
+                raise ValueError(f"dataset split escapes its bundle: {split.name}")
+            path = resolved
         if not path.is_file():
             raise ValueError(f"dataset split missing: {split.name}")
         payload = path.read_bytes()
@@ -370,7 +388,16 @@ def load_verified_dataset(
     return manifest, examples_by_split
 
 
-def verify_dataset_manifest(manifest_path: Path) -> DatasetManifestV2:
+def verify_dataset_manifest(
+    manifest_path: Path,
+    *,
+    expected_manifest_file_sha256: str | None = None,
+    require_contained_splits: bool = False,
+) -> DatasetManifestV2:
     """Verify the complete dataset contract without retaining records for callers."""
-    manifest, _ = load_verified_dataset(manifest_path)
+    manifest, _ = load_verified_dataset(
+        manifest_path,
+        expected_manifest_file_sha256=expected_manifest_file_sha256,
+        require_contained_splits=require_contained_splits,
+    )
     return manifest

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import math
 import os
 import statistics
 import time
@@ -39,8 +40,12 @@ class LoadSmokeReport(StrictModel):
 
 
 def _percentile(values: list[float], quantile: float) -> float:
+    if not values:
+        raise ValueError("percentile requires at least one observation")
+    if not 0 <= quantile <= 1:
+        raise ValueError("quantile must be in [0, 1]")
     ordered = sorted(values)
-    index = min(len(ordered) - 1, max(0, int((len(ordered) - 1) * quantile)))
+    index = min(len(ordered) - 1, max(0, math.ceil(len(ordered) * quantile) - 1))
     return ordered[index]
 
 
@@ -80,7 +85,7 @@ async def probe_asgi_app(
                 try:
                     response = await client.get(endpoint)
                     key = str(response.status_code)
-                except httpx.HTTPError as error:
+                except Exception as error:
                     key = f"error:{type(error).__name__}"
                 latencies.append((time.perf_counter() - started) * 1_000)
                 statuses[key] = statuses.get(key, 0) + 1

@@ -4,6 +4,9 @@ import hashlib
 import json
 from pathlib import Path
 
+import pytest
+
+import olympus.foundry.readiness as readiness_module
 from olympus.foundry.readiness import (
     REQUIRED_CAPABILITIES,
     REQUIRED_CONTROLS,
@@ -13,6 +16,7 @@ from olympus.foundry.readiness import (
     CandidateReadinessEvidence,
     ComparativeEvaluation,
     DatasetEvidence,
+    FamilyGateEvidence,
     ProductionEvidence,
     ReadinessEvidenceSet,
     ReadinessThresholds,
@@ -25,10 +29,11 @@ from olympus.foundry.readiness import (
 from olympus.models.specifications import model_spec
 
 
-def _artifact(tmp_path: Path, name: str) -> ArtifactIdentity:
+def _artifact(tmp_path: Path, name: str, content: str | None = None) -> ArtifactIdentity:
     path = tmp_path / name
-    path.write_text(name, encoding="utf-8")
-    return ArtifactIdentity(path=name, sha256=hashlib.sha256(name.encode()).hexdigest())
+    payload = name if content is None else content
+    path.write_text(payload, encoding="utf-8")
+    return ArtifactIdentity(path=name, sha256=hashlib.sha256(payload.encode()).hexdigest())
 
 
 def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
@@ -50,10 +55,13 @@ def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
         )
         for seed in (1, 2, 3)
     ]
+    candidate_checkpoint = runs[0].checkpoint_sha256
     controls = [
         ComparativeEvaluation(
             control=name,
             receipt=_artifact(tmp_path, f"control-{name}.json"),
+            checkpoint_sha256=candidate_checkpoint,
+            dataset_manifest_sha256="d" * 64,
             effect=0.04,
             confidence_interval_low=0.03,
             confidence_interval_high=0.05,
@@ -65,6 +73,8 @@ def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
         SuiteEvaluation(
             suite=name,
             receipt=_artifact(tmp_path, f"capability-{name}.json"),
+            checkpoint_sha256=candidate_checkpoint,
+            dataset_manifest_sha256="d" * 64,
             score=0.9,
             passed=True,
             critical_failures=0,
@@ -75,6 +85,8 @@ def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
         SuiteEvaluation(
             suite=name,
             receipt=_artifact(tmp_path, f"safety-{name}.json"),
+            checkpoint_sha256=candidate_checkpoint,
+            dataset_manifest_sha256="d" * 64,
             score=1.0,
             passed=True,
             critical_failures=0,
@@ -84,6 +96,8 @@ def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
     return CandidateReadinessEvidence(
         family_id="hermes",
         candidate_id="hermes-test",
+        candidate_checkpoint_sha256=candidate_checkpoint,
+        training_operator="primary-lab",
         dataset=DatasetEvidence(
             manifest=manifest,
             dataset_manifest_sha256="d" * 64,
@@ -104,6 +118,7 @@ def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
         safety=safety,
         production=ProductionEvidence(
             receipt=_artifact(tmp_path, "production.json"),
+            checkpoint_sha256=candidate_checkpoint,
             p50_latency_ms=100,
             p95_latency_ms=500,
             p99_latency_ms=900,
@@ -123,15 +138,34 @@ def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
             clean_environment_identity="container-sha256:abc",
             source_commit="c" * 40,
             dataset_manifest_sha256="d" * 64,
-            checkpoint_sha256=runs[0].checkpoint_sha256,
+            checkpoint_sha256=candidate_checkpoint,
             metrics_reproduced_within_tolerance=True,
         ),
-        family_gate_results={name: True for name in model_spec("hermes").capability_gates},
-        documents={name: _artifact(tmp_path, f"{name}.md") for name in REQUIRED_DOCUMENTS},
+        family_gate_results=[
+            FamilyGateEvidence(
+                gate=name,
+                receipt=_artifact(tmp_path, f"family-{index}.json"),
+                checkpoint_sha256=candidate_checkpoint,
+                dataset_manifest_sha256="d" * 64,
+                passed=True,
+            )
+            for index, name in enumerate(model_spec("hermes").capability_gates)
+        ],
+        documents={
+            name: _artifact(
+                tmp_path,
+                f"{name}.md",
+                f"hermes-test\ncheckpoint: {candidate_checkpoint}\n",
+            )
+            for name in REQUIRED_DOCUMENTS
+        },
     )
 
 
-def test_complete_hash_bound_evidence_passes(tmp_path: Path) -> None:
+def test_complete_hash_bound_evidence_passes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(readiness_module, "_dataset_receipt_valid", lambda *_: True)
     report = evaluate_family_readiness(
         _passing_candidate(tmp_path), ReadinessThresholds(), evidence_root=tmp_path
     )
@@ -152,15 +186,58 @@ def test_tamper_and_weak_effect_fail_closed(tmp_path: Path) -> None:
 
 def test_empty_portfolio_reports_every_family_and_gate(tmp_path: Path) -> None:
     evidence_path = tmp_path / "evidence.json"
-    thresholds_path = tmp_path / "thresholds.json"
+    thresholds_path = Path(__file__).parents[1] / "configs/llm-readiness-v1.json"
     output_path = tmp_path / "report.json"
     evidence_path.write_text(
         ReadinessEvidenceSet(candidates=[]).model_dump_json(), encoding="utf-8"
     )
-    thresholds_path.write_text(ReadinessThresholds().model_dump_json(), encoding="utf-8")
     report = evaluate_portfolio_readiness(evidence_path, thresholds_path, output_path)
     assert report.total_families == 6
     assert report.ready_families == 0
     assert not report.all_families_ready
     assert all(len(item.gates) == 11 for item in report.family_reports)
     assert json.loads(output_path.read_text())["all_families_ready"] is False
+
+
+def test_duplicate_suite_and_checkpoint_mismatch_fail_closed(tmp_path: Path) -> None:
+    candidate = _passing_candidate(tmp_path)
+    candidate.capabilities.append(candidate.capabilities[0].model_copy())
+    candidate.controls[0].checkpoint_sha256 = "f" * 64
+    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    assert "capability_evaluation" in report.blockers
+    assert "strong_controls" in report.blockers
+
+
+def test_documents_must_name_candidate_and_checkpoint(tmp_path: Path) -> None:
+    candidate = _passing_candidate(tmp_path)
+    candidate.documents["model_card"] = _artifact(tmp_path, "unbound-card.md", "generic card")
+    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    assert "release_documentation" in report.blockers
+
+
+def test_artifact_cannot_escape_evidence_root(tmp_path: Path) -> None:
+    evidence_root = tmp_path / "bundle"
+    evidence_root.mkdir()
+    outside = tmp_path / "outside.json"
+    outside.write_text("outside", encoding="utf-8")
+    candidate = _passing_candidate(evidence_root)
+    candidate.training_runs[0].receipt = ArtifactIdentity(
+        path="../outside.json", sha256=hashlib.sha256(b"outside").hexdigest()
+    )
+    report = evaluate_family_readiness(
+        candidate, ReadinessThresholds(), evidence_root=evidence_root
+    )
+    assert "three_seed_training" in report.blockers
+
+
+def test_relaxed_threshold_policy_is_rejected(tmp_path: Path) -> None:
+    evidence_path = tmp_path / "evidence.json"
+    thresholds_path = tmp_path / "relaxed.json"
+    evidence_path.write_text(
+        ReadinessEvidenceSet(candidates=[]).model_dump_json(), encoding="utf-8"
+    )
+    thresholds_path.write_text(
+        ReadinessThresholds(minimum_training_records=1).model_dump_json(), encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="frozen v1 policy"):
+        evaluate_portfolio_readiness(evidence_path, thresholds_path, tmp_path / "report.json")

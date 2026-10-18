@@ -49,6 +49,7 @@ REQUIRED_SAFETY_SUITES = frozenset(
 REQUIRED_DOCUMENTS = frozenset(
     {"model_card", "evaluation_report", "load_and_cost_report", "safety_and_rollback_report"}
 )
+FROZEN_THRESHOLDS_SHA256 = "368073c460c05f24a874a4fcc115224b9b93bad1bdbae51e4642114c7d2dcf70"
 
 
 def _sha256(path: Path) -> str:
@@ -118,22 +119,41 @@ class TrainingRunEvidence(StrictModel):
 class ComparativeEvaluation(StrictModel):
     control: str = Field(min_length=1)
     receipt: ArtifactIdentity
-    effect: float
-    confidence_interval_low: float
-    confidence_interval_high: float
+    checkpoint_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    dataset_manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    effect: float = Field(allow_inf_nan=False)
+    confidence_interval_low: float = Field(allow_inf_nan=False)
+    confidence_interval_high: float = Field(allow_inf_nan=False)
     no_material_regressions: bool
+
+    @model_validator(mode="after")
+    def validate_interval(self) -> ComparativeEvaluation:
+        if not self.confidence_interval_low <= self.effect <= self.confidence_interval_high:
+            raise ValueError("control confidence interval must contain the observed effect")
+        return self
 
 
 class SuiteEvaluation(StrictModel):
     suite: str = Field(min_length=1)
     receipt: ArtifactIdentity
+    checkpoint_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    dataset_manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     score: float = Field(ge=0, le=1)
     passed: bool
     critical_failures: int = Field(ge=0)
 
 
+class FamilyGateEvidence(StrictModel):
+    gate: str = Field(min_length=1)
+    receipt: ArtifactIdentity
+    checkpoint_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    dataset_manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    passed: bool
+
+
 class ProductionEvidence(StrictModel):
     receipt: ArtifactIdentity
+    checkpoint_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     p50_latency_ms: float = Field(ge=0)
     p95_latency_ms: float = Field(ge=0)
     p99_latency_ms: float = Field(ge=0)
@@ -167,6 +187,8 @@ class ReproductionEvidence(StrictModel):
 class CandidateReadinessEvidence(StrictModel):
     family_id: ModelFamilyId
     candidate_id: str = Field(min_length=1)
+    candidate_checkpoint_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
+    training_operator: str | None = Field(default=None, min_length=1)
     dataset: DatasetEvidence | None = None
     training_runs: list[TrainingRunEvidence] = Field(default_factory=list)
     controls: list[ComparativeEvaluation] = Field(default_factory=list)
@@ -174,7 +196,7 @@ class CandidateReadinessEvidence(StrictModel):
     safety: list[SuiteEvaluation] = Field(default_factory=list)
     production: ProductionEvidence | None = None
     reproduction: ReproductionEvidence | None = None
-    family_gate_results: dict[str, bool] = Field(default_factory=dict)
+    family_gate_results: list[FamilyGateEvidence] = Field(default_factory=list)
     documents: dict[str, ArtifactIdentity] = Field(default_factory=dict)
 
 
@@ -223,15 +245,105 @@ def _identity_valid(identity: ArtifactIdentity | None, root: Path) -> bool:
     if identity is None:
         return False
     path = Path(identity.path)
-    if not path.is_absolute():
-        path = root / path
-    return path.is_file() and _sha256(path) == identity.sha256
+    if path.is_absolute() or path.is_symlink():
+        return False
+    root = root.resolve()
+    resolved = (root / path).resolve()
+    if not resolved.is_relative_to(root) or not resolved.is_file():
+        return False
+    return _sha256(resolved) == identity.sha256
+
+
+def _identity_path(identity: ArtifactIdentity, root: Path) -> Path | None:
+    if not _identity_valid(identity, root):
+        return None
+    return (root.resolve() / identity.path).resolve()
 
 
 def _all_receipts_valid(items: Sequence[object], root: Path) -> bool:
     return bool(items) and all(
         _identity_valid(getattr(item, "receipt", None), root) for item in items
     )
+
+
+def _dataset_receipt_valid(dataset: DatasetEvidence | None, root: Path) -> bool:
+    if dataset is None:
+        return False
+    manifest_path = _identity_path(dataset.manifest, root)
+    if manifest_path is None:
+        return False
+    try:
+        manifest = verify_dataset_manifest(
+            manifest_path,
+            expected_manifest_file_sha256=dataset.manifest.sha256,
+            require_contained_splits=True,
+        )
+    except OSError, ValueError:
+        return False
+    splits = {split.name: split for split in manifest.splits}
+    train = splits["train"]
+    protected = splits["test"]
+    return all(
+        (
+            manifest.manifest_sha256 == dataset.dataset_manifest_sha256,
+            train.records == dataset.training_records,
+            protected.records == dataset.protected_records,
+            min(protected.categories.values()) == dataset.minimum_protected_records_per_category,
+            dataset.license_approved == (manifest.source.license in ALLOWED_LICENSES),
+            dataset.provenance_complete
+            == bool(
+                manifest.source.uri
+                and manifest.source.owner
+                and manifest.source.sha256
+                and manifest.source.record_count
+            ),
+            dataset.exact_and_normalized_dedup_passed
+            == (
+                manifest.quality.duplicate_ids == 0 and manifest.quality.normalized_duplicates == 0
+            ),
+            dataset.contamination_scan_passed == (manifest.quality.split_leakage_hits == 0),
+            dataset.pii_and_secret_scan_passed == (manifest.quality.pii_or_secret_hits == 0),
+            dataset.splits_frozen_before_training == bool(manifest.manifest_sha256),
+            dataset.capability_coverage_complete
+            == (not manifest.quality.missing_category_split_pairs),
+        )
+    )
+
+
+def _names_are_unique(items: Sequence[object], attribute: str) -> bool:
+    names = [str(getattr(item, attribute)) for item in items]
+    return len(names) == len(set(names))
+
+
+def _bound_to_candidate(
+    items: Sequence[object], candidate_sha: str | None, dataset_sha: str | None
+) -> bool:
+    return (
+        candidate_sha is not None
+        and dataset_sha is not None
+        and all(
+            getattr(item, "checkpoint_sha256", None) == candidate_sha
+            and getattr(item, "dataset_manifest_sha256", None) == dataset_sha
+            for item in items
+        )
+    )
+
+
+def _documents_bound_to_candidate(evidence: CandidateReadinessEvidence, root: Path) -> bool:
+    checkpoint_sha = evidence.candidate_checkpoint_sha256
+    if checkpoint_sha is None or not REQUIRED_DOCUMENTS <= evidence.documents.keys():
+        return False
+    for name in REQUIRED_DOCUMENTS:
+        path = _identity_path(evidence.documents[name], root)
+        if path is None:
+            return False
+        try:
+            content = path.read_text(encoding="utf-8")
+        except OSError, UnicodeError:
+            return False
+        if checkpoint_sha not in content or evidence.candidate_id not in content:
+            return False
+    return True
 
 
 def evaluate_family_readiness(
@@ -241,20 +353,25 @@ def evaluate_family_readiness(
     evidence_root: Path,
 ) -> FamilyReadinessReport:
     dataset = evidence.dataset
-    data_receipt_ok = dataset is not None and _identity_valid(dataset.manifest, evidence_root)
-    data_quality_ok = dataset is not None and all(
-        (
-            dataset.license_approved,
-            dataset.provenance_complete,
-            dataset.exact_and_normalized_dedup_passed,
-            dataset.contamination_scan_passed,
-            dataset.pii_and_secret_scan_passed,
-            dataset.splits_frozen_before_training,
-            dataset.capability_coverage_complete,
+    data_receipt_ok = _dataset_receipt_valid(dataset, evidence_root)
+    data_quality_ok = (
+        data_receipt_ok
+        and dataset is not None
+        and all(
+            (
+                dataset.license_approved,
+                dataset.provenance_complete,
+                dataset.exact_and_normalized_dedup_passed,
+                dataset.contamination_scan_passed,
+                dataset.pii_and_secret_scan_passed,
+                dataset.splits_frozen_before_training,
+                dataset.capability_coverage_complete,
+            )
         )
     )
     data_scale_ok = (
-        dataset is not None
+        data_receipt_ok
+        and dataset is not None
         and dataset.training_records >= thresholds.minimum_training_records
         and dataset.protected_records >= thresholds.minimum_protected_records
         and dataset.minimum_protected_records_per_category
@@ -271,7 +388,9 @@ def evaluate_family_readiness(
         for run in runs
     }
     seeds_ok = (
-        len({run.seed for run in runs}) >= thresholds.minimum_independent_seeds
+        data_receipt_ok
+        and len({run.seed for run in runs}) >= thresholds.minimum_independent_seeds
+        and len({run.checkpoint_sha256 for run in runs}) == len(runs)
         and len(run_identities) == 1
         and _all_receipts_valid(runs, evidence_root)
         and all(
@@ -283,11 +402,19 @@ def evaluate_family_readiness(
         seeds_ok = seeds_ok and all(
             run.dataset_manifest_sha256 == dataset.dataset_manifest_sha256 for run in runs
         )
+    seeds_ok = seeds_ok and evidence.candidate_checkpoint_sha256 in {
+        run.checkpoint_sha256 for run in runs
+    }
 
     controls = {item.control: item for item in evidence.controls}
+    dataset_sha = dataset.dataset_manifest_sha256 if dataset is not None else None
     controls_ok = (
         REQUIRED_CONTROLS <= controls.keys()
+        and _names_are_unique(evidence.controls, "control")
         and _all_receipts_valid(evidence.controls, evidence_root)
+        and _bound_to_candidate(
+            evidence.controls, evidence.candidate_checkpoint_sha256, dataset_sha
+        )
         and all(
             item.confidence_interval_low >= thresholds.minimum_primary_effect
             and item.no_material_regressions
@@ -297,7 +424,11 @@ def evaluate_family_readiness(
     capabilities = {item.suite: item for item in evidence.capabilities}
     capability_ok = (
         REQUIRED_CAPABILITIES <= capabilities.keys()
+        and _names_are_unique(evidence.capabilities, "suite")
         and _all_receipts_valid(evidence.capabilities, evidence_root)
+        and _bound_to_candidate(
+            evidence.capabilities, evidence.candidate_checkpoint_sha256, dataset_sha
+        )
         and all(
             item.passed
             and item.critical_failures == 0
@@ -313,13 +444,16 @@ def evaluate_family_readiness(
     safety = {item.suite: item for item in evidence.safety}
     safety_ok = (
         REQUIRED_SAFETY_SUITES <= safety.keys()
+        and _names_are_unique(evidence.safety, "suite")
         and _all_receipts_valid(evidence.safety, evidence_root)
+        and _bound_to_candidate(evidence.safety, evidence.candidate_checkpoint_sha256, dataset_sha)
         and all(item.passed and item.critical_failures == 0 for item in safety.values())
     )
     production = evidence.production
     production_ok = (
         production is not None
         and _identity_valid(production.receipt, evidence_root)
+        and production.checkpoint_sha256 == evidence.candidate_checkpoint_sha256
         and production.p95_latency_ms <= thresholds.maximum_p95_latency_ms
         and production.p99_latency_ms <= thresholds.maximum_p99_latency_ms
         and production.throughput_requests_per_second
@@ -335,20 +469,30 @@ def evaluate_family_readiness(
     )
     reproduction = evidence.reproduction
     reproduction_ok = (
-        reproduction is not None
+        data_receipt_ok
+        and reproduction is not None
         and _identity_valid(reproduction.receipt, evidence_root)
         and reproduction.metrics_reproduced_within_tolerance
+        and evidence.training_operator is not None
+        and reproduction.independent_operator.casefold() != evidence.training_operator.casefold()
         and dataset is not None
         and reproduction.dataset_manifest_sha256 == dataset.dataset_manifest_sha256
-        and any(reproduction.checkpoint_sha256 == run.checkpoint_sha256 for run in runs)
+        and reproduction.checkpoint_sha256 == evidence.candidate_checkpoint_sha256
     )
     required_family_gates = set(model_spec(evidence.family_id).capability_gates)
-    family_gates_ok = required_family_gates <= evidence.family_gate_results.keys() and all(
-        evidence.family_gate_results.get(name) is True for name in required_family_gates
+    family_gate_results = {item.gate: item for item in evidence.family_gate_results}
+    family_gates_ok = (
+        required_family_gates <= family_gate_results.keys()
+        and _names_are_unique(evidence.family_gate_results, "gate")
+        and _all_receipts_valid(evidence.family_gate_results, evidence_root)
+        and _bound_to_candidate(
+            evidence.family_gate_results,
+            evidence.candidate_checkpoint_sha256,
+            dataset_sha,
+        )
+        and all(family_gate_results[name].passed for name in required_family_gates)
     )
-    documents_ok = REQUIRED_DOCUMENTS <= evidence.documents.keys() and all(
-        _identity_valid(evidence.documents[name], evidence_root) for name in REQUIRED_DOCUMENTS
-    )
+    documents_ok = _documents_bound_to_candidate(evidence, evidence_root)
 
     gates = [
         _gate(
@@ -433,7 +577,10 @@ def evaluate_family_readiness(
         _gate(
             "family_specific_gates",
             family_gates_ok,
-            f"passed={sum(evidence.family_gate_results.values())}/{len(required_family_gates)}",
+            (
+                f"passed={sum(item.passed for item in evidence.family_gate_results)}"
+                f"/{len(required_family_gates)}"
+            ),
             "Every capability gate in the canonical family specification passes.",
         ),
         _gate(
@@ -458,6 +605,16 @@ def evaluate_portfolio_readiness(
     thresholds_path: Path,
     output_path: Path,
 ) -> PortfolioReadinessReport:
+    for path, label in ((evidence_path, "evidence"), (thresholds_path, "thresholds")):
+        if path.is_symlink() or not path.is_file():
+            raise ValueError(f"{label} input must be a regular non-symlink file")
+    if output_path.resolve() in {evidence_path.resolve(), thresholds_path.resolve()}:
+        raise ValueError("readiness output cannot overwrite an input")
+    thresholds_sha = _sha256(thresholds_path)
+    if thresholds_sha != FROZEN_THRESHOLDS_SHA256:
+        raise ValueError(
+            "readiness thresholds do not match the frozen v1 policy; create a versioned protocol"
+        )
     evidence = ReadinessEvidenceSet.model_validate_json(evidence_path.read_bytes())
     thresholds = ReadinessThresholds.model_validate_json(thresholds_path.read_bytes())
     candidates = {candidate.family_id: candidate for candidate in evidence.candidates}
@@ -472,7 +629,7 @@ def evaluate_portfolio_readiness(
         )
     ready = sum(report.ready_for_large_scale for report in reports)
     report = PortfolioReadinessReport(
-        thresholds_sha256=_sha256(thresholds_path),
+        thresholds_sha256=thresholds_sha,
         evidence_sha256=_sha256(evidence_path),
         family_reports=reports,
         ready_families=ready,

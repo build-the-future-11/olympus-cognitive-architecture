@@ -93,6 +93,7 @@
   "history_policy": "Append revisions and failures with source identities. Preserve dated predecessor ledgers and frozen outcomes. Prior history is referenced without claiming to reconstruct missing events.",
   "large_scale_readiness_v1": {
     "status": "0_OF_6_FAMILIES_READY",
+    "integrity_revision": "LOCAL_HARDENING_COMPLETE_HOSTED_VERIFICATION_PENDING",
     "protocol": "research/llm_readiness_v1/PROTOCOL.md",
     "current_report": "research/llm_readiness_v1/CURRENT_REPORT.json",
     "thresholds": "configs/llm-readiness-v1.json",
@@ -189,6 +190,13 @@
       "event": "PR24 alphabet validation passed fresh required release run39041484835 and reached main. Integrating the separately reviewed PR25 low-temperature bigram sampler without changing its numerical source or tests; the merged alphabet check is retained. Fresh combined release verification is pending.",
       "main_commit": "9bdf374834ce088c91793eb46a8c76fcb4b25a3b",
       "sampling_head": "0409d8f54e20b21e1bfe30c695fba60bc1fe6559",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-18",
+      "kind": "large_scale_readiness_integrity_hardening",
+      "event": "Hardened the unpromoted six-family readiness evaluator against relaxed threshold files, artifact path escape and symlinks, manifest-file substitution, external split paths, forged dataset counts, duplicate suite names, reused seed checkpoints, mismatched evaluation/checkpoint identities, same-operator reproduction, bare family-gate booleans, unbound release documents, load-probe exceptions, and tail-percentile underestimation. The current disposition remains 0/6 ready; no protected evaluation, scientific training, promotion, paid compute, or predecessor outcome change occurred.",
+      "local_verification": "Ruff passed; strict MyPy passed on the four affected source modules; seven final readiness tests and two new dataset-integrity regressions passed. Earlier load/CLI focused checks remain bounded engineering evidence.",
       "scientific_outcomes_created": false
     }
   ],
