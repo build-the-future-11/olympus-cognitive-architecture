@@ -1,0 +1,590 @@
+{
+  "$defs": {
+    "ArtifactIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "title": "ArtifactIdentity",
+      "type": "object"
+    },
+    "CandidateReadinessEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_checkpoint_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Candidate Checkpoint Sha256"
+        },
+        "candidate_id": {
+          "minLength": 1,
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "capabilities": {
+          "items": {
+            "$ref": "#/$defs/SuiteEvaluation"
+          },
+          "title": "Capabilities",
+          "type": "array"
+        },
+        "controls": {
+          "items": {
+            "$ref": "#/$defs/ComparativeEvaluation"
+          },
+          "title": "Controls",
+          "type": "array"
+        },
+        "dataset": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DatasetEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "documents": {
+          "additionalProperties": {
+            "$ref": "#/$defs/ArtifactIdentity"
+          },
+          "title": "Documents",
+          "type": "object"
+        },
+        "family_gate_results": {
+          "items": {
+            "$ref": "#/$defs/FamilyGateEvidence"
+          },
+          "title": "Family Gate Results",
+          "type": "array"
+        },
+        "family_id": {
+          "enum": [
+            "hermes",
+            "prometheus",
+            "perseus",
+            "atlas",
+            "kronos",
+            "aion"
+          ],
+          "title": "Family Id",
+          "type": "string"
+        },
+        "production": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProductionEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reproduction": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReproductionEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "safety": {
+          "items": {
+            "$ref": "#/$defs/SuiteEvaluation"
+          },
+          "title": "Safety",
+          "type": "array"
+        },
+        "source_commit": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{40}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Commit"
+        },
+        "training_operator": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Training Operator"
+        },
+        "training_runs": {
+          "items": {
+            "$ref": "#/$defs/TrainingRunEvidence"
+          },
+          "title": "Training Runs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "family_id",
+        "candidate_id"
+      ],
+      "title": "CandidateReadinessEvidence",
+      "type": "object"
+    },
+    "ComparativeEvaluation": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Checkpoint Sha256",
+          "type": "string"
+        },
+        "confidence_interval_high": {
+          "title": "Confidence Interval High",
+          "type": "number"
+        },
+        "confidence_interval_low": {
+          "title": "Confidence Interval Low",
+          "type": "number"
+        },
+        "control": {
+          "minLength": 1,
+          "title": "Control",
+          "type": "string"
+        },
+        "dataset_manifest_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Dataset Manifest Sha256",
+          "type": "string"
+        },
+        "effect": {
+          "title": "Effect",
+          "type": "number"
+        },
+        "no_material_regressions": {
+          "title": "No Material Regressions",
+          "type": "boolean"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ArtifactIdentity"
+        }
+      },
+      "required": [
+        "control",
+        "receipt",
+        "checkpoint_sha256",
+        "dataset_manifest_sha256",
+        "effect",
+        "confidence_interval_low",
+        "confidence_interval_high",
+        "no_material_regressions"
+      ],
+      "title": "ComparativeEvaluation",
+      "type": "object"
+    },
+    "DatasetEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "capability_coverage_complete": {
+          "title": "Capability Coverage Complete",
+          "type": "boolean"
+        },
+        "contamination_scan_passed": {
+          "title": "Contamination Scan Passed",
+          "type": "boolean"
+        },
+        "dataset_manifest_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Dataset Manifest Sha256",
+          "type": "string"
+        },
+        "exact_and_normalized_dedup_passed": {
+          "title": "Exact And Normalized Dedup Passed",
+          "type": "boolean"
+        },
+        "license_approved": {
+          "title": "License Approved",
+          "type": "boolean"
+        },
+        "manifest": {
+          "$ref": "#/$defs/ArtifactIdentity"
+        },
+        "minimum_protected_records_per_category": {
+          "minimum": 0,
+          "title": "Minimum Protected Records Per Category",
+          "type": "integer"
+        },
+        "pii_and_secret_scan_passed": {
+          "title": "Pii And Secret Scan Passed",
+          "type": "boolean"
+        },
+        "protected_records": {
+          "minimum": 0,
+          "title": "Protected Records",
+          "type": "integer"
+        },
+        "provenance_complete": {
+          "title": "Provenance Complete",
+          "type": "boolean"
+        },
+        "splits_frozen_before_training": {
+          "title": "Splits Frozen Before Training",
+          "type": "boolean"
+        },
+        "training_records": {
+          "minimum": 0,
+          "title": "Training Records",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "manifest",
+        "dataset_manifest_sha256",
+        "training_records",
+        "protected_records",
+        "minimum_protected_records_per_category",
+        "license_approved",
+        "provenance_complete",
+        "exact_and_normalized_dedup_passed",
+        "contamination_scan_passed",
+        "pii_and_secret_scan_passed",
+        "splits_frozen_before_training",
+        "capability_coverage_complete"
+      ],
+      "title": "DatasetEvidence",
+      "type": "object"
+    },
+    "FamilyGateEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Checkpoint Sha256",
+          "type": "string"
+        },
+        "dataset_manifest_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Dataset Manifest Sha256",
+          "type": "string"
+        },
+        "gate": {
+          "minLength": 1,
+          "title": "Gate",
+          "type": "string"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ArtifactIdentity"
+        }
+      },
+      "required": [
+        "gate",
+        "receipt",
+        "checkpoint_sha256",
+        "dataset_manifest_sha256",
+        "passed"
+      ],
+      "title": "FamilyGateEvidence",
+      "type": "object"
+    },
+    "ProductionEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Checkpoint Sha256",
+          "type": "string"
+        },
+        "cost_per_million_tokens_usd": {
+          "minimum": 0,
+          "title": "Cost Per Million Tokens Usd",
+          "type": "number"
+        },
+        "drift_failure_cost_monitoring_passed": {
+          "title": "Drift Failure Cost Monitoring Passed",
+          "type": "boolean"
+        },
+        "error_rate": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Error Rate",
+          "type": "number"
+        },
+        "failure_injection_passed": {
+          "title": "Failure Injection Passed",
+          "type": "boolean"
+        },
+        "p50_latency_ms": {
+          "minimum": 0,
+          "title": "P50 Latency Ms",
+          "type": "number"
+        },
+        "p95_latency_ms": {
+          "minimum": 0,
+          "title": "P95 Latency Ms",
+          "type": "number"
+        },
+        "p99_latency_ms": {
+          "minimum": 0,
+          "title": "P99 Latency Ms",
+          "type": "number"
+        },
+        "queue_cancel_retry_backpressure_passed": {
+          "title": "Queue Cancel Retry Backpressure Passed",
+          "type": "boolean"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ArtifactIdentity"
+        },
+        "rollback_passed": {
+          "title": "Rollback Passed",
+          "type": "boolean"
+        },
+        "soak_hours": {
+          "minimum": 0,
+          "title": "Soak Hours",
+          "type": "number"
+        },
+        "throughput_requests_per_second": {
+          "minimum": 0,
+          "title": "Throughput Requests Per Second",
+          "type": "number"
+        },
+        "zero_downtime_upgrade_passed": {
+          "title": "Zero Downtime Upgrade Passed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "receipt",
+        "checkpoint_sha256",
+        "p50_latency_ms",
+        "p95_latency_ms",
+        "p99_latency_ms",
+        "throughput_requests_per_second",
+        "error_rate",
+        "cost_per_million_tokens_usd",
+        "soak_hours",
+        "failure_injection_passed",
+        "queue_cancel_retry_backpressure_passed",
+        "rollback_passed",
+        "zero_downtime_upgrade_passed",
+        "drift_failure_cost_monitoring_passed"
+      ],
+      "title": "ProductionEvidence",
+      "type": "object"
+    },
+    "ReproductionEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Checkpoint Sha256",
+          "type": "string"
+        },
+        "clean_environment_identity": {
+          "minLength": 1,
+          "title": "Clean Environment Identity",
+          "type": "string"
+        },
+        "dataset_manifest_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Dataset Manifest Sha256",
+          "type": "string"
+        },
+        "independent_operator": {
+          "minLength": 1,
+          "title": "Independent Operator",
+          "type": "string"
+        },
+        "metrics_reproduced_within_tolerance": {
+          "title": "Metrics Reproduced Within Tolerance",
+          "type": "boolean"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ArtifactIdentity"
+        },
+        "source_commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "title": "Source Commit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "receipt",
+        "independent_operator",
+        "clean_environment_identity",
+        "source_commit",
+        "dataset_manifest_sha256",
+        "checkpoint_sha256",
+        "metrics_reproduced_within_tolerance"
+      ],
+      "title": "ReproductionEvidence",
+      "type": "object"
+    },
+    "SuiteEvaluation": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Checkpoint Sha256",
+          "type": "string"
+        },
+        "critical_failures": {
+          "minimum": 0,
+          "title": "Critical Failures",
+          "type": "integer"
+        },
+        "dataset_manifest_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Dataset Manifest Sha256",
+          "type": "string"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ArtifactIdentity"
+        },
+        "score": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Score",
+          "type": "number"
+        },
+        "suite": {
+          "minLength": 1,
+          "title": "Suite",
+          "type": "string"
+        }
+      },
+      "required": [
+        "suite",
+        "receipt",
+        "checkpoint_sha256",
+        "dataset_manifest_sha256",
+        "score",
+        "passed",
+        "critical_failures"
+      ],
+      "title": "SuiteEvaluation",
+      "type": "object"
+    },
+    "TrainingRunEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "base_model_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Base Model Sha256",
+          "type": "string"
+        },
+        "checkpoint_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Checkpoint Sha256",
+          "type": "string"
+        },
+        "completed": {
+          "title": "Completed",
+          "type": "boolean"
+        },
+        "dataset_manifest_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Dataset Manifest Sha256",
+          "type": "string"
+        },
+        "finite_metrics": {
+          "title": "Finite Metrics",
+          "type": "boolean"
+        },
+        "protected_accesses_before_freeze": {
+          "minimum": 0,
+          "title": "Protected Accesses Before Freeze",
+          "type": "integer"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ArtifactIdentity"
+        },
+        "seed": {
+          "minimum": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "training_config_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Training Config Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "seed",
+        "receipt",
+        "checkpoint_sha256",
+        "dataset_manifest_sha256",
+        "base_model_sha256",
+        "training_config_sha256",
+        "completed",
+        "finite_metrics",
+        "protected_accesses_before_freeze"
+      ],
+      "title": "TrainingRunEvidence",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/CandidateReadinessEvidence"
+      },
+      "title": "Candidates",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "candidates"
+  ],
+  "title": "ReadinessEvidenceSet",
+  "type": "object"
+}

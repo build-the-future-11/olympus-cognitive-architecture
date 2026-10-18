@@ -16,10 +16,12 @@ from olympus.foundry.readiness import (
     CandidateReadinessEvidence,
     ComparativeEvaluation,
     DatasetEvidence,
+    EvidenceReceiptEnvelope,
     FamilyGateEvidence,
     ProductionEvidence,
     ReadinessEvidenceSet,
     ReadinessThresholds,
+    ReceiptKind,
     ReproductionEvidence,
     SuiteEvaluation,
     TrainingRunEvidence,
@@ -36,22 +38,43 @@ def _artifact(tmp_path: Path, name: str, content: str | None = None) -> Artifact
     return ArtifactIdentity(path=name, sha256=hashlib.sha256(payload.encode()).hexdigest())
 
 
+def _receipt(
+    tmp_path: Path,
+    name: str,
+    *,
+    kind: ReceiptKind,
+    checkpoint_sha256: str,
+    producer: str = "primary-lab",
+) -> ArtifactIdentity:
+    payload = EvidenceReceiptEnvelope(
+        kind=kind,
+        candidate_id="hermes-test",
+        checkpoint_sha256=checkpoint_sha256,
+        dataset_manifest_sha256="d" * 64,
+        producer=producer,
+        source_commit="c" * 40,
+    ).model_dump_json()
+    return _artifact(tmp_path, name, payload)
+
+
 def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
     manifest = _artifact(tmp_path, "manifest.json")
-    shared = {
-        "dataset_manifest_sha256": "d" * 64,
-        "base_model_sha256": "a" * 64,
-        "training_config_sha256": "b" * 64,
-        "completed": True,
-        "finite_metrics": True,
-        "protected_accesses_before_freeze": 0,
-    }
     runs = [
         TrainingRunEvidence(
             seed=seed,
-            receipt=_artifact(tmp_path, f"training-{seed}.json"),
             checkpoint_sha256=(str(seed) * 64)[:64],
-            **shared,
+            receipt=_receipt(
+                tmp_path,
+                f"training-{seed}.json",
+                kind="training",
+                checkpoint_sha256=(str(seed) * 64)[:64],
+            ),
+            dataset_manifest_sha256="d" * 64,
+            base_model_sha256="a" * 64,
+            training_config_sha256="b" * 64,
+            completed=True,
+            finite_metrics=True,
+            protected_accesses_before_freeze=0,
         )
         for seed in (1, 2, 3)
     ]
@@ -59,7 +82,12 @@ def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
     controls = [
         ComparativeEvaluation(
             control=name,
-            receipt=_artifact(tmp_path, f"control-{name}.json"),
+            receipt=_receipt(
+                tmp_path,
+                f"control-{name}.json",
+                kind="control",
+                checkpoint_sha256=candidate_checkpoint,
+            ),
             checkpoint_sha256=candidate_checkpoint,
             dataset_manifest_sha256="d" * 64,
             effect=0.04,
@@ -72,7 +100,12 @@ def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
     capabilities = [
         SuiteEvaluation(
             suite=name,
-            receipt=_artifact(tmp_path, f"capability-{name}.json"),
+            receipt=_receipt(
+                tmp_path,
+                f"capability-{name}.json",
+                kind="capability",
+                checkpoint_sha256=candidate_checkpoint,
+            ),
             checkpoint_sha256=candidate_checkpoint,
             dataset_manifest_sha256="d" * 64,
             score=0.9,
@@ -84,7 +117,12 @@ def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
     safety = [
         SuiteEvaluation(
             suite=name,
-            receipt=_artifact(tmp_path, f"safety-{name}.json"),
+            receipt=_receipt(
+                tmp_path,
+                f"safety-{name}.json",
+                kind="safety",
+                checkpoint_sha256=candidate_checkpoint,
+            ),
             checkpoint_sha256=candidate_checkpoint,
             dataset_manifest_sha256="d" * 64,
             score=1.0,
@@ -96,6 +134,7 @@ def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
     return CandidateReadinessEvidence(
         family_id="hermes",
         candidate_id="hermes-test",
+        source_commit="c" * 40,
         candidate_checkpoint_sha256=candidate_checkpoint,
         training_operator="primary-lab",
         dataset=DatasetEvidence(
@@ -117,7 +156,12 @@ def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
         capabilities=capabilities,
         safety=safety,
         production=ProductionEvidence(
-            receipt=_artifact(tmp_path, "production.json"),
+            receipt=_receipt(
+                tmp_path,
+                "production.json",
+                kind="production",
+                checkpoint_sha256=candidate_checkpoint,
+            ),
             checkpoint_sha256=candidate_checkpoint,
             p50_latency_ms=100,
             p95_latency_ms=500,
@@ -133,7 +177,13 @@ def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
             drift_failure_cost_monitoring_passed=True,
         ),
         reproduction=ReproductionEvidence(
-            receipt=_artifact(tmp_path, "reproduction.json"),
+            receipt=_receipt(
+                tmp_path,
+                "reproduction.json",
+                kind="reproduction",
+                checkpoint_sha256=candidate_checkpoint,
+                producer="external-lab",
+            ),
             independent_operator="external-lab",
             clean_environment_identity="container-sha256:abc",
             source_commit="c" * 40,
@@ -144,7 +194,12 @@ def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
         family_gate_results=[
             FamilyGateEvidence(
                 gate=name,
-                receipt=_artifact(tmp_path, f"family-{index}.json"),
+                receipt=_receipt(
+                    tmp_path,
+                    f"family-{index}.json",
+                    kind="family_gate",
+                    checkpoint_sha256=candidate_checkpoint,
+                ),
                 checkpoint_sha256=candidate_checkpoint,
                 dataset_manifest_sha256="d" * 64,
                 passed=True,
@@ -182,6 +237,29 @@ def test_tamper_and_weak_effect_fail_closed(tmp_path: Path) -> None:
     assert not report.ready_for_large_scale
     assert "three_seed_training" in report.blockers
     assert "strong_controls" in report.blockers
+
+
+def test_hash_valid_receipt_with_wrong_semantics_fails_closed(tmp_path: Path) -> None:
+    candidate = _passing_candidate(tmp_path)
+    checkpoint = candidate.candidate_checkpoint_sha256
+    assert checkpoint is not None
+    candidate.controls[0].receipt = _receipt(
+        tmp_path,
+        "wrong-kind.json",
+        kind="safety",
+        checkpoint_sha256=checkpoint,
+    )
+    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    assert "strong_controls" in report.blockers
+
+
+def test_hash_valid_receipt_from_wrong_source_fails_closed(tmp_path: Path) -> None:
+    candidate = _passing_candidate(tmp_path)
+    candidate.source_commit = "f" * 40
+    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    assert "three_seed_training" in report.blockers
+    assert "strong_controls" in report.blockers
+    assert "independent_reproduction" in report.blockers
 
 
 def test_empty_portfolio_reports_every_family_and_gate(tmp_path: Path) -> None:

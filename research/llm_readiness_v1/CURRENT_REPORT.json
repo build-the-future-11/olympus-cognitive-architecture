@@ -1,5 +1,7 @@
 {
   "all_families_ready": false,
+  "evaluator_sha256": "95c237108f0f6e280175ea058ccdf5fb1243fe9c896949f402659dc05805eb35",
+  "evidence_schema_sha256": "d762a5d6a19add83181c7e9bc99cf7dae417a947ca3e81bf82d6c51df2a53cd0",
   "evidence_sha256": "15da83d57c29a0090599a424836fbaa6f91af9fc7b9315b8c2cdbff3b8694919",
   "family_reports": [
     {
@@ -517,6 +519,7 @@
       "ready_for_large_scale": false
     }
   ],
+  "protocol_id": "olympus-six-family-readiness-v1",
   "ready_families": 0,
   "schema_version": 1,
   "thresholds_sha256": "368073c460c05f24a874a4fcc115224b9b93bad1bdbae51e4642114c7d2dcf70",

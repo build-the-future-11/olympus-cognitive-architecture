@@ -21,7 +21,11 @@ from olympus.foundry.load_probe import probe_asgi_app, write_load_smoke_report
 from olympus.foundry.ollama import OllamaClient
 from olympus.foundry.promotion import evaluate_promotion
 from olympus.foundry.quantization import quantize_checkpoint
-from olympus.foundry.readiness import audit_instruction_dataset, evaluate_portfolio_readiness
+from olympus.foundry.readiness import (
+    audit_instruction_dataset,
+    evaluate_portfolio_readiness,
+    write_readiness_evidence_schema,
+)
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.service import FoundryService
 from olympus.foundry.sft import SFTConfig, TinyModelConfig, run_sft
@@ -619,6 +623,14 @@ def foundry_readiness_check(
         evidence.resolve(), thresholds.resolve(), output.resolve()
     )
     console.print_json(report.model_dump_json())
+
+
+@foundry_app.command("readiness-schema")
+def foundry_readiness_schema(output: Path) -> None:
+    """Write the canonical JSON Schema for six-family evidence bundles."""
+
+    write_readiness_evidence_schema(output.resolve())
+    console.print(f"Wrote readiness evidence schema to {output.resolve()}")
 
 
 @foundry_app.command("load-smoke")

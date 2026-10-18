@@ -11,13 +11,23 @@ authorize deployment.
 ## Frozen inputs and decision
 
 Thresholds are frozen in `configs/llm-readiness-v1.json` and the evaluator
-rejects any byte-level change to that v1 policy hash. Evidence conforms to
-`ReadinessEvidenceSet` in `olympus/foundry/readiness.py`. The evaluator accepts
-only regular, non-symlink inputs and artifact paths contained by the evidence
-bundle. Evaluation, production, reproduction, and release-document evidence is
-bound to the selected checkpoint. The evaluator always emits all eleven gates
-for all six canonical families. A family is ready only when every gate passes;
-the portfolio is ready only when all six families pass.
+rejects any byte-level change to that v1 policy hash. Evidence conforms to the
+machine-readable schema in
+`configs/llm-readiness-evidence-v1.schema.json`. The evaluator accepts only
+regular, non-symlink inputs and artifact paths contained by the evidence
+bundle. Training, control, capability, safety, production, reproduction, and
+family-gate receipts must be JSON envelopes that identify their evidence kind,
+candidate, checkpoint, dataset, producer, and source commit. A receipt whose
+bytes match its advertised hash still fails when any of those bindings are
+wrong. Release documents are bound to the candidate and checkpoint by their
+verified contents.
+
+Every report records the protocol ID plus SHA-256 identities for the frozen
+thresholds, submitted evidence, evidence schema, and exact evaluator source.
+The evaluator always emits all eleven gates for all six canonical families. A
+family is ready only when every gate passes; the portfolio is ready only when
+all six families pass. CI regenerates the schema and current report in tests
+and requires byte-for-byte equality with the checked-in baseline.
 
 1. **Data receipt integrity:** the manifest exists and its SHA-256 matches.
 2. **Data quality:** approved rights and provenance, exact and normalized
