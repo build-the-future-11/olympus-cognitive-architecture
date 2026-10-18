@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "status": "FAILED_RETAINED",
+  "operation": "Generate lock-derived CycloneDX SBOM with the temporary exact-lock Python 3.14.0 interpreter",
+  "input": "/tmp/olympus-locked-requirements.txt",
+  "error_type": "subprocess.CalledProcessError",
+  "cause": "pip-audit created a transient resolver environment whose ensurepip process terminated with SIGABRT",
+  "affected_evidence": "No SBOM was produced by this attempt",
+  "recovery": "The identical lock-derived requirements input was audited with the verified project Python 3.14.7 interpreter; no known vulnerabilities were found and the final 79-component CycloneDX SBOM was retained.",
+  "final_artifact": "artifacts/release-audit-20261011/sbom-locked-final/olympus-python.cdx.json",
+  "final_artifact_sha256": "9aba07dbe0a65075b701dbde0de0a568678c32f8c8634a0dac733153b4ca2b0c"
+}

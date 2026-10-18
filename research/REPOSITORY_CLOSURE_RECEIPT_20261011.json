@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "status": "LOCAL_ENGINEERING_AND_DATA_READINESS_VERIFIED_WITH_EXPLICIT_BLOCKERS",
+  "disposition": "MIXED",
+  "source": {
+    "repository": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture",
+    "branch": "main",
+    "head": "20a5687d041859e888bf21390a37483177177dd8",
+    "dirty_entries_preserved": 76,
+    "commit_created": false,
+    "pushed": false
+  },
+  "implemented": [
+    "Pinned EditCLEVR to an immutable upstream revision with license, sizes, and LFS SHA-256 values.",
+    "Completed the resource-governed EditCLEVR acquisition by resuming retained fragments and admitted all five pinned archives.",
+    "Strengthened the bounded-memory validator with split-archive size, hash, membership, and byte-for-byte staged-registry binding in addition to unsafe-member rejection and capped error samples.",
+    "Added a universal 110-package uv.lock and made CI and release builds consume the locked environment and locked build backend.",
+    "Added atomic fail-preserving EditCLEVR materialization, stage-wise resource checks, bounded split streaming, contained paths, and deterministic RGB, scene, and mask decoding.",
+    "Excluded external research data and Hub caches from source distributions, narrowed packaging traversal to the distributable smoke corpus, and included both dataset operations scripts.",
+    "Executed fresh deterministic demos, Foundry golden-path verification, integrity status, immutable dataset preparation, and installed-wheel CLI verification.",
+    "Made the top-level olympus app export lazy without changing the public import contract.",
+    "Migrated all nine historical O1 protocol files byte-for-byte from the closed, unmerged VertexED PR 653 and created a canonical no-run state.",
+    "Reconciled README, changelog, model/system documentation, reality ledger, release gate, CI, and canonical research history with v2/v3 negative evidence."
+  ],
+  "verification": {
+    "python": {
+      "tests": 200,
+      "failures": 0,
+      "branch_coverage_percent": 86.72,
+      "required_percent": 85.0,
+      "coverage_artifact": "artifacts/release-audit-20261011/coverage-extended-final.json",
+      "coverage_sha256": "15492614b00e26f5812d8ffd46b4507cf4b884865caf111393a65f268f9b0744",
+      "ruff": "PASS_CURRENT_TREE",
+      "mypy": "PASS_110_SOURCE_FILES",
+      "dependency_audit": "PASS_LOCK_DERIVED_NO_KNOWN_VULNERABILITIES"
+    },
+    "web": {
+      "npm_ci": "PASS",
+      "tests": 6,
+      "test_failures": 0,
+      "npm_audit_all": "PASS_ZERO_VULNERABILITIES",
+      "npm_audit_production": "PASS_ZERO_VULNERABILITIES",
+      "production_build": "PASS"
+    },
+    "distribution": {
+      "twine": "PASS",
+      "external_dataset_files_in_sdist": 0,
+      "validator_in_sdist": true,
+      "materializer_in_sdist": true,
+      "uv_lock_in_sdist": true,
+      "wheel": {
+        "path": "artifacts/release-audit-20261011/dist-repro-final/olympus_cognitive_architecture-0.2.0-py3-none-any.whl",
+        "sha256": "b917c69dd0527cbc90c13ca59ca5b947c8b979cde76db0009500e27c93789cab"
+      },
+      "sdist": {
+        "path": "artifacts/release-audit-20261011/dist-repro-final/olympus_cognitive_architecture-0.2.0.tar.gz",
+        "sha256": "70c419ca241c77b505370a78ccff79d16487c153f01af62b1a78ce8f92d2345c"
+      },
+      "isolated_no_dependency_wheel_import": "PASS_VERSION_0.2.0_API_NOT_EAGERLY_IMPORTED",
+      "exact_lock_environment": "PASS_110_PACKAGES",
+      "full_dependency_installed_wheel": "PASS_IMPORTS_AND_ALL_DEMOS",
+      "source_date_epoch": 1791692886,
+      "wheel_rebuilt_from_clean_sdist": "PASS_BYTE_IDENTICAL",
+      "reproducibility_receipt": "research/REPRODUCIBLE_BUILD_RECEIPT_20261011.json",
+      "reproducibility_receipt_sha256": "50089a173f33166c9f2fde2962d6d1f4d33e014fd8e0eeab51e43f2e8f4b0b97"
+    },
+    "sbom": {
+      "python": {
+        "components": 79,
+        "sha256": "9aba07dbe0a65075b701dbde0de0a568678c32f8c8634a0dac733153b4ca2b0c"
+      },
+      "web": {
+        "components": 149,
+        "sha256": "33fb40c7c96deccf8a1deb61d8874a4215e95c9706aa739ebc0ae68ca3e2bb75"
+      }
+    },
+    "o1_migration": {
+      "byte_exact_files": 9,
+      "synthetic_contract_tests": 10,
+      "migration_tests": 2,
+      "status": "PASS_MIGRATION_ONLY_EXECUTION_UNAUTHORIZED"
+    },
+    "environment_lock": {
+      "format": "uv.lock revision 3",
+      "packages": 110,
+      "sha256": "5631a669ae92dc7cc6db076cbf41c14dc1067b76a58b17dec4ee4e168f0d9bf1",
+      "lock_check": "PASS"
+    },
+    "cli_foundry": {
+      "status": "PASS_LOCAL_DIRTY_TREE",
+      "receipt": "research/CLI_FOUNDRY_LIFECYCLE_RECEIPT_20261011.json",
+      "receipt_sha256": "461698ed7e1b4da8e89ab81954e01717bd7e3d771a513a857b74d4e437bb7868"
+    },
+    "final_resource_snapshot": {
+      "available_bytes": 2955870208,
+      "swap_total_bytes": 9663676416,
+      "swap_used_bytes": 8968271298,
+      "swap_fraction": 0.9280392794559399,
+      "disposition": "NO_FURTHER_HEAVY_WORK"
+    }
+  },
+  "retained_failures": [
+    {
+      "artifact": "research/REPOSITORY_CLOSURE_FAILED_ATTEMPT_20261011.json",
+      "summary": "The first repository-wide test attempt retained 185 passes and three resource-governor setup errors at 93.9 percent swap; the later admitted rerun passed."
+    },
+    {
+      "summary": "A new lazy-export test initially asserted the wrong pre-existing FastAPI title; the expectation was corrected and the targeted suite then passed 10 of 10."
+    },
+    {
+      "artifact": "datasets/external/editclevr/MATERIALIZATION_RECEIPT_RESOURCE_DEVIATION_20261011.json",
+      "summary": "The first complete materialization retained exact data integrity but ended at 90.083 percent swap; it is preserved as a deviation and stage-wise resource checks were added before any later materialization."
+    },
+    {
+      "summary": "An ambient-environment pip-audit attempt failed on an unrelated local labos package. CI and release were corrected to audit only the uv.lock-derived requirements export, which passed with no known vulnerabilities."
+    },
+    {
+      "artifact": "research/SBOM_FAILED_ATTEMPT_20261011.json",
+      "summary": "The temporary Python 3.14.0 interpreter's pip-audit resolver environment aborted in ensurepip; the same lock-derived input succeeded under the verified project interpreter and produced the final SBOM."
+    }
+  ],
+  "research": {
+    "predecessor": "CENTRAL_NATURAL_DATA_AND_JEPA_HYPOTHESES_NOT_EVALUATED",
+    "v2": "NEGATIVE_CONTROLLED_SYNTHETIC",
+    "v3": {
+      "status": "NEGATIVE_CONTROLLED_SYNTHETIC",
+      "primary_delta": -0.0125,
+      "ci95": [-0.028125, 0.003125],
+      "required_effect": 0.02,
+      "risk_monotonicity_violations": 0,
+      "transition_legality_violations": 0
+    },
+    "o1": "MIGRATED_PREREGISTRATION_NOT_RUN_UNFROZEN_DO_NOT_RUN",
+    "model_promotion": "NONE",
+    "independent_reproduction": false
+  },
+  "datasets": {
+    "editclevr": {
+      "revision": "734efa9b0164ba742cd2c39b9c2945c494497c23",
+      "license": "CC-BY-4.0",
+      "status": "MATERIALIZED_LOADER_SMOKE_PASS_RESOURCE_DEVIATION_RETAINED",
+      "completed_suite_archives": 4,
+      "completed_metadata_archives": 1,
+      "payload_files": 202835,
+      "unique_pairs": 20000,
+      "referenced_paths": 120000,
+      "unsafe_members": 0,
+      "invalid_records": 0,
+      "missing_paths": 0,
+      "receipt": "datasets/external/editclevr/PAYLOAD_VALIDATION.json",
+      "receipt_sha256": "a329f9df42468db22cb44a158673450548ebadb40455f7717c54835738f8b74a",
+      "materialized_files": 202838,
+      "materialization_marker_sha256": "540216ef434350f3fa0915ccd42aa2b9d5a9cabf243603d41226283df202942a",
+      "materialization_resource_deviation_retained": true,
+      "loader_smoke": "PASS_2000_COGENT_RECORDS_AND_REAL_SAMPLE_DECODE",
+      "loader_smoke_sha256": "9ebd7c98e3782b6a4023462df44ef63a1f7eac3ead19cbb8d51864bfb77eef5d"
+    }
+  },
+  "remote_account_audit": {
+    "private_vulnerability_reporting": true,
+    "main_required_checks": ["python", "web"],
+    "main_strict_checks": true,
+    "main_admin_enforcement": true,
+    "force_pushes_allowed": false,
+    "branch_deletions_allowed": false,
+    "latest_observed_remote_ci": {
+      "run_id": 38044934536,
+      "head": "6958be0e3dedaf978bc1b8a486f5f8ebfc7cfc70",
+      "conclusion": "success",
+      "current_tree": false
+    },
+    "open_pull_requests": 13,
+    "open_issues": 1,
+    "pypi_project_observed": false
+  },
+  "blocked_or_owner_controlled": [
+    "The final reconciliation snapshot reached 92.8 percent swap, above the unchanged 90 percent ceiling; no further heavy local run is admitted until headroom recovers.",
+    "EditCLEVR is admitted and materialized but remains insufficient for the full aligned language, temporal, governance, risk, and transition contract; no benchmark or JEPA efficacy run has been authorized by data readiness alone.",
+    "O1 cannot become run-ready without a real 100-task manifest and explicit provider, runtime, prompt, decoding, tool, retry, time, token, seed, and authorization freeze.",
+    "No rights-reviewed aligned natural Olympus corpus exists, so predecessor confirmatory fusion and JEPA claims remain blocked.",
+    "PyPI Trusted Publisher state, merging, tagging, publishing, deployment, arXiv submission, and independent reproduction require external authority or coordination and were not performed."
+  ],
+  "external_actions": {
+    "commit_created": false,
+    "pushed": false,
+    "pull_request_modified": false,
+    "issue_modified": false,
+    "tag_created": false,
+    "github_release_created": false,
+    "pypi_published": false,
+    "arxiv_submitted": false,
+    "deployed": false,
+    "model_promoted": false
+  },
+  "claim_boundary": "This receipt establishes a strong local engineering, exact dependency-lock, installed-artifact, dataset-admission, materialization, loader-smoke, and CLI-lifecycle pass on a preserved dirty worktree, with the materialization resource deviation retained. It is not a clean-checkout CI result, executed EditCLEVR benchmark, model capability claim, positive scientific result, protected aligned-data confirmation, independent reproduction, production deployment, or external release."
+}

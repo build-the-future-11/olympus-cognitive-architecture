@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "source_parent_head": "20a5687d041859e888bf21390a37483177177dd8",
+  "status": "REFERENCE_HARDENED_AND_BOUNDED_PIPELINE_EXECUTED",
+  "scientific_status": "NOT_RUN_MISSING_REQUIRED_RIGHTS_REVIEWED_MULTIMODAL_DATA",
+  "promotion_status": "NOT_PROMOTED_SMOKE_QUALITY_GATE_FAILED",
+  "implemented": [
+    "normalized six-family fusion with typed extension channels",
+    "leave-one-component-out counterfactual decision surfaces",
+    "family disagreement and separately supervised intrinsic risk",
+    "monotone noisy-OR composition that cannot lower host risk",
+    "host-constrained Aion transition masking and fail-closed STOP suppression",
+    "finite non-negative joint loss validation and clipped finite-gradient step",
+    "resource-governed device, precision, compilation, and inference runtime",
+    "digest-pinned immutable Olympus checkpoint save and load",
+    "source-disjoint content-addressed aligned Olympus tensor dataset contract",
+    "CLI dataset verification and digest-pinned evaluation inference",
+    "JEPA multiscale pyramid and phase-aware spectral objectives",
+    "JEPA memory-bounded tiled and eight-way self-ensemble inference",
+    "falsifiable research manuscript with baselines, ablations, statistics, and release gates"
+  ],
+  "not_claimed": [
+    "absence of all possible defects",
+    "scientific novelty established by peer review or exhaustive prior-art search",
+    "target-scale checkpoint training or family capability",
+    "multimodal, temporal, safety, or super-resolution superiority",
+    "calibrated risk or conformal coverage guarantees",
+    "deployment, promotion, publication readiness, or independent reproduction"
+  ],
+  "source_sha256": {
+    "olympus/models/olympus_system.py": "b3d278e07b90a6019dcfd4a39e79254cc65f228800493d5bf462ad81fb73e151",
+    "olympus/models/runtime.py": "28b7a33f24830206e9c7b9a286cec169bfd0a99b4c3530b6b5962e84e08515f2",
+    "olympus/models/reference_families.py": "0340c62dacb289967ac22f39e6c022a7a9b4e4512772e6734e36f0fab878bc6b",
+    "olympus/data/olympus_dataset.py": "0fc88caa76e083964eb8b75180af4d7a934942817c40a9437fc748cbefea8ae8",
+    "olympus/upscaler/jepa.py": "22578cb2ce45ee9a52126b427342a6f129c4af3ceed28f7ca4d6ff6273117bbf",
+    "olympus/upscaler/training.py": "d25db43f7dff9307a07cfe3e2a17a4aaa2e90e85a91b4047a91f3b42c2637d15",
+    "olympus/cli.py": "8871052fc6aa4c2577fda4a4ff732f793188bd3b14abef53e9703afea28675db",
+    "tests/test_olympus_system.py": "553bd55dcabda76873d6ff28a6e8a759d7b80cfc3b14255736ba820c421c6569",
+    "tests/test_olympus_dataset.py": "9a54a9e7ddb09d5d71802150bed6e0bc96dde8d90e7e9923cb4f3f0c32000c6e",
+    "tests/test_bu1ld_model_pathways.py": "727b34a3b406e9960dd06eb689f07f227265cd53a37713594d5d55e48f308968",
+    "research/OLYMPUS_PAPER_DRAFT.md": "c2e7f84175a3349bd00757b594b480c8715960b6885aedb14803f4998e5cc03f",
+    "docs/olympus-system.md": "63de31cd03468aef46104633095313ee9aacac3474cf639f467c09f617d574f0",
+    "apps/forge-web/package-lock.json": "fca3edd7a0008bf6d8a046170ef5f9a8385b3b1aad6ccc8713721be767206909"
+  },
+  "verification": {
+    "admitted_full_python_suite": "178 passed",
+    "observed_branch_coverage_percent": 86.05,
+    "coverage_gate_percent": 85.0,
+    "coverage_gate_status": "PASSED",
+    "ruff": "passed for olympus and tests",
+    "strict_mypy": "passed for 73 source files",
+    "frontend_tests": "6 passed in 2 files",
+    "frontend_production_build": "passed",
+    "npm_audit": "0 vulnerabilities after lockfile-pinned source-map-js fix",
+    "pip_audit": "no known vulnerabilities after isolated-environment cryptography and Pillow upgrades",
+    "wheel_build": "passed",
+    "sdist_build": "passed",
+    "twine_check": "passed for wheel and source distribution",
+    "wheel_contains_new_runtime_data_model_and_upscaler_modules": true,
+    "later_replay": "175 passed; 3 training-backed tests refused at setup by the 90 percent swap ceiling",
+    "later_replay_interpretation": "resource admission block, not a bypassed or concealed model result"
+  },
+  "loaded_instruction_dataset": {
+    "path": "artifacts/foundry/deep/dataset/manifest.json",
+    "file_sha256": "401cece21cf4ec5460148e6385dcc7bbf73dd87c4b851596dfcbe507a3d17ce4",
+    "manifest_sha256": "dde28b2e08a1763ab77d179b519c6d60ae8d3abd3094850cb8bcc48ecda694c7",
+    "records": 36,
+    "train_records": 12,
+    "validation_records": 12,
+    "test_records": 12,
+    "categories_per_split": 12,
+    "duplicate_ids": 0,
+    "normalized_duplicates": 0,
+    "split_leakage_hits": 0,
+    "pii_or_secret_hits": 0,
+    "scope": "internal instruction smoke data only; not aligned six-family or super-resolution research data"
+  },
+  "bounded_readiness_run": {
+    "run_id": "sft-full-dde28b2e08a1-s20261011",
+    "parameters": 34528,
+    "epochs": 1,
+    "optimizer_steps": 2,
+    "checkpoint_path": "artifacts/foundry/deep/readiness-run-20261011/sft-full-dde28b2e08a1-s20261011/checkpoint.pt",
+    "checkpoint_sha256": "db69d98c4d517e333149046a5028d9893567939894f7a9498656e1c77652be6a",
+    "initial_validation_loss": 5.629098653793335,
+    "final_validation_loss": 5.467877388000488,
+    "held_out_baseline_loss": 5.628210067749023,
+    "held_out_candidate_loss": 5.4858009815216064,
+    "held_out_category_regressions": 0,
+    "exact_match_rate": 0.0,
+    "format_compliance_rate": 0.0,
+    "passed_smoke_quality_gate": false,
+    "evaluation_path": "artifacts/foundry/deep/readiness-run-20261011/evaluation.json",
+    "evaluation_sha256": "46c42ed8bf1a3420d929a5cacff96d55a77da408cf52d488374875bbfa78fd2f"
+  },
+  "resource_snapshot_after_verification": {
+    "total_bytes": 17179869184,
+    "available_bytes": 3395780608,
+    "swap_total_bytes": 4831838208,
+    "swap_used_bytes": 4428660736,
+    "swap_fraction": 0.9165581597222222,
+    "process_peak_rss_bytes": 253329408
+  },
+  "build_artifacts": {
+    "wheel": {
+      "path": "/tmp/olympus-hardening-final-20261011.Kjlalu/olympus_cognitive_architecture-0.2.0-py3-none-any.whl",
+      "sha256": "038ef9bf1a9ccbf995dc3c5dedfb235ec20a8a77679481d49526097203b470cd"
+    },
+    "sdist": {
+      "path": "/tmp/olympus-hardening-final-20261011.Kjlalu/olympus_cognitive_architecture-0.2.0.tar.gz",
+      "sha256": "7a41e54d3cfd0f9e0da23fa2ed0edcf7ba2609e98494612dc4c93cd88b0f32d5"
+    },
+    "coverage_json": {
+      "path": "/tmp/olympus-hardening-coverage.json",
+      "sha256": "9f1f6cb7c2e03166a614b3e438a940ecc13155c4a96c1a26eb3052454edf96aa"
+    }
+  },
+  "remaining_run_blockers": [
+    "rights-reviewed aligned multimodal, temporal, policy-risk, tool-outcome, and native-resolution datasets are absent",
+    "current swap utilization exceeds the repository's admitted training ceiling",
+    "matched baselines, multi-seed trials, protected evaluation, and independent reproduction have not run"
+  ],
+  "worktree_boundary": "The checkout remains one existing commit ahead of origin/main with task changes uncommitted. Two pre-existing untracked .DS_Store files remain untouched. No dataset license acceptance, remote upload, paid compute, promotion, deployment, commit, or push occurred."
+}

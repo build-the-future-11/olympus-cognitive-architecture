@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "source_parent_head": "20a5687d041859e888bf21390a37483177177dd8",
+  "status": "SIX_REFERENCE_ARCHITECTURES_AND_JEPA_V3_IMPLEMENTED_AND_VERIFIED",
+  "capability_status": "NO_TARGET_SCALE_MODEL_TRAINED_OR_PROMOTED",
+  "scope": {
+    "implemented": [
+      "Hermes causal reference with language, tool, and abstention heads",
+      "Prometheus domain-adapter reference with evidence classification",
+      "Perseus sparse top-k expert reference with routing diagnostics",
+      "Atlas spatiotemporal multimodal grounding and retrieval reference",
+      "Kronos temporal world-model and differentiable planning reference",
+      "Aion host-constrained research transition router with deterministic STOP rule",
+      "six-family non-promotional inventory CLI",
+      "masked high-resolution-detail JEPA upscaler with multiscale prediction",
+      "frequency and SSIM objectives and held-out metrics",
+      "digest-pinned JEPA checkpoint reload"
+    ],
+    "not_claimed": [
+      "12B, 128B, 1.024T, 8T, or otherwise target-scale family checkpoints",
+      "assistant, specialist, generalist, multimodal, AGI, or autonomous-research capability",
+      "JEPA upscaler superiority on rights-reviewed natural images",
+      "family promotion, deployment, independent reproduction, or publication readiness"
+    ]
+  },
+  "source_sha256": {
+    "olympus/models/reference_families.py": "d33c6a7d434437c36797d3dc0d43a978984b3cdb5617965e332d75875dba0a19",
+    "olympus/models/specifications.py": "91afc0b48fb51de493cbad877803325ea6a4a81abe00a5405399613f20cb99a2",
+    "olympus/upscaler/jepa.py": "c0323ba4bdb5b6b16ecbdf6077f90d51eb92e20cfda72cca4dc7d790fc411e7e",
+    "olympus/upscaler/training.py": "9a4ca94c01d429de637409c55f061228e6c07b7ce3f38962f3cb688b7c543d78",
+    "olympus/cli.py": "bfa2814f4272050073a8096784cddac0bb1012ca47323172462a05362d8b6f26",
+    "tests/test_bu1ld_model_pathways.py": "2235978515ba279f88c7beb6b72db551184ed4ba50935ff3d5432c4298f338e8",
+    "tests/test_cli.py": "6eb442a8bf74df8ab6fda3f6a0caff1569d8802020d54757e2c91e0239501a24",
+    "research/BU1LD_MODEL_SPECIFICATIONS.md": "a7b823f885bf67b4a8af6a2ac8ec59f7cc5836ea77c6a6516babfd65ce931a17",
+    "docs/architecture.md": "6b269f949385ce7098388d3ced47059425f98607e2d2b49d76d9b155f97796d9"
+  },
+  "verification": {
+    "focused_tests": "14 passed",
+    "full_tests": "171 passed",
+    "observed_branch_coverage_percent": 87.11,
+    "coverage_gate_percent": 85.0,
+    "coverage_gate_status": "PASSED",
+    "ruff_lint": "passed for olympus and tests",
+    "strict_mypy": "passed for 85 source files",
+    "cli_reference_inventory": "passed for all six families",
+    "wheel_build": "passed",
+    "sdist_build": "passed",
+    "wheel_archive_contains_new_modules": true,
+    "twine_check": "passed for wheel and source distribution"
+  },
+  "resource_snapshot": {
+    "total_bytes": 17179869184,
+    "available_bytes": 3754049536,
+    "swap_total_bytes": 4294967296,
+    "swap_used_bytes": 3321563709,
+    "swap_fraction": 0.7733618163038045,
+    "process_peak_rss_bytes": 238829568
+  },
+  "artifacts": {
+    "wheel": {
+      "path": "/tmp/olympus-models-final2-20261011.ABMSo0/olympus_cognitive_architecture-0.2.0-py3-none-any.whl",
+      "sha256": "504c45d1f22a4f1945a6ffa84cdc42e1b70c03089bd80a3e56c583bcda00ec69"
+    },
+    "sdist": {
+      "path": "/tmp/olympus-models-final2-20261011.ABMSo0/olympus_cognitive_architecture-0.2.0.tar.gz",
+      "sha256": "bf804d736fe3134dc9fcc60339706d5206d75a67bb543f8473dd1c9c7acfaff4"
+    }
+  },
+  "worktree_boundary": "The checkout began with two pre-existing untracked .DS_Store files, which remain untouched. The prior 2026-10-11 implementation receipt remains preserved. No target-scale training, natural-image campaign, promotion, deployment, commit, or push occurred."
+}

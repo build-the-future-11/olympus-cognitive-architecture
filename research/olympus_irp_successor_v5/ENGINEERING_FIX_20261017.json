@@ -1,0 +1,17 @@
+{
+  "amendment": "PRIOR_INVENTORY.json entry for this file updated to the new sha256/bytes so verify_prior() admits the documented fix. All other 1572 entries remain the original preparation-time hashes. This receipt preserves the original hash for audit.",
+  "change": "Removed the per-metric print from _Metrics.emit. The durable fsync'd metrics.jsonl record and optional TensorBoard writer are unchanged. No training, model, loss, seed, split, metric, or artifact logic was modified (diff is exactly one deleted print line).",
+  "defect": "tests/test_cli.py::test_bu1ld_composed_training_command_runs_end_to_end failed at HEAD commit 110e651: _Metrics.emit printed every metric row to stdout as compact JSON, so the bu1ld train-olympus-system CLI emitted N metric lines followed by the report JSON, violating the single-JSON-stdout contract that json.loads(result.output) asserts. Pre-existing validity defect committed with the final-deliverables commit.",
+  "evidence": "Fixed test passes; full local suite 382 passed / 2 skipped with only two load-flaky process-timing tests that pass in isolation; ruff and mypy clean on the touched file. Full inventory drift scan before amendment found exactly this one file drifted; zero missing files across 1573 entries.",
+  "file": "olympus/training/olympus_system.py",
+  "kind": "ENGINEERING_FIX_PRE_EXECUTION_AMENDMENT",
+  "new_bytes": 34150,
+  "new_sha256": "972d5eec7b856896564ee1df19b8c3f9691bfdc3d2f56459105c29e461d9c23d",
+  "old_bytes": 34185,
+  "old_sha256": "71c3d588c10ff1cba24228fb7d2d49eb40df47cc3969220edb06e275f32ad3a1",
+  "promotion_authorized": false,
+  "schema_version": 1,
+  "scientific_inertness": "olympus/training/olympus_system.py is not imported by the v4/v5 research path (scripts/run_oracle_fusion_v4.py, scripts/run_robust_fusion_v5.py, olympus/data|models/oracle_fusion_v4.py, olympus/data|models/robust_fusion_v5.py). The v5 campaign trains via its own in-runner bank/head loops. This fix cannot affect any v5 tensor, seed, split, route, metric, or endpoint.",
+  "status": "DOCUMENTED_PRE_RERUN_FIX",
+  "time_utc": "2026-10-17T11:07:08Z"
+}

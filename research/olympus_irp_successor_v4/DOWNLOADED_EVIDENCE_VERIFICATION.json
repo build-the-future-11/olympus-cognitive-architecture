@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "cells": 40,
+  "prediction_files_hash_verified": 120,
+  "parameters": [
+    26697,
+    11306
+  ],
+  "development_only_selection": true,
+  "crossfit_overlap": 0,
+  "common_protected_data_verified": true,
+  "all_reported_means_recomputed": true,
+  "primary_cluster_deltas_recomputed": [
+    -0.08349609375,
+    -0.060546875,
+    -0.06982421875,
+    -0.052734375,
+    -0.07421875
+  ],
+  "freeze_precedes_protected_evaluation": true,
+  "limitation": "Provenance and aggregate verification; not independent model retraining"
+}

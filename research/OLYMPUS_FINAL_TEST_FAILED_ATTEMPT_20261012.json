@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-12",
+  "status": "RESOURCE_GOVERNOR_REJECTION_RETAINED",
+  "source": {
+    "repository": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture",
+    "head": "20a5687d041859e888bf21390a37483177177dd8",
+    "dirty_worktree_preserved": true
+  },
+  "command_scope": "repository-wide Python test suite with branch coverage",
+  "admission_snapshot": {
+    "available_bytes": 3020259328,
+    "swap_total_bytes": 11811160064,
+    "swap_used_bytes": 10566038978,
+    "swap_fraction": 0.8945809658616781
+  },
+  "result": {
+    "passed": 197,
+    "errors": 3,
+    "error_scope": "three tests sharing the trained_foundry module fixture",
+    "error": "ResourceGovernor rejected model training after swap utilization reached 95.4%, above the unchanged 90.0% ceiling.",
+    "coverage_percent": 80.58,
+    "coverage_failure_is_downstream": true,
+    "coverage_artifact": "artifacts/release-audit-20261012/coverage.json",
+    "coverage_sha256": "807b532a3c4451f285dc63684dd8a260a1333430e24097162f42bcd9a3279b80"
+  },
+  "disposition": "INVALID_AS_A_SINGLE_PROCESS_FULL_SUITE_PASS_RESOURCE_LIMIT_PRESERVED",
+  "follow_up": "After swap recovered below the ceiling, the complete seven-test deep Foundry file was executed in a fresh process. All seven passed and the three previously rejected cases completed; coverage was appended without weakening the guard.",
+  "later_cli_demo_preflight": {
+    "status": "NOT_RUN_RESOURCE_REJECTED_BEFORE_EXECUTION",
+    "available_bytes": 3245096960,
+    "swap_total_bytes": 12884901888,
+    "swap_used_bytes": 11739919810,
+    "swap_fraction": 0.9111376952690383,
+    "ceiling": 0.9
+  },
+  "claim_boundary": "This retained attempt records a host-resource rejection, not a product defect and not a successful monolithic test run."
+}

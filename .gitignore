@@ -25,3 +25,19 @@ portfolio_status.json
 *.pyc
 *.sqlite3
 *.db
+
+# Large, revision-pinned external dataset payloads stay local. Provenance,
+# manifests, split registries, and validation receipts remain versionable.
+datasets/external/editclevr/upstream-*/.cache/
+datasets/external/editclevr/upstream-*/*.tar.gz
+datasets/external/editclevr/upstream-*/*.part
+datasets/external/editclevr/upstream-*/*.incomplete
+datasets/external/editclevr/payload-*/
+
+# Local desktop metadata and transient build files
+.DS_Store
+.editclevr-materialize.lock
+output/pdf/*.log
+output/pdf/*.blg
+output/pdf/rendered/
+output/pdf/rendered-final/

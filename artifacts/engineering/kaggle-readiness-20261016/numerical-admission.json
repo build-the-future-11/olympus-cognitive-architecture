@@ -1,0 +1,7 @@
+{
+  "command": "python -m scripts.validate_olympus_campaign --device cpu",
+  "exit_code": 2,
+  "elapsed_seconds": 0.023871209006756544,
+  "torch_imported": false,
+  "output": "swap utilization 93.3% exceeds the 90.0% safety ceiling\n"
+}

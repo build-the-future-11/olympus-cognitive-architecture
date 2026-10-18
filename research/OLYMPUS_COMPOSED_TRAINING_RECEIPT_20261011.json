@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-11",
+  "checkout": {
+    "branch": "main",
+    "head": "20a5687d041859e888bf21390a37483177177dd8",
+    "dirty_worktree_preserved": true,
+    "commit_created": false,
+    "push_performed": false
+  },
+  "status": "ENGINEERING_VERIFIED_SCIENCE_NOT_RUN_NOT_PROMOTED",
+  "completed": [
+    "hash-bound composed-system training and held-out evaluation runner",
+    "validated and hash-recorded training configuration",
+    "resource admission, deterministic execution, clipped gradients, and cosine schedule",
+    "routing entropy, effective-component, counterfactual KL, and class-flip diagnostics",
+    "risk Brier, ten-bin ECE, fixed risk-coverage, and forced-STOP diagnostics",
+    "forbidden-transition dataset rejection and model-data compatibility checks",
+    "position-aware squared-sine JEPA tile blending",
+    "packaged reference configuration and end-to-end CLI coverage"
+  ],
+  "verification": {
+    "python": {
+      "command": ".venv/bin/python -m pytest --cov=olympus --cov-report=term -q",
+      "tests_passed": 181,
+      "tests_failed": 0,
+      "branch_coverage_percent": 86.08,
+      "required_branch_coverage_percent": 85.0,
+      "passed": true
+    },
+    "ruff": {
+      "command": ".venv/bin/ruff check .",
+      "passed": true
+    },
+    "mypy": {
+      "command": ".venv/bin/mypy olympus",
+      "source_files_checked": 75,
+      "passed": true
+    },
+    "python_dependency_audit": {
+      "known_vulnerabilities": 0,
+      "local_non_pypi_packages_skipped": [
+        "labos 0.2.0",
+        "olympus-cognitive-architecture 0.2.0"
+      ]
+    },
+    "frontend": {
+      "tests": "2 files, 6 tests passed",
+      "production_build": "passed",
+      "npm_audit_vulnerabilities": 0
+    },
+    "distribution": {
+      "build": "passed",
+      "twine_check": "wheel and sdist passed",
+      "reference_config_present_in_wheel": true,
+      "wheel": {
+        "path": "/tmp/olympus-final-build-20261011-v3/olympus_cognitive_architecture-0.2.0-py3-none-any.whl",
+        "sha256": "e210a8017555a498a1dac40ebb036f5957a8013c7ce94bdc2867b6314138f63e"
+      },
+      "sdist": {
+        "path": "/tmp/olympus-final-build-20261011-v3/olympus_cognitive_architecture-0.2.0.tar.gz",
+        "sha256": "cd355e2947ae01a83a6fb0b3a9a5b98dd7a22a3f7e014cff27bbf9485a5c7848"
+      }
+    }
+  },
+  "source_sha256": {
+    "olympus/training/olympus_system.py": "51e4be2bc986457c42b8230c40d6be07248ad0b4365640360e76b346c2a3b711",
+    "olympus/evaluation/olympus_system.py": "ace89e33d91eb443d2cf32aa4deeca09ebdee5d680ff7fe8c2674f3292cd57a6",
+    "olympus/models/olympus_system.py": "157a96eb9414f94b1e27100b8f79253e6768ad821d4f7d65b432dc949be427e8",
+    "olympus/models/runtime.py": "68a7c7f9e4ea2a7aa87b640bc8ccb3105e144c2ea0f7752234cbef11fa666647",
+    "olympus/data/olympus_dataset.py": "fdfffe81d28e2ccbab0df8e6da9661acdf9afefc3fba53d1029f7e8e180e97a6",
+    "olympus/upscaler/jepa.py": "808766cf56f8ab2bb2244c0b3fdad66faa705ee3e62c54c458da4e9c723a7292",
+    "configs/olympus-reference-system.json": "0c8363e606b20dfbd465d40dce2871fa6563fda21f437fa5361f753a5baa9391"
+  },
+  "resource_snapshot_after_verification": {
+    "available_bytes": 4333453312,
+    "swap_fraction": 0.7869873046875,
+    "admitted_under_default_thresholds": true
+  },
+  "dataset_boundary": {
+    "instruction_smoke_dataset_loaded": true,
+    "instruction_smoke_records": 36,
+    "aligned_olympus_scientific_dataset_present": false,
+    "reason": "No rights-reviewed source-disjoint aligned multimodal, temporal, governance, and intrinsic-risk corpus is available in the repository."
+  },
+  "promotion_authorized": false,
+  "scientific_claims_authorized": false,
+  "remaining": [
+    "acquire and rights-review the aligned Olympus corpus",
+    "freeze calibration, validation, and protected test splits",
+    "run the preregistered matched baselines and ablations across seeds",
+    "report confidence intervals, resource curves, failures, and independent reproduction"
+  ]
+}

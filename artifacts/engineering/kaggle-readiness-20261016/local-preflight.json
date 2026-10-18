@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "python": "3.14.7",
+  "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "torch_imported": false,
+  "promotion_authorized": false,
+  "package_versions": {
+    "torch": "2.14.1",
+    "numpy": "2.5.4",
+    "pydantic": "2.14.0"
+  },
+  "memory": {
+    "total_bytes": 17179869184,
+    "available_bytes": 3733094400,
+    "swap_total_bytes": 13958643712,
+    "swap_used_bytes": 12918582149,
+    "swap_fraction": 0.9254897836452494,
+    "process_peak_rss_bytes": 40747008
+  },
+  "status": "BLOCKED_RESOURCE_OR_DEVICE",
+  "reason": "swap utilization 92.5% exceeds the 90.0% safety ceiling",
+  "torch_in_sys_modules_after_attempt": false
+}

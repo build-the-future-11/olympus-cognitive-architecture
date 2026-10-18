@@ -145,3 +145,88 @@ Kronos are **PLANNED ONLY** in `research/FUTURE_MODEL_FAMILY_ROADMAPS.md`.
 
 No paid compute, remote training, private-data upload, or false model-family
 instantiation occurred.
+
+## 2026-10-11 ENGINEERING ADDENDUM
+
+**REAL reference implementations, NOT PROMOTED MODELS.** All six family
+contracts now have bounded differentiable PyTorch references. Hermes exposes
+language, tool, and abstention heads; Prometheus exposes domain-adapter and
+evidence routing; Perseus performs sparse top-k token-to-expert dispatch; Atlas
+returns multimodal patch grounding and retrieval embeddings; Kronos returns
+transition, reward, value, uncertainty, and multi-step planning outputs; Aion
+ranks only host-allowed research transitions and forces STOP at its risk gate. The
+full local Python gate passed 171 tests with 87.13% branch coverage. This does
+not change the `PROMOTED MODELS: None` verdict above.
+
+**REAL JEPA upscaler engineering upgrade, efficacy UNESTABLISHED.** The v3
+mechanism uses masked high-resolution pixel-unshuffle targets, multiscale
+dilated prediction, frequency and SSIM losses/metrics, component loss receipts,
+and digest-verified checkpoint reload. Its zero-initialized reconstruction head
+still reproduces bicubic at initialization. No rights-reviewed natural-image
+campaign, matched modern baseline matrix, multi-seed confidence interval, or
+independent reproduction was run, so superiority and promotion remain absent.
+
+**REAL composed-system run path, scientific execution BLOCKED ON DATA.** The
+reference system now verifies a hash-bound aligned dataset, enforces model/data
+compatibility and resource admission, trains with deterministic bounded steps,
+evaluates a source-disjoint split, and writes an immutable checkpoint and report.
+The report includes routing entropy/utilization, leave-one-component-out shifts,
+STOP behavior, labeled risk calibration, and fixed risk-coverage points. No
+rights-reviewed aligned Olympus corpus is present, so no scientific campaign or
+promotion has been performed.
+
+## 2026-10-11 TRAINING CONTINUATION
+
+**REAL bounded training, NOT A PROMOTED OLYMPUS MODEL.** The exact one-epoch
+34,528-parameter instruction candidate was resumed from checkpoint SHA-256
+`db69d98c4d517e333149046a5028d9893567939894f7a9498656e1c77652be6a`
+with its optimizer and generator state intact. It completed 12 total epochs and
+24 optimizer steps on the immutable 12-record training split. Validation loss
+improved from 5.46788 at resume to 3.38116; every recorded epoch reduced
+validation loss. The final checkpoint SHA-256 is
+`cd1cdae3016f6d7d063243b3e1f0a1297c2c560a6186d4f1ffb3cd18991ec610`.
+
+The untouched 12-record test evaluation improved loss from the deterministic
+untrained baseline 5.62821 to 3.47457 with zero category regressions. Format
+compliance rose to 66.67%, but exact match and all workflow exact-match scores
+remained 0%. The smoke gate therefore failed and the checkpoint is ineligible
+for promotion. No additional tuning was performed after inspecting the
+protected test result.
+
+## 2026-10-11 IMPROVED EXPLORATORY CANDIDATE
+
+**REAL TRAINING AND SMOKE PASS; NOT HERMES PROMOTION.** The trainer was first
+hardened with configuration-hash run identities, overwrite refusal, strict
+resume compatibility, optimizer-step warmup plus cosine decay, early stopping,
+and restoration of a mutually consistent best model/optimizer/generator state.
+A fresh 884,480-parameter candidate (width 128, four layers, eight heads, seed
+20261012) was then trained without using protected-test feedback for stopping.
+It attempted 30 epochs, early-stopped after a 12-epoch validation plateau, and
+restored epoch 18 / optimizer step 36. Validation loss improved 5.75673 →
+2.96258. Checkpoint SHA-256:
+`e95ff77e5465707a49dbd08b43077108bbff373979fb834e1c29593015102eaa`.
+
+Its single held-out evaluation reduced loss 5.75433 → 3.16436 with zero
+category regressions, 83.33% format compliance, and nonempty outputs for all
+workflow examples. It passed the bounded infrastructure smoke gate. Exact match
+and tool exact match remained 0%, median generation latency rose to 615.52 ms,
+and the dataset contains only 12 training and 12 test records. Therefore this
+is a better plumbing candidate, not evidence of general task competence or a
+promotable Hermes model.
+
+Int4 and int8 derivatives passed the quantization quality gate. Int4 reduced
+weight storage 86.04% (3,556,754 → 496,699 bytes) with a −0.064% measured loss
+change; int8 reduced it 73.60% with a +0.012% loss change. Tool exact match
+remained 0%, so quantization does not alter the promotion verdict.
+
+## 2026-10-11 CONTROLLED RESEARCH OUTCOMES
+
+**NEGATIVE v2 and v3; invariants retained.** Controlled fusion v2 and the
+separately frozen reliability-supervised shrinkage v3 each completed 25 fitted
+checkpoints and 75 protected evaluations. The v3 primary full-minus-semantic
+corrupted selective-accuracy delta was -0.0125 with a 95% paired-bootstrap
+interval of [-0.0281, 0.0031], below the preregistered +0.0200 effect. Both
+studies recorded zero host-risk monotonicity and transition-legality violations.
+The results are controlled synthetic evidence only and do not establish
+natural-data fusion, JEPA efficacy, promoted model capability, or independent
+reproduction.

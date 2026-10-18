@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "project_id": "olympus-oracle-fusion-successor-v4",
+  "phase": "COMPLETED_VERIFIED",
+  "protocol": "PROTOCOL.md",
+  "prior_files": 1102,
+  "prior_results_preserved": true,
+  "planned_cells": 40,
+  "planned_expert_bank_fits": 80,
+  "planned_protected_evaluations": 120,
+  "test_count_passed_observed": 9,
+  "scientific_result": "PRIMARY_NOT_SUPPORTED_WITH_SECONDARY_SYNTHETIC_GAINS",
+  "promotion_authorized": false,
+  "external_benchmark_status": "NOT_EVALUATED",
+  "kaggle_version": 359270139,
+  "completed_cells": 40,
+  "completed_expert_bank_fits": 80,
+  "completed_protected_evaluations": 120,
+  "test_count_passed_verified": 9,
+  "primary_mean_accuracy_delta": -0.0681640625,
+  "primary_ci95_descriptive": [
+    -0.07705078125,
+    -0.05888671875
+  ],
+  "prior_preservation_after_download": {
+    "files_checked": 1102,
+    "changed_or_missing": [],
+    "unchanged": true
+  },
+  "completion_receipt": "KAGGLE_COMPLETED_VERIFIED.json",
+  "findings": "FINDINGS.md"
+}

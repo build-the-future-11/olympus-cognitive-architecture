@@ -1,0 +1,54 @@
+{
+  "archives": {
+    "editclevr_atomic_id.tar.gz": {
+      "file_count": 140000,
+      "sha256": "b0f188e2f2e8b32b54416cfefa43740e976157345c1ea0186411e7082de48c4f",
+      "size_bytes": 3996651313
+    },
+    "editclevr_cogent_ood.tar.gz": {
+      "file_count": 20000,
+      "sha256": "0e2601daf5ec90b10f6f37b384050b4ea9e7d138f588dc0d3d68de9634026e0d",
+      "size_bytes": 568788167
+    },
+    "editclevr_hard_distractor.tar.gz": {
+      "file_count": 22835,
+      "sha256": "458b4dcb4be6393c8dd943f0671dd89786d57af6cf88d1880506450ad1b0d73b",
+      "size_bytes": 650415087
+    },
+    "editclevr_no_edit.tar.gz": {
+      "file_count": 20000,
+      "sha256": "b6c133ff5e39370e1e339a3ac77b34ff46218524ca161e06feac790663ac81be",
+      "size_bytes": 570931863
+    },
+    "editclevr_splits.tar.gz": {
+      "file_count": 3,
+      "sha256": "170a29a91bfe24515916c5da744c2dfb61b882637232090ff4e8d1113b02eb5f",
+      "size_bytes": 9711965
+    }
+  },
+  "dataset": "torux/EditCLEVR",
+  "elapsed_seconds": 217.10507202148438,
+  "final_memory": {
+    "available_bytes": 4358258688,
+    "process_peak_rss_bytes": 283246592,
+    "swap_fraction": 0.900830078125,
+    "swap_total_bytes": 10737418240,
+    "swap_used_bytes": 9672589312,
+    "total_bytes": 17179869184
+  },
+  "marker_sha256": "540216ef434350f3fa0915ccd42aa2b9d5a9cabf243603d41226283df202942a",
+  "output_dir": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture/datasets/external/editclevr/payload-734efa9",
+  "payload_file_count": 202838,
+  "preflight_memory": {
+    "available_bytes": 3215867904,
+    "process_peak_rss_bytes": 39485440,
+    "swap_fraction": 0.8568544921465218,
+    "swap_total_bytes": 10737418240,
+    "swap_used_bytes": 9200405053,
+    "total_bytes": 17179869184
+  },
+  "revision": "734efa9b0164ba742cd2c39b9c2945c494497c23",
+  "schema_version": 1,
+  "status": "PASS",
+  "validation_sha256": "a329f9df42468db22cb44a158673450548ebadb40455f7717c54835738f8b74a"
+}

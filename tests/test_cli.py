@@ -4,9 +4,13 @@ import json
 import sys
 from pathlib import Path
 
+import torch
 from typer.testing import CliRunner
 
 from olympus.cli import app
+from olympus.data.olympus_dataset import write_olympus_dataset_manifest
+from olympus.foundry.resources import MemorySnapshot
+from olympus.models.olympus_system import OlympusSystemConfig
 
 runner = CliRunner()
 
@@ -85,6 +89,104 @@ def test_forge_workspace_and_demo_commands(tmp_path: Path) -> None:
 
     demos = json.loads(_invoke("demo", "run-all"))
     assert demos["forge"]["passed"] is True
+
+
+def test_bu1ld_specifications_command_is_explicitly_non_promotional() -> None:
+    specifications = json.loads(_invoke("bu1ld", "specs"))
+    assert [item["family_id"] for item in specifications] == [
+        "hermes",
+        "prometheus",
+        "perseus",
+        "atlas",
+        "kronos",
+        "aion",
+    ]
+    assert all(item["capability_claimed"] is False for item in specifications)
+
+    references = json.loads(_invoke("bu1ld", "reference-models"))
+    assert [item["family_id"] for item in references] == [
+        "hermes",
+        "prometheus",
+        "perseus",
+        "atlas",
+        "kronos",
+        "aion",
+    ]
+    assert all(item["reference_parameters"] > 0 for item in references)
+    assert all(item["status"] == "REFERENCE_IMPLEMENTATION_NOT_PROMOTED" for item in references)
+    assert all(item["target_capability_claimed"] is False for item in references)
+
+
+def test_bu1ld_composed_training_command_runs_end_to_end(
+    tmp_path: Path, monkeypatch: object
+) -> None:
+    config = OlympusSystemConfig()
+    batch_size = 2
+    batch = {
+        "tokens": torch.ones((batch_size, 4), dtype=torch.long),
+        "attention_mask": torch.ones((batch_size, 4), dtype=torch.bool),
+        "image": torch.rand(batch_size, 3, 8, 8),
+        "states": torch.rand(batch_size, 3, 16),
+        "actions": torch.rand(batch_size, 3, 8),
+        "temporal_mask": torch.ones((batch_size, 3), dtype=torch.bool),
+        "allowed_transitions": torch.ones((batch_size, 8), dtype=torch.bool),
+        "risk_score": torch.tensor([0.1, 0.9]),
+        "decision_targets": torch.tensor([0, 1]),
+        "transition_targets": torch.tensor([0, 7]),
+        "next_state_targets": torch.rand(batch_size, 3, 16),
+        "intrinsic_risk_targets": torch.tensor([0.1, 0.9]),
+        "domain_ids": torch.tensor([0, 1]),
+        "timestamp": torch.tensor([0.0, 1.0]),
+    }
+    dataset = tmp_path / "dataset"
+    dataset.mkdir()
+    torch.save(batch, dataset / "train.pt")
+    torch.save(batch, dataset / "evaluation.pt")
+    manifest = dataset / "manifest.json"
+    write_olympus_dataset_manifest(
+        manifest,
+        dataset_id="cli-test",
+        version="1.0.0",
+        license_name="LicenseRef-Proprietary",
+        train_batch=dataset / "train.pt",
+        evaluation_batch=dataset / "evaluation.pt",
+        train_source_ids=["train-0", "train-1"],
+        evaluation_source_ids=["evaluation-0", "evaluation-1"],
+    )
+    model_config = tmp_path / "model.json"
+    model_config.write_text(config.model_dump_json(), encoding="utf-8")
+    monkeypatch.setattr(  # type: ignore[attr-defined]
+        "olympus.foundry.resources.memory_snapshot",
+        lambda: MemorySnapshot(
+            total_bytes=16 * 1024**3,
+            available_bytes=8 * 1024**3,
+            swap_total_bytes=1024**3,
+            swap_used_bytes=0,
+            process_peak_rss_bytes=1024**2,
+        ),
+    )
+    output = tmp_path / "run"
+    result = json.loads(
+        _invoke(
+            "bu1ld",
+            "train-olympus-system",
+            str(manifest),
+            str(model_config),
+            str(output),
+            "--steps",
+            "1",
+            "--batch-size",
+            "2",
+            "--device",
+            "cpu",
+            "--workload-lock",
+            str(tmp_path / "training.lock"),
+        )
+    )
+    assert result["status"] == "COMPLETED_DEVELOPMENT_NOT_PROMOTED"
+    assert result["promotion_authorized"] is False
+    assert (output / "checkpoint.pt").is_file()
+    assert (output / "report.json").is_file()
 
 
 def test_labos_read_run_and_report_commands(tmp_path: Path) -> None:

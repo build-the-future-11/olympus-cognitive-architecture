@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "project_id": "olympus-controlled-fusion-v2",
+  "title": "Controlled Reliability-Shift Test of Risk-Monotone Counterfactual Fusion",
+  "initialized_at": "2026-10-11",
+  "updated_at": "2026-10-11",
+  "canonical": true,
+  "predecessor": "olympus-risk-monotone-fusion-v1",
+  "research_question": "Does learned normalized fusion with counterfactual consistency and disagreement-conditioned intrinsic risk outperform parameter-matched uniform fusion under controlled source-disjoint reliability shifts?",
+  "current_hypothesis": "The full mechanism improves clean accuracy and corrupted selective accuracy while preserving host-risk and transition invariants.",
+  "final_disposition": "NEGATIVE",
+  "scope": "Synthetic controlled-mechanism evidence only; external validity and JEPA claims excluded.",
+  "current_phase": "TERMINAL_NEGATIVE_ARXIV_PACKAGE_READY_EXTERNAL_REVIEW_PENDING",
+  "development_budget": {
+    "revisions_after_development": 1,
+    "revisions_used": 0,
+    "protected_outcome_revisions": 0
+  },
+  "compute_budget": {
+    "training_runs_registered": 25,
+    "training_runs_completed": 25,
+    "steps_per_run": 300,
+    "protected_evaluations_completed": 75,
+    "maximum_parallel_training_jobs": 1,
+    "resource_guard_weakened": false
+  },
+  "protected_evaluation_boundary": {
+    "clean_seed": 20261203,
+    "corrupted_seed": 20261204,
+    "ood_seed": 20261205,
+    "status": "OPENED_ONCE_AFTER_SCIENTIFIC_FREEZE",
+    "scientific_freeze": "artifacts/research/olympus-controlled-fusion-v2/runs/SCIENTIFIC_FREEZE.json",
+    "post_outcome_redesigns": 0
+  },
+  "repositories": [
+    {
+      "path": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture",
+      "branch": "main",
+      "dirty_worktree_preserved": true,
+      "commit_created": false
+    }
+  ],
+  "datasets": [
+    {
+      "id": "olympus-controlled-fusion",
+      "version": "2.0.0",
+      "license": "CC-BY-4.0",
+      "records": 1408,
+      "split_counts": {
+        "train": 512,
+        "development": 128,
+        "clean_test": 256,
+        "corrupted_test": 256,
+        "ood_test": 256
+      },
+      "source_overlap_count": 0,
+      "scientific_role": "controlled synthetic mechanism test"
+    },
+    {
+      "id": "torux/EditCLEVR",
+      "license": "CC-BY-4.0",
+      "status": "METADATA_AND_SPLIT_REGISTRY_STAGED_IMAGE_PAYLOAD_NOT_DOWNLOADED",
+      "scientific_role": "future external visual intervention and JEPA candidate"
+    }
+  ],
+  "claims": [
+    {
+      "claim": "The registered mechanism improves both primary endpoints within the controlled generator.",
+      "status": "REJECTED"
+    },
+    {
+      "claim": "The implemented effective risk never falls below host risk.",
+      "status": "SUPPORTED_ZERO_VIOLATIONS_ACROSS_75_PROTECTED_EVALUATIONS"
+    },
+    {
+      "claim": "Selected transitions remain host-allowed.",
+      "status": "SUPPORTED_ZERO_VIOLATIONS_ACROSS_75_PROTECTED_EVALUATIONS"
+    },
+    {
+      "claim": "The result establishes natural-data or JEPA performance.",
+      "status": "NOT_LICENSED_BY_STUDY_SCOPE"
+    }
+  ],
+  "artifacts": [
+    "artifacts/research/olympus-controlled-fusion-v2/dataset/receipt.json",
+    "artifacts/research/olympus-controlled-fusion-v2/runs/campaign_contract.json",
+    "artifacts/research/olympus-controlled-fusion-v2/runs/SCIENTIFIC_FREEZE.json",
+    "artifacts/research/olympus-controlled-fusion-v2/runs/CONFIRMATORY_SUMMARY.json",
+    "research/olympus_irp_successor_v2/RESULT_AUDIT.md",
+    "research/olympus_irp_successor_v2/EVIDENCE_MAP.md",
+    "output/pdf/olympus-risk-monotone-fusion-controlled-negative-v2.pdf",
+    "output/pdf/olympus-risk-monotone-fusion-controlled-negative-v2-arxiv.tar.gz"
+  ],
+  "decisions": [
+    "Versioned as a successor because the predecessor lacks admissible aligned natural data.",
+    "Synthetic evidence cannot close the predecessor's real-data question.",
+    "Protocol frozen before generator execution or outcome inspection.",
+    "The 50-percent selective endpoint was clarified before scientific freeze and protected inspection.",
+    "Resource and workload locks were never weakened.",
+    "The negative outcome is terminal for this hypothesis; any reliability-supervised router is a new successor.",
+    "The separately versioned v3 reliability-supervised successor was executed and also terminated NEGATIVE; v2 evidence was not rewritten."
+  ],
+  "failures": [
+    {
+      "date": "2026-10-11",
+      "artifact": "research/olympus_irp_successor_v2/INVALID_ORCHESTRATION_ATTEMPT_20261011.md",
+      "result": "A duplicate campaign invocation encountered the workload lock and produced retained invalid lock-contention receipts; no protected outcome was opened."
+    },
+    {
+      "date": "2026-10-11",
+      "result": "The full learned mechanism failed both registered primary superiority criteria."
+    }
+  ],
+  "checkpoint_status": {
+    "1_idea_ready": "PASS_FOR_CONTROLLED_SYNTHETIC_SCOPE",
+    "2_model_specification_ready": "PASS",
+    "3_methodology_ready": "FROZEN",
+    "4_model_implemented": "PASS",
+    "5_experiment_system_implemented": "PASS",
+    "6_run_ready": "PASS",
+    "7_confirmatory_protocol_frozen": "PASS",
+    "8_evidence_locked": "PASS_NEGATIVE",
+    "9_verified": "PASS_CLEAN_BUILD_TESTS_VISUAL_INSPECTION_EXTERNAL_INDEPENDENT_REPRODUCTION_PENDING",
+    "10_research_complete": "TERMINAL_NEGATIVE_WITHIN_SYNTHETIC_SCOPE_EXTERNAL_RELEASE_NOT_PERFORMED"
+  },
+  "history": [
+    {
+      "date": "2026-10-11",
+      "event": "Successor state initialized and protocol frozen before data generation or outcome inspection."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Generated 1,408 aligned examples across five source-disjoint splits and bound every artifact by SHA-256."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Recorded and corrected a development orchestration lock-contention defect without opening protected outcomes or changing the science."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Completed 25 of 25 development training runs; 184 tests, 86.41 percent branch coverage, Ruff, and strict mypy passed."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Froze code, data, configurations, protocol, and 25 checkpoints, then completed 75 protected evaluations."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Locked a NEGATIVE disposition: clean delta 0.000 and corrupted selective delta -0.046875 versus uniform fusion, with zero invariant violations."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Generated and visually inspected a ten-page PDF and clean-compiled a new arXiv source package."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Recorded the v3 successor pointer after its frozen primary analysis returned NEGATIVE; this v2 disposition remains unchanged."
+    }
+  ]
+}

@@ -1,0 +1,305 @@
+{
+  "schema_version": 1,
+  "project_id": "olympus-risk-monotone-fusion-v1",
+  "title": "Olympus: Risk-Monotone Counterfactual Fusion for Governed Multimodal Prediction",
+  "initialized_at": "2026-10-11",
+  "updated_at": "2026-10-12",
+  "canonical": true,
+  "research_question": "Can normalized heterogeneous fusion with emitted counterfactual influence, disagreement-conditioned intrinsic risk, and a host-monotone governance boundary improve source-disjoint predictive quality and failure detection without weakening externally declared risk or legal-transition constraints?",
+  "scientific_objective": "Test the architectural mechanism against parameter-, compute-, and information-matched alternatives on rights-reviewed, source-disjoint multimodal and temporal data.",
+  "current_hypothesis": "Risk-monotone counterfactual fusion improves task quality and selective failure detection under missing or corrupted components while preserving host risk and transition invariants.",
+  "intended_contribution": "A falsifiable fusion contract combining normalized heterogeneous representations, leave-one-component-out decisions, disagreement-conditioned intrinsic risk, and deterministic host-owned safety constraints.",
+  "scope": {
+    "included": [
+      "six reference model families and the composed Olympus system",
+      "counterfactual fusion, risk, transition, calibration, and routing diagnostics",
+      "JEPA super-resolution specification and implementation",
+      "bounded instruction-model training as an engineering case study",
+      "reproducible software, raw artifacts, statistics, figures, and paper package"
+    ],
+    "excluded_until_data_exist": [
+      "target-scale capability claims",
+      "clinical, legal, or operational deployment claims",
+      "fresh confirmatory conclusions from the already observed smoke test split",
+      "claims that instruction SFT validates multimodal fusion or JEPA super-resolution"
+    ]
+  },
+  "current_phase": "LOCAL_ENGINEERING_TESTED_EDITCLEVR_ADMITTED_ALIGNED_CONFIRMATORY_DATA_BLOCKED_V2_AND_V3_SUCCESSORS_NEGATIVE",
+  "development_budget": {
+    "instruction_backtest_runs": 24,
+    "epochs_per_run": 30,
+    "seeds": [20261101, 20261102, 20261103, 20261104, 20261105],
+    "revision_budget_after_results": 0,
+    "reason": "The matrix is a bounded engineering audit, not an open-ended metric search."
+  },
+  "compute_budget": {
+    "device": "cpu",
+    "maximum_parallel_training_jobs": 1,
+    "resource_guard": "repository ResourceGovernor defaults",
+    "abort_policy": "Retain and report resource rejection, exception, or non-finite outcome; do not weaken guards."
+  },
+  "protected_evaluation_boundary": {
+    "status": "COMPROMISED_FOR_FRESH_CONFIRMATION",
+    "reason": "The 12-record smoke test split was inspected in earlier development runs.",
+    "allowed_use": "Explicitly labeled exploratory infrastructure backtesting only.",
+    "required_for_confirmation": "Acquire a new rights-reviewed aligned corpus and freeze a never-observed source-disjoint test split before confirmatory execution."
+  },
+  "repositories": [
+    {
+      "path": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture",
+      "branch": "main",
+      "head_at_initialization": "20a5687d041859e888bf21390a37483177177dd8",
+      "dirty_worktree_preserved": true
+    }
+  ],
+  "datasets": [
+    {
+      "id": "olympus-hermes-smoke",
+      "version": "1.0.0",
+      "records": 36,
+      "split_counts": {"train": 12, "validation": 12, "test": 12},
+      "license": "LicenseRef-Proprietary",
+      "manifest_path": "artifacts/foundry/deep/dataset/manifest.json",
+      "manifest_internal_sha256": "dde28b2e08a1763ab77d179b519c6d60ae8d3abd3094850cb8bcc48ecda694c7",
+      "file_sha256": "401cece21cf4ec5460148e6385dcc7bbf73dd87c4b851596dfcbe507a3d17ce4",
+      "scientific_role": "engineering smoke corpus only"
+    },
+    {
+      "id": "torux/EditCLEVR",
+      "revision": "734efa9b0164ba742cd2c39b9c2945c494497c23",
+      "records": 20000,
+      "split_counts": {
+        "train": 10000,
+        "validation": 1000,
+        "test_id": 3000,
+        "test_noop": 2000,
+        "test_hard": 2000,
+        "test_cogent": 2000
+      },
+      "license": "CC-BY-4.0",
+      "manifest_path": "datasets/external/editclevr/UPSTREAM_MANIFEST.json",
+      "payload_status": "MATERIALIZED_LOADER_SMOKE_PASS_RESOURCE_DEVIATION_RETAINED",
+      "scientific_role": "candidate external visual intervention and OOD benchmark; insufficient for the full aligned Olympus contract"
+    }
+  ],
+  "artifacts": [
+    "research/OLYMPUS_PAPER_DRAFT.md",
+    "research/OLYMPUS_IMPROVED_TRAINING_RECEIPT_20261011.json",
+    "research/OLYMPUS_COMPOSED_TRAINING_RECEIPT_20261011.json",
+    "artifacts/research/olympus-irp-v1",
+    "artifacts/research/olympus-irp-v1-corrected",
+    "research/olympus_irp/RESULT_AUDIT.md",
+    "research/olympus_irp/EVIDENCE_MAP.md",
+    "output/pdf/olympus-risk-monotone-fusion.pdf",
+    "output/pdf/olympus-risk-monotone-fusion-arxiv.tar.gz",
+    "research/olympus_irp/RELEASE_RECEIPT_20261011.json",
+    "research/olympus_irp_successor_v2/RESEARCH_STATE.json",
+    "artifacts/research/olympus-controlled-fusion-v2/runs/CONFIRMATORY_SUMMARY.json",
+    "output/pdf/olympus-risk-monotone-fusion-controlled-negative-v2.pdf",
+    "output/pdf/olympus-risk-monotone-fusion-controlled-negative-v2-arxiv.tar.gz",
+    "research/olympus_irp_successor_v3/RESEARCH_STATE.json",
+    "artifacts/runs/olympus-reliability-v3/EVIDENCE_SUMMARY.json",
+    "output/pdf/olympus-reliability-supervised-shrinkage-negative-v3.pdf",
+    "output/pdf/olympus-reliability-supervised-shrinkage-negative-v3-arxiv.tar.gz",
+    "datasets/external/editclevr/UPSTREAM_MANIFEST.json",
+    "datasets/external/editclevr/PAYLOAD_VALIDATION_PARTIAL_20261011.json",
+    "datasets/external/editclevr/PAYLOAD_VALIDATION.json",
+    "datasets/external/editclevr/MATERIALIZATION_RECEIPT_RESOURCE_DEVIATION_20261011.json",
+    "datasets/external/editclevr/LOADER_SMOKE_20261011.json",
+    "scripts/validate_editclevr_payload.py",
+    "scripts/materialize_editclevr_payload.py",
+    "research/CLI_FOUNDRY_LIFECYCLE_RECEIPT_20261011.json",
+    "research/SBOM_FAILED_ATTEMPT_20261011.json",
+    "research/REPRODUCIBLE_BUILD_RECEIPT_20261011.json",
+    "research/REPOSITORY_CLOSURE_FAILED_ATTEMPT_20261011.json",
+    "research/olympus_o1/RESEARCH_STATE.json",
+    "research/olympus_o1/MIGRATION_PROVENANCE.json",
+    "research/REPOSITORY_CLOSURE_RECEIPT_20261011.json",
+    "research/OLYMPUS_FINAL_TEST_FAILED_ATTEMPT_20261012.json",
+    "research/OLYMPUS_FINAL_TEST_RECEIPT_20261012.json",
+    "artifacts/release-audit-20261012/coverage-combined.json"
+  ],
+  "claims": [
+    {
+      "claim": "Effective risk never falls below host-declared risk.",
+      "status": "PROVED_FOR_IMPLEMENTED_FORMULA_AND_SOFTWARE_TESTED"
+    },
+    {
+      "claim": "Forbidden transitions are masked and high risk forces host-allowed STOP.",
+      "status": "SOFTWARE_TESTED_AT_REFERENCE_SCALE"
+    },
+    {
+      "claim": "Olympus fusion improves source-disjoint predictive quality.",
+      "status": "NOT_EVALUATED"
+    },
+    {
+      "claim": "The improved tiny SFT candidate passes an infrastructure smoke gate.",
+      "status": "DEVELOPMENT_ONLY_TEST_ALREADY_OBSERVED"
+    },
+    {
+      "claim": "Cosine scheduling and validation-best restoration reduce observed smoke-test loss in the frozen 24-run matrix.",
+      "status": "MIXED_DEVELOPMENT_EVIDENCE_NOT_CONFIRMATORY"
+    },
+    {
+      "claim": "The tiny SFT candidates solve held-out instructions.",
+      "status": "REJECTED_ZERO_EXACT_MATCH_ACROSS_ALL_24_RUNS"
+    }
+  ],
+  "decisions": [
+    "Do not reinterpret the 36-record instruction corpus as aligned Olympus scientific data.",
+    "Do not use exploratory backtests to authorize promotion or H1-H5 claims.",
+    "Freeze the 24-run engineering matrix before executing any new run.",
+    "Preserve every failed run and immutable artifact.",
+    "A new corpus and untouched protected test set are mandatory for confirmatory research.",
+    "The controlled synthetic v2 successor is NEGATIVE and does not close this predecessor's natural-data or JEPA questions.",
+    "The reliability-supervised v3 successor is also NEGATIVE; do not reopen it or reinterpret its synthetic evidence as natural-data or JEPA validation.",
+    "Do not extract, train on, or evaluate EditCLEVR until all four pinned payload archives and every split-referenced path pass the fail-closed validator.",
+    "The EditCLEVR admission condition was satisfied on 2026-10-11 for all five pinned archives. The owner's dataset-readiness request authorized materialization, but not evaluation, confirmatory reuse, or an Olympus capability claim.",
+    "Use the committed uv.lock as the canonical Python dependency resolution for CI and release builds; release artifacts must use the locked, non-isolated build backend.",
+    "Do not weaken the 2 GiB available-memory floor or 90 percent swap ceiling to complete a download, test, or training run.",
+    "The migrated historical O1 protocol remains PREREGISTERED_NOT_RUN and UNFROZEN_DO_NOT_RUN until its exact 100-task manifest, provider/runtime identity, prompts, decoding, budgets, and authorization are frozen without altering the archived contract."
+  ],
+  "failures": [
+    {
+      "date": "2026-10-11",
+      "artifact": "research/OLYMPUS_TRAINING_RECEIPT_20261011.json",
+      "result": "First tiny SFT candidate failed the infrastructure smoke gate."
+    },
+    {
+      "date": "2026-10-11",
+      "result": "No rights-reviewed aligned multimodal, temporal, governance, and intrinsic-risk corpus is present; central hypotheses cannot be executed validly."
+    },
+    {
+      "date": "2026-10-11",
+      "artifact": "artifacts/research/olympus-irp-v1",
+      "result": "All 24 frozen backtests were rejected before training at 91.2% swap utilization; the subsequent all-failure plot path raised StatisticsError and the attempt was classified invalid."
+    },
+    {
+      "date": "2026-10-11",
+      "artifact": "research/REPOSITORY_CLOSURE_FAILED_ATTEMPT_20261011.json",
+      "result": "A repository-wide test attempt retained 185 passes and three deep-Foundry setup errors when concurrent dataset acquisition raised swap to 93.9%; the resource guard was not weakened."
+    },
+    {
+      "date": "2026-10-11",
+      "artifact": "datasets/external/editclevr/MATERIALIZATION_RECEIPT_RESOURCE_DEVIATION_20261011.json",
+      "result": "The first complete EditCLEVR materialization preserved exact data integrity but ended at 90.083% swap, narrowly above the 90% ceiling. The receipt is retained as a resource-policy deviation; the materializer now checks after every archive and before promotion."
+    },
+    {
+      "date": "2026-10-11",
+      "artifact": "research/SBOM_FAILED_ATTEMPT_20261011.json",
+      "result": "The first lock-derived SBOM attempt under the temporary Python 3.14.0 environment failed when pip-audit's ensurepip subprocess received SIGABRT; the identical exported lock input later passed under Python 3.14.7 and produced the retained final SBOM."
+    },
+    {
+      "date": "2026-10-12",
+      "artifact": "research/OLYMPUS_FINAL_TEST_FAILED_ATTEMPT_20261012.json",
+      "result": "A fresh monolithic suite passed 197 tests before the unchanged resource governor rejected the shared deep-Foundry fixture for three tests at 95.4% swap; the partial coverage failure was downstream and the attempt is retained."
+    },
+    {
+      "date": "2026-10-12",
+      "artifact": "research/OLYMPUS_FINAL_TEST_FAILED_ATTEMPT_20261012.json",
+      "result": "A later fresh CLI demo replay was not started because preflight observed 91.11% swap, above the unchanged 90% ceiling."
+    }
+  ],
+  "checkpoint_status": {
+    "1_idea_ready": "READY_WITH_PROVISIONAL_NOVELTY_BOUNDARY",
+    "2_model_specification_ready": "READY_AT_REFERENCE_SCALE",
+    "3_methodology_ready": "READY_FOR_ENGINEERING_CASE_STUDY_ONLY",
+    "4_model_implemented": "PASS",
+    "5_experiment_system_implemented": "PASS_FOR_ENGINEERING_CASE_STUDY_ONLY",
+    "6_run_ready": "PASS_FOR_BOUNDED_DEVELOPMENT",
+    "7_confirmatory_protocol_frozen": "BLOCKED_MISSING_DATA_AND_UNTOUCHED_TEST",
+    "8_evidence_locked": "PASS_FOR_EXPLORATORY_ENGINEERING_EVIDENCE_ONLY",
+    "9_verified": "PASS_FOR_SOFTWARE_AND_PAPER_PACKAGE_NO_INDEPENDENT_SCIENTIFIC_REPRODUCTION",
+    "10_research_complete": "NO"
+  },
+  "history": [
+    {
+      "date": "2026-10-11",
+      "event": "Canonical state initialized from existing receipts, implementation, dataset manifest, and paper draft."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "A 24-run exploratory instruction-model backtest matrix was frozen before execution."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "The first execution attempt retained 24 resource-governor rejections and exposed an all-failure aggregation bug; the guard was not weakened and the bug was repaired for a new immutable run root."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "The corrected frozen matrix completed 24 of 24 runs. Engineering disposition was MIXED; central Olympus hypotheses remained NOT_EVALUATED."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Exploratory evidence was locked and the arXiv manuscript source was generated from retained artifacts."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "The eight-page PDF passed visual inspection, the arXiv package compiled from a clean extraction, and 181 tests plus static checks passed. Checkpoint 10 remained open because the central scientific question was not evaluated."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "A separately versioned controlled synthetic successor completed 25 training runs and 75 protected evaluations with a NEGATIVE disposition; the full router tied uniform fusion on clean accuracy and underperformed it under corruption in the point estimate."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "The updated ten-page manuscript and new arXiv source package preserve the negative result while the predecessor remains blocked on rights-reviewed aligned natural data and JEPA evidence."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "A separately versioned reliability-supervised shrinkage successor completed 25 development fits and 75 protected evaluations with a NEGATIVE result: primary delta -0.0125, 95 percent paired-bootstrap interval [-0.028125, 0.003125], and zero invariant violations."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "The five-page v3 negative-result manuscript passed full-page visual inspection and its arXiv source package clean-compiled; neither artifact was externally submitted."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "A repository closure audit pinned EditCLEVR to revision 734efa9b0164ba742cd2c39b9c2945c494497c23, recorded upstream LFS hashes and license, implemented a bounded-memory fail-closed archive/split validator, and paused payload acquisition after the unchanged resource governor rejected concurrent model-test setup."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "After resource admission recovered, the final current-tree Python gate passed 197 tests at 86.69 percent branch coverage; Ruff, strict MyPy across 107 source files, dependency audits, six web tests, web production build, wheel/source build, Twine metadata validation, and SBOM generation also passed within their recorded scope."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "The release audit found and fixed source-distribution leakage of the 186 MB external split registry; external datasets are now excluded while the validator script remains included. No commit, push, tag, package publication, arXiv submission, deployment, or model promotion was performed."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "The historical Olympus O1 preregistration was migrated from closed, unmerged VertexED PR 653 as nine byte-exact files bound to source commit bc22ecc73201659cf099a20b6d038675b7307f28 and verified SHA-256 values. Its archival synthetic contract suite passed 10 tests, but the missing task/provider/runtime/prompt freeze keeps execution unauthorized."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Resource-admitted range resumption completed all EditCLEVR archives at immutable revision 734efa9b0164ba742cd2c39b9c2945c494497c23. The strengthened five-archive validator passed 202,835 files, 20,000 unique pairs, 120,000 referenced paths, exact split-archive binding, and zero unsafe, invalid, or missing members. Archives remain unextracted and no benchmark result was generated."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "A 110-package universal uv.lock was generated and wired into CI, release verification, contributor guidance, and non-isolated distribution builds to prevent dependency and build-backend resolution drift."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "The admitted EditCLEVR snapshot was atomically materialized as 202,838 extracted files plus a content-bound marker. Its first receipt retained a 90.083% final-swap deviation; a hardened materializer now performs stage-wise resource checks, and a later admitted loader smoke verified all 2,000 CoGenT records plus real PNG, scene, and mask decoding."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Fresh CLI closure passed all deterministic demos, the complete Foundry registry/checkpoint/evaluation/export golden path, integrity status, and immutable 36-record dataset preparation at a unique run root. The verification bigram remains infrastructure-only and unpromoted."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Packaging was narrowed to avoid traversing the 202,838-file ignored external corpus. A clean 110-package uv environment synchronized, built locked non-isolated wheel and sdist artifacts, passed Twine and content checks, and replaced its editable install with the wheel for full-dependency import and CLI verification."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "SOURCE_DATE_EPOCH was bound to the exact source commit in CI and release workflows. The normalized direct wheel and the wheel rebuilt from the clean sdist were byte-identical at SHA-256 b917c69dd0527cbc90c13ca59ca5b947c8b979cde76db0009500e27c93789cab."
+    },
+    {
+      "date": "2026-10-11",
+      "event": "Final reconciliation observed 2,955,870,208 available bytes but 92.804% swap utilization after the system swap pool contracted to 9 GiB. The unchanged resource policy stopped all further heavy local work; completed evidence was retained."
+    },
+    {
+      "date": "2026-10-12",
+      "event": "Fresh testing preserved a resource-rejected monolithic attempt, then isolated the seven deep-Foundry tests after resource recovery. All 200 unique Python tests passed across the two processes with 86.72% combined coverage; Ruff, strict MyPy across 110 files, offline uv.lock validation, git diff integrity, six web tests, both npm audits, and the production web build passed. A later demo replay was preflight-rejected at 91.11% swap before execution. Scientific and external-release boundaries remain unchanged."
+    }
+  ]
+}

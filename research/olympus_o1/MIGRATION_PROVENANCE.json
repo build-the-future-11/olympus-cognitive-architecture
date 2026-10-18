@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "status": "MIGRATED_PREREGISTRATION_NOT_RUN",
+  "migrated_at": "2026-10-11",
+  "source_repository": "vertex-studyAI/vertexED.ai",
+  "source_pull_request": 653,
+  "source_pull_request_url": "https://github.com/vertex-studyAI/vertexED.ai/pull/653",
+  "historical_cumulative_head": "91061a8e9c19c12519841ac96f9f13395bc946de",
+  "reconciled_source_head": "bc22ecc73201659cf099a20b6d038675b7307f28",
+  "source_base": "eb72c18897773edd42cb81188a0d7938b554c99f",
+  "source_pr_state": "CLOSED_UNMERGED",
+  "migration_mode": "byte_exact_archival_copy",
+  "files": {
+    "OLYMPUS_O1_PREREGISTRATION_20260829.md": "1532fdf23755195b0bb81bbd96936ce14b902479f4299e6c5c9c60d6eedb46cc",
+    "olympus_o1_analyze_v1.py": "a7d067419a473f12e5d378dc51ad3f0cdf0c520e135bb6d165b47a418039cdd0",
+    "olympus_o1_arm_config_template_v1.json": "894ec88856de8d894c97b1909f1e117ffd9c916814d177349a14268f450409d0",
+    "olympus_o1_artifact_schema_v1.json": "931114c0e7dcce02874d750a4a728dc416ec2fab2c0d695fe74b7b4c80a2e8a7",
+    "olympus_o1_execution_freeze_template_v1.json": "504cbf275af9957b07357af59be548f2fbc7b63560e0d4b8cd3ed01c2b444827",
+    "olympus_o1_protocol_v1.json": "bd22f4e68921aee8d24b4e18a39ae2e65d61494fe7948799ff8a0d708aa0442c",
+    "olympus_o1_validate_manifest_v1.py": "68c824407a5ecf12732b6001d06b4901bb2799d699e8feb6c131c8e22a368686",
+    "test_olympus_o1_analysis_v1.py": "80deb13b129a0df02ab5c8912f07865d0376a6c44214ded17e8e6e2bd3d0a72b",
+    "test_olympus_o1_manifest_validator_v1.py": "bd39da197031ca7767652e3ef56c5ef21358fe75a97991dd6901ea76d012d99b"
+  },
+  "execution_gate": {
+    "status": "UNFROZEN_DO_NOT_RUN",
+    "task_manifest_present": false,
+    "provider_runtime_identity_frozen": false,
+    "prompt_hashes_frozen": false,
+    "execution_authorized": false
+  },
+  "migration_differences": [
+    "Files live under research/olympus_o1/upstream instead of portfolio/research.",
+    "The source PR was closed without merge; this repository records that provenance instead of implying main-branch ancestry.",
+    "No historical scientific content, constant, arm, threshold, seed, or status was changed."
+  ]
+}

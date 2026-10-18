@@ -5,19 +5,24 @@
 Run these commands from a clean checkout:
 
 ```bash
-python3.14 -m venv .venv
-.venv/bin/pip install -e ".[dev]"
-.venv/bin/ruff check .
-.venv/bin/mypy olympus tests
-.venv/bin/pytest --cov=olympus --cov-branch --cov-report=term-missing -q
-.venv/bin/pip-audit --strict .
-.venv/bin/python -m olympus.cli demo run-all
-.venv/bin/python -m olympus.cli foundry verify-pipeline
-.venv/bin/python -m olympus.cli foundry status
-.venv/bin/python -m olympus.cli foundry prepare-dataset \
+export SOURCE_DATE_EPOCH="$(git show -s --format=%ct HEAD)"
+uv sync --locked --all-extras
+uv run --locked python -m ruff check .
+uv run --locked python -m mypy olympus scripts tests
+uv run --locked python -m pytest --cov=olympus --cov-branch --cov-report=term-missing -q
+uv export --locked --all-extras --no-emit-project --no-hashes \
+  --format requirements-txt --output-file /tmp/olympus-locked-requirements.txt
+uv run --locked python -m pip_audit --strict \
+  -r /tmp/olympus-locked-requirements.txt
+uv run --locked python -m olympus.cli demo run-all
+uv run --locked python -m olympus.cli foundry verify-pipeline
+uv run --locked python -m olympus.cli foundry status
+uv run --locked python -m olympus.cli foundry prepare-dataset \
   --output artifacts/release-deep-dataset
-.venv/bin/python -m build
-.venv/bin/python -m twine check dist/*
+uv run --locked python -m build --no-isolation
+uv run --locked python -m twine check dist/*
+tar -tzf dist/*.tar.gz | grep scripts/validate_editclevr_payload.py
+! tar -tzf dist/*.tar.gz | grep -q datasets/external/
 cd apps/forge-web
 npm ci
 npm test
@@ -36,15 +41,16 @@ dependency audits, CI gate, SBOM generation, artifact attestations, and release
 workflow are implemented. The source repository exists at the canonical URL.
 PyPI publication still depends on its owner-controlled Trusted Publisher.
 
-The repository owner must complete these account-controlled actions:
+Account-state audit on 2026-10-11 confirmed that private vulnerability
+reporting is enabled and `main` has strict required `python` and `web` checks,
+admin enforcement, linear history, conversation resolution, and force-push and
+deletion denial. The remaining account-controlled actions are:
 
-1. Configure GitHub private vulnerability reporting and require the
-   `release-gate` workflow on the `main` branch.
-2. Configure a PyPI Trusted Publisher for the `publish-release` workflow,
+1. Configure or independently verify the PyPI Trusted Publisher for the `publish-release` workflow,
    environment `pypi`, and package `olympus-cognitive-architecture`.
-3. Merge the verified pull request and create and push the signed or annotated
+2. Merge the verified pull request and create and push the signed or annotated
    `v0.2.0` tag.
-4. Confirm the tag-triggered workflow publishes the wheel, source archive,
+3. Confirm the tag-triggered workflow publishes the wheel, source archive,
    CycloneDX SBOMs, build attestations, GitHub release, and PyPI release.
 
 ## Scientific-publication gate

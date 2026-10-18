@@ -1,7 +1,8 @@
 # Olympus Reality Ledger
 
-Observed on 2026-08-21 from the repository and local runtime. Status terms are
-literal; no model-family capability is inferred from architecture code.
+Initialized from the repository and local runtime on 2026-08-21; reconciled
+through 2026-10-18. Status terms are literal; no model-family capability is
+inferred from architecture code.
 
 ## Real and verified
 
@@ -28,15 +29,75 @@ literal; no model-family capability is inferred from architecture code.
   has no trained weights and must not be represented as Hermes Alpha.
 - JEPA and transform demos: small synthetic training routines for testing
   research mechanisms, not general-purpose model checkpoints.
+- As of 2026-10-11, bounded differentiable reference architectures exist for
+  Hermes, Prometheus, Perseus, Atlas, Kronos, and Aion. They cover
+  tool/abstention heads, domain adapters, sparse expert dispatch, multimodal
+  patch grounding, temporal world-model planning, and a host-constrained
+  research-stage router with a deterministic STOP rule. All are
+  `REFERENCE_IMPLEMENTATION_NOT_PROMOTED`; none is a target-scale checkpoint.
+- The JEPA upscaler successor now predicts masked high-resolution subpixel
+  targets rather than embeddings of a downsampled target. It has multiscale
+  prediction, robust pixel/edge/embedding/geometry/variance/frequency/SSIM
+  losses, extended held-out metrics, and digest-pinned checkpoint reload. This
+  is engineering evidence only; no natural-image superiority claim exists.
+- `OlympusReferenceSystem` now composes the six reference contracts through
+  explicit family gates, joint coordination/temporal/uncertainty losses, and
+  Aion's host-constrained STOP boundary. It performs no tool execution and
+  confers no authority or capability promotion.
+- The composition now emits normalized extension and leave-one-family-out
+  states, combines learned disagreement risk with host risk monotonically,
+  supports digest-pinned checkpoints and resource-governed inference, and has
+  a source-disjoint aligned tensor dataset contract. These remain engineering
+  mechanisms, not validated improvements.
+- On 2026-10-11, the 36-record internal smoke corpus was materialized into 12
+  train, 12 validation, and 12 test records with all 12 categories in each
+  split. A one-epoch, 34,528-parameter readiness run completed and reduced
+  held-out loss from 5.6282 to 5.4858, but exact-match and format-compliance
+  rates were both 0%. The smoke quality gate failed and promotion remains
+  forbidden.
+- The same hash-bound 34,528-parameter candidate was subsequently resumed to
+  12 total epochs and 24 optimizer steps. Validation loss reached 3.3812 and
+  untouched-test loss reached 3.4746 with no category regressions. Format
+  compliance reached 66.7%, but exact match and every workflow exact score
+  remained 0%; the gate still failed. No post-test tuning was performed.
+- After trainer hardening, a fresh 884,480-parameter exploratory candidate used
+  validation-only early stopping and restored epoch 18 after 30 attempted
+  epochs. Held-out loss was 3.1644 with no category regressions, format
+  compliance was 83.3%, and the infrastructure smoke gate passed. Exact and
+  tool matches remained 0%, latency increased materially, and the corpus is
+  still only 36 records; promotion remains forbidden.
+- Controlled synthetic v2 completed 25 fits and 75 protected evaluations with
+  a NEGATIVE disposition: its learned router did not beat the registered
+  controls. The separately frozen v3 reliability-supervised successor also
+  completed 25 fits and 75 protected evaluations and was NEGATIVE; its primary
+  full-minus-semantic corrupted selective-accuracy delta was -0.0125 (95%
+  paired-bootstrap interval -0.0281 to 0.0031) versus a required +0.0200. Both
+  studies recorded zero host-risk monotonicity and transition-legality
+  violations. These are controlled synthetic results, not natural-data or JEPA
+  validation.
+- V4 completed 40 matched cells, 80 expert-bank fits and 120 protected
+  evaluations. Its utility-routing primary failed by 6.82 percentage points
+  against semantic routing. Mixed-corruption training improved corrupted
+  accuracy by 27.42 points and semantic routing beat fixed routing by 10.21
+  points, but semantic routing regressed on the reserved OOD shifts and the
+  temporal predictor lost to persistence on clean inputs.
+- V5 is source- and protocol-prepared for 20 cells, 40 bank fits and 80 protected
+  evaluations. It has not run and has no result. EditCLEVR is being added as a
+  separate image-edit benchmark; it does not supply temporal or governance data.
 
 ## Not present
 
 - A trained Hermes Alpha checkpoint.
-- A promoted Prometheus, Perseus, Atlas, or Kronos checkpoint.
+- A promoted Prometheus, Perseus, Atlas, Kronos, or Aion checkpoint.
 - A completed Hermes base-model comparison and licensing decision.
 - Hermes-specific SFT, tool-use post-training, quantization comparison, or Percy
   task evaluation.
 - A paid or distributed large-scale training run.
+- Aligned rights-reviewed multimodal, temporal, risk, tool-outcome, or native
+  super-resolution corpora required for the composed Olympus study.
+- An executed EditCLEVR benchmark or JEPA efficacy result. The complete
+  revision-pinned snapshot is locally admitted and materialized, and a bounded
+  real-payload loader smoke passed, but data readiness is not an experiment.
 
 ## Current external-runtime findings
 
@@ -57,6 +118,6 @@ and its int4/int8 artifacts preserved loss within 2%. It nevertheless scored
 
 ## Naming rule
 
-No artifact may use Hermes, Prometheus, Perseus, Atlas, or Kronos as its model
-identity until a real immutable checkpoint exists and passes the family-specific
-evaluation and deployment gates.
+No artifact may use Hermes, Prometheus, Perseus, Atlas, Kronos, or Aion as its
+model identity until a real immutable checkpoint exists and passes the
+family-specific evaluation and deployment gates.

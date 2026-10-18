@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "status": "TRAINING_COMPLETED_SMOKE_GATE_FAILED_NOT_PROMOTED",
+  "candidate_scope": "bounded Hermes instruction-development candidate",
+  "dataset": {
+    "path": "artifacts/foundry/deep/dataset/manifest.json",
+    "manifest_sha256": "dde28b2e08a1763ab77d179b519c6d60ae8d3abd3094850cb8bcc48ecda694c7",
+    "records": 36,
+    "train_records": 12,
+    "validation_records": 12,
+    "protected_test_records": 12,
+    "categories_per_split": 12
+  },
+  "resume_source": {
+    "path": "artifacts/foundry/deep/readiness-run-20261011/sft-full-dde28b2e08a1-s20261011/checkpoint.pt",
+    "sha256": "db69d98c4d517e333149046a5028d9893567939894f7a9498656e1c77652be6a",
+    "completed_epochs": 1,
+    "optimizer_steps": 2
+  },
+  "training": {
+    "mode": "full",
+    "seed": 20261011,
+    "total_epochs": 12,
+    "optimizer_steps": 24,
+    "parameters": 34528,
+    "batch_size": 3,
+    "gradient_accumulation_steps": 2,
+    "learning_rate": 0.003,
+    "weight_decay": 0.01,
+    "gradient_clip_norm": 1.0,
+    "width": 32,
+    "layers": 1,
+    "heads": 4,
+    "sequence_tokens": 160,
+    "device": "cpu",
+    "mixed_precision_requested": true,
+    "mixed_precision_effective": false,
+    "elapsed_seconds": 1.514450124988798,
+    "validation_loss_at_resume": 5.467877388000488,
+    "final_validation_loss": 3.381155490875244,
+    "final_validation_perplexity": 29.40472838619102,
+    "all_recorded_epochs_improved_validation_loss": true
+  },
+  "artifacts": {
+    "checkpoint": {
+      "path": "artifacts/foundry/deep/training-run-20261011/sft-full-dde28b2e08a1-s20261011/checkpoint.pt",
+      "sha256": "cd1cdae3016f6d7d063243b3e1f0a1297c2c560a6186d4f1ffb3cd18991ec610"
+    },
+    "metrics": {
+      "path": "artifacts/foundry/deep/training-run-20261011/sft-full-dde28b2e08a1-s20261011/metrics.jsonl",
+      "sha256": "89e34cc524583027d853c4746dce2ab81e530e8c1c850441f7ccdd7a01b139b0"
+    },
+    "evaluation": {
+      "path": "artifacts/foundry/deep/training-run-20261011/evaluation.json",
+      "sha256": "7f0accb89178af9e918d15e97ca32587ff95f1a3f2730e5bafdddf9d9f76785a"
+    }
+  },
+  "protected_test_evaluation": {
+    "baseline_loss": 5.628210067749023,
+    "candidate_loss": 3.474574327468872,
+    "baseline_perplexity": 278.1637774521949,
+    "candidate_perplexity": 32.28408316390891,
+    "category_regressions": 0,
+    "exact_match_rate": 0.0,
+    "format_compliance_rate": 0.6666666666666666,
+    "workflow_exact_match_rates": {
+      "tool_workflow": 0.0,
+      "result_comparison": 0.0,
+      "multi_step_planning": 0.0
+    },
+    "passed_smoke_quality_gate": false
+  },
+  "resource_admission": {
+    "available_bytes": 5537153024,
+    "swap_fraction": 0.834716796875,
+    "admitted": true,
+    "peak_rss_bytes": 360251392
+  },
+  "decision": "Failed the infrastructure smoke gate and is ineligible for model promotion.",
+  "post_test_tuning_performed": false,
+  "promotion_authorized": false,
+  "scientific_claim_authorized": false,
+  "boundary": "This run trains a tiny instruction-development candidate only. It is not the composed six-family system, a target-scale Hermes checkpoint, or evidence of general capability."
+}

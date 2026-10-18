@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-11",
+  "status": "ARXIV_PACKAGE_READY_CORE_SCIENCE_INCONCLUSIVE",
+  "scientific_disposition": {
+    "central_olympus_hypothesis": "INCONCLUSIVE_NOT_EVALUATED",
+    "bounded_engineering_study": "MIXED",
+    "promotion_authorized": false,
+    "external_submission_performed": false
+  },
+  "execution": {
+    "frozen_runs_planned": 24,
+    "corrected_runs_completed": 24,
+    "corrected_runs_failed": 0,
+    "attempted_epochs": 900,
+    "invalid_first_attempt_preserved": true,
+    "invalid_first_attempt_reason": "Twenty-four resource rejections followed by an all-failure plotting exception.",
+    "resource_guard_weakened": false
+  },
+  "exploratory_results": {
+    "cosine_large_mean_test_loss": 3.1388906955718996,
+    "constant_large_mean_test_loss": 3.1485805749893188,
+    "paired_cosine_minus_constant_mean": -0.009689879417419434,
+    "paired_cosine_minus_constant_bootstrap_95_ci": [-0.016071629524230958, -0.005640339851379394],
+    "no_restore_large_mean_test_loss": 3.1667319774627685,
+    "paired_restore_minus_no_restore_mean": -0.02784128189086914,
+    "paired_restore_minus_no_restore_bootstrap_95_ci": [-0.03643655776977539, -0.020872163772583007],
+    "exact_match_rate_all_runs": 0.0,
+    "packing_ablation": "NON_INFORMATIVE_BIT_IDENTICAL_FOR_SHARED_SEEDS"
+  },
+  "verification": {
+    "ruff": "PASS",
+    "mypy": "PASS_75_SOURCE_FILES",
+    "pytest": "PASS_181_TESTS",
+    "branch_coverage_percent": 86.08,
+    "coverage_floor_percent": 85.0,
+    "pdf_pages": 8,
+    "pdf_visual_inspection": "PASS_ALL_PAGES",
+    "arxiv_clean_extract_compile": "PASS",
+    "latex_overfull_or_undefined_warnings": 0,
+    "independent_scientific_reproduction": "NOT_PERFORMED"
+  },
+  "sha256": {
+    "backtest_runner": "915c30b0883cc2b1b497c2f1e3ceee0284180e52742bc1b631994265389948ba",
+    "aggregate": "d13a9cac39771ca47e456b451fcb4247fd66062e8f6ff34d1271f0b152dfe3c8",
+    "corrected_completion_receipt": "2b94b0984937c7125a2300b574f99de0de9199e7f2f1b3cd455776499f2abf40",
+    "invalid_attempt_matrix_manifest": "39b31b7042cca356e8d7bfaa390fcec96901a0d70572e58597c61bb06340d73f",
+    "invalid_attempt_failures": "bbae6fa5d4cfdcd426ade3df03b9ca9d1f20ab7a51650c66dda284c24d5bcb91",
+    "paper_source": "c71e1026253ce95f499a990786db243534278111bb35bf9ec83b9f8b82ffdda5",
+    "bibliography": "a05e6581816853133eebc8e79a78ff58cc4cc401a276680bb3734afc2caf70ea",
+    "pdf": "3fd637454cb79a3c1a99adf0a243aa99b2073c31d65e7a526905ece978a42d13",
+    "arxiv_source_package": "874f05f84d9ff1d97e294c586a0f782bc0c7d34180632245edaa96e887c37ee8"
+  },
+  "claim_boundary": "The paper and artifacts establish implementation, invariants, and bounded engineering evidence only. They do not establish Olympus fusion efficacy, JEPA reconstruction quality, general capability, safety efficacy, deployment readiness, or model promotion."
+}

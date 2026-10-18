@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-12",
+  "completed_at_utc": "2026-10-12T01:22:44Z",
+  "status": "LOCAL_ENGINEERING_TEST_GATES_PASS_WITH_RESOURCE_SPLIT",
+  "source": {
+    "repository": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture",
+    "branch": "main",
+    "head": "20a5687d041859e888bf21390a37483177177dd8",
+    "dirty_entries_preserved_before_receipt": 76,
+    "commit_created": false,
+    "pushed": false
+  },
+  "python": {
+    "unique_tests": 200,
+    "failures": 0,
+    "execution_topology": "197 passing tests in the repository-wide process plus a fresh seven-test deep Foundry process that passed the three previously resource-rejected cases and repeated four already-passing cases",
+    "single_process_full_suite_pass": false,
+    "single_process_failed_attempt": "research/OLYMPUS_FINAL_TEST_FAILED_ATTEMPT_20261012.json",
+    "deep_foundry_rerun": {
+      "tests": 7,
+      "failures": 0,
+      "status": "PASS"
+    },
+    "combined_branch_coverage_percent": 86.71552908841045,
+    "required_coverage_percent": 85.0,
+    "coverage_artifact": "artifacts/release-audit-20261012/coverage-combined.json",
+    "coverage_sha256": "c2095d9c01659376951787546f52a97e6bc4f4584f57c0283715ec4b2947517e",
+    "ruff": "PASS",
+    "mypy": "PASS_110_SOURCE_FILES",
+    "git_diff_check": "PASS"
+  },
+  "dependencies": {
+    "uv_lock_check_offline": "PASS",
+    "uv_lock_packages": 110,
+    "uv_lock_sha256": "5631a669ae92dc7cc6db076cbf41c14dc1067b76a58b17dec4ee4e168f0d9bf1"
+  },
+  "web": {
+    "test_files": 2,
+    "tests": 6,
+    "failures": 0,
+    "npm_audit_all": "PASS_ZERO_VULNERABILITIES",
+    "npm_audit_production": "PASS_ZERO_VULNERABILITIES",
+    "typescript_build": "PASS",
+    "vite_production_build": "PASS",
+    "built_assets": {
+      "javascript_bytes": 205420,
+      "css_bytes": 3480,
+      "html_bytes": 400
+    }
+  },
+  "cli": {
+    "current_test_coverage": "PASS_WITHIN_200_UNIQUE_PYTHON_TESTS",
+    "last_full_demo_lifecycle": "PASS_2026-10-11",
+    "last_full_demo_receipt": "research/CLI_FOUNDRY_LIFECYCLE_RECEIPT_20261011.json",
+    "fresh_demo_replay": "NOT_RUN_RESOURCE_PREFLIGHT_REJECTED_AT_91.11_PERCENT_SWAP"
+  },
+  "resource_policy": {
+    "minimum_available_bytes": 2147483648,
+    "maximum_swap_fraction": 0.9,
+    "weakened": false,
+    "final_snapshot": {
+      "available_bytes": 3245096960,
+      "swap_total_bytes": 12884901888,
+      "swap_used_bytes": 11739919810,
+      "swap_fraction": 0.9111376952690383,
+      "disposition": "NO_FURTHER_HEAVY_WORK"
+    }
+  },
+  "scientific_boundary": {
+    "v2": "NEGATIVE_CONTROLLED_SYNTHETIC",
+    "v3": "NEGATIVE_CONTROLLED_SYNTHETIC",
+    "natural_aligned_fusion": "NOT_EVALUATED",
+    "jepa_efficacy": "NOT_EVALUATED",
+    "o1": "PREREGISTERED_NOT_RUN_UNFROZEN_DO_NOT_RUN",
+    "model_promotion": "NONE"
+  },
+  "external_actions": {
+    "commit_created": false,
+    "pushed": false,
+    "tag_created": false,
+    "package_published": false,
+    "arxiv_submitted": false,
+    "deployed": false,
+    "model_promoted": false
+  },
+  "claim_boundary": "All 200 unique Python tests passed across resource-isolated processes, combined coverage exceeded the frozen threshold, and current static, lock, web-test, dependency-audit, and production-build gates passed. A fresh demo replay was not run because its preflight observed swap above the unchanged ceiling; the last full lifecycle pass remains the retained 2026-10-11 receipt. This is local dirty-tree engineering evidence, not a clean-checkout CI result, positive scientific finding, independent reproduction, deployment, or external release."
+}

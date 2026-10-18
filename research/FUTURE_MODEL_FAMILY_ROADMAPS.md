@@ -1,7 +1,8 @@
 # Future Olympus Model-Family Roadmaps
 
-These are planned programs, not instantiated models. Reserved names remain
-unavailable until a real checkpoint passes its own family gates.
+These remain planned training and qualification programs. Bounded reference
+architectures now exercise each active family contract, but reserved model
+identities remain unavailable until a real checkpoint passes its family gates.
 
 ## Prometheus — reasoning and scientific synthesis
 
@@ -59,3 +60,20 @@ unavailable until a real checkpoint passes its own family gates.
 - Bottlenecks: feedback delay, non-stationarity, hidden confounding, safe online
   learning, and reproducible environment snapshots.
 - Dependency: Atlas grounding plus Perseus execution reliability.
+
+## Aion — governed research-loop orchestration
+
+- Capability justification: coordinate evidence mapping, preregistration,
+  authorized execution, audit, revision, and stop decisions without granting a
+  learned model authority to execute or promote itself.
+- Data: immutable research traces with protocol versions, legal transitions,
+  authority records, budget use, audits, negative results, and stop outcomes.
+- Compute path: deterministic controller first; train only a masked transition
+  router; retain the risk-triggered STOP rule outside learned weights.
+- Evaluations: illegal-transition rate, false-promotion rate, protocol drift,
+  budget violations, audit completeness, and matched-controller experiment
+  validity.
+- Bottlenecks: durable signed authority, adversarial protocol substitution,
+  reliable audit labels, and proving benefit over a deterministic controller.
+- Dependency: the other five family contracts plus independent human review;
+  none may delegate execution or promotion authority to Aion.

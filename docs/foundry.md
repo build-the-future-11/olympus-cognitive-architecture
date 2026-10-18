@@ -101,13 +101,19 @@ promotion controls on hardware that cannot safely train a large model.
 .venv/bin/olympus foundry train-sft \
   artifacts/foundry/deep/dataset/manifest.json \
   --output artifacts/foundry/deep/training \
-  --mode full --epochs 4 --width 48 --layers 2 --heads 4
+  --mode full --epochs 100 --width 128 --layers 4 --heads 8 \
+  --batch-size 4 --gradient-accumulation-steps 2 \
+  --loss-normalization supervised_token_mean_v2
 ```
 
 `train-sft` also accepts `--mode lora` and `--mode qlora` with an exact
 `--base-checkpoint`. QLoRA uses frozen symmetric 4-bit bases stored as packed
 nibbles, not an int8 substitute. `--resume-checkpoint` restores model,
 optimizer, completed epoch/step counters, and deterministic generator state.
+Resume rejects every configuration change except a larger target epoch count.
+Every invocation owns a fresh attempt directory, restores Python, Torch and
+accelerator random state, and validates the optimizer policy and counters before
+continuing. The checkpoint records the exact continuation state.
 
 New SFT runs use `supervised_token_mean_v2`: loss is the mean over supervised
 next-token targets, with prompt and padding positions excluded. Gradient

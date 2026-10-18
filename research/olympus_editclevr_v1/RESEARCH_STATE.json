@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "project_id": "olympus-editclevr-v1",
+  "phase": "COMPLETED_REMOTE_VERIFIED_ARCHIVE_PENDING_RETRIEVAL",
+  "protocol": "PROTOCOL.md",
+  "source_commit": "1d2591788cbc7a52766f18c959d4114c16888910",
+  "remote_runtime": "Kaggle GPU T4 x2; training used cuda:0",
+  "remote_notebook": "https://www.kaggle.com/code/ryangomez010/notebookec59f0cb01/edit",
+  "dataset": "torux/EditCLEVR",
+  "dataset_revision": "734efa9b0164ba742cd2c39b9c2945c494497c23",
+  "dataset_license": "CC-BY-4.0",
+  "dataset_validation": {
+    "status": "PASS",
+    "pair_ids": 20000,
+    "referenced_files": 120000,
+    "missing_paths": 0
+  },
+  "execution": {
+    "training_seeds": 5,
+    "epochs_per_seed": 15,
+    "protected_splits": 4,
+    "protected_reports": 20,
+    "protected_prediction_hashes": 20,
+    "scientific_freeze_before_protected_access": true,
+    "parameter_count": 741064
+  },
+  "verifier": {
+    "status": "PASS",
+    "seeds": 5,
+    "development_only_control_selection": true,
+    "common_split_identities_across_seeds": true,
+    "source_checkpoint_freeze_and_chronology_verified": true,
+    "aggregate_deltas_and_intervals_recomputed": true,
+    "limitation": "Provenance and report arithmetic; not independent retraining."
+  },
+  "scientific_result": {
+    "primary_supported": false,
+    "shifted_learned_minus_control": {
+      "mean": -0.000050002336502075194,
+      "ci95": [
+        -0.00015000700950622558,
+        0.0
+      ],
+      "seed_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.000250011682510376
+      ]
+    },
+    "id_learned_minus_control": {
+      "mean": -0.00006667375564575195,
+      "ci95": [
+        -0.00020002126693725587,
+        0.0
+      ],
+      "seed_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.00033336877822875977
+      ]
+    },
+    "interpretation": "The learned router tied the development-selected control in four seeds and was marginally worse in one. It missed the predeclared +2 percentage-point shifted-data effect and is rejected as an improvement. ID non-regression passed."
+  },
+  "remote_archive": {
+    "path": "/kaggle/working/olympus-editclevr-v1-evidence.tar.gz",
+    "sha256": "a947b3f86afe71ff712e7f203fdfc421cb7c66d3a45e5e61d2d95f6ffeed13c1",
+    "retrieved_to_repository": false,
+    "same_kernel_manual_seal_after_verifier_replay": true
+  },
+  "promotion_authorized": false,
+  "full_olympus_claim_authorized": false,
+  "independent_reproduction": false,
+  "limitations": [
+    "One synthetic public image benchmark and five optimizer seeds.",
+    "No independent dataset or operator reproduction.",
+    "This study does not test temporal prediction or the full six-family Olympus contract."
+  ]
+}

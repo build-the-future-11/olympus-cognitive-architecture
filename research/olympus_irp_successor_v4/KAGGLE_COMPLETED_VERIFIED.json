@@ -1,0 +1,34 @@
+{
+  "status": "COMPLETED_VERIFIED",
+  "verified_at_unix": 1792222720.7443929,
+  "url": "https://www.kaggle.com/code/ryangomez010/olympus-v4",
+  "version": 359270139,
+  "privacy": "Private",
+  "accelerator": "None",
+  "runtime_seconds_observed": 1080.4,
+  "recovery_archive_sha256": "ad2d03f6190d165dd68771224e5cc7f733a0b28919450d543fc6ecbc04ecf552",
+  "source_archive_sha256": "900f61ddfa16aa48977de09fe2b5cb3c58b908e0a2ec1dbe83ed0c99dfbcd91c",
+  "scientific_freeze_sha256": "7bed7fe4e27a93c731d1190e0a9866ec418f93c4a22afe0e5128b620df0267b6",
+  "summary_sha256": "07c79a3d94ae83a883dd44bf90de9a622e97e63d220a61ce1be89548dc7aa54e",
+  "current_sources_match_executed_sources": true,
+  "original_host_preservation": {
+    "files_checked": 1102,
+    "changed_or_missing": [],
+    "unchanged": true
+  },
+  "qualification_tests": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "9",
+    "time": "1.066",
+    "timestamp": "2026-10-17T07:15:44.950878+00:00",
+    "hostname": "046663bd6ef4"
+  },
+  "comparison_cluster_deltas_and_means_recomputed": 57,
+  "verification": "DOWNLOADED_EVIDENCE_VERIFICATION.json",
+  "recovered_root": "/Volumes/PRO-BLADE/GitHubRepos/olympus-cognitive-architecture/artifacts/oracle-fusion-v4-kaggle-359270139/recovered",
+  "primary_disposition": "NOT_SUPPORTED",
+  "independent_retraining": false
+}
