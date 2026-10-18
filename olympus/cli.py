@@ -25,6 +25,7 @@ from olympus.foundry.readiness import (
     audit_instruction_dataset,
     evaluate_portfolio_readiness,
     write_readiness_evidence_schema,
+    write_readiness_report_schema,
 )
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.service import FoundryService
@@ -638,6 +639,14 @@ def foundry_readiness_schema(output: Path) -> None:
 
     write_readiness_evidence_schema(output.resolve())
     console.print(f"Wrote readiness evidence schema to {output.resolve()}")
+
+
+@foundry_app.command("readiness-report-schema")
+def foundry_readiness_report_schema(output: Path) -> None:
+    """Write the canonical JSON Schema for six-family decision reports."""
+
+    write_readiness_report_schema(output.resolve())
+    console.print(f"Wrote readiness report schema to {output.resolve()}")
 
 
 @foundry_app.command("load-smoke")

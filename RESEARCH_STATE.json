@@ -98,9 +98,11 @@
     "current_report": "research/llm_readiness_v1/CURRENT_REPORT.json",
     "thresholds": "configs/llm-readiness-v1.json",
     "evidence_schema": "configs/llm-readiness-evidence-v1.schema.json",
+    "report_schema": "configs/llm-readiness-report-v1.schema.json",
     "receipt_binding": "Every stage receipt must be a hash-verified JSON envelope matching the expected evidence kind, candidate, checkpoint, dataset, producer where applicable, and source commit.",
     "report_binding": "Every generated report records the protocol ID and SHA-256 identities of the thresholds, evidence, evidence schema, exact evaluator source, and combined evaluator/dataset-verifier/family-specification decision code.",
     "automation_gate": "olympus foundry readiness-check --require-ready writes the report and exits 1 unless all six canonical families pass.",
+    "baseline_verifier": "scripts/verify_readiness_baseline.py independently checks both schemas, validates and exactly regenerates the checked-in report, and requires the documented 0/6 disposition.",
     "hermes_data_audit": "research/llm_readiness_v1/HERMES_SMOKE_DATA_AUDIT.json",
     "load_smoke": "research/llm_readiness_v1/LOAD_SMOKE.json",
     "claim_boundary": "The Hermes smoke corpus passes bounded integrity and hygiene checks but has 12 training and 12 protected records. The health-endpoint load run is an engineering smoke. Neither is model capability, safety, production, or promotion evidence."
@@ -215,6 +217,13 @@
       "kind": "large_scale_readiness_fail_closed_extension",
       "event": "Required explicit protocol identity and unique family/candidate identities; rejected duplicate training seeds and undeclared control, capability, safety, and family-gate entries; replaced release-document substring matching with exact structured headers; bound reports to the combined evaluator, dataset verifier, and family specification source; and added a --require-ready CLI exit gate. The current disposition remains 0/6 ready. No protected evaluation, scientific training, promotion, paid compute, or predecessor outcome changed.",
       "local_verification": "Ruff and strict MyPy passed on all touched Python source and tests. The versioned schema and 0/6 current report regenerated successfully. New focused pytest regressions were written but not launched because free memory remained below the 512 MiB admission guard with active pageouts.",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-18",
+      "kind": "large_scale_readiness_release_verification",
+      "event": "Published a machine-readable readiness-report schema, added an independent baseline verifier to CI and release workflows, repaired Python 3.11 exception syntax, and added regressions for exact schema/report reproduction, dataset-audit totals, malformed but hash-valid receipts, structured release-document headers, missing evidence, symlink rejection, and output overwrite refusal. The readiness disposition remains 0/6 ready; no protected evaluation, scientific training, model promotion, paid compute, or predecessor outcome changed.",
+      "local_verification": "Across resource-isolated commands all 562 collected tests were accounted for: 560 passed and 2 expected skips, with 85.02 percent combined branch coverage. Full Ruff passed; strict MyPy passed on 154 source files; the readiness baseline verifier, Foundry golden path, web 6-test suite and production build passed. Offline npm audit found zero vulnerabilities. No-isolation wheel and source distributions built, passed Twine checks, contained the required readiness assets, and excluded external datasets. The online Python dependency audit was not run because automatic approval review rejected disclosure of project dependency and build metadata to external package and vulnerability services.",
       "scientific_outcomes_created": false
     }
   ],

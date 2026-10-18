@@ -273,6 +273,13 @@ def test_hash_valid_receipt_with_wrong_semantics_fails_closed(tmp_path: Path) ->
     assert "strong_controls" in report.blockers
 
 
+def test_hash_valid_malformed_receipt_fails_closed(tmp_path: Path) -> None:
+    candidate = _passing_candidate(tmp_path)
+    candidate.controls[0].receipt = _artifact(tmp_path, "malformed-receipt.json", "{bad-json")
+    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    assert "strong_controls" in report.blockers
+
+
 def test_hash_valid_receipt_from_wrong_source_fails_closed(tmp_path: Path) -> None:
     candidate = _passing_candidate(tmp_path)
     candidate.source_commit = "f" * 40
@@ -357,6 +364,15 @@ def test_documents_require_exact_set_and_structured_binding(tmp_path: Path) -> N
     assert "release_documentation" in report.blockers
 
     candidate = _passing_candidate(tmp_path)
+    candidate.documents["model_card"] = _artifact(
+        tmp_path,
+        "malformed-header-card.md",
+        f"{DOCUMENT_HEADER_PREFIX} {{bad-json {DOCUMENT_HEADER_SUFFIX}\n# Model card\n",
+    )
+    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    assert "release_documentation" in report.blockers
+
+    candidate = _passing_candidate(tmp_path)
     header = ReleaseDocumentHeader(
         protocol_id=PROTOCOL_ID,
         document_type="model_card",
@@ -401,3 +417,26 @@ def test_relaxed_threshold_policy_is_rejected(tmp_path: Path) -> None:
     )
     with pytest.raises(ValueError, match="frozen v1 policy"):
         evaluate_portfolio_readiness(evidence_path, thresholds_path, tmp_path / "report.json")
+
+
+def test_portfolio_rejects_missing_symlink_and_input_overwrite(tmp_path: Path) -> None:
+    thresholds_path = Path(__file__).parents[1] / "configs/llm-readiness-v1.json"
+    with pytest.raises(ValueError, match="evidence input must be"):
+        evaluate_portfolio_readiness(
+            tmp_path / "missing.json",
+            thresholds_path,
+            tmp_path / "report.json",
+        )
+
+    evidence_path = tmp_path / "evidence.json"
+    evidence_path.write_text(
+        ReadinessEvidenceSet(protocol_id=PROTOCOL_ID, candidates=[]).model_dump_json(),
+        encoding="utf-8",
+    )
+    evidence_symlink = tmp_path / "evidence-link.json"
+    evidence_symlink.symlink_to(evidence_path)
+    with pytest.raises(ValueError, match="non-symlink"):
+        evaluate_portfolio_readiness(evidence_symlink, thresholds_path, tmp_path / "report.json")
+
+    with pytest.raises(ValueError, match="cannot overwrite"):
+        evaluate_portfolio_readiness(evidence_path, thresholds_path, evidence_path)

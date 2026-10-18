@@ -86,6 +86,29 @@ def test_readiness_check_can_enforce_unready_exit_status(tmp_path: Path) -> None
     assert enforced.exit_code == 1
 
 
+def test_readiness_schema_commands_write_valid_schemas(tmp_path: Path) -> None:
+    evidence_schema = tmp_path / "evidence.schema.json"
+    report_schema = tmp_path / "report.schema.json"
+
+    evidence_result = runner.invoke(
+        app,
+        ["foundry", "readiness-schema", str(evidence_schema)],
+    )
+    assert evidence_result.exit_code == 0, evidence_result.output
+    assert json.loads(evidence_schema.read_text(encoding="utf-8"))["title"] == (
+        "ReadinessEvidenceSet"
+    )
+
+    report_result = runner.invoke(
+        app,
+        ["foundry", "readiness-report-schema", str(report_schema)],
+    )
+    assert report_result.exit_code == 0, report_result.output
+    assert json.loads(report_schema.read_text(encoding="utf-8"))["title"] == (
+        "PortfolioReadinessReport"
+    )
+
+
 def test_forge_workspace_and_demo_commands(tmp_path: Path) -> None:
     compile_output = _invoke(
         "forge",

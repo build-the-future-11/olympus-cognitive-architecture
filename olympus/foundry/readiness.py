@@ -267,11 +267,11 @@ class FamilyReadinessReport(StrictModel):
 class PortfolioReadinessReport(StrictModel):
     schema_version: Literal[1] = 1
     protocol_id: Literal["olympus-six-family-readiness-v1"] = PROTOCOL_ID
-    thresholds_sha256: str
-    evidence_sha256: str
-    evidence_schema_sha256: str
-    evaluator_sha256: str
-    decision_code_sha256: str
+    thresholds_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    evidence_schema_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    evaluator_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    decision_code_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     family_reports: list[FamilyReadinessReport]
     ready_families: int
     total_families: int
@@ -293,6 +293,23 @@ def readiness_evidence_schema_bytes() -> bytes:
 
 def write_readiness_evidence_schema(output_path: Path) -> None:
     _atomic_json(output_path, ReadinessEvidenceSet.model_json_schema())
+
+
+def readiness_report_schema_bytes() -> bytes:
+    """Return the canonical JSON Schema bytes for readiness decision reports."""
+
+    return (
+        json.dumps(
+            PortfolioReadinessReport.model_json_schema(),
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n"
+    ).encode()
+
+
+def write_readiness_report_schema(output_path: Path) -> None:
+    _atomic_json(output_path, PortfolioReadinessReport.model_json_schema())
 
 
 def _decision_code_sha256() -> str:
@@ -418,7 +435,7 @@ def _dataset_receipt_valid(dataset: DatasetEvidence | None, root: Path) -> bool:
             expected_manifest_file_sha256=dataset.manifest.sha256,
             require_contained_splits=True,
         )
-    except OSError, ValueError:
+    except (OSError, ValueError):
         return False
     splits = {split.name: split for split in manifest.splits}
     train = splits["train"]

@@ -45,6 +45,8 @@ jobs:
         run: uv run --locked python -m ruff check .
       - name: Type check
         run: uv run --locked python -m mypy olympus scripts tests
+      - name: Verify frozen readiness baseline
+        run: uv run --locked python scripts/verify_readiness_baseline.py
       - name: Test with branch coverage
         run: uv run --locked python -m pytest --cov=olympus --cov-branch --cov-report=term-missing -q
       - name: Verify Foundry golden path
