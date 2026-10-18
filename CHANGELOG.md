@@ -4,6 +4,18 @@ All notable changes to Olympus are recorded here.
 
 ## Unreleased
 
+- Added the completed, independently verifiable v4 oracle diagnostic and the
+  frozen v5 robust-routing/residual-temporal successor with matched controls,
+  development-only selection, protected splits, checkpoint/prediction hashes,
+  and fail-preserving evidence archives.
+- Added a revision-pinned EditCLEVR paired-image model and five-seed protocol
+  covering ID, hard, CoGenT, and no-op splits; the primary must beat the strongest
+  development-selected control while satisfying an ID non-regression guard.
+- Added checksummed Kaggle research runners, explicit historical-evidence
+  preservation, independent bootstrap recomputation, and a root
+  `RESEARCH_STATE.json` that separates implemented, executed, and supported work.
+- Added optional bearer authentication and bounded concurrent workload admission
+  to stateful and compute-bearing API routes.
 - Added bounded, differentiable reference architectures for all six Olympus
   families: Hermes, Prometheus, Perseus, Olympus-Atlas, Kronos, and Aion. These
   remain explicitly non-promotional and are not target-scale checkpoints.

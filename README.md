@@ -31,6 +31,11 @@ uv run --locked python -m olympus.cli foundry verify-pipeline
 uv run --locked uvicorn olympus.api:app --reload
 ```
 
+The default development server is loopback-only. Before binding the API to any
+other interface, set `OLYMPUS_API_TOKEN` and send it as a bearer token to
+stateful or compute-bearing routes. `OLYMPUS_MAX_CONCURRENT_WORKLOADS` defaults
+to one and rejects excess work with HTTP 429.
+
 The committed `uv.lock` is the canonical Python environment resolution used by
 CI and release verification. Regenerate it only when dependency policy changes,
 and reject drift with `uv lock --check`. Release distributions use the locked
@@ -125,6 +130,15 @@ router's corrupted selective accuracy was 0.0125 below the semantic control
 +0.0200 effect. Risk monotonicity and transition legality still had zero
 violations. The complete evidence lock and arXiv-ready, unsubmitted negative
 paper live under `research/olympus_irp_successor_v3/`.
+
+The v4 oracle-routing diagnostic subsequently completed 40 cells, 80 expert-bank
+fits, and 120 protected evaluations. Its preregistered utility-routing primary
+failed by 6.82 percentage points against the development-selected semantic
+control. Two bounded repairs were supported: mixed-corruption training improved
+corrupted accuracy by 27.42 points, and semantic routing exceeded learned fixed
+routing by 10.21 points. The v5 distribution-shift and residual-temporal
+successor is frozen but not yet executed. The authoritative cross-iteration
+status is `RESEARCH_STATE.json`.
 
 The bounded Foundry SFT path now uses configuration-hashed immutable runs,
 strict resume compatibility, warmup plus cosine decay, validation early

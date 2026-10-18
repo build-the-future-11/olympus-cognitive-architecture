@@ -8,7 +8,6 @@ from typing import Any
 
 import pytest
 import torch
-from test_olympus_system import _config, _dataset_batch
 
 from olympus.data.olympus_dataset import write_olympus_dataset_manifest
 from olympus.evaluation.olympus_system import (
@@ -25,6 +24,7 @@ from olympus.training.olympus_system import (
     TrainingInterrupted,
     train_olympus_system,
 )
+from tests.test_olympus_system import _config, _dataset_batch
 
 
 @pytest.fixture

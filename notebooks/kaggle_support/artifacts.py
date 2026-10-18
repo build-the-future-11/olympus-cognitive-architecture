@@ -32,8 +32,21 @@ _VALIDATION_TESTS = frozenset(
         "test_controlled_fusion.py",
         "test_runtime_hardening.py",
         "test_olympus_resume.py",
+        "test_editclevr_model.py",
+        "test_editclevr_dataset.py",
+        "test_oracle_fusion_v4.py",
+        "test_robust_fusion_v5.py",
         "conftest.py",
         "__init__.py",
+    }
+)
+_REQUIRED_VALIDATION_TESTS = frozenset(
+    {
+        "test_olympus_system.py",
+        "test_olympus_dataset.py",
+        "test_controlled_fusion.py",
+        "test_runtime_hardening.py",
+        "test_olympus_resume.py",
     }
 )
 _CACHE_NAMES = frozenset(
@@ -116,7 +129,11 @@ def _source_allowed(relative: str) -> bool:
     parts = path.parts
     if _secret(path) or any(part in _CACHE_NAMES for part in parts):
         return False
-    if relative in {"pyproject.toml", "requirements-kaggle.txt"}:
+    if relative in {
+        "pyproject.toml",
+        "requirements-kaggle.txt",
+        "V5_REMOTE_PRESERVATION.json",
+    }:
         return True
     if len(parts) >= 2 and parts[0] == "olympus" and path.suffix == ".py":
         return True
@@ -125,6 +142,17 @@ def _source_allowed(relative: str) -> bool:
     if len(parts) == 3 and parts[:2] == ("configs", "kaggle") and path.suffix == ".json":
         return True
     if len(parts) == 2 and parts[0] == "tests" and parts[1] in _VALIDATION_TESTS:
+        return True
+    if (
+        len(parts) == 3
+        and parts[0] == "research"
+        and parts[1] in {
+            "olympus_irp_successor_v4",
+            "olympus_irp_successor_v5",
+            "olympus_editclevr_v1",
+        }
+        and path.suffix in {".md", ".json"}
+    ):
         return True
     return len(parts) == 3 and parts[:2] == ("notebooks", "kaggle_support") and path.suffix == ".py"
 
@@ -173,10 +201,20 @@ def _source_paths(root: Path) -> list[str]:
         "scripts/*.py",
         "configs/kaggle/*.json",
         "notebooks/kaggle_support/*.py",
+        "research/olympus_irp_successor_v4/*.md",
+        "research/olympus_irp_successor_v4/*.json",
+        "research/olympus_irp_successor_v5/*.md",
+        "research/olympus_irp_successor_v5/*.json",
+        "research/olympus_editclevr_v1/*.md",
+        "research/olympus_editclevr_v1/*.json",
     ):
-        candidates.update(str(path.relative_to(root)) for path in root.glob(pattern))
+        candidates.update(
+            str(path.relative_to(root)) for path in root.glob(pattern) if path.is_file()
+        )
     candidates.update(
-        name for name in ("pyproject.toml", "requirements-kaggle.txt") if (root / name).is_file()
+        name
+        for name in ("pyproject.toml", "requirements-kaggle.txt", "V5_REMOTE_PRESERVATION.json")
+        if (root / name).is_file()
     )
     candidates.update(
         f"tests/{name}" for name in _VALIDATION_TESTS if (root / "tests" / name).is_file()
@@ -184,9 +222,7 @@ def _source_paths(root: Path) -> list[str]:
     required = {"olympus/__init__.py", "pyproject.toml", "requirements-kaggle.txt"}
     if "scripts/validate_olympus_campaign.py" in candidates:
         required.update(
-            f"tests/{name}"
-            for name in _VALIDATION_TESTS
-            if name not in {"conftest.py", "__init__.py"}
+            f"tests/{name}" for name in _REQUIRED_VALIDATION_TESTS
         )
     if not required <= candidates:
         raise ValueError("source root is missing required Olympus source/environment files")
@@ -194,7 +230,15 @@ def _source_paths(root: Path) -> list[str]:
         raise ValueError("source candidate violates the explicit allowlist")
     # Glob recursion does not follow directory links. Reject them instead of silently
     # omitting source, which would produce a misleading source identity.
-    for selected in ("olympus", "scripts", "configs/kaggle", "notebooks/kaggle_support"):
+    for selected in (
+        "olympus",
+        "scripts",
+        "configs/kaggle",
+        "notebooks/kaggle_support",
+        "research/olympus_irp_successor_v4",
+        "research/olympus_irp_successor_v5",
+        "research/olympus_editclevr_v1",
+    ):
         base = root / selected
         if base.is_symlink():
             raise ValueError("source directory must not be a symlink")

@@ -16,6 +16,7 @@ from olympus.foundry.resources import ResourceGovernor
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
+    parser.add_argument("--junitxml", type=Path, help="Persist numerical regression results")
     parser.add_argument(
         "--lock", type=Path, default=Path("artifacts/locks/campaign-validation.lock")
     )
@@ -40,6 +41,8 @@ def main() -> None:
             "test_olympus_resume.py",
         ]
         arguments = ["-q", *[str(root / "tests" / name) for name in tests]]
+        if args.junitxml is not None:
+            arguments.extend(["--junitxml", str(args.junitxml.resolve())])
         if args.device == "cuda":
             arguments.extend(["-k", "cuda"])
         raise SystemExit(pytest.main(arguments))

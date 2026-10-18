@@ -1,0 +1,10 @@
+{
+  "status": "PASS_OBSERVED_IN_KAGGLE_LOG",
+  "script_version_id": 359270139,
+  "tests_passed": 9,
+  "test_seconds": 1.07,
+  "log_time_seconds": 20.7,
+  "source_archive_sha256": "900f61ddfa16aa48977de09fe2b5cb3c58b908e0a2ec1dbe83ed0c99dfbcd91c",
+  "scope": "Numerical and integrity regression tests, not experiment efficacy",
+  "downloaded_xml_verified": false
+}

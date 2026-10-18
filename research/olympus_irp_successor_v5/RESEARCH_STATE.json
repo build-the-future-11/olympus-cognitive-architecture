@@ -1,0 +1,14 @@
+{
+  "phase": "PREPARED_FOR_PRIVATE_CPU",
+  "prior_preservation": {
+    "files_checked": 1573,
+    "changed_or_missing": [],
+    "unchanged": true
+  },
+  "planned_cells": 20,
+  "planned_bank_fits": 40,
+  "planned_protected_evaluations": 80,
+  "sources_sha256": "81b1e8062cedc1132004db3300db2dc22abd41db774819ad02097050fa6efea1",
+  "external_benchmark_status": "NOT_EVALUATED",
+  "promotion_authorized": false
+}

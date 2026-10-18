@@ -2,6 +2,7 @@ include CHANGELOG.md
 include CONTRIBUTING.md
 include LICENSE
 include OLYMPUS_MODEL_FOUNDRY_LEDGER.md
+include RESEARCH_STATE.json
 include RELEASE.md
 include SECURITY.md
 include uv.lock

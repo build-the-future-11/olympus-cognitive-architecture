@@ -9,10 +9,11 @@ import hashlib
 import json
 import textwrap
 from pathlib import Path
+from typing import Any
 
 
 def build(bundle: Path, output: Path) -> None:
-    cells = []
+    cells: list[dict[str, Any]] = []
 
     def md(value: str) -> None:
         cells.append(

@@ -67,6 +67,7 @@ class OlympusSystemEvaluation(StrictModel):
     decision_available_examples: int = Field(ge=0)
     forced_stop_examples: int = Field(ge=0)
     total_loss: float
+    loss_components: dict[str, float] = Field(default_factory=dict)
     decision_accuracy: float | None = Field(default=None, ge=0.0, le=1.0)
     transition_accuracy: float = Field(ge=0.0, le=1.0)
     next_state_mse: float = Field(ge=0.0)
@@ -260,6 +261,18 @@ def evaluate_olympus_system(
         decision_available_examples=int(active.sum().item()),
         forced_stop_examples=int(output.aion.forced_stop.sum().item()),
         total_loss=float(loss.total.item()),
+        loss_components={
+            name: float(getattr(loss, name).item())
+            for name in (
+                "decision",
+                "transition",
+                "temporal",
+                "uncertainty_calibration",
+                "risk_calibration",
+                "gate_balance",
+                "counterfactual_consistency",
+            )
+        },
         decision_accuracy=decision_accuracy,
         transition_accuracy=float(
             output.aion.selected_stage.eq(transition_targets).float().mean().item()

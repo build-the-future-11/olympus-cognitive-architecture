@@ -1,0 +1,10 @@
+{
+  "files_verified": 90,
+  "source_matches_local": true,
+  "notebook_code_compiles": true,
+  "ruff": "PASS",
+  "mypy_targeted": "PASS",
+  "numerical_tests": "BLOCKED_BY_LOCAL_PAGEOUT_GUARD",
+  "source_sha256": "900f61ddfa16aa48977de09fe2b5cb3c58b908e0a2ec1dbe83ed0c99dfbcd91c",
+  "prior_package": "retained; scripts init packaging mismatch"
+}

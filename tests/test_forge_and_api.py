@@ -2,8 +2,9 @@ import asyncio
 from pathlib import Path
 
 import httpx
+import pytest
 
-from olympus.api import app, demos
+from olympus.api import app, demos, get_workload_limiter
 from olympus.demos import run_division_demo, run_forge_demo, run_hermes_demo
 from olympus.forge.compiler import NaturalLanguageBehaviorCompiler
 from olympus.forge.language import BehaviorLanguage
@@ -14,18 +15,20 @@ async def _async_request(
     method: str,
     path: str,
     json: dict[str, object] | None = None,
+    headers: dict[str, str] | None = None,
 ) -> httpx.Response:
     transport = httpx.ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
-        return await client.request(method, path, json=json)
+        return await client.request(method, path, json=json, headers=headers)
 
 
 def _request(
     method: str,
     path: str,
     json: dict[str, object] | None = None,
+    headers: dict[str, str] | None = None,
 ) -> httpx.Response:
-    return asyncio.run(_async_request(method, path, json))
+    return asyncio.run(_async_request(method, path, json, headers))
 
 
 def test_behavior_language_round_trip() -> None:
@@ -78,6 +81,42 @@ def test_api_endpoints() -> None:
     )
     assert run_response.status_code == 200
     assert "output" in run_response.json()["outputs"]
+
+
+def test_stateful_api_routes_enforce_configured_token(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("OLYMPUS_API_TOKEN", "test-secret")
+    denied = _request(
+        "POST",
+        "/forge/run",
+        {"behavior": "Interpret and merge.", "prompt": "A bounded prompt."},
+    )
+    assert denied.status_code == 401
+    assert denied.headers["www-authenticate"] == "Bearer"
+
+    accepted = _request(
+        "POST",
+        "/forge/run",
+        {"behavior": "Interpret and merge.", "prompt": "A bounded prompt."},
+        headers={"Authorization": "Bearer test-secret"},
+    )
+    assert accepted.status_code == 200
+
+
+def test_stateful_api_routes_reject_excess_concurrency(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("OLYMPUS_MAX_CONCURRENT_WORKLOADS", "1")
+    get_workload_limiter.cache_clear()
+    limiter = get_workload_limiter()
+    limiter.acquire()
+    try:
+        response = _request(
+            "POST",
+            "/forge/run",
+            {"behavior": "Interpret and merge.", "prompt": "A bounded prompt."},
+        )
+    finally:
+        limiter.release()
+        get_workload_limiter.cache_clear()
+    assert response.status_code == 429
 
 
 def test_demo_endpoint_returns_real_cached_results() -> None:

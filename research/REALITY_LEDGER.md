@@ -1,7 +1,7 @@
 # Olympus Reality Ledger
 
 Initialized from the repository and local runtime on 2026-08-21; reconciled
-through 2026-10-11. Status terms are literal; no model-family capability is
+through 2026-10-18. Status terms are literal; no model-family capability is
 inferred from architecture code.
 
 ## Real and verified
@@ -75,6 +75,15 @@ inferred from architecture code.
   studies recorded zero host-risk monotonicity and transition-legality
   violations. These are controlled synthetic results, not natural-data or JEPA
   validation.
+- V4 completed 40 matched cells, 80 expert-bank fits and 120 protected
+  evaluations. Its utility-routing primary failed by 6.82 percentage points
+  against semantic routing. Mixed-corruption training improved corrupted
+  accuracy by 27.42 points and semantic routing beat fixed routing by 10.21
+  points, but semantic routing regressed on the reserved OOD shifts and the
+  temporal predictor lost to persistence on clean inputs.
+- V5 is source- and protocol-prepared for 20 cells, 40 bank fits and 80 protected
+  evaluations. It has not run and has no result. EditCLEVR is being added as a
+  separate image-edit benchmark; it does not supply temporal or governance data.
 
 ## Not present
 

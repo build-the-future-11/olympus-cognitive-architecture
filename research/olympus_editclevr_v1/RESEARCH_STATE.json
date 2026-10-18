@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "project_id": "olympus-editclevr-v1",
+  "phase": "IMPLEMENTATION_AND_PROTOCOL_PREPARATION",
+  "protocol": "PROTOCOL.md",
+  "dataset": "torux/EditCLEVR",
+  "dataset_revision": "734efa9b0164ba742cd2c39b9c2945c494497c23",
+  "dataset_license": "CC-BY-4.0",
+  "dataset_validation": {
+    "status": "PASS",
+    "pair_ids": 20000,
+    "referenced_files": 120000,
+    "missing_paths": 0
+  },
+  "planned_training_seeds": 5,
+  "planned_protected_splits": 4,
+  "scientific_result": "NOT_EVALUATED",
+  "promotion_authorized": false,
+  "full_olympus_claim_authorized": false,
+  "independent_reproduction": false
+}

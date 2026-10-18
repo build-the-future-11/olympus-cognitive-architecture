@@ -1,8 +1,10 @@
 # Olympus six-family reference system
 
 For the maintained bounded training, interruption/resume, and Kaggle commands,
-see [the 2026-10-16 campaign handoff](kaggle-campaign.md). Its readiness status is
-BLOCKED pending numerical and CUDA checks; older study outcomes remain historical.
+see [the 2026-10-16 campaign handoff](kaggle-campaign.md). CUDA smoke/resume and
+the six-cell development matrix completed successfully; these are engineering
+receipts, not scientific promotion. V4 later completed with a failed primary and
+useful secondary synthetic effects. V5 remains prepared but unexecuted.
 
 `OlympusReferenceSystem` is the bounded composition layer for the six family
 reference implementations. It is executable and differentiable, but it is not

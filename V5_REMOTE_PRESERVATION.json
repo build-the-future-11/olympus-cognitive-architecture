@@ -1,0 +1,26 @@
+{
+  "inventory_sha256": "04e6ca4f9d524ee90f80f0ad3bf260758afd5ca13ef402bafdbef0eb19e3fd5c",
+  "local_verification": {
+    "files_checked": 1573,
+    "immutable_evidence_changed_or_missing": [],
+    "immutable_evidence_unchanged": true,
+    "mutable_source_changed_or_missing": [
+      "docs/olympus-system.md",
+      "notebooks/build_kaggle_launch.py",
+      "notebooks/build_kaggle_runner.py",
+      "notebooks/olympus_kaggle_20261016.ipynb",
+      "olympus/api.py",
+      "olympus/models/__init__.py",
+      "research/REALITY_LEDGER.md",
+      "scripts/kaggle_followup.py",
+      "tests/test_forge_and_api.py",
+      "tests/test_kaggle_account_guard.py",
+      "tests/test_kaggle_runner.py",
+      "tests/test_olympus_resume.py",
+      "tests/test_oracle_fusion_v4.py"
+    ],
+    "unchanged": true
+  },
+  "schema_version": 1,
+  "scope": "pre-upload original-host preservation receipt; recheck after retrieval"
+}

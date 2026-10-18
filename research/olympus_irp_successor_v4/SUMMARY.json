@@ -1,0 +1,1827 @@
+{
+  "cells": 40,
+  "comparisons": {
+    "clean/corruption/counterfactual": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/corruption/coverage": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/oracle_corruption-minus-uniform": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/oracle_corruption/counterfactual": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/oracle_corruption/coverage": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/oracle_task-minus-uniform": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/oracle_task/counterfactual": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/oracle_task/coverage": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/semantic-minus-fixed": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/semantic-minus-semantic_train_mean": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/semantic/counterfactual": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/semantic/coverage": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/uniform/counterfactual": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/uniform/coverage": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/utility-minus-corruption": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/utility-minus-selected_control": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/utility-minus-semantic": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/utility/counterfactual": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "clean/utility/coverage": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "corrupted/corruption/counterfactual": {
+      "ci95": [
+        -0.0005859375,
+        0.00048828125
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        -0.00048828125,
+        0.0,
+        -0.0009765625,
+        0.0009765625
+      ],
+      "descriptive": true,
+      "mean": -9.765625e-05
+    },
+    "corrupted/corruption/coverage": {
+      "ci95": [
+        0.11669921875,
+        0.14169921875
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.13525390625,
+        0.140625,
+        0.107421875,
+        0.12060546875,
+        0.14599609375
+      ],
+      "descriptive": true,
+      "mean": 0.12998046875
+    },
+    "corrupted/oracle_corruption-minus-uniform": {
+      "ci95": [
+        0.13525390625,
+        0.16640625
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.13720703125,
+        0.130859375,
+        0.18408203125,
+        0.14013671875,
+        0.14892578125
+      ],
+      "descriptive": true,
+      "mean": 0.1482421875
+    },
+    "corrupted/oracle_corruption/counterfactual": {
+      "ci95": [
+        0.0,
+        0.00068359375
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0009765625,
+        0.00048828125,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.00029296875
+    },
+    "corrupted/oracle_corruption/coverage": {
+      "ci95": [
+        0.0435546875,
+        0.05693359375
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.05029296875,
+        0.0634765625,
+        0.04052734375,
+        0.0439453125,
+        0.05224609375
+      ],
+      "descriptive": true,
+      "mean": 0.05009765625
+    },
+    "corrupted/oracle_task-minus-uniform": {
+      "ci95": [
+        0.1720703125,
+        0.20791015625
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.18994140625,
+        0.16455078125,
+        0.22607421875,
+        0.17138671875,
+        0.1953125
+      ],
+      "descriptive": true,
+      "mean": 0.189453125
+    },
+    "corrupted/oracle_task/counterfactual": {
+      "ci95": [
+        0.0,
+        0.00029296875
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.00048828125,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 9.765625e-05
+    },
+    "corrupted/oracle_task/coverage": {
+      "ci95": [
+        0.01416015625,
+        0.0224609375
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.025390625,
+        0.02099609375,
+        0.0146484375,
+        0.01171875,
+        0.01953125
+      ],
+      "descriptive": true,
+      "mean": 0.01845703125
+    },
+    "corrupted/semantic-minus-fixed": {
+      "ci95": [
+        0.09619140625,
+        0.1076171875
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.1123046875,
+        0.09619140625,
+        0.10498046875,
+        0.09326171875,
+        0.103515625
+      ],
+      "descriptive": true,
+      "mean": 0.10205078125
+    },
+    "corrupted/semantic-minus-semantic_train_mean": {
+      "ci95": [
+        0.102734375,
+        0.1318359375
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.1064453125,
+        0.11474609375,
+        0.115234375,
+        0.14599609375,
+        0.0947265625
+      ],
+      "descriptive": true,
+      "mean": 0.1154296875
+    },
+    "corrupted/semantic/counterfactual": {
+      "ci95": [
+        -0.0001953125,
+        0.000390625
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.00048828125,
+        0.0,
+        -0.00048828125,
+        0.00048828125
+      ],
+      "descriptive": true,
+      "mean": 9.765625e-05
+    },
+    "corrupted/semantic/coverage": {
+      "ci95": [
+        0.25302734375,
+        0.2927734375
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.2861328125,
+        0.24072265625,
+        0.28759765625,
+        0.25537109375,
+        0.30126953125
+      ],
+      "descriptive": true,
+      "mean": 0.27421875
+    },
+    "corrupted/uniform/counterfactual": {
+      "ci95": [
+        0.0001953125,
+        0.0013671875
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0009765625,
+        0.0,
+        0.0,
+        0.00146484375,
+        0.00146484375
+      ],
+      "descriptive": true,
+      "mean": 0.00078125
+    },
+    "corrupted/uniform/coverage": {
+      "ci95": [
+        0.01435546875,
+        0.04228515625
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0380859375,
+        0.04931640625,
+        0.00048828125,
+        0.025390625,
+        0.03515625
+      ],
+      "descriptive": true,
+      "mean": 0.0296875
+    },
+    "corrupted/utility-minus-corruption": {
+      "ci95": [
+        0.00625,
+        0.0189453125
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.013671875,
+        0.01611328125,
+        0.01220703125,
+        0.02294921875,
+        0.0009765625
+      ],
+      "descriptive": true,
+      "mean": 0.01318359375
+    },
+    "corrupted/utility-minus-selected_control": {
+      "ci95": [
+        -0.07705078125,
+        -0.05888671875
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        -0.08349609375,
+        -0.060546875,
+        -0.06982421875,
+        -0.052734375,
+        -0.07421875
+      ],
+      "descriptive": true,
+      "mean": -0.0681640625
+    },
+    "corrupted/utility-minus-semantic": {
+      "ci95": [
+        -0.07705078125,
+        -0.0588793945312501
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        -0.08349609375,
+        -0.060546875,
+        -0.06982421875,
+        -0.052734375,
+        -0.07421875
+      ],
+      "descriptive": true,
+      "mean": -0.0681640625
+    },
+    "corrupted/utility/counterfactual": {
+      "ci95": [
+        -0.00048828125,
+        0.0005859375
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0009765625,
+        0.0,
+        -0.0009765625,
+        0.0,
+        0.00048828125
+      ],
+      "descriptive": true,
+      "mean": 9.765625e-05
+    },
+    "corrupted/utility/coverage": {
+      "ci95": [
+        0.0759765625,
+        0.10146484375
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.09033203125,
+        0.10791015625,
+        0.0654296875,
+        0.08349609375,
+        0.10009765625
+      ],
+      "descriptive": true,
+      "mean": 0.089453125
+    },
+    "ood/corruption/counterfactual": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "ood/corruption/coverage": {
+      "ci95": [
+        -0.0033203125,
+        0.0005859375
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        -0.00244140625,
+        0.00048828125,
+        0.0009765625,
+        -0.0048828125,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": -0.001171875
+    },
+    "ood/oracle_corruption-minus-uniform": {
+      "ci95": [
+        0.00517578125,
+        0.03720703125
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.00390625,
+        0.01513671875,
+        0.0419921875,
+        0.04345703125,
+        0.00146484375
+      ],
+      "descriptive": true,
+      "mean": 0.02119140625
+    },
+    "ood/oracle_corruption/counterfactual": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "ood/oracle_corruption/coverage": {
+      "ci95": [
+        0.0,
+        0.00029296875
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.00048828125,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 9.765625e-05
+    },
+    "ood/oracle_task-minus-uniform": {
+      "ci95": [
+        0.00517578125,
+        0.03720703125
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.00390625,
+        0.01513671875,
+        0.0419921875,
+        0.04345703125,
+        0.00146484375
+      ],
+      "descriptive": true,
+      "mean": 0.02119140625
+    },
+    "ood/oracle_task/counterfactual": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "ood/oracle_task/coverage": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "ood/semantic-minus-fixed": {
+      "ci95": [
+        -0.07470703125,
+        -0.0548828125
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        -0.07763671875,
+        -0.0673828125,
+        -0.04345703125,
+        -0.0732421875,
+        -0.07080078125
+      ],
+      "descriptive": true,
+      "mean": -0.06650390625
+    },
+    "ood/semantic-minus-semantic_train_mean": {
+      "ci95": [
+        0.1111328125,
+        0.1447265625
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.1416015625,
+        0.1142578125,
+        0.1572265625,
+        0.10986328125,
+        0.11083984375
+      ],
+      "descriptive": true,
+      "mean": 0.1267578125
+    },
+    "ood/semantic/counterfactual": {
+      "ci95": [
+        -0.00087890625,
+        0.0001953125
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.00048828125,
+        0.0,
+        0.0,
+        -0.00048828125,
+        -0.00146484375
+      ],
+      "descriptive": true,
+      "mean": -0.00029296875
+    },
+    "ood/semantic/coverage": {
+      "ci95": [
+        0.06865234375,
+        0.1361328125
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.12353515625,
+        0.03564453125,
+        0.15771484375,
+        0.080078125,
+        0.1181640625
+      ],
+      "descriptive": true,
+      "mean": 0.10302734375
+    },
+    "ood/uniform/counterfactual": {
+      "ci95": [
+        -0.0005859375,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        -0.0009765625,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": -0.0001953125
+    },
+    "ood/uniform/coverage": {
+      "ci95": [
+        -0.0138671875,
+        0.0130859375
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0087890625,
+        -0.0146484375,
+        0.009765625,
+        -0.0244140625,
+        0.0185546875
+      ],
+      "descriptive": true,
+      "mean": -0.000390625
+    },
+    "ood/utility-minus-corruption": {
+      "ci95": [
+        -0.0064453125,
+        0.00078125
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.00146484375,
+        -0.0107421875,
+        0.0,
+        -0.00048828125,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": -0.001953125
+    },
+    "ood/utility-minus-selected_control": {
+      "ci95": [
+        0.0587890625,
+        0.094140625
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.076171875,
+        0.07421875,
+        0.0478515625,
+        0.1083984375,
+        0.0712890625
+      ],
+      "descriptive": true,
+      "mean": 0.0755859375
+    },
+    "ood/utility-minus-semantic": {
+      "ci95": [
+        0.0583984375,
+        0.09453125
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.076171875,
+        0.07421875,
+        0.0478515625,
+        0.1083984375,
+        0.0712890625
+      ],
+      "descriptive": true,
+      "mean": 0.0755859375
+    },
+    "ood/utility/counterfactual": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive": true,
+      "mean": 0.0
+    },
+    "ood/utility/coverage": {
+      "ci95": [
+        -0.0044921875,
+        0.01259765625
+      ],
+      "clusters": 5,
+      "dataset_deltas": [
+        -0.0009765625,
+        -0.00927734375,
+        0.02099609375,
+        0.0,
+        0.00634765625
+      ],
+      "descriptive": true,
+      "mean": 0.00341796875
+    }
+  },
+  "freeze_sha256": "7bed7fe4e27a93c731d1190e0a9866ec418f93c4a22afe0e5128b620df0267b6",
+  "means": {
+    "missing_only/cf0.05/clean": {
+      "best_single": {
+        "accuracy": 1.0,
+        "brier": 0.000815540278563276,
+        "ece": 0.023888403445016592,
+        "nll": 0.024190456606447697,
+        "selective_accuracy_50": 1.0
+      },
+      "corruption": {
+        "accuracy": 1.0,
+        "brier": 0.0019434288027696312,
+        "ece": 0.037496554851531985,
+        "nll": 0.03823409900069237,
+        "selective_accuracy_50": 1.0
+      },
+      "diagnostics": {
+        "domain_only_accuracy": 0.2478515625,
+        "legacy_formula_mse": 0.026976544037461282,
+        "mask_only_accuracy": 0.2544921875,
+        "persistence_mse": 0.029771588742733,
+        "temporal_mse": 0.049310583621263504,
+        "utility_brier": 0.00010859658796107397
+      },
+      "fixed": {
+        "accuracy": 1.0,
+        "brier": 0.001755348639562726,
+        "ece": 0.03566222190856934,
+        "nll": 0.03632808215916157,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_corruption": {
+        "accuracy": 1.0,
+        "brier": 0.0019130687578581274,
+        "ece": 0.037210071086883546,
+        "nll": 0.037936118245124814,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_task": {
+        "accuracy": 1.0,
+        "brier": 0.00071290711639449,
+        "ece": 0.02263220548629761,
+        "nll": 0.022897598333656788,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic": {
+        "accuracy": 1.0,
+        "brier": 0.0008926809066906571,
+        "ece": 0.02498936653137207,
+        "nll": 0.02532102558761835,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic_train_mean": {
+        "accuracy": 1.0,
+        "brier": 0.0010476679017301649,
+        "ece": 0.02723920941352844,
+        "nll": 0.027633386105298995,
+        "selective_accuracy_50": 1.0
+      },
+      "uniform": {
+        "accuracy": 1.0,
+        "brier": 0.0019130687578581274,
+        "ece": 0.037210071086883546,
+        "nll": 0.037936118245124814,
+        "selective_accuracy_50": 1.0
+      },
+      "utility": {
+        "accuracy": 1.0,
+        "brier": 0.001910063298419118,
+        "ece": 0.03718836903572083,
+        "nll": 0.0379133727401495,
+        "selective_accuracy_50": 1.0
+      }
+    },
+    "missing_only/cf0.05/corrupted": {
+      "best_single": {
+        "accuracy": 0.67568359375,
+        "brier": 0.4396583318710327,
+        "ece": 0.1178912404953735,
+        "nll": 1.0094648122787475,
+        "selective_accuracy_50": 0.952734375
+      },
+      "corruption": {
+        "accuracy": 0.7458984375,
+        "brier": 0.33199414908885955,
+        "ece": 0.07684914344281424,
+        "nll": 0.6163222372531891,
+        "selective_accuracy_50": 0.9412109375
+      },
+      "diagnostics": {
+        "domain_only_accuracy": 0.240234375,
+        "legacy_formula_mse": 0.48694915175437925,
+        "mask_only_accuracy": 0.2494140625,
+        "persistence_mse": 0.4899878859519958,
+        "temporal_mse": 0.1351135179400444,
+        "utility_brier": 0.27680703699588777
+      },
+      "fixed": {
+        "accuracy": 0.793359375,
+        "brier": 0.3907283335924149,
+        "ece": 0.230757105757948,
+        "nll": 0.7417004227638244,
+        "selective_accuracy_50": 0.8541015625
+      },
+      "oracle_corruption": {
+        "accuracy": 0.9046875,
+        "brier": 0.18530588150024413,
+        "ece": 0.128992101829499,
+        "nll": 0.3940331220626831,
+        "selective_accuracy_50": 0.9927734375
+      },
+      "oracle_task": {
+        "accuracy": 0.97734375,
+        "brier": 0.04159375876188278,
+        "ece": 0.05713434063072782,
+        "nll": 0.10778548121452332,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic": {
+        "accuracy": 0.68359375,
+        "brier": 0.41362402141094207,
+        "ece": 0.10797585178224836,
+        "nll": 0.8166997253894805,
+        "selective_accuracy_50": 0.9484375
+      },
+      "semantic_train_mean": {
+        "accuracy": 0.67529296875,
+        "brier": 0.42040916681289675,
+        "ece": 0.10263225011294708,
+        "nll": 0.835915070772171,
+        "selective_accuracy_50": 0.924609375
+      },
+      "uniform": {
+        "accuracy": 0.77666015625,
+        "brier": 0.416289159655571,
+        "ece": 0.24231379010889215,
+        "nll": 0.7854562759399414,
+        "selective_accuracy_50": 0.8220703125
+      },
+      "utility": {
+        "accuracy": 0.79970703125,
+        "brier": 0.35187252461910246,
+        "ece": 0.16198115895676893,
+        "nll": 0.663937371969223,
+        "selective_accuracy_50": 0.89453125
+      }
+    },
+    "missing_only/cf0.05/ood": {
+      "best_single": {
+        "accuracy": 0.787109375,
+        "brier": 0.30747839212417605,
+        "ece": 0.11624697781517171,
+        "nll": 0.8339127957820892,
+        "selective_accuracy_50": 0.991015625
+      },
+      "corruption": {
+        "accuracy": 0.9986328125,
+        "brier": 0.11362407505512237,
+        "ece": 0.24377114484086632,
+        "nll": 0.29607851803302765,
+        "selective_accuracy_50": 1.0
+      },
+      "diagnostics": {
+        "domain_only_accuracy": 0.2392578125,
+        "legacy_formula_mse": 0.8590493083000184,
+        "mask_only_accuracy": 0.247265625,
+        "persistence_mse": 0.8620000720024109,
+        "temporal_mse": 0.10423433408141136,
+        "utility_brier": 0.16803615987300874
+      },
+      "fixed": {
+        "accuracy": 0.9580078125,
+        "brier": 0.22761449664831163,
+        "ece": 0.3265810926444829,
+        "nll": 0.49650064408779143,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_corruption": {
+        "accuracy": 0.99990234375,
+        "brier": 0.04426190517842769,
+        "ece": 0.1503829196386505,
+        "nll": 0.168734572827816,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_task": {
+        "accuracy": 1.0,
+        "brier": 0.002660865033976734,
+        "ece": 0.03570181012619287,
+        "nll": 0.036648666858673094,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic": {
+        "accuracy": 0.81689453125,
+        "brier": 0.27203267216682436,
+        "ece": 0.12196151413663756,
+        "nll": 0.5902931183576584,
+        "selective_accuracy_50": 0.9900390625
+      },
+      "semantic_train_mean": {
+        "accuracy": 0.8234375,
+        "brier": 0.2627509072422981,
+        "ece": 0.1623119255033089,
+        "nll": 0.5930194079875946,
+        "selective_accuracy_50": 1.0
+      },
+      "uniform": {
+        "accuracy": 0.97880859375,
+        "brier": 0.2443884938955307,
+        "ece": 0.35466973765869625,
+        "nll": 0.5224306106567382,
+        "selective_accuracy_50": 1.0
+      },
+      "utility": {
+        "accuracy": 0.9916015625,
+        "brier": 0.1558757096529007,
+        "ece": 0.27873597407597117,
+        "nll": 0.3649654656648636,
+        "selective_accuracy_50": 1.0
+      }
+    },
+    "missing_only/cf0/clean": {
+      "best_single": {
+        "accuracy": 1.0,
+        "brier": 0.0008088673290330917,
+        "ece": 0.023788170784246176,
+        "nll": 0.02408771626651287,
+        "selective_accuracy_50": 1.0
+      },
+      "corruption": {
+        "accuracy": 1.0,
+        "brier": 0.0019320925930514932,
+        "ece": 0.03738301396369934,
+        "nll": 0.038116146251559256,
+        "selective_accuracy_50": 1.0
+      },
+      "diagnostics": {
+        "domain_only_accuracy": 0.2478515625,
+        "legacy_formula_mse": 0.026976544037461282,
+        "mask_only_accuracy": 0.2544921875,
+        "persistence_mse": 0.029771588742733,
+        "temporal_mse": 0.049306662008166316,
+        "utility_brier": 0.00010827119913301431
+      },
+      "fixed": {
+        "accuracy": 1.0,
+        "brier": 0.001745092065539211,
+        "ece": 0.03555428385734558,
+        "nll": 0.03621613718569279,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_corruption": {
+        "accuracy": 1.0,
+        "brier": 0.001901869080029428,
+        "ece": 0.037097007036209106,
+        "nll": 0.0378187220543623,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_task": {
+        "accuracy": 1.0,
+        "brier": 0.0007070473511703312,
+        "ece": 0.022537922859191893,
+        "nll": 0.02280110027641058,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic": {
+        "accuracy": 1.0,
+        "brier": 0.0008854614337906241,
+        "ece": 0.024885839223861693,
+        "nll": 0.025214751623570918,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic_train_mean": {
+        "accuracy": 1.0,
+        "brier": 0.0010395273275207728,
+        "ece": 0.027129942178726198,
+        "nll": 0.027521046809852123,
+        "selective_accuracy_50": 1.0
+      },
+      "uniform": {
+        "accuracy": 1.0,
+        "brier": 0.001901869080029428,
+        "ece": 0.037097007036209106,
+        "nll": 0.0378187220543623,
+        "selective_accuracy_50": 1.0
+      },
+      "utility": {
+        "accuracy": 1.0,
+        "brier": 0.0018988769967108964,
+        "ece": 0.03707534074783325,
+        "nll": 0.03779598586261272,
+        "selective_accuracy_50": 1.0
+      }
+    },
+    "missing_only/cf0/corrupted": {
+      "best_single": {
+        "accuracy": 0.67568359375,
+        "brier": 0.43965759575366975,
+        "ece": 0.11798357647203375,
+        "nll": 1.0098234236240387,
+        "selective_accuracy_50": 0.952734375
+      },
+      "corruption": {
+        "accuracy": 0.74609375,
+        "brier": 0.3319892048835754,
+        "ece": 0.0772718523920048,
+        "nll": 0.616243427991867,
+        "selective_accuracy_50": 0.9412109375
+      },
+      "diagnostics": {
+        "domain_only_accuracy": 0.240234375,
+        "legacy_formula_mse": 0.48694915175437925,
+        "mask_only_accuracy": 0.2494140625,
+        "persistence_mse": 0.4899878859519958,
+        "temporal_mse": 0.1351122036576271,
+        "utility_brier": 0.27672708332538604
+      },
+      "fixed": {
+        "accuracy": 0.79326171875,
+        "brier": 0.390705007314682,
+        "ece": 0.23029229615931399,
+        "nll": 0.7416152119636535,
+        "selective_accuracy_50": 0.8541015625
+      },
+      "oracle_corruption": {
+        "accuracy": 0.90458984375,
+        "brier": 0.18527369499206542,
+        "ece": 0.12888162109302356,
+        "nll": 0.39392147660255433,
+        "selective_accuracy_50": 0.992578125
+      },
+      "oracle_task": {
+        "accuracy": 0.97744140625,
+        "brier": 0.041549614444375035,
+        "ece": 0.05712587624439038,
+        "nll": 0.10763920843601227,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic": {
+        "accuracy": 0.683203125,
+        "brier": 0.4142344892024994,
+        "ece": 0.10816064070095308,
+        "nll": 0.8186772704124451,
+        "selective_accuracy_50": 0.9490234375
+      },
+      "semantic_train_mean": {
+        "accuracy": 0.675,
+        "brier": 0.42069756984710693,
+        "ece": 0.10272857294767164,
+        "nll": 0.8371573030948639,
+        "selective_accuracy_50": 0.924609375
+      },
+      "uniform": {
+        "accuracy": 0.7767578125,
+        "brier": 0.4162621319293976,
+        "ece": 0.2426188161916798,
+        "nll": 0.7853635966777801,
+        "selective_accuracy_50": 0.822265625
+      },
+      "utility": {
+        "accuracy": 0.7998046875,
+        "brier": 0.3519399642944336,
+        "ece": 0.16196001232310664,
+        "nll": 0.663900762796402,
+        "selective_accuracy_50": 0.89375
+      }
+    },
+    "missing_only/cf0/ood": {
+      "best_single": {
+        "accuracy": 0.78701171875,
+        "brier": 0.3075631409883499,
+        "ece": 0.11611590261163655,
+        "nll": 0.8343003571033478,
+        "selective_accuracy_50": 0.991015625
+      },
+      "corruption": {
+        "accuracy": 0.9986328125,
+        "brier": 0.11359454020857811,
+        "ece": 0.24369068581727332,
+        "nll": 0.29597284495830534,
+        "selective_accuracy_50": 1.0
+      },
+      "diagnostics": {
+        "domain_only_accuracy": 0.2392578125,
+        "legacy_formula_mse": 0.8590493083000184,
+        "mask_only_accuracy": 0.247265625,
+        "persistence_mse": 0.8620000720024109,
+        "temporal_mse": 0.10423171520233154,
+        "utility_brier": 0.16835944652557372
+      },
+      "fixed": {
+        "accuracy": 0.95771484375,
+        "brier": 0.22756920605897904,
+        "ece": 0.3262192022753879,
+        "nll": 0.4963900536298752,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_corruption": {
+        "accuracy": 0.99990234375,
+        "brier": 0.04422690644860268,
+        "ece": 0.1502809902653098,
+        "nll": 0.16861279755830766,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_task": {
+        "accuracy": 1.0,
+        "brier": 0.002649966673925519,
+        "ece": 0.03559682090999559,
+        "nll": 0.036539622023701666,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic": {
+        "accuracy": 0.81689453125,
+        "brier": 0.27280486226081846,
+        "ece": 0.12258026089111809,
+        "nll": 0.5931943237781525,
+        "selective_accuracy_50": 0.9904296875
+      },
+      "semantic_train_mean": {
+        "accuracy": 0.82333984375,
+        "brier": 0.2628712773323059,
+        "ece": 0.16253812198119705,
+        "nll": 0.593681925535202,
+        "selective_accuracy_50": 1.0
+      },
+      "uniform": {
+        "accuracy": 0.97919921875,
+        "brier": 0.24432963281869888,
+        "ece": 0.3549913828901481,
+        "nll": 0.522301509976387,
+        "selective_accuracy_50": 1.0
+      },
+      "utility": {
+        "accuracy": 0.99208984375,
+        "brier": 0.15581485033035278,
+        "ece": 0.278972415626049,
+        "nll": 0.3646944224834442,
+        "selective_accuracy_50": 1.0
+      }
+    },
+    "mixed/cf0.05/clean": {
+      "best_single": {
+        "accuracy": 1.0,
+        "brier": 0.0020514345844276248,
+        "ece": 0.03689230820164084,
+        "nll": 0.03763283863663673,
+        "selective_accuracy_50": 1.0
+      },
+      "corruption": {
+        "accuracy": 1.0,
+        "brier": 0.010268478374928235,
+        "ece": 0.08445537067600525,
+        "nll": 0.08845866471529007,
+        "selective_accuracy_50": 1.0
+      },
+      "diagnostics": {
+        "domain_only_accuracy": 0.2478515625,
+        "legacy_formula_mse": 0.026976544037461282,
+        "mask_only_accuracy": 0.2544921875,
+        "persistence_mse": 0.029771588742733,
+        "temporal_mse": 0.06872902736067772,
+        "utility_brier": 0.003012942452915013
+      },
+      "fixed": {
+        "accuracy": 1.0,
+        "brier": 0.008690798049792647,
+        "ece": 0.0782210633100476,
+        "nll": 0.08160327821969986,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_corruption": {
+        "accuracy": 1.0,
+        "brier": 0.009981577983126044,
+        "ece": 0.08334935696911998,
+        "nll": 0.08723972663283348,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_task": {
+        "accuracy": 1.0,
+        "brier": 0.0018704063608311118,
+        "ece": 0.03581056594848633,
+        "nll": 0.03649516850709915,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic": {
+        "accuracy": 1.0,
+        "brier": 0.0027394466334953902,
+        "ece": 0.042984808090841396,
+        "nll": 0.04400446116924286,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic_train_mean": {
+        "accuracy": 1.0,
+        "brier": 0.0037439294857904313,
+        "ece": 0.05107325154240243,
+        "nll": 0.05248498357832432,
+        "selective_accuracy_50": 1.0
+      },
+      "uniform": {
+        "accuracy": 1.0,
+        "brier": 0.009981577983126044,
+        "ece": 0.08334935696911998,
+        "nll": 0.08723972663283348,
+        "selective_accuracy_50": 1.0
+      },
+      "utility": {
+        "accuracy": 1.0,
+        "brier": 0.009883499145507813,
+        "ece": 0.08301097191288136,
+        "nll": 0.08686203807592392,
+        "selective_accuracy_50": 1.0
+      }
+    },
+    "mixed/cf0.05/corrupted": {
+      "best_single": {
+        "accuracy": 0.74072265625,
+        "brier": 0.338765150308609,
+        "ece": 0.08143537984287832,
+        "nll": 0.7208831071853637,
+        "selective_accuracy_50": 0.9734375
+      },
+      "corruption": {
+        "accuracy": 0.876171875,
+        "brier": 0.22246129363775252,
+        "ece": 0.17623905093350914,
+        "nll": 0.45998112559318544,
+        "selective_accuracy_50": 0.9958984375
+      },
+      "diagnostics": {
+        "domain_only_accuracy": 0.240234375,
+        "legacy_formula_mse": 0.48694915175437925,
+        "mask_only_accuracy": 0.2494140625,
+        "persistence_mse": 0.4899878859519958,
+        "temporal_mse": 0.1333876892924309,
+        "utility_brier": 0.14622130692005159
+      },
+      "fixed": {
+        "accuracy": 0.85576171875,
+        "brier": 0.36521645784378054,
+        "ece": 0.3094656322413357,
+        "nll": 0.7102148115634919,
+        "selective_accuracy_50": 0.921484375
+      },
+      "oracle_corruption": {
+        "accuracy": 0.95439453125,
+        "brier": 0.15400139540433883,
+        "ece": 0.21739689576788807,
+        "nll": 0.3557551234960556,
+        "selective_accuracy_50": 0.998828125
+      },
+      "oracle_task": {
+        "accuracy": 0.99580078125,
+        "brier": 0.02716219574213028,
+        "ece": 0.09420107296027709,
+        "nll": 0.11097660511732102,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic": {
+        "accuracy": 0.95732421875,
+        "brier": 0.09731756076216698,
+        "ece": 0.13167363416869193,
+        "nll": 0.23683327734470366,
+        "selective_accuracy_50": 0.9984375
+      },
+      "semantic_train_mean": {
+        "accuracy": 0.84248046875,
+        "brier": 0.2730949193239212,
+        "ece": 0.20201213509135413,
+        "nll": 0.5483967781066894,
+        "selective_accuracy_50": 0.98984375
+      },
+      "uniform": {
+        "accuracy": 0.8056640625,
+        "brier": 0.40200709402561186,
+        "ece": 0.2736264969338663,
+        "nll": 0.7682056844234466,
+        "selective_accuracy_50": 0.8650390625
+      },
+      "utility": {
+        "accuracy": 0.88916015625,
+        "brier": 0.2636550456285477,
+        "ece": 0.2448417078179773,
+        "nll": 0.5364896506071091,
+        "selective_accuracy_50": 0.9681640625
+      }
+    },
+    "mixed/cf0.05/ood": {
+      "best_single": {
+        "accuracy": 0.75205078125,
+        "brier": 0.34670511484146116,
+        "ece": 0.11883432953618467,
+        "nll": 0.860398530960083,
+        "selective_accuracy_50": 0.99453125
+      },
+      "corruption": {
+        "accuracy": 0.9974609375,
+        "brier": 0.1400422990322113,
+        "ece": 0.2922918858006597,
+        "nll": 0.36234270334243773,
+        "selective_accuracy_50": 1.0
+      },
+      "diagnostics": {
+        "domain_only_accuracy": 0.2392578125,
+        "legacy_formula_mse": 0.8590493083000184,
+        "mask_only_accuracy": 0.247265625,
+        "persistence_mse": 0.8620000720024109,
+        "temporal_mse": 0.11074498742818832,
+        "utility_brier": 0.1476236656308174
+      },
+      "fixed": {
+        "accuracy": 0.98642578125,
+        "brier": 0.2675956904888153,
+        "ece": 0.39978552716202104,
+        "nll": 0.5717557668685913,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_corruption": {
+        "accuracy": 1.0,
+        "brier": 0.07044659107923508,
+        "ece": 0.2094176459359005,
+        "nll": 0.2400088220834732,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_task": {
+        "accuracy": 1.0,
+        "brier": 0.009706564107909798,
+        "ece": 0.07353647036361508,
+        "nll": 0.07719110772013664,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic": {
+        "accuracy": 0.92021484375,
+        "brier": 0.19201224595308303,
+        "ece": 0.19312565316504332,
+        "nll": 0.41220504939556124,
+        "selective_accuracy_50": 0.9916015625
+      },
+      "semantic_train_mean": {
+        "accuracy": 0.793359375,
+        "brier": 0.27039181143045427,
+        "ece": 0.20176712365355343,
+        "nll": 0.5540413141250611,
+        "selective_accuracy_50": 0.9986328125
+      },
+      "uniform": {
+        "accuracy": 0.97900390625,
+        "brier": 0.2844878286123276,
+        "ece": 0.4004170462954789,
+        "nll": 0.596534126996994,
+        "selective_accuracy_50": 1.0
+      },
+      "utility": {
+        "accuracy": 0.9955078125,
+        "brier": 0.1863563284277916,
+        "ece": 0.3369807653944008,
+        "nll": 0.43806575834751127,
+        "selective_accuracy_50": 1.0
+      }
+    },
+    "mixed/cf0/clean": {
+      "best_single": {
+        "accuracy": 1.0,
+        "brier": 0.002032734011299908,
+        "ece": 0.03671765938634053,
+        "nll": 0.037451295927166936,
+        "selective_accuracy_50": 1.0
+      },
+      "corruption": {
+        "accuracy": 1.0,
+        "brier": 0.010203031171113253,
+        "ece": 0.08417026785900816,
+        "nll": 0.08814680576324463,
+        "selective_accuracy_50": 1.0
+      },
+      "diagnostics": {
+        "domain_only_accuracy": 0.2478515625,
+        "legacy_formula_mse": 0.026976544037461282,
+        "mask_only_accuracy": 0.2544921875,
+        "persistence_mse": 0.029771588742733,
+        "temporal_mse": 0.06872642114758491,
+        "utility_brier": 0.003014589881058782
+      },
+      "fixed": {
+        "accuracy": 1.0,
+        "brier": 0.008635023469105363,
+        "ece": 0.07795785752241499,
+        "nll": 0.081317438185215,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_corruption": {
+        "accuracy": 1.0,
+        "brier": 0.009917903831228614,
+        "ece": 0.08306781954597682,
+        "nll": 0.08693215921521187,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_task": {
+        "accuracy": 1.0,
+        "brier": 0.0018527144449763,
+        "ece": 0.03563721776008606,
+        "nll": 0.03631524182856083,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic": {
+        "accuracy": 1.0,
+        "brier": 0.002717601181939244,
+        "ece": 0.04280370371998288,
+        "nll": 0.04381502605974674,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic_train_mean": {
+        "accuracy": 1.0,
+        "brier": 0.0037150003015995027,
+        "ece": 0.05087008527480066,
+        "nll": 0.05227059908211231,
+        "selective_accuracy_50": 1.0
+      },
+      "uniform": {
+        "accuracy": 1.0,
+        "brier": 0.009917903831228614,
+        "ece": 0.08306781954597682,
+        "nll": 0.08693215921521187,
+        "selective_accuracy_50": 1.0
+      },
+      "utility": {
+        "accuracy": 1.0,
+        "brier": 0.009820342902094126,
+        "ece": 0.0827289110631682,
+        "nll": 0.08655412942171097,
+        "selective_accuracy_50": 1.0
+      }
+    },
+    "mixed/cf0/corrupted": {
+      "best_single": {
+        "accuracy": 0.7408203125,
+        "brier": 0.3387667894363403,
+        "ece": 0.08136267297377345,
+        "nll": 0.7210268080234528,
+        "selective_accuracy_50": 0.9732421875
+      },
+      "corruption": {
+        "accuracy": 0.87607421875,
+        "brier": 0.22241288870573045,
+        "ece": 0.1759151881939033,
+        "nll": 0.4597818374633789,
+        "selective_accuracy_50": 0.9958984375
+      },
+      "diagnostics": {
+        "domain_only_accuracy": 0.240234375,
+        "legacy_formula_mse": 0.48694915175437925,
+        "mask_only_accuracy": 0.2494140625,
+        "persistence_mse": 0.4899878859519958,
+        "temporal_mse": 0.13338862955570222,
+        "utility_brier": 0.14640747457742692
+      },
+      "fixed": {
+        "accuracy": 0.85537109375,
+        "brier": 0.3651291787624359,
+        "ece": 0.3091152989654802,
+        "nll": 0.7100148975849152,
+        "selective_accuracy_50": 0.921875
+      },
+      "oracle_corruption": {
+        "accuracy": 0.9546875,
+        "brier": 0.15388041138648986,
+        "ece": 0.217307201231597,
+        "nll": 0.3554453581571579,
+        "selective_accuracy_50": 0.998828125
+      },
+      "oracle_task": {
+        "accuracy": 0.9958984375,
+        "brier": 0.02705561984330416,
+        "ece": 0.09394786821794696,
+        "nll": 0.1106619156897068,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic": {
+        "accuracy": 0.957421875,
+        "brier": 0.09715121909976006,
+        "ece": 0.13139065786090215,
+        "nll": 0.2364223062992096,
+        "selective_accuracy_50": 0.9984375
+      },
+      "semantic_train_mean": {
+        "accuracy": 0.8419921875,
+        "brier": 0.2730248630046844,
+        "ece": 0.20127777066954877,
+        "nll": 0.5481813549995422,
+        "selective_accuracy_50": 0.98984375
+      },
+      "uniform": {
+        "accuracy": 0.8064453125,
+        "brier": 0.4019453704357147,
+        "ece": 0.27434834005835,
+        "nll": 0.7680325329303741,
+        "selective_accuracy_50": 0.865234375
+      },
+      "utility": {
+        "accuracy": 0.8892578125,
+        "brier": 0.26364749670028687,
+        "ece": 0.244905129581457,
+        "nll": 0.5364165037870408,
+        "selective_accuracy_50": 0.9685546875
+      }
+    },
+    "mixed/cf0/ood": {
+      "best_single": {
+        "accuracy": 0.7521484375,
+        "brier": 0.34676872193813324,
+        "ece": 0.11828946754976641,
+        "nll": 0.8609219074249268,
+        "selective_accuracy_50": 0.9943359375
+      },
+      "corruption": {
+        "accuracy": 0.9974609375,
+        "brier": 0.13990411907434464,
+        "ece": 0.2920769353600917,
+        "nll": 0.3620507031679153,
+        "selective_accuracy_50": 1.0
+      },
+      "diagnostics": {
+        "domain_only_accuracy": 0.2392578125,
+        "legacy_formula_mse": 0.8590493083000184,
+        "mask_only_accuracy": 0.247265625,
+        "persistence_mse": 0.8620000720024109,
+        "temporal_mse": 0.1107434682548046,
+        "utility_brier": 0.14756841957569122
+      },
+      "fixed": {
+        "accuracy": 0.98642578125,
+        "brier": 0.2674927920103073,
+        "ece": 0.39970212338957933,
+        "nll": 0.5715354323387146,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_corruption": {
+        "accuracy": 1.0,
+        "brier": 0.07033511735498905,
+        "ece": 0.20917872318532318,
+        "nll": 0.23971398025751114,
+        "selective_accuracy_50": 1.0
+      },
+      "oracle_task": {
+        "accuracy": 1.0,
+        "brier": 0.009644572855904698,
+        "ece": 0.07326806783676147,
+        "nll": 0.07689874842762948,
+        "selective_accuracy_50": 1.0
+      },
+      "semantic": {
+        "accuracy": 0.919921875,
+        "brier": 0.19176560193300246,
+        "ece": 0.19249901977309491,
+        "nll": 0.41172676980495454,
+        "selective_accuracy_50": 0.9916015625
+      },
+      "semantic_train_mean": {
+        "accuracy": 0.7931640625,
+        "brier": 0.27038680016994476,
+        "ece": 0.2012174953124486,
+        "nll": 0.55393745303154,
+        "selective_accuracy_50": 0.9986328125
+      },
+      "uniform": {
+        "accuracy": 0.97880859375,
+        "brier": 0.28439964056015016,
+        "ece": 0.40007723384769633,
+        "nll": 0.5963244378566742,
+        "selective_accuracy_50": 1.0
+      },
+      "utility": {
+        "accuracy": 0.9955078125,
+        "brier": 0.18648525476455688,
+        "ece": 0.33708607510779987,
+        "nll": 0.43827824890613554,
+        "selective_accuracy_50": 1.0
+      }
+    }
+  },
+  "primary": {
+    "ci95": [
+      -0.07705078125,
+      -0.05888671875
+    ],
+    "clusters": 5,
+    "dataset_deltas": [
+      -0.08349609375,
+      -0.060546875,
+      -0.06982421875,
+      -0.052734375,
+      -0.07421875
+    ],
+    "descriptive": true,
+    "mean": -0.0681640625
+  },
+  "primary_disposition": "NOT_SUPPORTED",
+  "prior_preservation": {
+    "local_verification": {
+      "changed_or_missing": [],
+      "files_checked": 1102,
+      "unchanged": true
+    },
+    "remote_receipt_sha256": "9c81fe4d0ec815d35200bfcaf74233d9fb66a712f3a121e567c31eaa40023882",
+    "scope": "local pre-upload verification only; reverify original host after retrieval",
+    "unchanged": true
+  },
+  "promotion_authorized": false,
+  "protected_reports": 120,
+  "protocol": "olympus-oracle-fusion-v4.0.0",
+  "scope": "controlled synthetic diagnostic using Olympus reference encoders; no SOTA claim"
+}

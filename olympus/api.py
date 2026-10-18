@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import os
-from collections.abc import AsyncIterator
+import secrets
+import threading
+from collections.abc import AsyncIterator, Iterator
 from contextlib import asynccontextmanager
 from functools import lru_cache
 from pathlib import Path
@@ -9,7 +11,7 @@ from tempfile import TemporaryDirectory
 from typing import Annotated, Literal
 
 import httpx
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException
 from pydantic import BaseModel, ConfigDict, Field
 
 from olympus import __version__
@@ -90,6 +92,66 @@ FoundryDependency = Annotated[FoundryService, Depends(get_foundry_service)]
 OllamaDependency = Annotated[OllamaClient, Depends(get_ollama_client)]
 
 
+def require_workload_authorization(
+    authorization: Annotated[str | None, Header()] = None,
+) -> None:
+    """Require a bearer token for stateful/compute routes when one is configured.
+
+    Olympus remains usable as a loopback-only development service without a token.
+    Any deployment that crosses a trust boundary must set ``OLYMPUS_API_TOKEN``.
+    """
+
+    token = os.environ.get("OLYMPUS_API_TOKEN")
+    if token is None:
+        return
+    if not token or authorization is None or not secrets.compare_digest(
+        authorization, f"Bearer {token}"
+    ):
+        raise HTTPException(
+            status_code=401,
+            detail="valid Olympus bearer token required",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+class _WorkloadLimiter:
+    def __init__(self) -> None:
+        raw = os.environ.get("OLYMPUS_MAX_CONCURRENT_WORKLOADS", "1")
+        try:
+            limit = int(raw)
+        except ValueError as error:
+            raise RuntimeError("OLYMPUS_MAX_CONCURRENT_WORKLOADS must be an integer") from error
+        if limit < 1 or limit > 64:
+            raise RuntimeError("OLYMPUS_MAX_CONCURRENT_WORKLOADS must be in [1, 64]")
+        self._semaphore = threading.BoundedSemaphore(limit)
+
+    def acquire(self) -> None:
+        if not self._semaphore.acquire(blocking=False):
+            raise HTTPException(status_code=429, detail="Olympus workload capacity exhausted")
+
+    def release(self) -> None:
+        self._semaphore.release()
+
+
+@lru_cache(maxsize=1)
+def get_workload_limiter() -> _WorkloadLimiter:
+    return _WorkloadLimiter()
+
+
+def admitted_workload(
+    _authorized: Annotated[None, Depends(require_workload_authorization)],
+) -> Iterator[None]:
+    limiter = get_workload_limiter()
+    limiter.acquire()
+    try:
+        yield
+    finally:
+        limiter.release()
+
+
+WorkloadAdmission = Annotated[None, Depends(admitted_workload)]
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     yield
@@ -134,7 +196,7 @@ def compile_behavior(request: CompileRequest) -> dict[str, object]:
 
 
 @app.post("/forge/run")
-def run_behavior(request: RunRequest) -> dict[str, object]:
+def run_behavior(request: RunRequest, _admission: WorkloadAdmission) -> dict[str, object]:
     compilation = compiler.compile(request.behavior)
     result = runtime.execute(compilation.spec, request.prompt)
     return {
@@ -178,6 +240,7 @@ def foundry_status(
 @app.post("/foundry/verify")
 def verify_foundry(
     service: FoundryDependency,
+    _admission: WorkloadAdmission,
 ) -> dict[str, object]:
     sample = Path(__file__).resolve().parent / "foundry/foundry_verification.txt"
     try:
@@ -210,6 +273,7 @@ def list_foundry_models(
 def create_chat_completion(
     request: ChatCompletionRequest,
     service: FoundryDependency,
+    _admission: WorkloadAdmission,
 ) -> dict[str, object]:
     prompt = "\n".join(f"{message.role}: {message.content}" for message in request.messages)
     try:
@@ -260,6 +324,7 @@ def ollama_health(
 def ollama_generate(
     request: OllamaGenerateRequest,
     client: OllamaDependency,
+    _admission: WorkloadAdmission,
 ) -> dict[str, object]:
     try:
         return client.generate(

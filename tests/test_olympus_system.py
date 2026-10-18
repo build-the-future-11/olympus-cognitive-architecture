@@ -346,5 +346,16 @@ def test_olympus_composed_training_evaluation_and_immutable_report(tmp_path: Pat
     assert record.metadata["training_config_sha256"] == report.training_config_sha256
     assert evaluation.examples == 2
     assert math.isfinite(evaluation.total_loss)
+    components = evaluation.loss_components
+    reconstructed = (
+        components["decision"]
+        + config.loss.transition_weight * components["transition"]
+        + config.loss.temporal_weight * components["temporal"]
+        + config.loss.uncertainty_weight * components["uncertainty_calibration"]
+        + config.loss.risk_weight * components["risk_calibration"]
+        + config.loss.gate_balance_weight * components["gate_balance"]
+        + config.loss.counterfactual_weight * components["counterfactual_consistency"]
+    )
+    assert reconstructed == pytest.approx(evaluation.total_loss, abs=1e-6)
     with pytest.raises(FileExistsError, match="refusing to overwrite"):
         train_olympus_system(manifest_path, output, config=config)

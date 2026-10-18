@@ -1,5 +1,57 @@
 # Olympus bounded campaign handoff — 2026-10-16
 
+## Maintained notebook launcher
+
+Build a fresh upload package from the current checkout:
+
+```sh
+rtk proxy .venv/bin/python -m notebooks.build_kaggle_runner --output-dir artifacts/kaggle-runner-new
+```
+
+Import the generated `olympus_kaggle.ipynb` into Kaggle and attach its accompanying
+`olympus-source.tar.gz` as a private input. The notebook verifies the pinned archive,
+extracts into `/kaggle/working`, runs resource/device preflight and numerical
+regressions, then executes the eight-step smoke and exports recovery evidence.
+It defaults to CPU. Select a GPU session and set `DEVICE = "cuda"` for CUDA;
+unavailable CUDA fails explicitly. The six-cell development matrix requires
+`RUN_DEVELOPMENT = True` after smoke validation. Keep the image's CUDA Torch;
+do not install the Python-3.14 application package into the source-run environment.
+
+For a self-contained GPU notebook, add `--device cuda --embed-source` to the
+builder command. This embeds the same hash-verified source bundle and avoids a
+separate dataset upload. The code cells can also be pasted into Kaggle's editor
+when local-file upload is unavailable. Numerical regression results are retained
+as `results/regressions-cuda.xml` (or `regressions-cpu.xml`) in recovery archives.
+
+Re-executing setup verifies the extracted source. Re-executing a campaign validates
+completed artifacts or resumes its saved optimizer state. For a fresh session,
+attach the recovery archive and original source archive, set `RECOVERY_ARCHIVE`
+and its externally saved `RECOVERY_SHA256`, and retain the original device/runtime.
+Clear the recovery setting after restoration to continue the existing results.
+Recovery archives include data and partial checkpoints; keep the source bundle
+separately. Save outputs and explicitly stop the platform session when finished.
+The campaign wall budget does not meter account quota or stop the platform GPU.
+
+The old `olympus_kaggle_20261016.ipynb` and `build_kaggle_launch.py` remain disabled
+historical drafts. Use the maintained builder above.
+
+Verified Kaggle execution: [version 358974216](https://www.kaggle.com/code/ryangomez010/olympus-gpu-smoke-and-resume-2026-10-16?scriptVersionId=358974216)
+completed successfully in 64.2 seconds on Tesla T4 with Python 3.13.15,
+Torch 2.11.0+cu128 and CUDA 12.8. All three selected CUDA checks passed
+(54 deselected), including interrupted/resumed training with exact model-weight
+parity against uninterrupted training. The eight-step GPU smoke completed.
+Downloaded recovery checksums, restoration and completed artifacts were verified
+locally. See the [verified receipt](../artifacts/kaggle-gpu-qualification-20261016/VERIFIED_GPU_RESULT.json)
+and [executed output](../artifacts/kaggle-gpu-qualification-20261016/notebook-output.log).
+
+Local verification also passed 55 numerical CPU tests (two CUDA skips) and all
+six maintained launcher tests. The earlier 73 control/archive checks passed,
+and the generated CPU notebook completed extraction through recovery export.
+These are synthetic engineering checks; scientific results are not promoted.
+The original readiness record below is retained as historical context.
+
+## Original handoff
+
 Status: **BLOCKED** pending numerical regressions and target-machine preflight.
 The new runner is implemented. No Kaggle session, GPU quota, external tracking or
 submission was used. See [readiness](../research/KAGGLE_READINESS_20261016.md).
@@ -111,6 +163,16 @@ not arbitrary workspace files, data or source. For interrupted sessions retain
 the entire run directory, its checkpoint pointers, original source and separate data.
 
 ## Finite development matrix and quota budget
+
+Executed successfully on Kaggle on 2026-10-16:
+[version 359060464](https://www.kaggle.com/code/ryangomez010/olympus-full-development-matrix-2026-10-16?scriptVersionId=359060464)
+completed all six fits at 300 steps each (1,800 development steps) in a
+206.8-second notebook run with GPU T4 x2 selected. The preceding three CUDA
+regressions and eight-step smoke also passed. No execution repair was needed.
+The downloaded recovery archive was checksum-verified and restored; the campaign
+analyzer verified all six completion records and artifact digests. See the
+[verified development receipt](../artifacts/kaggle-development-20261016/VERIFIED_DEVELOPMENT_RESULT.json).
+This remains synthetic development evidence, with promotion unauthorized.
 
 After smoke/resume verification, create a new directory, copy
 `configs/kaggle/development-cuda.json` to `campaign.json`, run

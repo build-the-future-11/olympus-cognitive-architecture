@@ -1,5 +1,12 @@
 """Reference model-family implementations."""
 
+from olympus.models.editclevr import (
+    EDIT_FACTORS,
+    FUSION_MODES,
+    EditCLEVROutput,
+    OlympusEditCLEVRModel,
+    editclevr_loss,
+)
 from olympus.models.olympus_system import (
     FAMILY_VECTOR_NAMES,
     OlympusReferenceSystem,
@@ -45,6 +52,9 @@ from olympus.models.runtime import (
 )
 
 __all__ = [
+    "EDIT_FACTORS",
+    "FUSION_MODES",
+    "EditCLEVROutput",
     "FAMILY_VECTOR_NAMES",
     "OlympusReferenceSystem",
     "OlympusSystemConfig",
@@ -52,6 +62,7 @@ __all__ = [
     "OlympusSystemOutput",
     "OlympusCheckpointRecord",
     "OlympusInferenceResult",
+    "OlympusEditCLEVRModel",
     "OlympusRuntimeConfig",
     "OlympusSystemRuntime",
     "OlympusTrainStepResult",
@@ -75,6 +86,7 @@ __all__ = [
     "ReferenceTransformerConfig",
     "build_reference_model",
     "default_reference_configs",
+    "editclevr_loss",
     "load_olympus_checkpoint",
     "olympus_system_loss",
     "reliability_fusion_loss",

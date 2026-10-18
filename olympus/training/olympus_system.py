@@ -284,7 +284,6 @@ class _Metrics:
             handle.write(encoded + "\n")
             handle.flush()
             os.fsync(handle.fileno())
-        print(encoded, flush=True)
         if self.writer is not None:
             try:
                 for name, value in fields.items():

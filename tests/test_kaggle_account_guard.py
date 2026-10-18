@@ -28,18 +28,30 @@ def create(path: Path, *, quota: float = 30, now: datetime = NOW) -> dict:
     )
 
 
-def start(path: Path, *, now: datetime = NOW, devices: int = 1, **kwargs: object) -> dict:
-    arguments = dict(
-        project="candidate",
-        quota_hours=30,
-        observed_at=now,
-        other_active_sessions=0,
+def start(
+    path: Path,
+    *,
+    now: datetime = NOW,
+    devices: int = 1,
+    project: str = "candidate",
+    quota_hours: float = 30,
+    observed_at: datetime | None = None,
+    other_active_sessions: int | None = 0,
+    charge_rate: float | None = None,
+    charge_evidence: str | None = None,
+) -> dict:
+    return guard.start_session(
+        path,
+        project=project,
+        quota_hours=quota_hours,
+        observed_at=now if observed_at is None else observed_at,
+        other_active_sessions=other_active_sessions,
         allocation_started_at=now,
         device_count=devices,
+        charge_rate=charge_rate,
+        charge_evidence=charge_evidence,
         now=now,
     )
-    arguments.update(kwargs)
-    return guard.start_session(path, **arguments)
 
 
 @pytest.mark.parametrize(
@@ -168,6 +180,7 @@ def test_expired_or_missing_deadline_is_never_defaulted(tmp_path: Path) -> None:
             quota_hours=30,
             observed_at=NOW,
             other_active_sessions=0,
+            deadline=None,  # type: ignore[arg-type]
             now=NOW,
         )
 
