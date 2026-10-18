@@ -1,8 +1,15 @@
 # Olympus EditCLEVR v1 prospective protocol
 
-Status: **IMPLEMENTED, NOT EXECUTED**. This protocol is frozen before model
-development. A failed or mixed result remains a result; thresholds, splits and
-controls must not be weakened after protected evaluation.
+Status: **COMPLETED, PRIMARY REJECTED**. The protocol was frozen before model
+development, and the protected evaluation was opened only after all five
+development checkpoints and the source/checkpoint freeze existed. The learned
+router tied the development-selected control in four seeds and was slightly
+worse in one: shifted mean difference `-0.0000500` (95% descriptive interval
+`[-0.0001500, 0]`) and ID mean difference `-0.0000667` (interval
+`[-0.0002000, 0]`). The predeclared +2 percentage-point shifted-data endpoint
+failed; ID non-regression passed. The arithmetic/provenance verifier passed for
+five seeds, 20 protected reports and 20 prediction hashes. This is a negative
+result and does not authorize promotion.
 
 ## Question
 

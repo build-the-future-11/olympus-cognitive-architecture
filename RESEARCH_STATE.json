@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "Olympus Cognitive Architecture",
   "repository": "build-the-future-11/olympus-cognitive-architecture",
-  "updated_utc": "2026-10-17",
+  "updated_utc": "2026-10-18",
   "software": {
     "version": "0.2.0",
     "maturity": "ALPHA",
@@ -328,14 +328,14 @@
     },
     {
       "id": "olympus-editclevr-v1",
-      "phase": "IMPLEMENTATION_AND_PROTOCOL_PREPARATION",
-      "primary_supported": null,
+      "phase": "COMPLETED_REMOTE_VERIFIED_ARCHIVE_PENDING_RETRIEVAL",
+      "primary_supported": false,
       "path": "research/olympus_editclevr_v1/RESEARCH_STATE.json"
     }
   ],
   "blocking_gates": [
-    "v5 remote archive is hash-bound but not yet retrieved into the repository",
-    "EditCLEVR model comparison is not executed",
+    "v5 and EditCLEVR remote archives are hash-bound but not yet retrieved into the repository",
+    "EditCLEVR learned routing failed its predeclared improvement threshold",
     "no rights-reviewed aligned corpus covers the full six-family contract",
     "no independent scientific reproduction exists",
     "exact current source has not passed the complete release workflow"
