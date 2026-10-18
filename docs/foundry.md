@@ -102,21 +102,37 @@ promotion controls on hardware that cannot safely train a large model.
   artifacts/foundry/deep/dataset/manifest.json \
   --output artifacts/foundry/deep/training \
   --mode full --epochs 100 --width 128 --layers 4 --heads 8 \
-  --learning-rate 0.001 --warmup-optimizer-steps 10 \
-  --minimum-learning-rate-ratio 0.05 \
-  --early-stopping-patience 12 --early-stopping-min-delta 0.001
+  --batch-size 4 --gradient-accumulation-steps 2 \
+  --loss-normalization supervised_token_mean_v2
 ```
 
 `train-sft` also accepts `--mode lora` and `--mode qlora` with an exact
 `--base-checkpoint`. QLoRA uses frozen symmetric 4-bit bases stored as packed
 nibbles, not an int8 substitute. `--resume-checkpoint` restores model,
 optimizer, completed epoch/step counters, and deterministic generator state.
-Resume now rejects every configuration change except a larger target epoch
-count. Runs have configuration-hash identities and refuse overwrite. Training
-uses an optional optimizer-step warmup followed by cosine decay, records every
-learning rate, stops after a configured validation plateau, and restores a
-self-consistent best-validation model, optimizer, generator, epoch, and step
-state before writing the immutable checkpoint.
+Resume rejects every configuration change except a larger target epoch count.
+Every invocation owns a fresh attempt directory, restores Python, Torch and
+accelerator random state, and validates the optimizer policy and counters before
+continuing. The checkpoint records the exact continuation state.
+
+New SFT runs use `supervised_token_mean_v2`: loss is the mean over supervised
+next-token targets, with prompt and padding positions excluded. Gradient
+accumulation uses the actual target count across each optimizer window, including
+the final partial window. Changing microbatch sizes therefore preserves the
+window's objective when its examples and forward behavior are the same.
+
+The normalization version is stored in training logs, checkpoint configuration,
+training summaries, held-out reports, and quantization reports. V2 run paths end
+in `-tokens-v2`, separating them from historical run paths. Checkpoints without
+this metadata retain `legacy_batch_mean_v1`; evaluation and quantization use that
+legacy definition. To resume such a checkpoint, pass
+`--loss-normalization legacy_batch_mean_v1` explicitly. Resuming with a different
+normalization is rejected.
+
+V2 changes optimization trajectories and reported losses. Its measurements must
+remain bound to that version and source; they are not interchangeable with the
+retained v1 losses in `OLYMPUS_MODEL_FOUNDRY_LEDGER.md`. The dated implementation
+record is `research/SFT_TOKEN_NORMALIZATION_20261010.md`.
 
 ```bash
 .venv/bin/olympus foundry evaluate-checkpoint CHECKPOINT MANIFEST REPORT

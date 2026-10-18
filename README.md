@@ -140,9 +140,9 @@ routing by 10.21 points. The v5 distribution-shift and residual-temporal
 successor is frozen but not yet executed. The authoritative cross-iteration
 status is `RESEARCH_STATE.json`.
 
-The bounded Foundry SFT path now uses configuration-hashed immutable runs,
-strict resume compatibility, warmup plus cosine decay, validation early
-stopping, and best-state restoration. These mechanisms improve development-run
+The bounded Foundry SFT path now uses unique immutable attempt directories,
+strict resume compatibility, exact stochastic-state restoration, and
+supervised-token-normalized loss. These mechanisms improve development-run
 integrity but do not turn the bundled 36-record smoke corpus into a capability
 dataset.
 

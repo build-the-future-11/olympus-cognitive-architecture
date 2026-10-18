@@ -42,9 +42,9 @@ All notable changes to Olympus are recorded here.
   risk-coverage diagnostics, and immutable non-promotional reports.
 - Replaced uniform JEPA tile averaging with position-aware squared-sine overlap
   blending to suppress internal seams without attenuating exterior edges.
-- Hardened SFT with configuration-bound immutable run identities, strict resume
-  compatibility, optimizer-step warmup and cosine decay, validation early
-  stopping, and self-consistent best-state restoration.
+- Hardened SFT with unique immutable attempt directories, strict resume
+  compatibility, exact stochastic-state restoration, and supervised-token
+  normalization across complete optimizer windows.
 - Trained an 884,480-parameter exploratory instruction candidate whose restored
   epoch-18 checkpoint passed the infrastructure smoke gate, then verified int4
   and int8 quality-preserving derivatives. It remains unpromoted.

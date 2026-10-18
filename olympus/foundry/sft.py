@@ -1,16 +1,17 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import math
 import os
 import random
 import time
-from collections.abc import Iterable
-from contextlib import nullcontext
-from copy import deepcopy
+from collections.abc import Iterable, Iterator
+from contextlib import contextmanager, nullcontext
+from itertools import islice
 from pathlib import Path
-from tempfile import NamedTemporaryFile
+from tempfile import NamedTemporaryFile, mkdtemp
 from typing import Any, Literal, cast
 
 import torch
@@ -20,13 +21,52 @@ from torch.nn import functional as F
 
 from olympus.core.schemas import StrictModel
 from olympus.foundry.data_pipeline import (
-    DatasetManifestV2,
     InstructionExample,
-    verify_dataset_manifest,
+    load_verified_dataset,
 )
 from olympus.foundry.resources import ResourceGovernor, memory_snapshot
 
 AdapterMode = Literal["full", "lora", "qlora"]
+LossNormalization = Literal["legacy_batch_mean_v1", "supervised_token_mean_v2"]
+
+
+def _require_finite(value: Any, name: str) -> None:
+    if isinstance(value, torch.Tensor):
+        if (value.is_floating_point() or value.is_complex()) and not bool(
+            torch.isfinite(value).all()
+        ):
+            raise ValueError(f"{name} must contain only finite values")
+    elif isinstance(value, float):
+        if not math.isfinite(value):
+            raise ValueError(f"{name} must contain only finite values")
+    elif isinstance(value, dict):
+        for child in value.values():
+            _require_finite(child, name)
+    elif isinstance(value, list | tuple):
+        for child in value:
+            _require_finite(child, name)
+
+
+def _checkpoint_counter(checkpoint: dict[str, Any], name: str) -> int:
+    value = checkpoint.get(name)
+    if type(value) is not int or value < 0:
+        raise ValueError(f"checkpoint {name} must be an exact nonnegative integer")
+    return value
+
+
+def _validate_optimizer_policy(state: Any, optimizer: torch.optim.AdamW) -> None:
+    # load_state_dict replaces all parameter-group options, including the learning
+    # rate and AdamW defaults. Admit only the policy and parameter order that this
+    # run actually declared; do not silently relabel a different update rule.
+    if not isinstance(state, dict):
+        raise ValueError("checkpoint optimizer policy is malformed")
+    expected = optimizer.state_dict()["param_groups"]
+    try:
+        actual_policy = json.dumps(state.get("param_groups"), sort_keys=True, allow_nan=False)
+    except (TypeError, ValueError) as error:
+        raise ValueError("checkpoint optimizer policy is malformed") from error
+    if actual_policy != json.dumps(expected, sort_keys=True, allow_nan=False):
+        raise ValueError("checkpoint optimizer policy does not match the declared configuration")
 
 
 def _sha256(path: Path) -> str:
@@ -38,8 +78,6 @@ def _sha256(path: Path) -> str:
 
 
 def _atomic_torch_save(path: Path, payload: dict[str, Any]) -> None:
-    if path.exists():
-        raise FileExistsError(f"refusing to overwrite immutable training artifact: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
     with NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", delete=False) as handle:
         temporary = Path(handle.name)
@@ -86,12 +124,11 @@ class TinyModelConfig(StrictModel):
 
 class SFTConfig(StrictModel):
     mode: AdapterMode = "full"
+    loss_normalization: LossNormalization = "supervised_token_mean_v2"
     seed: int = Field(default=7, ge=0, le=2**32 - 1)
     epochs: int = Field(default=2, ge=1, le=100)
     batch_size: int = Field(default=4, ge=1, le=128)
     learning_rate: float = Field(default=3e-3, gt=0.0, le=1.0)
-    warmup_optimizer_steps: int = Field(default=0, ge=0)
-    minimum_learning_rate_ratio: float = Field(default=0.1, ge=0.0, le=1.0)
     gradient_accumulation_steps: int = Field(default=2, ge=1, le=128)
     gradient_clip_norm: float = Field(default=1.0, gt=0.0, le=100.0)
     weight_decay: float = Field(default=0.01, ge=0.0, le=1.0)
@@ -100,9 +137,6 @@ class SFTConfig(StrictModel):
     lora_rank: int = Field(default=4, ge=1, le=128)
     lora_alpha: float = Field(default=8.0, gt=0.0, le=1_024.0)
     category_mix_weights: dict[str, float] = Field(default_factory=dict)
-    early_stopping_patience: int = Field(default=0, ge=0, le=100)
-    early_stopping_min_delta: float = Field(default=0.0, ge=0.0)
-    restore_best_validation: bool = True
     device: Literal["auto", "cpu", "cuda", "mps"] = "cpu"
     model: TinyModelConfig = Field(default_factory=TinyModelConfig)
 
@@ -118,23 +152,21 @@ class TrainingSummary(StrictModel):
     adapter_sha256: str | None
     log_path: str
     completed_epochs: int
-    attempted_epochs: int
     optimizer_steps: int
     trainable_parameters: int
     total_parameters: int
     initial_validation_loss: float
-    best_validation_loss: float
-    best_epoch: int
     final_validation_loss: float
     final_validation_perplexity: float
     mixed_precision_requested: bool
     mixed_precision_effective: bool
-    early_stopped: bool
-    final_learning_rate: float
-    training_config_sha256: str
     elapsed_seconds: float
     preflight_memory: dict[str, int | float]
     final_memory: dict[str, int | float]
+    # Reports written before the corrected objective used batch means.
+    loss_normalization: LossNormalization = "legacy_batch_mean_v1"
+    resume_checkpoint_sha256: str | None = None
+    attempt_path: str | None = None
 
 
 class LoRALinear(nn.Module):
@@ -200,9 +232,9 @@ class QLoRALinear(nn.Module):
         nn.init.kaiming_uniform_(self.lora_a, a=math.sqrt(5))
 
     def _weight(self, dtype: torch.dtype) -> torch.Tensor:
-        values = _unpack_nibbles(self.packed_weight, self.in_features * self.out_features).reshape(
-            self.out_features, self.in_features
-        )
+        values = _unpack_nibbles(
+            self.packed_weight, self.in_features * self.out_features
+        ).reshape(self.out_features, self.in_features)
         signed = values.to(torch.int8) - 8
         return signed.to(dtype) * self.row_scale.to(dtype)[:, None]
 
@@ -235,7 +267,9 @@ class CausalSelfAttention(nn.Module):
             dropout_p=self.dropout if self.training else 0.0,
             is_causal=True,
         )
-        projected = self.output(attended.transpose(1, 2).contiguous().reshape(batch, length, width))
+        projected = self.output(
+            attended.transpose(1, 2).contiguous().reshape(batch, length, width)
+        )
         return cast(torch.Tensor, projected)
 
 
@@ -296,20 +330,6 @@ def apply_adapters(model: nn.Module, mode: AdapterMode, rank: int, alpha: float)
             parameter.requires_grad = False
 
 
-def _load_examples(
-    manifest: DatasetManifestV2, split_name: str, manifest_root: Path
-) -> list[InstructionExample]:
-    descriptor = next(split for split in manifest.splits if split.name == split_name)
-    path = Path(descriptor.path)
-    if not path.is_absolute():
-        path = manifest_root / path
-    return [
-        InstructionExample.model_validate_json(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
-
-
 def _encode_examples(
     examples: list[InstructionExample], config: SFTConfig
 ) -> list[tuple[list[int], list[int]]]:
@@ -362,30 +382,26 @@ def _batches(
         yield tokens, labels
 
 
-def _loss(model: TinyCausalLM, tokens: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
+def _supervised_token_count(labels: torch.Tensor) -> int:
+    """Count next-token targets, excluding prompts, padding, and the first column."""
+    count = int((labels[:, 1:] != -100).sum().item())
+    if count == 0:
+        raise ValueError("batch contains no supervised next-token targets")
+    return count
+
+
+def _loss(
+    model: TinyCausalLM,
+    tokens: torch.Tensor,
+    labels: torch.Tensor,
+    *,
+    reduction: Literal["mean", "sum"] = "mean",
+) -> torch.Tensor:
     logits = model(tokens[:, :-1])
     return F.cross_entropy(
-        logits.reshape(-1, logits.shape[-1]), labels[:, 1:].reshape(-1), ignore_index=-100
+        logits.reshape(-1, logits.shape[-1]), labels[:, 1:].reshape(-1),
+        ignore_index=-100, reduction=reduction,
     )
-
-
-def _learning_rate(config: SFTConfig, optimizer_step: int, total_steps: int) -> float:
-    """Warm up, then decay with a cosine curve to a non-negative floor."""
-
-    if total_steps < 1 or optimizer_step < 1:
-        raise ValueError("optimizer and total steps must be positive")
-    warmup = min(config.warmup_optimizer_steps, total_steps)
-    if warmup and optimizer_step <= warmup:
-        scale = optimizer_step / warmup
-    elif total_steps == warmup:
-        scale = 1.0
-    else:
-        progress = (optimizer_step - warmup) / (total_steps - warmup)
-        progress = min(max(progress, 0.0), 1.0)
-        cosine = 0.5 * (1.0 + math.cos(math.pi * progress))
-        floor = config.minimum_learning_rate_ratio
-        scale = floor + (1.0 - floor) * cosine
-    return config.learning_rate * scale
 
 
 def evaluate_loss(
@@ -393,16 +409,30 @@ def evaluate_loss(
     rows: list[tuple[list[int], list[int]]],
     *,
     device: torch.device,
+    normalization: LossNormalization = "supervised_token_mean_v2",
 ) -> float:
+    if normalization not in {"legacy_batch_mean_v1", "supervised_token_mean_v2"}:
+        raise ValueError("unsupported loss normalization")
     model.eval()
     losses: list[float] = []
+    denominator = 0
     generator = torch.Generator().manual_seed(0)
     with torch.inference_mode():
         for tokens, labels in _batches(rows, 8, generator):
-            losses.append(float(_loss(model, tokens.to(device), labels.to(device)).item()))
-    if not losses:
+            if normalization == "supervised_token_mean_v2":
+                denominator += _supervised_token_count(labels)
+                reduction: Literal["mean", "sum"] = "sum"
+            else:
+                denominator += 1
+                reduction = "mean"
+            batch_loss = _loss(model, tokens.to(device), labels.to(device), reduction=reduction)
+            _require_finite(batch_loss, "evaluation loss")
+            losses.append(float(batch_loss.item()))
+    if denominator == 0:
         raise ValueError("evaluation contains no batches")
-    return sum(losses) / len(losses)
+    result = sum(losses) / denominator
+    _require_finite(result, "evaluation loss")
+    return result
 
 
 def generate_text(
@@ -441,10 +471,37 @@ def _resolve_device(name: str) -> torch.device:
     return torch.device(name)
 
 
-def _model_from_checkpoint(path: Path, device: torch.device) -> tuple[TinyCausalLM, dict[str, Any]]:
-    checkpoint = cast(dict[str, Any], torch.load(path, map_location="cpu", weights_only=True))
+def _checkpoint_training_config(checkpoint: dict[str, Any]) -> SFTConfig:
+    """Preserve legacy checkpoint semantics instead of applying new-run defaults."""
+    values = dict(checkpoint["training_config"])
+    if checkpoint.get("schema_version", 1) not in {1, 2, 3}:
+        raise ValueError("unsupported SFT checkpoint schema")
+    if checkpoint.get("schema_version", 1) >= 2 and "loss_normalization" not in values:
+        raise ValueError("checkpoint is missing its loss normalization version")
+    values.setdefault("loss_normalization", "legacy_batch_mean_v1")
+    training = SFTConfig.model_validate(values)
+    if checkpoint.get("loss_normalization", training.loss_normalization) != (
+        training.loss_normalization
+    ):
+        raise ValueError("checkpoint loss normalization metadata does not match")
+    return training
+
+
+def _read_checkpoint(path: Path) -> tuple[dict[str, Any], str]:
+    # Bind provenance to the exact bytes deserialized, not a later path reread.
+    raw = path.read_bytes()
+    checkpoint = cast(
+        dict[str, Any], torch.load(io.BytesIO(raw), map_location="cpu", weights_only=True)
+    )
+    return checkpoint, hashlib.sha256(raw).hexdigest()
+
+
+def _model_from_payload(checkpoint: dict[str, Any], device: torch.device) -> TinyCausalLM:
     model_config = TinyModelConfig.model_validate(checkpoint["model_config"])
-    training_config = SFTConfig.model_validate(checkpoint["training_config"])
+    training_config = _checkpoint_training_config(checkpoint)
+    if model_config != training_config.model:
+        raise ValueError("checkpoint model configuration does not match training configuration")
+    _require_finite(checkpoint["model_state"], "checkpoint model state")
     model = TinyCausalLM(model_config)
     apply_adapters(
         model,
@@ -453,7 +510,98 @@ def _model_from_checkpoint(path: Path, device: torch.device) -> tuple[TinyCausal
         training_config.lora_alpha,
     )
     model.load_state_dict(checkpoint["model_state"])
-    return model.to(device), checkpoint
+    return model.to(device)
+
+
+def _model_from_checkpoint(path: Path, device: torch.device) -> tuple[TinyCausalLM, dict[str, Any]]:
+    checkpoint, _ = _read_checkpoint(path)
+    return _model_from_payload(checkpoint, device), checkpoint
+
+
+def _capture_rng_state(device: torch.device) -> dict[str, Any]:
+    state: dict[str, Any] = {
+        "python": random.getstate(),
+        "torch_cpu": torch.get_rng_state(),
+        "device_type": device.type,
+        "torch_version": str(torch.__version__),
+    }
+    if device.type == "cuda":
+        state["accelerator"] = torch.cuda.get_rng_state(device)
+    elif device.type == "mps":
+        state["accelerator"] = torch.mps.get_rng_state()
+    return state
+
+
+def _restore_rng_state(checkpoint: dict[str, Any], config: SFTConfig, device: torch.device) -> None:
+    state = checkpoint.get("rng_state")
+    if state is None and checkpoint.get("schema_version", 1) < 3 and config.model.dropout == 0:
+        # Historical zero-dropout TinyCausalLM has no stochastic forward operations.
+        # Its separate saved generator already supplies the minibatch order.
+        return
+    if not isinstance(state, dict) or not {"python", "torch_cpu", "device_type"} <= state.keys():
+        raise ValueError("resume checkpoint is missing complete random state")
+    if state["device_type"] != device.type or state.get("torch_version") != str(torch.__version__):
+        raise ValueError("resume checkpoint random state runtime does not match")
+    try:
+        random.Random().setstate(state["python"])
+        torch.Generator().set_state(state["torch_cpu"])
+        if device.type != "cpu":
+            accelerator = state.get("accelerator")
+            if not isinstance(accelerator, torch.Tensor) or accelerator.dtype != torch.uint8:
+                raise ValueError("missing accelerator random state")
+    except (TypeError, ValueError, RuntimeError) as error:
+        raise ValueError("resume checkpoint random state is malformed") from error
+    previous = _capture_rng_state(device)
+    try:
+        random.setstate(state["python"])
+        torch.set_rng_state(state["torch_cpu"])
+        if device.type == "cuda":
+            torch.cuda.set_rng_state(state["accelerator"], device)
+        elif device.type == "mps":
+            torch.mps.set_rng_state(state["accelerator"])
+    except (TypeError, ValueError, RuntimeError) as error:
+        random.setstate(previous["python"])
+        torch.set_rng_state(previous["torch_cpu"])
+        if device.type == "cuda":
+            torch.cuda.set_rng_state(previous["accelerator"], device)
+        elif device.type == "mps":
+            torch.mps.set_rng_state(previous["accelerator"])
+        raise ValueError("resume checkpoint accelerator random state is malformed") from error
+
+
+@contextmanager
+def _run_attempt(output_root: Path, family: str, metadata: dict[str, Any]) -> Iterator[Path]:
+    # mkdtemp atomically owns a new directory, including repeated identical runs.
+    directory = Path(mkdtemp(prefix=f"{family}-attempt-", dir=output_root))
+    receipt = {"schema_version": 1, "run_id": directory.name, "status": "RUNNING", **metadata}
+    receipt_path = directory / "attempt.json"
+
+    def save() -> None:
+        with NamedTemporaryFile(dir=directory, prefix=".receipt-", mode="w",
+                                encoding="utf-8", delete=False) as handle:
+            temporary = Path(handle.name)
+            try:
+                json.dump(receipt, handle, sort_keys=True, indent=2)
+                handle.write("\n")
+                handle.flush()
+                os.fsync(handle.fileno())
+            except BaseException:
+                temporary.unlink(missing_ok=True)
+                raise
+        temporary.replace(receipt_path)
+
+    save()
+    try:
+        yield directory
+    except BaseException as error:
+        receipt["status"] = "FAILED"
+        receipt["error_type"] = type(error).__name__
+        receipt["error"] = str(error)
+        raise
+    else:
+        receipt["status"] = "COMPLETED"
+    finally:
+        save()
 
 
 def load_trained_model(path: Path, *, device: str = "cpu") -> TinyCausalLM:
@@ -470,24 +618,16 @@ def run_sft(
     base_checkpoint: Path | None = None,
     resume_checkpoint: Path | None = None,
 ) -> TrainingSummary:
+    if base_checkpoint is not None and resume_checkpoint is not None:
+        raise ValueError("base and resume checkpoints are mutually exclusive")
     if config.mode != "full" and base_checkpoint is None and resume_checkpoint is None:
         raise ValueError("LoRA and QLoRA require a base checkpoint or resume checkpoint")
     if config.mode == "full" and base_checkpoint is not None:
         raise ValueError("full SFT does not accept a base checkpoint")
-    manifest = verify_dataset_manifest(manifest_path)
+    manifest, examples_by_split = load_verified_dataset(manifest_path)
     if manifest.manifest_sha256 is None:
         raise ValueError("dataset manifest has no immutable hash")
     output_root = output_root.resolve()
-    serialized_config = json.dumps(
-        config.model_dump(mode="json"), sort_keys=True, separators=(",", ":")
-    ).encode()
-    config_sha256 = hashlib.sha256(serialized_config).hexdigest()
-    run_id = (
-        f"sft-{config.mode}-{manifest.manifest_sha256[:12]}-c{config_sha256[:10]}-s{config.seed}"
-    )
-    run_directory = output_root / run_id
-    if run_directory.exists():
-        raise FileExistsError("refusing to overwrite an existing SFT run")
     governor = ResourceGovernor(output_root / ".workload.lock")
     start = time.perf_counter()
     with governor:
@@ -495,38 +635,48 @@ def run_sft(
         torch.manual_seed(config.seed)
         generator = torch.Generator().manual_seed(config.seed)
         device = _resolve_device(config.device)
-        train_rows = _encode_examples(
-            _load_examples(manifest, "train", manifest_path.parent), config
-        )
-        validation_rows = _encode_examples(
-            _load_examples(manifest, "validation", manifest_path.parent), config
-        )
+        train_rows = _encode_examples(examples_by_split["train"], config)
+        validation_rows = _encode_examples(examples_by_split["validation"], config)
+        del examples_by_split
         base_sha: str | None = None
+        resume_sha: str | None = None
         completed_epochs = 0
         optimizer_steps = 0
 
         if resume_checkpoint is not None:
-            model, resumed = _model_from_checkpoint(resume_checkpoint, device)
+            resumed, resume_sha = _read_checkpoint(resume_checkpoint)
             if resumed["dataset_manifest_sha256"] != manifest.manifest_sha256:
                 raise ValueError("resume checkpoint dataset hash does not match")
-            resumed_config = SFTConfig.model_validate(resumed["training_config"])
+            resumed_config = _checkpoint_training_config(resumed)
             if resumed_config.mode != config.mode:
                 raise ValueError("resume checkpoint training mode does not match")
-            completed_epochs = int(resumed["completed_epochs"])
-            optimizer_steps = int(resumed["optimizer_steps"])
+            if resumed_config.loss_normalization != config.loss_normalization:
+                raise ValueError("resume checkpoint loss normalization does not match")
+            if resumed_config.model_dump(exclude={"epochs"}) != config.model_dump(
+                exclude={"epochs"}
+            ):
+                raise ValueError("resume checkpoint configuration does not match")
+            completed_epochs = _checkpoint_counter(resumed, "completed_epochs")
+            optimizer_steps = _checkpoint_counter(resumed, "optimizer_steps")
+            if completed_epochs > resumed_config.epochs:
+                raise ValueError("checkpoint completed_epochs exceeds its saved epoch schedule")
+            batches_per_epoch = math.ceil(len(train_rows) / config.batch_size)
+            steps_per_epoch = math.ceil(batches_per_epoch / config.gradient_accumulation_steps)
+            if optimizer_steps != completed_epochs * steps_per_epoch:
+                raise ValueError(
+                    "checkpoint optimizer_steps is inconsistent with its epoch schedule"
+                )
             if config.epochs <= completed_epochs:
-                raise ValueError("resume target epochs must exceed completed epochs")
-            compatible_config = resumed_config.model_copy(update={"epochs": config.epochs})
-            if compatible_config != config:
-                raise ValueError("resume configuration may change only the target epoch count")
+                raise ValueError("resume epochs must exceed the completed checkpoint epochs")
             base_sha = cast(str | None, resumed.get("base_checkpoint_sha256"))
+            model = _model_from_payload(resumed, device)
         elif base_checkpoint is not None:
-            base_model, _ = _model_from_checkpoint(base_checkpoint, device)
+            base_payload, base_sha = _read_checkpoint(base_checkpoint)
+            base_model = _model_from_payload(base_payload, device)
             model = TinyCausalLM(config.model).to(device)
             model.load_state_dict(base_model.state_dict())
             apply_adapters(model, config.mode, config.lora_rank, config.lora_alpha)
             model.to(device)
-            base_sha = _sha256(base_checkpoint)
         else:
             model = TinyCausalLM(config.model).to(device)
 
@@ -537,173 +687,177 @@ def run_sft(
             trainable, lr=config.learning_rate, weight_decay=config.weight_decay
         )
         if resume_checkpoint is not None:
+            _require_finite(resumed["optimizer_state"], "checkpoint optimizer state")
+            _validate_optimizer_policy(resumed["optimizer_state"], optimizer)
             optimizer.load_state_dict(resumed["optimizer_state"])
+            for parameter in trainable:
+                state = optimizer.state.get(parameter, {})
+                if optimizer_steps and (
+                    not {"step", "exp_avg", "exp_avg_sq"} <= state.keys()
+                    or float(state["step"]) != optimizer_steps
+                ):
+                    raise ValueError("checkpoint optimizer state does not match its step counter")
             generator.set_state(resumed["generator_state"])
+            _restore_rng_state(resumed, config, device)
 
-        initial_validation = evaluate_loss(model, validation_rows, device=device)
-        mixed_effective = config.mixed_precision and device.type == "cuda"
-        log_path = run_directory / "metrics.jsonl"
-        log_path.parent.mkdir(parents=True, exist_ok=True)
-        log_mode = "w"
-        batches_per_epoch = math.ceil(len(train_rows) / config.batch_size)
-        optimizer_steps_per_epoch = math.ceil(
-            batches_per_epoch / config.gradient_accumulation_steps
+        initial_validation = evaluate_loss(
+            model, validation_rows, device=device, normalization=config.loss_normalization
         )
-        total_optimizer_steps = config.epochs * optimizer_steps_per_epoch
-        best_validation = initial_validation
-        best_epoch = completed_epochs
-        best_optimizer_steps = optimizer_steps
-        best_model_state = deepcopy(model.state_dict())
-        best_optimizer_state = deepcopy(optimizer.state_dict())
-        best_generator_state = generator.get_state().clone()
-        attempted_epochs = completed_epochs
-        stale_epochs = 0
-        early_stopped = False
-        final_learning_rate = float(optimizer.param_groups[0]["lr"])
-        optimizer.zero_grad(set_to_none=True)
-        with log_path.open(log_mode, encoding="utf-8") as log:
-            for epoch in range(completed_epochs, config.epochs):
-                model.train()
-                epoch_losses: list[float] = []
-                batches = list(_batches(train_rows, config.batch_size, generator))
-                for batch_index, (tokens, labels) in enumerate(batches):
-                    autocast = (
-                        torch.autocast(device_type="cuda", dtype=torch.bfloat16)
-                        if mixed_effective
-                        else nullcontext()
-                    )
-                    with autocast:
-                        loss = _loss(model, tokens.to(device), labels.to(device))
-                        scaled_loss = loss / config.gradient_accumulation_steps
-                    scaled_loss.backward()  # type: ignore[no-untyped-call]
-                    epoch_losses.append(float(loss.detach().cpu().item()))
-                    should_step = (
-                        batch_index + 1
-                    ) % config.gradient_accumulation_steps == 0 or batch_index + 1 == len(batches)
-                    if should_step:
-                        nn.utils.clip_grad_norm_(trainable, config.gradient_clip_norm)
-                        next_optimizer_step = optimizer_steps + 1
-                        final_learning_rate = _learning_rate(
-                            config, next_optimizer_step, total_optimizer_steps
+        mixed_effective = config.mixed_precision and device.type == "cuda"
+        run_id = f"sft-{config.mode}-{manifest.manifest_sha256[:12]}-s{config.seed}"
+        if config.loss_normalization == "supervised_token_mean_v2":
+            run_id += "-tokens-v2"
+        metadata: dict[str, Any] = {
+            "dataset_manifest_sha256": manifest.manifest_sha256,
+            "training_config": config.model_dump(mode="json"),
+            "base_checkpoint_sha256": base_sha,
+            "resume_checkpoint_sha256": resume_sha,
+            "source_sha256": _sha256(Path(__file__)),
+            "torch_version": str(torch.__version__),
+            "device_type": device.type,
+        }
+        with _run_attempt(output_root, run_id, metadata) as attempt:
+            run_id = attempt.name
+            log_path = attempt / "metrics.jsonl"
+            optimizer.zero_grad(set_to_none=True)
+            with log_path.open("x", encoding="utf-8") as log:
+                for epoch in range(completed_epochs, config.epochs):
+                    model.train()
+                    epoch_losses: list[float] = []
+                    epoch_tokens = 0
+                    batches = iter(_batches(train_rows, config.batch_size, generator))
+                    while True:
+                        # Preserve the parent trainer's bounded padded-tensor window.
+                        window = list(islice(batches, config.gradient_accumulation_steps))
+                        if not window:
+                            break
+                        token_counts = [_supervised_token_count(labels) for _, labels in window]
+                        window_tokens = sum(token_counts)
+                        for (tokens, labels), token_count in zip(window, token_counts, strict=True):
+                            autocast = (
+                                torch.autocast(device_type="cuda", dtype=torch.bfloat16)
+                                if mixed_effective
+                                else nullcontext()
+                            )
+                            with autocast:
+                                if config.loss_normalization == "supervised_token_mean_v2":
+                                    loss = _loss(
+                                        model, tokens.to(device), labels.to(device), reduction="sum"
+                                    )
+                                    # Normalize before clipping, using the actual
+                                    # supervised target count even for partial tails.
+                                    scaled_loss = loss / window_tokens
+                                else:
+                                    loss = _loss(model, tokens.to(device), labels.to(device))
+                                    scaled_loss = loss / config.gradient_accumulation_steps
+                            _require_finite(loss, "training loss")
+                            scaled_loss.backward()  # type: ignore[no-untyped-call]
+                            loss_value = float(loss.detach().cpu().item())
+                            epoch_losses.append(loss_value)
+                            epoch_tokens += token_count
+                        for parameter in trainable:
+                            _require_finite(parameter.grad, "training gradient")
+                        nn.utils.clip_grad_norm_(
+                            trainable, config.gradient_clip_norm, error_if_nonfinite=True
                         )
-                        for group in optimizer.param_groups:
-                            group["lr"] = final_learning_rate
                         optimizer.step()
+                        _require_finite(model.state_dict(), "updated model state")
+                        _require_finite(optimizer.state_dict(), "updated optimizer state")
                         optimizer.zero_grad(set_to_none=True)
                         optimizer_steps += 1
-                completed_epochs = epoch + 1
-                attempted_epochs = completed_epochs
-                validation_loss = evaluate_loss(model, validation_rows, device=device)
-                improved = validation_loss < best_validation - config.early_stopping_min_delta
-                if improved:
-                    best_validation = validation_loss
-                    best_epoch = completed_epochs
-                    best_optimizer_steps = optimizer_steps
-                    best_model_state = deepcopy(model.state_dict())
-                    best_optimizer_state = deepcopy(optimizer.state_dict())
-                    best_generator_state = generator.get_state().clone()
-                    stale_epochs = 0
-                else:
-                    stale_epochs += 1
-                record = {
-                    "epoch": completed_epochs,
-                    "optimizer_steps": optimizer_steps,
-                    "train_loss": sum(epoch_losses) / len(epoch_losses),
-                    "validation_loss": validation_loss,
-                    "validation_perplexity": math.exp(min(validation_loss, 20.0)),
-                    "learning_rate": final_learning_rate,
-                    "best_validation_loss": best_validation,
-                    "improved": improved,
-                }
-                log.write(json.dumps(record, sort_keys=True) + "\n")
-                log.flush()
-                os.fsync(log.fileno())
+                        # Release this window before constructing the next one.
+                        del window, tokens, labels
+                    completed_epochs = epoch + 1
+                    validation_loss = evaluate_loss(
+                        model, validation_rows, device=device,
+                        normalization=config.loss_normalization
+                    )
+                    record = {
+                        "epoch": completed_epochs,
+                        "optimizer_steps": optimizer_steps,
+                        "train_loss": (
+                            sum(epoch_losses) / epoch_tokens
+                            if config.loss_normalization == "supervised_token_mean_v2"
+                            else sum(epoch_losses) / len(epoch_losses)
+                        ),
+                        "train_supervised_tokens": epoch_tokens,
+                        "loss_normalization": config.loss_normalization,
+                        "validation_loss": validation_loss,
+                        "validation_perplexity": math.exp(min(validation_loss, 20.0)),
+                    }
+                    _require_finite(record, "training metrics")
+                    log.write(json.dumps(record, sort_keys=True) + "\n")
+                    log.flush()
+                    os.fsync(log.fileno())
 
-                if (
-                    config.early_stopping_patience
-                    and stale_epochs >= config.early_stopping_patience
-                ):
-                    early_stopped = True
-                    break
-
-        if config.restore_best_validation:
-            model.load_state_dict(best_model_state)
-            optimizer.load_state_dict(best_optimizer_state)
-            generator.set_state(best_generator_state)
-            completed_epochs = best_epoch
-            optimizer_steps = best_optimizer_steps
-            final_learning_rate = float(optimizer.param_groups[0]["lr"])
-
-        final_validation = evaluate_loss(model, validation_rows, device=device)
-        checkpoint_path = run_directory / "checkpoint.pt"
-        checkpoint_payload: dict[str, Any] = {
-            "schema_version": 1,
-            "run_id": run_id,
-            "model_config": config.model.model_dump(mode="json"),
-            "training_config": config.model_dump(mode="json"),
-            "training_config_sha256": config_sha256,
-            "dataset_manifest_sha256": manifest.manifest_sha256,
-            "base_checkpoint_sha256": base_sha,
-            "model_state": model.state_dict(),
-            "optimizer_state": optimizer.state_dict(),
-            "completed_epochs": completed_epochs,
-            "optimizer_steps": optimizer_steps,
-            "generator_state": generator.get_state(),
-            "validation_loss": final_validation,
-            "best_validation_loss": best_validation,
-            "best_epoch": best_epoch,
-            "attempted_epochs": attempted_epochs,
-            "early_stopped": early_stopped,
-        }
-        _atomic_torch_save(checkpoint_path, checkpoint_payload)
-        adapter_path: Path | None = None
-        if config.mode != "full":
-            adapter_path = run_directory / "adapter.pt"
-            adapter_state = {
-                name: tensor.detach().cpu()
-                for name, tensor in model.state_dict().items()
-                if "lora_" in name
-            }
-            _atomic_torch_save(
-                adapter_path,
-                {
-                    "schema_version": 1,
-                    "mode": config.mode,
-                    "rank": config.lora_rank,
-                    "alpha": config.lora_alpha,
-                    "base_checkpoint_sha256": base_sha,
-                    "dataset_manifest_sha256": manifest.manifest_sha256,
-                    "adapter_state": adapter_state,
-                },
+            final_validation = evaluate_loss(
+                model, validation_rows, device=device, normalization=config.loss_normalization
             )
-        total_parameters = sum(parameter.numel() for parameter in model.parameters())
-        trainable_parameters = sum(parameter.numel() for parameter in trainable)
-        return TrainingSummary(
-            run_id=run_id,
-            mode=config.mode,
-            dataset_manifest_sha256=manifest.manifest_sha256,
-            base_checkpoint_sha256=base_sha,
-            checkpoint_path=str(checkpoint_path),
-            checkpoint_sha256=_sha256(checkpoint_path),
-            adapter_path=str(adapter_path) if adapter_path else None,
-            adapter_sha256=_sha256(adapter_path) if adapter_path else None,
-            log_path=str(log_path),
-            completed_epochs=completed_epochs,
-            attempted_epochs=attempted_epochs,
-            optimizer_steps=optimizer_steps,
-            trainable_parameters=trainable_parameters,
-            total_parameters=total_parameters,
-            initial_validation_loss=initial_validation,
-            best_validation_loss=best_validation,
-            best_epoch=best_epoch,
-            final_validation_loss=final_validation,
-            final_validation_perplexity=math.exp(min(final_validation, 20.0)),
-            mixed_precision_requested=config.mixed_precision,
-            mixed_precision_effective=mixed_effective,
-            early_stopped=early_stopped,
-            final_learning_rate=final_learning_rate,
-            training_config_sha256=config_sha256,
-            elapsed_seconds=time.perf_counter() - start,
-            preflight_memory=governor.preflight.as_dict() if governor.preflight else {},
-            final_memory=memory_snapshot().as_dict(),
-        )
+            checkpoint_path = output_root / run_id / "checkpoint.pt"
+            checkpoint_payload: dict[str, Any] = {
+                "schema_version": 3,
+                "loss_normalization": config.loss_normalization,
+                "run_id": run_id,
+                "model_config": config.model.model_dump(mode="json"),
+                "training_config": config.model_dump(mode="json"),
+                "dataset_manifest_sha256": manifest.manifest_sha256,
+                "base_checkpoint_sha256": base_sha,
+                "model_state": model.state_dict(),
+                "optimizer_state": optimizer.state_dict(),
+                "completed_epochs": completed_epochs,
+                "optimizer_steps": optimizer_steps,
+                "generator_state": generator.get_state(),
+                "rng_state": _capture_rng_state(device),
+                "resume_checkpoint_sha256": resume_sha,
+                "validation_loss": final_validation,
+            }
+            _atomic_torch_save(checkpoint_path, checkpoint_payload)
+            adapter_path: Path | None = None
+            if config.mode != "full":
+                adapter_path = output_root / run_id / "adapter.pt"
+                adapter_state = {
+                    name: tensor.detach().cpu()
+                    for name, tensor in model.state_dict().items()
+                    if "lora_" in name
+                }
+                _atomic_torch_save(
+                    adapter_path,
+                    {
+                        "schema_version": 2,
+                        "loss_normalization": config.loss_normalization,
+                        "mode": config.mode,
+                        "rank": config.lora_rank,
+                        "alpha": config.lora_alpha,
+                        "base_checkpoint_sha256": base_sha,
+                        "dataset_manifest_sha256": manifest.manifest_sha256,
+                        "adapter_state": adapter_state,
+                    },
+                )
+            total_parameters = sum(parameter.numel() for parameter in model.parameters())
+            trainable_parameters = sum(parameter.numel() for parameter in trainable)
+            return TrainingSummary(
+                run_id=run_id,
+                mode=config.mode,
+                dataset_manifest_sha256=manifest.manifest_sha256,
+                base_checkpoint_sha256=base_sha,
+                checkpoint_path=str(checkpoint_path),
+                checkpoint_sha256=_sha256(checkpoint_path),
+                adapter_path=str(adapter_path) if adapter_path else None,
+                adapter_sha256=_sha256(adapter_path) if adapter_path else None,
+                log_path=str(log_path),
+                completed_epochs=completed_epochs,
+                optimizer_steps=optimizer_steps,
+                trainable_parameters=trainable_parameters,
+                total_parameters=total_parameters,
+                initial_validation_loss=initial_validation,
+                final_validation_loss=final_validation,
+                final_validation_perplexity=math.exp(min(final_validation, 20.0)),
+                mixed_precision_requested=config.mixed_precision,
+                mixed_precision_effective=mixed_effective,
+                elapsed_seconds=time.perf_counter() - start,
+                preflight_memory=governor.preflight.as_dict() if governor.preflight else {},
+                final_memory=memory_snapshot().as_dict(),
+                loss_normalization=config.loss_normalization,
+                resume_checkpoint_sha256=resume_sha,
+                attempt_path=str(attempt / "attempt.json"),
+            )
