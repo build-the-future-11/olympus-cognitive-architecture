@@ -99,7 +99,8 @@
     "thresholds": "configs/llm-readiness-v1.json",
     "evidence_schema": "configs/llm-readiness-evidence-v1.schema.json",
     "receipt_binding": "Every stage receipt must be a hash-verified JSON envelope matching the expected evidence kind, candidate, checkpoint, dataset, producer where applicable, and source commit.",
-    "report_binding": "Every generated report records the protocol ID and SHA-256 identities of the thresholds, evidence, evidence schema, and exact evaluator source.",
+    "report_binding": "Every generated report records the protocol ID and SHA-256 identities of the thresholds, evidence, evidence schema, exact evaluator source, and combined evaluator/dataset-verifier/family-specification decision code.",
+    "automation_gate": "olympus foundry readiness-check --require-ready writes the report and exits 1 unless all six canonical families pass.",
     "hermes_data_audit": "research/llm_readiness_v1/HERMES_SMOKE_DATA_AUDIT.json",
     "load_smoke": "research/llm_readiness_v1/LOAD_SMOKE.json",
     "claim_boundary": "The Hermes smoke corpus passes bounded integrity and hygiene checks but has 12 training and 12 protected records. The health-endpoint load run is an engineering smoke. Neither is model capability, safety, production, or promotion evidence."
@@ -207,6 +208,13 @@
       "kind": "large_scale_readiness_evidence_contract",
       "event": "Added a machine-readable readiness evidence schema, semantically validated JSON receipt envelopes, exact evaluator/schema identities in reports, and byte-reproducibility tests for the checked-in schema and 0/6 baseline report. Hash-valid receipts now fail when their kind, candidate, checkpoint, dataset, or required producer binding is wrong. This is artificial engineering hardening only; no protected evaluation, scientific training, model promotion, paid compute, or predecessor outcome changed.",
       "local_verification": "Ruff and strict MyPy passed on all touched Python source and tests. Schema and current report generation completed. Pytest was not launched because free memory remained below the 512 MiB admission guard with active pageouts; hosted/full test verification remains pending.",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-18",
+      "kind": "large_scale_readiness_fail_closed_extension",
+      "event": "Required explicit protocol identity and unique family/candidate identities; rejected duplicate training seeds and undeclared control, capability, safety, and family-gate entries; replaced release-document substring matching with exact structured headers; bound reports to the combined evaluator, dataset verifier, and family specification source; and added a --require-ready CLI exit gate. The current disposition remains 0/6 ready. No protected evaluation, scientific training, promotion, paid compute, or predecessor outcome changed.",
+      "local_verification": "Ruff and strict MyPy passed on all touched Python source and tests. The versioned schema and 0/6 current report regenerated successfully. New focused pytest regressions were written but not launched because free memory remained below the 512 MiB admission guard with active pageouts.",
       "scientific_outcomes_created": false
     }
   ],

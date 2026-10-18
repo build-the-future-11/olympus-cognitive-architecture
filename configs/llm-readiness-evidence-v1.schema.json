@@ -575,6 +575,11 @@
       "title": "Candidates",
       "type": "array"
     },
+    "protocol_id": {
+      "const": "olympus-six-family-readiness-v1",
+      "title": "Protocol Id",
+      "type": "string"
+    },
     "schema_version": {
       "const": 1,
       "default": 1,
@@ -583,6 +588,7 @@
     }
   },
   "required": [
+    "protocol_id",
     "candidates"
   ],
   "title": "ReadinessEvidenceSet",

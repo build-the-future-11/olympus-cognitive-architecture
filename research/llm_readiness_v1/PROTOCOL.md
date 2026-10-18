@@ -13,17 +13,23 @@ authorize deployment.
 Thresholds are frozen in `configs/llm-readiness-v1.json` and the evaluator
 rejects any byte-level change to that v1 policy hash. Evidence conforms to the
 machine-readable schema in
-`configs/llm-readiness-evidence-v1.schema.json`. The evaluator accepts only
+`configs/llm-readiness-evidence-v1.schema.json`; every bundle must explicitly
+declare `olympus-six-family-readiness-v1`. Family IDs and candidate IDs must
+each be unique. The evaluator accepts only
 regular, non-symlink inputs and artifact paths contained by the evidence
 bundle. Training, control, capability, safety, production, reproduction, and
 family-gate receipts must be JSON envelopes that identify their evidence kind,
 candidate, checkpoint, dataset, producer, and source commit. A receipt whose
 bytes match its advertised hash still fails when any of those bindings are
 wrong. Release documents are bound to the candidate and checkpoint by their
-verified contents.
+verified contents. Each release document starts with a structured
+`olympus-readiness` header binding its document type, protocol, candidate,
+source commit, checkpoint, and dataset. The four-document set must be exact.
 
 Every report records the protocol ID plus SHA-256 identities for the frozen
-thresholds, submitted evidence, evidence schema, and exact evaluator source.
+thresholds, submitted evidence, evidence schema, exact evaluator source, and
+the complete decision-code bundle comprising the evaluator, dataset verifier,
+and canonical family specifications.
 The evaluator always emits all eleven gates for all six canonical families. A
 family is ready only when every gate passes; the portfolio is ready only when
 all six families pass. CI regenerates the schema and current report in tests
@@ -37,18 +43,21 @@ and requires byte-for-byte equality with the checked-in baseline.
    records, and 100 protected records per category.
 4. **Three-seed training:** at least three unique seeds use one exact dataset,
    base model, and training configuration. Every run completes with finite
-   metrics and no protected access before the scientific freeze.
+   metrics and no protected access before the scientific freeze. Duplicate
+   seed entries are rejected.
 5. **Strong controls:** base model, matched alternative, retrieval ablation,
    tool ablation, and routing ablation each have an immutable receipt. The
    confidence-interval lower bound of the primary improvement is at least 0.02
-   with no material regression.
+   with no material regression. The control set must exactly match the frozen
+   list; undeclared extras fail the gate.
 6. **Capability evaluation:** reasoning, instruction following, tool
    completion, structured output, long context, domain-held-out behavior,
    distribution shift/adversarial behavior, and calibration/abstention meet
-   their frozen floors without critical failures.
+   their frozen floors without critical failures. The suite set must exactly
+   match the frozen list.
 7. **Safety evaluation:** prompt injection, data exfiltration, harmful-output
    policy, tool permissions, and tenant/memory isolation pass with zero
-   critical failures.
+   critical failures. The suite set must exactly match the frozen list.
 8. **Production qualification:** P50/P95/P99 latency, throughput, error rate,
    cost, a 24-hour soak, failure injection, queue/cancel/retry/backpressure,
    rollback, zero-downtime upgrades, and drift/failure/cost monitoring pass.
@@ -56,7 +65,7 @@ and requires byte-for-byte equality with the checked-in baseline.
    reproduces the exact source, dataset, checkpoint, and metrics.
 10. **Family-specific gates:** every gate in the canonical target specification
     for that family has a hash-bound receipt tied to the selected dataset and
-    checkpoint, and passes.
+    checkpoint, and passes. Missing or undeclared gates fail.
 11. **Release documentation:** exact model card, evaluation report, load/cost
     report, and safety/rollback report hashes are present.
 
@@ -71,7 +80,9 @@ and requires byte-for-byte equality with the checked-in baseline.
 4. Admit only candidates that clear scientific gates to an isolated staging
    service. Run the production qualification and rollback exercise.
 5. Give an independent operator only the protocol and immutable identities.
-6. Add the four release documents and run `olympus foundry readiness-check`.
+6. Add the four release documents and run `olympus foundry readiness-check
+   --require-ready`. This mode writes the full report and exits with status 1
+   unless all six families pass.
 
 The current evidence file contains only the verified Hermes smoke-dataset
 receipt; it contains no trained family candidate. Its generated report is the

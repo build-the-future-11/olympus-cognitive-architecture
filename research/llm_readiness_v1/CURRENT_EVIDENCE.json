@@ -1,5 +1,6 @@
 {
   "schema_version": 1,
+  "protocol_id": "olympus-six-family-readiness-v1",
   "candidates": [
     {
       "family_id": "hermes",

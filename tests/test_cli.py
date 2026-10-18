@@ -51,6 +51,41 @@ def _invoke(*arguments: str) -> str:
     return result.output
 
 
+def test_readiness_check_can_enforce_unready_exit_status(tmp_path: Path) -> None:
+    evidence = tmp_path / "evidence.json"
+    output = tmp_path / "report.json"
+    evidence.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "protocol_id": "olympus-six-family-readiness-v1",
+                "candidates": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report_only = runner.invoke(
+        app,
+        ["foundry", "readiness-check", str(evidence), "--output", str(output)],
+    )
+    assert report_only.exit_code == 0, report_only.output
+    assert json.loads(output.read_text(encoding="utf-8"))["all_families_ready"] is False
+
+    enforced = runner.invoke(
+        app,
+        [
+            "foundry",
+            "readiness-check",
+            str(evidence),
+            "--output",
+            str(output),
+            "--require-ready",
+        ],
+    )
+    assert enforced.exit_code == 1
+
+
 def test_forge_workspace_and_demo_commands(tmp_path: Path) -> None:
     compile_output = _invoke(
         "forge",

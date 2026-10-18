@@ -60,6 +60,8 @@ ReceiptKind = Literal[
     "reproduction",
     "family_gate",
 ]
+DOCUMENT_HEADER_PREFIX = "<!-- olympus-readiness:"
+DOCUMENT_HEADER_SUFFIX = "-->"
 
 
 def _sha256(path: Path) -> str:
@@ -101,12 +103,22 @@ class ArtifactIdentity(StrictModel):
 
 class EvidenceReceiptEnvelope(StrictModel):
     schema_version: Literal[1] = 1
+    protocol_id: Literal["olympus-six-family-readiness-v1"]
     kind: ReceiptKind
     candidate_id: str = Field(min_length=1)
     checkpoint_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     dataset_manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     producer: str = Field(min_length=1)
     source_commit: str = Field(pattern=r"^[0-9a-f]{40}$")
+
+
+class ReleaseDocumentHeader(StrictModel):
+    protocol_id: Literal["olympus-six-family-readiness-v1"]
+    document_type: str = Field(min_length=1)
+    candidate_id: str = Field(min_length=1)
+    source_commit: str = Field(pattern=r"^[0-9a-f]{40}$")
+    checkpoint_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    dataset_manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
 
 class DatasetEvidence(StrictModel):
@@ -223,13 +235,17 @@ class CandidateReadinessEvidence(StrictModel):
 
 class ReadinessEvidenceSet(StrictModel):
     schema_version: Literal[1] = 1
+    protocol_id: Literal["olympus-six-family-readiness-v1"]
     candidates: list[CandidateReadinessEvidence]
 
     @model_validator(mode="after")
-    def unique_families(self) -> ReadinessEvidenceSet:
+    def unique_candidate_identities(self) -> ReadinessEvidenceSet:
         families = [candidate.family_id for candidate in self.candidates]
         if len(families) != len(set(families)):
             raise ValueError("readiness evidence contains duplicate model families")
+        candidate_ids = [candidate.candidate_id for candidate in self.candidates]
+        if len(candidate_ids) != len(set(candidate_ids)):
+            raise ValueError("readiness evidence contains duplicate candidate IDs")
         return self
 
 
@@ -255,6 +271,7 @@ class PortfolioReadinessReport(StrictModel):
     evidence_sha256: str
     evidence_schema_sha256: str
     evaluator_sha256: str
+    decision_code_sha256: str
     family_reports: list[FamilyReadinessReport]
     ready_families: int
     total_families: int
@@ -276,6 +293,23 @@ def readiness_evidence_schema_bytes() -> bytes:
 
 def write_readiness_evidence_schema(output_path: Path) -> None:
     _atomic_json(output_path, ReadinessEvidenceSet.model_json_schema())
+
+
+def _decision_code_sha256() -> str:
+    paths = (
+        Path(__file__),
+        Path(__file__).with_name("data_pipeline.py"),
+        Path(__file__).parents[1] / "models/specifications.py",
+    )
+    digest = hashlib.sha256()
+    for path in paths:
+        payload = path.read_bytes()
+        digest.update(path.name.encode())
+        digest.update(b"\0")
+        digest.update(str(len(payload)).encode())
+        digest.update(b"\0")
+        digest.update(payload)
+    return digest.hexdigest()
 
 
 def _gate(name: str, passed: bool, observed: object, requirement: str) -> ReadinessGate:
@@ -437,7 +471,13 @@ def _bound_to_candidate(
 
 def _documents_bound_to_candidate(evidence: CandidateReadinessEvidence, root: Path) -> bool:
     checkpoint_sha = evidence.candidate_checkpoint_sha256
-    if checkpoint_sha is None or not REQUIRED_DOCUMENTS <= evidence.documents.keys():
+    dataset_sha = evidence.dataset.dataset_manifest_sha256 if evidence.dataset is not None else None
+    if (
+        checkpoint_sha is None
+        or dataset_sha is None
+        or evidence.source_commit is None
+        or set(evidence.documents) != REQUIRED_DOCUMENTS
+    ):
         return False
     for name in REQUIRED_DOCUMENTS:
         payload = _artifact_bytes(evidence.documents[name], root)
@@ -447,7 +487,31 @@ def _documents_bound_to_candidate(evidence: CandidateReadinessEvidence, root: Pa
             content = payload.decode("utf-8")
         except UnicodeError:
             return False
-        if checkpoint_sha not in content or evidence.candidate_id not in content:
+        lines = content.splitlines()
+        if not lines or not any(line.strip() for line in lines[1:]):
+            return False
+        first_line = lines[0]
+        if not (
+            first_line.startswith(DOCUMENT_HEADER_PREFIX)
+            and first_line.endswith(DOCUMENT_HEADER_SUFFIX)
+        ):
+            return False
+        header_payload = first_line[
+            len(DOCUMENT_HEADER_PREFIX) : -len(DOCUMENT_HEADER_SUFFIX)
+        ].strip()
+        try:
+            header = ReleaseDocumentHeader.model_validate_json(header_payload)
+        except ValueError:
+            return False
+        if not all(
+            (
+                header.document_type == name,
+                header.candidate_id == evidence.candidate_id,
+                header.source_commit == evidence.source_commit,
+                header.checkpoint_sha256 == checkpoint_sha,
+                header.dataset_manifest_sha256 == dataset_sha,
+            )
+        ):
             return False
     return True
 
@@ -498,6 +562,7 @@ def evaluate_family_readiness(
         and evidence.source_commit is not None
         and evidence.training_operator is not None
         and len({run.seed for run in runs}) >= thresholds.minimum_independent_seeds
+        and len({run.seed for run in runs}) == len(runs)
         and len({run.checkpoint_sha256 for run in runs}) == len(runs)
         and len(run_identities) == 1
         and _item_receipts_valid(
@@ -524,7 +589,7 @@ def evaluate_family_readiness(
     controls = {item.control: item for item in evidence.controls}
     dataset_sha = dataset.dataset_manifest_sha256 if dataset is not None else None
     controls_ok = (
-        REQUIRED_CONTROLS <= controls.keys()
+        set(controls) == REQUIRED_CONTROLS
         and _names_are_unique(evidence.controls, "control")
         and _item_receipts_valid(
             evidence.controls,
@@ -544,7 +609,7 @@ def evaluate_family_readiness(
     )
     capabilities = {item.suite: item for item in evidence.capabilities}
     capability_ok = (
-        REQUIRED_CAPABILITIES <= capabilities.keys()
+        set(capabilities) == REQUIRED_CAPABILITIES
         and _names_are_unique(evidence.capabilities, "suite")
         and _item_receipts_valid(
             evidence.capabilities,
@@ -570,7 +635,7 @@ def evaluate_family_readiness(
     )
     safety = {item.suite: item for item in evidence.safety}
     safety_ok = (
-        REQUIRED_SAFETY_SUITES <= safety.keys()
+        set(safety) == REQUIRED_SAFETY_SUITES
         and _names_are_unique(evidence.safety, "suite")
         and _item_receipts_valid(
             evidence.safety,
@@ -633,7 +698,7 @@ def evaluate_family_readiness(
     required_family_gates = set(model_spec(evidence.family_id).capability_gates)
     family_gate_results = {item.gate: item for item in evidence.family_gate_results}
     family_gates_ok = (
-        required_family_gates <= family_gate_results.keys()
+        set(family_gate_results) == required_family_gates
         and _names_are_unique(evidence.family_gate_results, "gate")
         and _item_receipts_valid(
             evidence.family_gate_results,
@@ -790,6 +855,7 @@ def evaluate_portfolio_readiness(
         evidence_sha256=_sha256(evidence_path),
         evidence_schema_sha256=hashlib.sha256(readiness_evidence_schema_bytes()).hexdigest(),
         evaluator_sha256=_sha256(Path(__file__)),
+        decision_code_sha256=_decision_code_sha256(),
         family_reports=reports,
         ready_families=ready,
         total_families=len(reports),

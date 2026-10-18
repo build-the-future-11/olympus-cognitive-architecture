@@ -616,6 +616,11 @@ def foundry_readiness_check(
     evidence: Path,
     thresholds: Path = _DEFAULT_READINESS_THRESHOLDS,
     output: Path = Path("artifacts/readiness/portfolio-report.json"),
+    require_ready: bool = typer.Option(
+        False,
+        "--require-ready",
+        help="Exit with status 1 unless every canonical family is ready.",
+    ),
 ) -> None:
     """Evaluate all six families against immutable large-scale readiness evidence."""
 
@@ -623,6 +628,8 @@ def foundry_readiness_check(
         evidence.resolve(), thresholds.resolve(), output.resolve()
     )
     console.print_json(report.model_dump_json())
+    if require_ready and not report.all_families_ready:
+        raise typer.Exit(code=1)
 
 
 @foundry_app.command("readiness-schema")

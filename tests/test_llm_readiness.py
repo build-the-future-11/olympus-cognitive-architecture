@@ -8,6 +8,9 @@ import pytest
 
 import olympus.foundry.readiness as readiness_module
 from olympus.foundry.readiness import (
+    DOCUMENT_HEADER_PREFIX,
+    DOCUMENT_HEADER_SUFFIX,
+    PROTOCOL_ID,
     REQUIRED_CAPABILITIES,
     REQUIRED_CONTROLS,
     REQUIRED_DOCUMENTS,
@@ -22,6 +25,7 @@ from olympus.foundry.readiness import (
     ReadinessEvidenceSet,
     ReadinessThresholds,
     ReceiptKind,
+    ReleaseDocumentHeader,
     ReproductionEvidence,
     SuiteEvaluation,
     TrainingRunEvidence,
@@ -47,6 +51,7 @@ def _receipt(
     producer: str = "primary-lab",
 ) -> ArtifactIdentity:
     payload = EvidenceReceiptEnvelope(
+        protocol_id=PROTOCOL_ID,
         kind=kind,
         candidate_id="hermes-test",
         checkpoint_sha256=checkpoint_sha256,
@@ -55,6 +60,26 @@ def _receipt(
         source_commit="c" * 40,
     ).model_dump_json()
     return _artifact(tmp_path, name, payload)
+
+
+def _document(
+    tmp_path: Path,
+    document_type: str,
+    checkpoint_sha256: str,
+) -> ArtifactIdentity:
+    header = ReleaseDocumentHeader(
+        protocol_id=PROTOCOL_ID,
+        document_type=document_type,
+        candidate_id="hermes-test",
+        source_commit="c" * 40,
+        checkpoint_sha256=checkpoint_sha256,
+        dataset_manifest_sha256="d" * 64,
+    ).model_dump_json()
+    content = (
+        f"{DOCUMENT_HEADER_PREFIX} {header} {DOCUMENT_HEADER_SUFFIX}\n"
+        f"# {document_type}\n\nCandidate-specific release evidence.\n"
+    )
+    return _artifact(tmp_path, f"{document_type}.md", content)
 
 
 def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
@@ -207,12 +232,7 @@ def _passing_candidate(tmp_path: Path) -> CandidateReadinessEvidence:
             for index, name in enumerate(model_spec("hermes").capability_gates)
         ],
         documents={
-            name: _artifact(
-                tmp_path,
-                f"{name}.md",
-                f"hermes-test\ncheckpoint: {candidate_checkpoint}\n",
-            )
-            for name in REQUIRED_DOCUMENTS
+            name: _document(tmp_path, name, candidate_checkpoint) for name in REQUIRED_DOCUMENTS
         },
     )
 
@@ -267,7 +287,8 @@ def test_empty_portfolio_reports_every_family_and_gate(tmp_path: Path) -> None:
     thresholds_path = Path(__file__).parents[1] / "configs/llm-readiness-v1.json"
     output_path = tmp_path / "report.json"
     evidence_path.write_text(
-        ReadinessEvidenceSet(candidates=[]).model_dump_json(), encoding="utf-8"
+        ReadinessEvidenceSet(protocol_id=PROTOCOL_ID, candidates=[]).model_dump_json(),
+        encoding="utf-8",
     )
     report = evaluate_portfolio_readiness(evidence_path, thresholds_path, output_path)
     assert report.total_families == 6
@@ -275,6 +296,18 @@ def test_empty_portfolio_reports_every_family_and_gate(tmp_path: Path) -> None:
     assert not report.all_families_ready
     assert all(len(item.gates) == 11 for item in report.family_reports)
     assert json.loads(output_path.read_text())["all_families_ready"] is False
+
+
+def test_evidence_rejects_duplicate_candidate_ids(tmp_path: Path) -> None:
+    first = _passing_candidate(tmp_path)
+    second = first.model_copy(update={"family_id": "prometheus"}, deep=True)
+    with pytest.raises(ValueError, match="duplicate candidate IDs"):
+        ReadinessEvidenceSet(protocol_id=PROTOCOL_ID, candidates=[first, second])
+
+
+def test_evidence_requires_explicit_protocol_identity() -> None:
+    with pytest.raises(ValueError, match="protocol_id"):
+        ReadinessEvidenceSet.model_validate({"schema_version": 1, "candidates": []})
 
 
 def test_duplicate_suite_and_checkpoint_mismatch_fail_closed(tmp_path: Path) -> None:
@@ -286,9 +319,57 @@ def test_duplicate_suite_and_checkpoint_mismatch_fail_closed(tmp_path: Path) -> 
     assert "strong_controls" in report.blockers
 
 
+def test_duplicate_seed_and_undeclared_suite_fail_closed(tmp_path: Path) -> None:
+    candidate = _passing_candidate(tmp_path)
+    duplicate_seed = candidate.training_runs[0].model_copy(deep=True)
+    duplicate_seed.checkpoint_sha256 = "f" * 64
+    duplicate_seed.receipt = _receipt(
+        tmp_path,
+        "duplicate-seed.json",
+        kind="training",
+        checkpoint_sha256=duplicate_seed.checkpoint_sha256,
+    )
+    candidate.training_runs.append(duplicate_seed)
+    candidate.capabilities.append(
+        candidate.capabilities[0].model_copy(
+            update={"suite": "undeclared_suite"},
+            deep=True,
+        )
+    )
+    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    assert "three_seed_training" in report.blockers
+    assert "capability_evaluation" in report.blockers
+
+
 def test_documents_must_name_candidate_and_checkpoint(tmp_path: Path) -> None:
     candidate = _passing_candidate(tmp_path)
     candidate.documents["model_card"] = _artifact(tmp_path, "unbound-card.md", "generic card")
+    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    assert "release_documentation" in report.blockers
+
+
+def test_documents_require_exact_set_and_structured_binding(tmp_path: Path) -> None:
+    candidate = _passing_candidate(tmp_path)
+    checkpoint = candidate.candidate_checkpoint_sha256
+    assert checkpoint is not None
+    candidate.documents["extra"] = _document(tmp_path, "extra", checkpoint)
+    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    assert "release_documentation" in report.blockers
+
+    candidate = _passing_candidate(tmp_path)
+    header = ReleaseDocumentHeader(
+        protocol_id=PROTOCOL_ID,
+        document_type="model_card",
+        candidate_id="another-candidate",
+        source_commit="c" * 40,
+        checkpoint_sha256=checkpoint,
+        dataset_manifest_sha256="d" * 64,
+    ).model_dump_json()
+    candidate.documents["model_card"] = _artifact(
+        tmp_path,
+        "wrong-candidate-card.md",
+        f"{DOCUMENT_HEADER_PREFIX} {header} {DOCUMENT_HEADER_SUFFIX}\n# Model card\n",
+    )
     report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert "release_documentation" in report.blockers
 
@@ -312,7 +393,8 @@ def test_relaxed_threshold_policy_is_rejected(tmp_path: Path) -> None:
     evidence_path = tmp_path / "evidence.json"
     thresholds_path = tmp_path / "relaxed.json"
     evidence_path.write_text(
-        ReadinessEvidenceSet(candidates=[]).model_dump_json(), encoding="utf-8"
+        ReadinessEvidenceSet(protocol_id=PROTOCOL_ID, candidates=[]).model_dump_json(),
+        encoding="utf-8",
     )
     thresholds_path.write_text(
         ReadinessThresholds(minimum_training_records=1).model_dump_json(), encoding="utf-8"
