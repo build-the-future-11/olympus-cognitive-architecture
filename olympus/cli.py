@@ -11,6 +11,7 @@ from rich.table import Table
 
 from olympus.api import demos
 from olympus.core.workspace import LatentWorkspace
+from olympus.data.olympus_dataset import load_olympus_dataset
 from olympus.forge.compiler import NaturalLanguageBehaviorCompiler
 from olympus.forge.runtime import ForgeRuntime
 from olympus.foundry.data_pipeline import prepare_instruction_dataset
@@ -23,23 +24,305 @@ from olympus.foundry.service import FoundryService
 from olympus.foundry.sft import SFTConfig, TinyModelConfig, run_sft
 from olympus.labos.manifest import ProjectRecord, ResourceProfile
 from olympus.labos.portfolio import PortfolioService
+from olympus.models.encoder_quantization import EncoderQuantizationConfig
+from olympus.models.olympus_system import OlympusSystemConfig
+from olympus.models.reference_families import build_reference_model, default_reference_configs
+from olympus.models.runtime import (
+    OlympusRuntimeConfig,
+    OlympusSystemRuntime,
+    load_olympus_checkpoint,
+)
+from olympus.models.spatiotemporal_lazy import (
+    SpatiotemporalParameterStore,
+    SpatiotemporalQuery,
+)
+from olympus.models.specifications import BU1LD_MODEL_SPECS
+from olympus.training.encoder_quantization import (
+    EncoderQuantizationTrainingConfig,
+    train_encoder_quantizer,
+)
+from olympus.training.olympus_system import (
+    OlympusSystemTrainingConfig,
+    train_olympus_system,
+)
+from olympus.upscaler.jepa import JEPAUpscalerConfig
+from olympus.upscaler.training import JEPAUpscalerTrainingConfig, train_jepa_upscaler
 
 app = typer.Typer(help="Olympus command line interface.")
 demo_app = typer.Typer(help="Run built-in Olympus demos.")
 forge_app = typer.Typer(help="Compile and execute behaviors.")
 labos_app = typer.Typer(help="Discover, validate, and run portfolio projects.")
 foundry_app = typer.Typer(help="Operate the durable Olympus Model Foundry.")
+bu1ld_app = typer.Typer(help="Operate evidence-bound BU1LD model pathways.")
 app.add_typer(demo_app, name="demo")
 app.add_typer(forge_app, name="forge")
 app.add_typer(labos_app, name="labos")
 app.add_typer(foundry_app, name="foundry")
+app.add_typer(bu1ld_app, name="bu1ld")
 console = Console()
 
 
-def _default_instruction_source() -> Path:
-    repository_source = (
-        Path(__file__).resolve().parents[1] / "datasets/hermes-smoke/source.jsonl"
+@bu1ld_app.command("specs")
+def bu1ld_specs() -> None:
+    """Print target specifications without asserting that target models exist."""
+
+    console.print_json(json.dumps([spec.model_dump(mode="json") for spec in BU1LD_MODEL_SPECS]))
+
+
+@bu1ld_app.command("reference-models")
+def bu1ld_reference_models() -> None:
+    """Inspect bounded executable references without claiming family checkpoints."""
+
+    summaries: list[dict[str, object]] = []
+    for config in default_reference_configs():
+        model = build_reference_model(config)
+        summaries.append(
+            {
+                "family_id": config.family_id,
+                "implementation": type(model).__name__,
+                "reference_parameters": sum(parameter.numel() for parameter in model.parameters()),
+                "status": "REFERENCE_IMPLEMENTATION_NOT_PROMOTED",
+                "target_capability_claimed": False,
+            }
+        )
+    console.print_json(json.dumps(summaries))
+
+
+@bu1ld_app.command("train-encoder-quantizer")
+def bu1ld_train_encoder_quantizer(
+    manifest: Path,
+    output: Path,
+    steps: int = 1_000,
+    batch_size: int = 8,
+    learning_rate: float = 1e-3,
+    seed: int = 20261011,
+    input_dim: int = 768,
+    hidden_dim: int = 1_024,
+    latent_dim: int = 256,
+    codebook_size: int = 1_024,
+    residual_codebooks: int = 4,
+) -> None:
+    """Train one hash-bound encoder-quantizer development candidate."""
+
+    encoder = EncoderQuantizationConfig(
+        input_dim=input_dim,
+        hidden_dim=hidden_dim,
+        latent_dim=latent_dim,
+        codebook_size=codebook_size,
+        residual_codebooks=residual_codebooks,
     )
+    config = EncoderQuantizationTrainingConfig(
+        seed=seed,
+        steps=steps,
+        batch_size=batch_size,
+        learning_rate=learning_rate,
+        encoder=encoder,
+    )
+    report = train_encoder_quantizer(
+        manifest.resolve(),
+        output.resolve(),
+        config=config,
+    )
+    console.print_json(report.model_dump_json())
+
+
+@bu1ld_app.command("train-jepa-upscaler")
+def bu1ld_train_jepa_upscaler(
+    manifest: Path,
+    output: Path,
+    steps: int = 1_000,
+    batch_size: int = 4,
+    learning_rate: float = 2e-4,
+    seed: int = 20261011,
+    scale: int = 2,
+    feature_channels: int = 48,
+    residual_blocks: int = 4,
+) -> None:
+    """Train one source-disjoint JEPA upscaler development candidate."""
+
+    model = JEPAUpscalerConfig(
+        scale=scale,
+        feature_channels=feature_channels,
+        residual_blocks=residual_blocks,
+    )
+    config = JEPAUpscalerTrainingConfig(
+        seed=seed,
+        steps=steps,
+        batch_size=batch_size,
+        learning_rate=learning_rate,
+        model=model,
+    )
+    report = train_jepa_upscaler(
+        manifest.resolve(),
+        output.resolve(),
+        config=config,
+    )
+    console.print_json(report.model_dump_json())
+
+
+@bu1ld_app.command("train-olympus-system")
+def bu1ld_train_olympus_system(
+    manifest: Path,
+    model_config: Path,
+    output: Path,
+    steps: int = 1_000,
+    batch_size: int = 8,
+    learning_rate: float = 3e-4,
+    warmup_steps: int = 0,
+    seed: int = 20261011,
+    device: str = "auto",
+    workload_lock: Path = Path("artifacts/locks/olympus-system-training.lock"),
+) -> None:
+    """Train and diagnose one hash-bound composed Olympus development candidate."""
+
+    if device not in {"auto", "cpu", "cuda", "mps"}:
+        raise typer.BadParameter("device must be auto, cpu, cuda, or mps")
+    resolved_config = model_config.resolve()
+    if model_config.is_symlink() or not resolved_config.is_file():
+        raise typer.BadParameter("model config must be a regular non-symlink JSON file")
+    model = OlympusSystemConfig.model_validate_json(resolved_config.read_bytes())
+    config = OlympusSystemTrainingConfig(
+        seed=seed,
+        steps=steps,
+        batch_size=batch_size,
+        learning_rate=learning_rate,
+        warmup_steps=warmup_steps,
+        device=device,  # type: ignore[arg-type]
+        workload_lock=workload_lock.resolve(),
+        model=model,
+    )
+    report = train_olympus_system(
+        manifest.resolve(),
+        output.resolve(),
+        config=config,
+    )
+    console.print_json(report.model_dump_json())
+
+
+@bu1ld_app.command("verify-olympus-dataset")
+def bu1ld_verify_olympus_dataset(manifest: Path) -> None:
+    """Verify every aligned tensor, digest, split identity, and schema before a run."""
+
+    loaded = load_olympus_dataset(manifest.resolve())
+    console.print_json(
+        json.dumps(
+            {
+                "status": "VERIFIED_REFERENCE_DATASET_NOT_SCIENTIFICALLY_QUALIFIED",
+                "dataset_id": loaded.manifest.dataset_id,
+                "version": loaded.manifest.version,
+                "manifest_sha256": loaded.manifest.manifest_sha256,
+                "train_examples": len(loaded.manifest.train.source_ids),
+                "evaluation_examples": len(loaded.manifest.evaluation.source_ids),
+                "extensions": loaded.manifest.extensions,
+                "train_shapes": loaded.manifest.train.shapes,
+                "evaluation_shapes": loaded.manifest.evaluation.shapes,
+            }
+        )
+    )
+
+
+@bu1ld_app.command("run-olympus-dataset")
+def bu1ld_run_olympus_dataset(
+    manifest: Path,
+    checkpoint: Path,
+    checkpoint_sha256: str,
+    device: str = "auto",
+    mixed_precision: bool = True,
+) -> None:
+    """Run digest-pinned reference inference over a verified evaluation split."""
+
+    if device not in {"auto", "cpu", "cuda", "mps"}:
+        raise typer.BadParameter("device must be auto, cpu, cuda, or mps")
+    loaded = load_olympus_dataset(manifest.resolve())
+    model, record = load_olympus_checkpoint(checkpoint.resolve(), expected_sha256=checkpoint_sha256)
+    if set(model.extension_names) != set(loaded.manifest.extensions):
+        raise typer.BadParameter("checkpoint and dataset extension names do not match")
+    batch = loaded.evaluation
+    input_names = {
+        "tokens",
+        "image",
+        "states",
+        "actions",
+        "allowed_transitions",
+        "risk_score",
+        "attention_mask",
+        "domain_ids",
+        "temporal_mask",
+        "timestamp",
+    }
+    inputs: dict[str, object] = {
+        name: value for name, value in batch.items() if name in input_names
+    }
+    inputs["extension_features"] = {
+        name: batch[f"extension__{name}"] for name in loaded.manifest.extensions
+    }
+    runtime = OlympusSystemRuntime(
+        model,
+        OlympusRuntimeConfig(
+            device=device,  # type: ignore[arg-type]
+            mixed_precision=mixed_precision,
+        ),
+    )
+    result = runtime.infer(inputs)  # type: ignore[arg-type]
+    output = result.output
+    console.print_json(
+        json.dumps(
+            {
+                "status": "COMPLETED_REFERENCE_INFERENCE_NOT_PROMOTED",
+                "dataset_manifest_sha256": loaded.manifest.manifest_sha256,
+                "checkpoint_sha256": record.sha256,
+                "examples": output.raw_decision_logits.shape[0],
+                "device": result.device,
+                "mixed_precision_effective": result.mixed_precision_effective,
+                "elapsed_seconds": result.elapsed_seconds,
+                "forced_stop_examples": int(output.aion.forced_stop.sum().item()),
+                "mean_effective_risk": float(output.effective_risk.mean().item()),
+                "mean_family_gates": {
+                    name: float(weight)
+                    for name, weight in zip(
+                        output.component_names,
+                        output.family_gates.mean(dim=0).tolist(),
+                        strict=True,
+                    )
+                },
+                "promotion_authorized": False,
+            }
+        )
+    )
+
+
+@bu1ld_app.command("lazy-plan")
+def bu1ld_lazy_plan(
+    manifest: Path,
+    budget_bytes: int,
+    x: float,
+    y: float,
+    z: float,
+    timestamp: float,
+    resolution: float,
+    velocity_x: float = 0.0,
+    velocity_y: float = 0.0,
+    velocity_z: float = 0.0,
+    lookahead_seconds: float = 0.0,
+) -> None:
+    """Plan parameter residency without reading any unselected shard."""
+
+    store = SpatiotemporalParameterStore(manifest.resolve(), cache_budget_bytes=budget_bytes)
+    plan = store.plan(
+        SpatiotemporalQuery(
+            position=(x, y, z),
+            timestamp=timestamp,
+            resolution=resolution,
+            velocity=(velocity_x, velocity_y, velocity_z),
+            lookahead_seconds=lookahead_seconds,
+        ),
+        budget_bytes=budget_bytes,
+    )
+    console.print_json(plan.model_dump_json())
+
+
+def _default_instruction_source() -> Path:
+    repository_source = Path(__file__).resolve().parents[1] / "datasets/hermes-smoke/source.jsonl"
     if repository_source.is_file():
         return repository_source
     return Path(sys.prefix) / "share/olympus/datasets/source.jsonl"
@@ -203,6 +486,8 @@ def foundry_train_sft(
     sequence_tokens: int = 192,
     batch_size: int = 4,
     gradient_accumulation_steps: int = 2,
+    learning_rate: float = 3e-3,
+    weight_decay: float = 0.01,
     loss_normalization: str = "supervised_token_mean_v2",
 ) -> None:
     if mode not in {"full", "lora", "qlora"}:
@@ -219,11 +504,13 @@ def foundry_train_sft(
     )
     config = SFTConfig(
         mode=mode,  # type: ignore[arg-type]
-        loss_normalization=loss_normalization,  # type: ignore[arg-type]
         seed=seed,
         epochs=epochs,
         batch_size=batch_size,
+        learning_rate=learning_rate,
         gradient_accumulation_steps=gradient_accumulation_steps,
+        weight_decay=weight_decay,
+        loss_normalization=loss_normalization,  # type: ignore[arg-type]
         model=model,
     )
     summary = run_sft(
@@ -345,9 +632,7 @@ def validate(
     _print_records_table(records)
     for record in records:
         for issue in record.validation.issues:
-            console.print(
-                f"[{issue.severity}] {record.manifest.project_id}: {issue.message}"
-            )
+            console.print(f"[{issue.severity}] {record.manifest.project_id}: {issue.message}")
 
 
 @labos_app.command("run-smoke")

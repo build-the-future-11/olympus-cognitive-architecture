@@ -320,8 +320,10 @@
     },
     {
       "id": "olympus-robust-fusion-v5",
-      "phase": "PREPARED_FOR_PRIVATE_CPU",
-      "primary_supported": null,
+      "phase": "COMPLETED_REMOTE_VERIFIED_ARCHIVE_PENDING_RETRIEVAL",
+      "primary_supported": false,
+      "routing_primary_supported": false,
+      "temporal_primary_supported": true,
       "path": "research/olympus_irp_successor_v5/RESEARCH_STATE.json"
     },
     {
@@ -332,7 +334,7 @@
     }
   ],
   "blocking_gates": [
-    "v5 protected evaluation is not executed",
+    "v5 remote archive is hash-bound but not yet retrieved into the repository",
     "EditCLEVR model comparison is not executed",
     "no rights-reviewed aligned corpus covers the full six-family contract",
     "no independent scientific reproduction exists",

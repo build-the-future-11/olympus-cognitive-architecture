@@ -1,5 +1,5 @@
 {
-  "phase": "PREPARED_FOR_PRIVATE_CPU",
+  "phase": "COMPLETED_REMOTE_VERIFIED_ARCHIVE_PENDING_RETRIEVAL",
   "prior_preservation": {
     "files_checked": 1573,
     "changed_or_missing": [],
@@ -8,6 +8,44 @@
   "planned_cells": 20,
   "planned_bank_fits": 40,
   "planned_protected_evaluations": 80,
+  "executed_cells": 20,
+  "executed_bank_fits": 40,
+  "protected_evaluations": 80,
+  "source_commit": "2bbf6d1e73d6eb57d9748dc65a89231f184cf4f3",
+  "remote_runtime": "Kaggle CPU",
+  "remote_notebook": "https://www.kaggle.com/code/ryangomez010/notebookec59f0cb01/edit",
+  "verifier": {
+    "status": "PASS",
+    "qualification_tests": 7,
+    "prediction_hashes_verified": 80,
+    "aggregate_means_recomputed": true,
+    "comparison_cluster_deltas_recomputed": 40,
+    "fold_overlap": 0,
+    "source_checkpoint_freeze_and_chronology_verified": true,
+    "limitation": "Report arithmetic and provenance verification; not independent retraining."
+  },
+  "routing_primary": {
+    "supported": false,
+    "novel_shift_selected_minus_core_semantic": -0.00068359375,
+    "ci95": [-0.00244140625, 0.00107421875],
+    "corrupted_selected_minus_core_semantic": -0.05869140625,
+    "corrupted_ci95": [-0.0638671875, -0.05068359375]
+  },
+  "temporal_primary": {
+    "supported": true,
+    "clean_residual_mse": 0.014565714355558156,
+    "clean_core_v4_mse": 0.07133172154426574,
+    "clean_reduction_vs_core_v4_fraction": 0.7957989156181884,
+    "clean_residual_minus_persistence": -0.015398251730948687,
+    "clean_residual_minus_persistence_ci95": [-0.015830382984131575, -0.014920006040483713],
+    "corrupted_residual_mse": 0.08741456121206284,
+    "corrupted_core_v4_mse": 0.13846375048160553
+  },
+  "remote_archive": {
+    "path": "/kaggle/working/olympus-v5-evidence.tar.gz",
+    "sha256": "7dd4b614d2895331e2000a68d2ae988cf8badd54d2776be26857471a5ac391d6",
+    "retrieved_to_repository": false
+  },
   "sources_sha256": "81b1e8062cedc1132004db3300db2dc22abd41db774819ad02097050fa6efea1",
   "external_benchmark_status": "NOT_EVALUATED",
   "promotion_authorized": false

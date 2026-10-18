@@ -173,6 +173,8 @@ def initialize(
     now: str | datetime | None = None,
 ) -> dict[str, Any]:
     """Create once. Re-entry cannot replace the original budget or deadline."""
+    if deadline is None:
+        raise TypeError("deadline must be an explicitly timezone-aware timestamp")
     current = _now(now)
     quota, observation = _observation(quota_hours, observed_at, current)
     _other_sessions(other_active_sessions)

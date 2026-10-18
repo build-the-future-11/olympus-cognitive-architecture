@@ -696,7 +696,9 @@ def run_sft(
             if resumed_config.model_dump(exclude={"epochs"}) != config.model_dump(
                 exclude={"epochs"}
             ):
-                raise ValueError("resume checkpoint configuration does not match")
+                raise ValueError(
+                    "resume checkpoint configuration may change only the target epoch count"
+                )
             completed_epochs = _checkpoint_counter(resumed, "completed_epochs")
             optimizer_steps = _checkpoint_counter(resumed, "optimizer_steps")
             if completed_epochs > resumed_config.epochs:
