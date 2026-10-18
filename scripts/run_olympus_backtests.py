@@ -18,10 +18,10 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any
 
-import matplotlib
+import matplotlib  # type: ignore[import-not-found, unused-ignore]
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # type: ignore[import-not-found, unused-ignore]
 import numpy as np
 
 from olympus.foundry.eval_suite import evaluate_checkpoint

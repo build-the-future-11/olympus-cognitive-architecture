@@ -10,7 +10,7 @@ import statistics
 from pathlib import Path
 from typing import Any
 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # type: ignore[import-not-found, unused-ignore]
 
 VARIANTS = (
     "full",

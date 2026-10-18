@@ -129,6 +129,8 @@ class SFTConfig(StrictModel):
     epochs: int = Field(default=2, ge=1, le=100)
     batch_size: int = Field(default=4, ge=1, le=128)
     learning_rate: float = Field(default=3e-3, gt=0.0, le=1.0)
+    warmup_optimizer_steps: int = Field(default=0, ge=0)
+    minimum_learning_rate_ratio: float = Field(default=1.0, ge=0.0, le=1.0)
     gradient_accumulation_steps: int = Field(default=2, ge=1, le=128)
     gradient_clip_norm: float = Field(default=1.0, gt=0.0, le=100.0)
     weight_decay: float = Field(default=0.01, ge=0.0, le=1.0)
@@ -137,6 +139,9 @@ class SFTConfig(StrictModel):
     lora_rank: int = Field(default=4, ge=1, le=128)
     lora_alpha: float = Field(default=8.0, gt=0.0, le=1_024.0)
     category_mix_weights: dict[str, float] = Field(default_factory=dict)
+    early_stopping_patience: int = Field(default=0, ge=0, le=100)
+    early_stopping_min_delta: float = Field(default=0.0, ge=0.0)
+    restore_best_validation: bool = False
     device: Literal["auto", "cpu", "cuda", "mps"] = "cpu"
     model: TinyModelConfig = Field(default_factory=TinyModelConfig)
 
@@ -167,6 +172,12 @@ class TrainingSummary(StrictModel):
     loss_normalization: LossNormalization = "legacy_batch_mean_v1"
     resume_checkpoint_sha256: str | None = None
     attempt_path: str | None = None
+    attempted_epochs: int = 0
+    best_validation_loss: float = math.inf
+    best_epoch: int = 0
+    early_stopped: bool = False
+    final_learning_rate: float = 0.0
+    training_config_sha256: str = ""
 
 
 class LoRALinear(nn.Module):
@@ -404,6 +415,25 @@ def _loss(
     )
 
 
+def _learning_rate(config: SFTConfig, optimizer_step: int, total_steps: int) -> float:
+    """Return the declared warmup/cosine rate for audit and historical replay."""
+
+    if total_steps < 1 or optimizer_step < 1:
+        raise ValueError("optimizer and total steps must be positive")
+    warmup = min(config.warmup_optimizer_steps, total_steps)
+    if warmup and optimizer_step <= warmup:
+        scale = optimizer_step / warmup
+    elif total_steps == warmup:
+        scale = 1.0
+    else:
+        progress = (optimizer_step - warmup) / (total_steps - warmup)
+        progress = min(max(progress, 0.0), 1.0)
+        cosine = 0.5 * (1.0 + math.cos(math.pi * progress))
+        floor = config.minimum_learning_rate_ratio
+        scale = floor + (1.0 - floor) * cosine
+    return config.learning_rate * scale
+
+
 def evaluate_loss(
     model: TinyCausalLM,
     rows: list[tuple[list[int], list[int]]],
@@ -624,6 +654,17 @@ def run_sft(
         raise ValueError("LoRA and QLoRA require a base checkpoint or resume checkpoint")
     if config.mode == "full" and base_checkpoint is not None:
         raise ValueError("full SFT does not accept a base checkpoint")
+    if (
+        config.warmup_optimizer_steps
+        or config.minimum_learning_rate_ratio != 1.0
+        or config.early_stopping_patience
+        or config.restore_best_validation
+    ):
+        raise ValueError(
+            "Foundry continuation admits only a constant learning rate and the final "
+            "epoch state; use the composed-system trainer for scheduled or "
+            "validation-selected training"
+        )
     manifest, examples_by_split = load_verified_dataset(manifest_path)
     if manifest.manifest_sha256 is None:
         raise ValueError("dataset manifest has no immutable hash")
@@ -716,6 +757,9 @@ def run_sft(
             "torch_version": str(torch.__version__),
             "device_type": device.type,
         }
+        training_config_sha256 = hashlib.sha256(
+            config.model_dump_json().encode("utf-8")
+        ).hexdigest()
         with _run_attempt(output_root, run_id, metadata) as attempt:
             run_id = attempt.name
             log_path = attempt / "metrics.jsonl"
@@ -800,6 +844,7 @@ def run_sft(
                 "run_id": run_id,
                 "model_config": config.model.model_dump(mode="json"),
                 "training_config": config.model_dump(mode="json"),
+                "training_config_sha256": training_config_sha256,
                 "dataset_manifest_sha256": manifest.manifest_sha256,
                 "base_checkpoint_sha256": base_sha,
                 "model_state": model.state_dict(),
@@ -860,4 +905,10 @@ def run_sft(
                 loss_normalization=config.loss_normalization,
                 resume_checkpoint_sha256=resume_sha,
                 attempt_path=str(attempt / "attempt.json"),
+                attempted_epochs=completed_epochs,
+                best_validation_loss=final_validation,
+                best_epoch=completed_epochs,
+                early_stopped=False,
+                final_learning_rate=float(optimizer.param_groups[0]["lr"]),
+                training_config_sha256=training_config_sha256,
             )
