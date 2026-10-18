@@ -1,0 +1,18 @@
+{
+  "concurrency": 16,
+  "elapsed_seconds": 0.747302541974932,
+  "endpoint": "/health",
+  "error_rate": 0.0,
+  "failed_requests": 0,
+  "p50_latency_ms": 36.69445848208852,
+  "p95_latency_ms": 91.53433301253244,
+  "p99_latency_ms": 119.2478749435395,
+  "qualification": "BOUNDED_ENGINEERING_SMOKE_NOT_PRODUCTION_EVIDENCE",
+  "requests": 200,
+  "schema_version": 1,
+  "status_counts": {
+    "200": 200
+  },
+  "successful_requests": 200,
+  "throughput_requests_per_second": 267.6292248002402
+}

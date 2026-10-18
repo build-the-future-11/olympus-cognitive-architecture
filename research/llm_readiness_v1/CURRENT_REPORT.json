@@ -1,0 +1,524 @@
+{
+  "all_families_ready": false,
+  "evidence_sha256": "15da83d57c29a0090599a424836fbaa6f91af9fc7b9315b8c2cdbff3b8694919",
+  "family_reports": [
+    {
+      "blockers": [
+        "data_scale",
+        "three_seed_training",
+        "strong_controls",
+        "capability_evaluation",
+        "safety_evaluation",
+        "production_qualification",
+        "independent_reproduction",
+        "family_specific_gates",
+        "release_documentation"
+      ],
+      "candidate_id": "hermes-no-promoted-candidate",
+      "family_id": "hermes",
+      "gates": [
+        {
+          "gate": "data_receipt_integrity",
+          "observed": "True",
+          "passed": true,
+          "requirement": "Manifest exists and hash matches."
+        },
+        {
+          "gate": "data_quality",
+          "observed": "True",
+          "passed": true,
+          "requirement": "Rights, provenance, deduplication, contamination, PII, frozen splits, and coverage all pass."
+        },
+        {
+          "gate": "data_scale",
+          "observed": "train=12, protected=12",
+          "passed": false,
+          "requirement": "Train >= 10000; protected >= 1200; each category >= 100."
+        },
+        {
+          "gate": "three_seed_training",
+          "observed": "runs=0, unique_seeds=0",
+          "passed": false,
+          "requirement": "At least three completed, finite, identically configured seeds with immutable receipts and no pre-freeze protected access."
+        },
+        {
+          "gate": "strong_controls",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All controls ['base_model', 'matched_alternative', 'retrieval_ablation', 'routing_ablation', 'tool_ablation'] pass with confidence-interval lower bound >= 0.02 and no material regression."
+        },
+        {
+          "gate": "capability_evaluation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All capability suites ['calibration_and_abstention', 'distribution_shift_and_adversarial', 'domain_held_out', 'instruction_following', 'long_context', 'reasoning', 'structured_output', 'tool_completion'] meet frozen score floors without critical failures."
+        },
+        {
+          "gate": "safety_evaluation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All safety suites ['data_exfiltration', 'harmful_output_policy', 'prompt_injection', 'tenant_and_memory_isolation', 'tool_permission_boundaries'] pass without critical failures."
+        },
+        {
+          "gate": "production_qualification",
+          "observed": "missing",
+          "passed": false,
+          "requirement": "Latency, throughput, cost, 24-hour soak, failure handling, rollback, upgrades, and monitoring meet thresholds."
+        },
+        {
+          "gate": "independent_reproduction",
+          "observed": "missing",
+          "passed": false,
+          "requirement": "A clean independent operator reproduces the exact source, data, checkpoint, and metrics."
+        },
+        {
+          "gate": "family_specific_gates",
+          "observed": "passed=0/4",
+          "passed": false,
+          "requirement": "Every capability gate in the canonical family specification passes."
+        },
+        {
+          "gate": "release_documentation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "Hash-bound documents required: ['evaluation_report', 'load_and_cost_report', 'model_card', 'safety_and_rollback_report']."
+        }
+      ],
+      "ready_for_large_scale": false
+    },
+    {
+      "blockers": [
+        "data_receipt_integrity",
+        "data_quality",
+        "data_scale",
+        "three_seed_training",
+        "strong_controls",
+        "capability_evaluation",
+        "safety_evaluation",
+        "production_qualification",
+        "independent_reproduction",
+        "family_specific_gates",
+        "release_documentation"
+      ],
+      "candidate_id": "prometheus-no-candidate",
+      "family_id": "prometheus",
+      "gates": [
+        {
+          "gate": "data_receipt_integrity",
+          "observed": "False",
+          "passed": false,
+          "requirement": "Manifest exists and hash matches."
+        },
+        {
+          "gate": "data_quality",
+          "observed": "False",
+          "passed": false,
+          "requirement": "Rights, provenance, deduplication, contamination, PII, frozen splits, and coverage all pass."
+        },
+        {
+          "gate": "data_scale",
+          "observed": "train=0, protected=0",
+          "passed": false,
+          "requirement": "Train >= 10000; protected >= 1200; each category >= 100."
+        },
+        {
+          "gate": "three_seed_training",
+          "observed": "runs=0, unique_seeds=0",
+          "passed": false,
+          "requirement": "At least three completed, finite, identically configured seeds with immutable receipts and no pre-freeze protected access."
+        },
+        {
+          "gate": "strong_controls",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All controls ['base_model', 'matched_alternative', 'retrieval_ablation', 'routing_ablation', 'tool_ablation'] pass with confidence-interval lower bound >= 0.02 and no material regression."
+        },
+        {
+          "gate": "capability_evaluation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All capability suites ['calibration_and_abstention', 'distribution_shift_and_adversarial', 'domain_held_out', 'instruction_following', 'long_context', 'reasoning', 'structured_output', 'tool_completion'] meet frozen score floors without critical failures."
+        },
+        {
+          "gate": "safety_evaluation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All safety suites ['data_exfiltration', 'harmful_output_policy', 'prompt_injection', 'tenant_and_memory_isolation', 'tool_permission_boundaries'] pass without critical failures."
+        },
+        {
+          "gate": "production_qualification",
+          "observed": "missing",
+          "passed": false,
+          "requirement": "Latency, throughput, cost, 24-hour soak, failure handling, rollback, upgrades, and monitoring meet thresholds."
+        },
+        {
+          "gate": "independent_reproduction",
+          "observed": "missing",
+          "passed": false,
+          "requirement": "A clean independent operator reproduces the exact source, data, checkpoint, and metrics."
+        },
+        {
+          "gate": "family_specific_gates",
+          "observed": "passed=0/4",
+          "passed": false,
+          "requirement": "Every capability gate in the canonical family specification passes."
+        },
+        {
+          "gate": "release_documentation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "Hash-bound documents required: ['evaluation_report', 'load_and_cost_report', 'model_card', 'safety_and_rollback_report']."
+        }
+      ],
+      "ready_for_large_scale": false
+    },
+    {
+      "blockers": [
+        "data_receipt_integrity",
+        "data_quality",
+        "data_scale",
+        "three_seed_training",
+        "strong_controls",
+        "capability_evaluation",
+        "safety_evaluation",
+        "production_qualification",
+        "independent_reproduction",
+        "family_specific_gates",
+        "release_documentation"
+      ],
+      "candidate_id": "perseus-no-candidate",
+      "family_id": "perseus",
+      "gates": [
+        {
+          "gate": "data_receipt_integrity",
+          "observed": "False",
+          "passed": false,
+          "requirement": "Manifest exists and hash matches."
+        },
+        {
+          "gate": "data_quality",
+          "observed": "False",
+          "passed": false,
+          "requirement": "Rights, provenance, deduplication, contamination, PII, frozen splits, and coverage all pass."
+        },
+        {
+          "gate": "data_scale",
+          "observed": "train=0, protected=0",
+          "passed": false,
+          "requirement": "Train >= 10000; protected >= 1200; each category >= 100."
+        },
+        {
+          "gate": "three_seed_training",
+          "observed": "runs=0, unique_seeds=0",
+          "passed": false,
+          "requirement": "At least three completed, finite, identically configured seeds with immutable receipts and no pre-freeze protected access."
+        },
+        {
+          "gate": "strong_controls",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All controls ['base_model', 'matched_alternative', 'retrieval_ablation', 'routing_ablation', 'tool_ablation'] pass with confidence-interval lower bound >= 0.02 and no material regression."
+        },
+        {
+          "gate": "capability_evaluation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All capability suites ['calibration_and_abstention', 'distribution_shift_and_adversarial', 'domain_held_out', 'instruction_following', 'long_context', 'reasoning', 'structured_output', 'tool_completion'] meet frozen score floors without critical failures."
+        },
+        {
+          "gate": "safety_evaluation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All safety suites ['data_exfiltration', 'harmful_output_policy', 'prompt_injection', 'tenant_and_memory_isolation', 'tool_permission_boundaries'] pass without critical failures."
+        },
+        {
+          "gate": "production_qualification",
+          "observed": "missing",
+          "passed": false,
+          "requirement": "Latency, throughput, cost, 24-hour soak, failure handling, rollback, upgrades, and monitoring meet thresholds."
+        },
+        {
+          "gate": "independent_reproduction",
+          "observed": "missing",
+          "passed": false,
+          "requirement": "A clean independent operator reproduces the exact source, data, checkpoint, and metrics."
+        },
+        {
+          "gate": "family_specific_gates",
+          "observed": "passed=0/4",
+          "passed": false,
+          "requirement": "Every capability gate in the canonical family specification passes."
+        },
+        {
+          "gate": "release_documentation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "Hash-bound documents required: ['evaluation_report', 'load_and_cost_report', 'model_card', 'safety_and_rollback_report']."
+        }
+      ],
+      "ready_for_large_scale": false
+    },
+    {
+      "blockers": [
+        "data_receipt_integrity",
+        "data_quality",
+        "data_scale",
+        "three_seed_training",
+        "strong_controls",
+        "capability_evaluation",
+        "safety_evaluation",
+        "production_qualification",
+        "independent_reproduction",
+        "family_specific_gates",
+        "release_documentation"
+      ],
+      "candidate_id": "atlas-no-candidate",
+      "family_id": "atlas",
+      "gates": [
+        {
+          "gate": "data_receipt_integrity",
+          "observed": "False",
+          "passed": false,
+          "requirement": "Manifest exists and hash matches."
+        },
+        {
+          "gate": "data_quality",
+          "observed": "False",
+          "passed": false,
+          "requirement": "Rights, provenance, deduplication, contamination, PII, frozen splits, and coverage all pass."
+        },
+        {
+          "gate": "data_scale",
+          "observed": "train=0, protected=0",
+          "passed": false,
+          "requirement": "Train >= 10000; protected >= 1200; each category >= 100."
+        },
+        {
+          "gate": "three_seed_training",
+          "observed": "runs=0, unique_seeds=0",
+          "passed": false,
+          "requirement": "At least three completed, finite, identically configured seeds with immutable receipts and no pre-freeze protected access."
+        },
+        {
+          "gate": "strong_controls",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All controls ['base_model', 'matched_alternative', 'retrieval_ablation', 'routing_ablation', 'tool_ablation'] pass with confidence-interval lower bound >= 0.02 and no material regression."
+        },
+        {
+          "gate": "capability_evaluation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All capability suites ['calibration_and_abstention', 'distribution_shift_and_adversarial', 'domain_held_out', 'instruction_following', 'long_context', 'reasoning', 'structured_output', 'tool_completion'] meet frozen score floors without critical failures."
+        },
+        {
+          "gate": "safety_evaluation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All safety suites ['data_exfiltration', 'harmful_output_policy', 'prompt_injection', 'tenant_and_memory_isolation', 'tool_permission_boundaries'] pass without critical failures."
+        },
+        {
+          "gate": "production_qualification",
+          "observed": "missing",
+          "passed": false,
+          "requirement": "Latency, throughput, cost, 24-hour soak, failure handling, rollback, upgrades, and monitoring meet thresholds."
+        },
+        {
+          "gate": "independent_reproduction",
+          "observed": "missing",
+          "passed": false,
+          "requirement": "A clean independent operator reproduces the exact source, data, checkpoint, and metrics."
+        },
+        {
+          "gate": "family_specific_gates",
+          "observed": "passed=0/4",
+          "passed": false,
+          "requirement": "Every capability gate in the canonical family specification passes."
+        },
+        {
+          "gate": "release_documentation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "Hash-bound documents required: ['evaluation_report', 'load_and_cost_report', 'model_card', 'safety_and_rollback_report']."
+        }
+      ],
+      "ready_for_large_scale": false
+    },
+    {
+      "blockers": [
+        "data_receipt_integrity",
+        "data_quality",
+        "data_scale",
+        "three_seed_training",
+        "strong_controls",
+        "capability_evaluation",
+        "safety_evaluation",
+        "production_qualification",
+        "independent_reproduction",
+        "family_specific_gates",
+        "release_documentation"
+      ],
+      "candidate_id": "kronos-no-candidate",
+      "family_id": "kronos",
+      "gates": [
+        {
+          "gate": "data_receipt_integrity",
+          "observed": "False",
+          "passed": false,
+          "requirement": "Manifest exists and hash matches."
+        },
+        {
+          "gate": "data_quality",
+          "observed": "False",
+          "passed": false,
+          "requirement": "Rights, provenance, deduplication, contamination, PII, frozen splits, and coverage all pass."
+        },
+        {
+          "gate": "data_scale",
+          "observed": "train=0, protected=0",
+          "passed": false,
+          "requirement": "Train >= 10000; protected >= 1200; each category >= 100."
+        },
+        {
+          "gate": "three_seed_training",
+          "observed": "runs=0, unique_seeds=0",
+          "passed": false,
+          "requirement": "At least three completed, finite, identically configured seeds with immutable receipts and no pre-freeze protected access."
+        },
+        {
+          "gate": "strong_controls",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All controls ['base_model', 'matched_alternative', 'retrieval_ablation', 'routing_ablation', 'tool_ablation'] pass with confidence-interval lower bound >= 0.02 and no material regression."
+        },
+        {
+          "gate": "capability_evaluation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All capability suites ['calibration_and_abstention', 'distribution_shift_and_adversarial', 'domain_held_out', 'instruction_following', 'long_context', 'reasoning', 'structured_output', 'tool_completion'] meet frozen score floors without critical failures."
+        },
+        {
+          "gate": "safety_evaluation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All safety suites ['data_exfiltration', 'harmful_output_policy', 'prompt_injection', 'tenant_and_memory_isolation', 'tool_permission_boundaries'] pass without critical failures."
+        },
+        {
+          "gate": "production_qualification",
+          "observed": "missing",
+          "passed": false,
+          "requirement": "Latency, throughput, cost, 24-hour soak, failure handling, rollback, upgrades, and monitoring meet thresholds."
+        },
+        {
+          "gate": "independent_reproduction",
+          "observed": "missing",
+          "passed": false,
+          "requirement": "A clean independent operator reproduces the exact source, data, checkpoint, and metrics."
+        },
+        {
+          "gate": "family_specific_gates",
+          "observed": "passed=0/4",
+          "passed": false,
+          "requirement": "Every capability gate in the canonical family specification passes."
+        },
+        {
+          "gate": "release_documentation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "Hash-bound documents required: ['evaluation_report', 'load_and_cost_report', 'model_card', 'safety_and_rollback_report']."
+        }
+      ],
+      "ready_for_large_scale": false
+    },
+    {
+      "blockers": [
+        "data_receipt_integrity",
+        "data_quality",
+        "data_scale",
+        "three_seed_training",
+        "strong_controls",
+        "capability_evaluation",
+        "safety_evaluation",
+        "production_qualification",
+        "independent_reproduction",
+        "family_specific_gates",
+        "release_documentation"
+      ],
+      "candidate_id": "aion-no-promoted-candidate",
+      "family_id": "aion",
+      "gates": [
+        {
+          "gate": "data_receipt_integrity",
+          "observed": "False",
+          "passed": false,
+          "requirement": "Manifest exists and hash matches."
+        },
+        {
+          "gate": "data_quality",
+          "observed": "False",
+          "passed": false,
+          "requirement": "Rights, provenance, deduplication, contamination, PII, frozen splits, and coverage all pass."
+        },
+        {
+          "gate": "data_scale",
+          "observed": "train=0, protected=0",
+          "passed": false,
+          "requirement": "Train >= 10000; protected >= 1200; each category >= 100."
+        },
+        {
+          "gate": "three_seed_training",
+          "observed": "runs=0, unique_seeds=0",
+          "passed": false,
+          "requirement": "At least three completed, finite, identically configured seeds with immutable receipts and no pre-freeze protected access."
+        },
+        {
+          "gate": "strong_controls",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All controls ['base_model', 'matched_alternative', 'retrieval_ablation', 'routing_ablation', 'tool_ablation'] pass with confidence-interval lower bound >= 0.02 and no material regression."
+        },
+        {
+          "gate": "capability_evaluation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All capability suites ['calibration_and_abstention', 'distribution_shift_and_adversarial', 'domain_held_out', 'instruction_following', 'long_context', 'reasoning', 'structured_output', 'tool_completion'] meet frozen score floors without critical failures."
+        },
+        {
+          "gate": "safety_evaluation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "All safety suites ['data_exfiltration', 'harmful_output_policy', 'prompt_injection', 'tenant_and_memory_isolation', 'tool_permission_boundaries'] pass without critical failures."
+        },
+        {
+          "gate": "production_qualification",
+          "observed": "missing",
+          "passed": false,
+          "requirement": "Latency, throughput, cost, 24-hour soak, failure handling, rollback, upgrades, and monitoring meet thresholds."
+        },
+        {
+          "gate": "independent_reproduction",
+          "observed": "missing",
+          "passed": false,
+          "requirement": "A clean independent operator reproduces the exact source, data, checkpoint, and metrics."
+        },
+        {
+          "gate": "family_specific_gates",
+          "observed": "passed=0/4",
+          "passed": false,
+          "requirement": "Every capability gate in the canonical family specification passes."
+        },
+        {
+          "gate": "release_documentation",
+          "observed": "[]",
+          "passed": false,
+          "requirement": "Hash-bound documents required: ['evaluation_report', 'load_and_cost_report', 'model_card', 'safety_and_rollback_report']."
+        }
+      ],
+      "ready_for_large_scale": false
+    }
+  ],
+  "ready_families": 0,
+  "schema_version": 1,
+  "thresholds_sha256": "368073c460c05f24a874a4fcc115224b9b93bad1bdbae51e4642114c7d2dcf70",
+  "total_families": 6
+}

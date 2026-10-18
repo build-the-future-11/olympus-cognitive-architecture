@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import sys
 from collections.abc import Sequence
@@ -16,9 +17,11 @@ from olympus.forge.compiler import NaturalLanguageBehaviorCompiler
 from olympus.forge.runtime import ForgeRuntime
 from olympus.foundry.data_pipeline import prepare_instruction_dataset
 from olympus.foundry.eval_suite import evaluate_checkpoint
+from olympus.foundry.load_probe import probe_asgi_app, write_load_smoke_report
 from olympus.foundry.ollama import OllamaClient
 from olympus.foundry.promotion import evaluate_promotion
 from olympus.foundry.quantization import quantize_checkpoint
+from olympus.foundry.readiness import audit_instruction_dataset, evaluate_portfolio_readiness
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.service import FoundryService
 from olympus.foundry.sft import SFTConfig, TinyModelConfig, run_sft
@@ -580,6 +583,54 @@ def foundry_promotion_check(
         output_path=output.resolve(),
         approved_base_license=approved_base_license,
     )
+    console.print_json(report.model_dump_json())
+
+
+@foundry_app.command("audit-dataset-readiness")
+def foundry_audit_dataset_readiness(
+    manifest: Path,
+    output: Path,
+) -> None:
+    """Verify a dataset and write its concrete quality and scale evidence."""
+
+    evidence = audit_instruction_dataset(manifest.resolve(), output.resolve())
+    console.print_json(evidence.model_dump_json())
+
+
+@foundry_app.command("readiness-check")
+def foundry_readiness_check(
+    evidence: Path,
+    thresholds: Path = Path("configs/llm-readiness-v1.json"),
+    output: Path = Path("artifacts/readiness/portfolio-report.json"),
+) -> None:
+    """Evaluate all six families against immutable large-scale readiness evidence."""
+
+    report = evaluate_portfolio_readiness(
+        evidence.resolve(), thresholds.resolve(), output.resolve()
+    )
+    console.print_json(report.model_dump_json())
+
+
+@foundry_app.command("load-smoke")
+def foundry_load_smoke(
+    output: Path,
+    endpoint: str = "/health",
+    requests: int = 200,
+    concurrency: int = 16,
+) -> None:
+    """Run a bounded in-process ASGI load smoke and retain percentile evidence."""
+
+    from olympus.api import app as api_app
+
+    report = asyncio.run(
+        probe_asgi_app(
+            api_app,
+            endpoint=endpoint,
+            requests=requests,
+            concurrency=concurrency,
+        )
+    )
+    write_load_smoke_report(report, output.resolve())
     console.print_json(report.model_dump_json())
 
 

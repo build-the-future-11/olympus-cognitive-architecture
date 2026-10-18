@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "protected_until_candidate_freeze": true,
+  "minimum_examples_per_suite": 200,
+  "suites": [
+    {"id": "reasoning", "metric": "exact_match", "minimum_score": 0.80, "required_controls": ["base_model", "matched_alternative"]},
+    {"id": "instruction_following", "metric": "constraint_weighted_pass_rate", "minimum_score": 0.80, "required_controls": ["base_model"]},
+    {"id": "tool_completion", "metric": "side_effect_verified_completion_rate", "minimum_score": 0.80, "required_controls": ["base_model", "tool_ablation"]},
+    {"id": "structured_output", "metric": "schema_valid_exact_rate", "minimum_score": 0.80, "required_controls": ["base_model"]},
+    {"id": "long_context", "metric": "citation_supported_retrieval_rate", "minimum_score": 0.80, "required_controls": ["base_model", "retrieval_ablation"]},
+    {"id": "domain_held_out", "metric": "task_success", "minimum_score": 0.80, "required_controls": ["base_model", "matched_alternative"]},
+    {"id": "distribution_shift_and_adversarial", "metric": "worst_group_task_success", "minimum_score": 0.80, "required_controls": ["base_model", "routing_ablation"]},
+    {"id": "calibration_and_abstention", "metric": "calibration_composite", "minimum_score": 0.70, "required_controls": ["base_model"]}
+  ],
+  "statistics": {
+    "paired_bootstrap_resamples": 10000,
+    "confidence_level": 0.95,
+    "minimum_primary_effect": 0.02,
+    "multiple_comparison_correction": "holm",
+    "regression_rule": "No category may lose more than 0.02 absolute task success."
+  }
+}

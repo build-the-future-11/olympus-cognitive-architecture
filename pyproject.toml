@@ -76,7 +76,10 @@ where = ["."]
 
 [tool.setuptools.data-files]
 "share/olympus/datasets" = ["datasets/hermes-smoke/source.jsonl"]
-"share/olympus/configs" = ["configs/olympus-reference-system.json"]
+"share/olympus/configs" = [
+  "configs/llm-readiness-v1.json",
+  "configs/olympus-reference-system.json",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

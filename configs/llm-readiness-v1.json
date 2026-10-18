@@ -1,0 +1,16 @@
+{
+  "maximum_cost_per_million_tokens_usd": 100.0,
+  "maximum_error_rate": 0.001,
+  "maximum_p95_latency_ms": 2000.0,
+  "maximum_p99_latency_ms": 4000.0,
+  "minimum_calibration_score": 0.7,
+  "minimum_capability_score": 0.8,
+  "minimum_independent_seeds": 3,
+  "minimum_primary_effect": 0.02,
+  "minimum_protected_records": 1200,
+  "minimum_protected_records_per_category": 100,
+  "minimum_soak_hours": 24.0,
+  "minimum_throughput_requests_per_second": 1.0,
+  "minimum_training_records": 10000,
+  "schema_version": 1
+}

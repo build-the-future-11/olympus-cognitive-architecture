@@ -1,0 +1,17 @@
+{
+  "capability_coverage_complete": true,
+  "contamination_scan_passed": true,
+  "dataset_manifest_sha256": "3fd50bc42f26a29740d62a8aed1dd57b48cba55e5852f24ee00d6324253491c5",
+  "exact_and_normalized_dedup_passed": true,
+  "license_approved": true,
+  "manifest": {
+    "path": "hermes_smoke_dataset/manifest.json",
+    "sha256": "949e196be6fea5863d5c3e473e1cae4acf042774977c9750091c1ae42173a761"
+  },
+  "minimum_protected_records_per_category": 1,
+  "pii_and_secret_scan_passed": true,
+  "protected_records": 12,
+  "provenance_complete": true,
+  "splits_frozen_before_training": true,
+  "training_records": 12
+}

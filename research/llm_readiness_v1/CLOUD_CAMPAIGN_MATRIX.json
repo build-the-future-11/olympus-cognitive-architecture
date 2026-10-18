@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "status": "BLOCKED_ON_RIGHTS_CLEARED_CORPUS_AND_EXACT_BASE_CHECKPOINTS",
+  "families": [
+    {"family_id": "hermes", "next_executable_job": "three_seed_sft", "seeds": [20261018, 20261019, 20261020], "blocked_by": ["10000_record_reviewed_training_manifest", "1200_record_protected_manifest", "approved_base_model_sha256", "cloud_hardware_and_cost_cap"]},
+    {"family_id": "prometheus", "next_executable_job": "domain_adapter_training", "seeds": [20261018, 20261019, 20261020], "blocked_by": ["promoted_hermes_or_approved_base", "domain_disjoint_corpus", "adapter_rollback_test"]},
+    {"family_id": "perseus", "next_executable_job": "sparse_routing_pilot", "seeds": [20261018, 20261019, 20261020], "blocked_by": ["approved_dense_control", "multilingual_low_resource_corpus", "target_hardware_budget"]},
+    {"family_id": "atlas", "next_executable_job": "multimodal_long_context_pilot", "seeds": [20261018, 20261019, 20261020], "blocked_by": ["rights_cleared_multimodal_corpus", "long_context_protected_suite", "exact_architecture_freeze"]},
+    {"family_id": "kronos", "next_executable_job": "long_horizon_controller_pilot", "seeds": [20261018, 20261019, 20261020], "blocked_by": ["promoted_component_models", "continual_learning_rollback_protocol", "distributed_compute_budget"]},
+    {"family_id": "aion", "next_executable_job": "learned_router_replication", "seeds": [20261018, 20261019, 20261020], "blocked_by": ["approved_natural_protocol_corpus", "independent_operator", "false_promotion_protected_suite"]}
+  ],
+  "job_contract": {
+    "before_start": ["verify source commit", "verify dataset manifest hash", "verify base checkpoint hash", "verify frozen config hash", "record accelerator and container identity", "confirm protected access count is zero"],
+    "during_run": ["append metrics without overwrite", "record checkpoint hashes", "fail on nonfinite metric", "retain failure receipt", "enforce cost and wall-time cap"],
+    "after_run": ["upload immutable checkpoint and receipt", "run controls before protected suite", "never promote from development metrics", "feed only hash-verified receipts to readiness-check"]
+  }
+}
