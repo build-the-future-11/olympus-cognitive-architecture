@@ -30,6 +30,8 @@
           "items": {
             "$ref": "#/$defs/ReadinessGate"
           },
+          "maxItems": 11,
+          "minItems": 11,
           "title": "Gates",
           "type": "array"
         },
@@ -84,6 +86,11 @@
       "title": "All Families Ready",
       "type": "boolean"
     },
+    "capability_policy_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Capability Policy Sha256",
+      "type": "string"
+    },
     "decision_code_sha256": {
       "pattern": "^[0-9a-f]{64}$",
       "title": "Decision Code Sha256",
@@ -108,8 +115,15 @@
       "items": {
         "$ref": "#/$defs/FamilyReadinessReport"
       },
+      "maxItems": 6,
+      "minItems": 6,
       "title": "Family Reports",
       "type": "array"
+    },
+    "production_policy_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Production Policy Sha256",
+      "type": "string"
     },
     "protocol_id": {
       "const": "olympus-six-family-readiness-v1",
@@ -118,8 +132,20 @@
       "type": "string"
     },
     "ready_families": {
+      "maximum": 6,
+      "minimum": 0,
       "title": "Ready Families",
       "type": "integer"
+    },
+    "report_schema_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Report Schema Sha256",
+      "type": "string"
+    },
+    "safety_policy_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Safety Policy Sha256",
+      "type": "string"
     },
     "schema_version": {
       "const": 1,
@@ -133,6 +159,7 @@
       "type": "string"
     },
     "total_families": {
+      "const": 6,
       "title": "Total Families",
       "type": "integer"
     }
@@ -141,6 +168,10 @@
     "thresholds_sha256",
     "evidence_sha256",
     "evidence_schema_sha256",
+    "report_schema_sha256",
+    "capability_policy_sha256",
+    "safety_policy_sha256",
+    "production_policy_sha256",
     "evaluator_sha256",
     "decision_code_sha256",
     "family_reports",

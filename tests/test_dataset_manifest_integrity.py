@@ -87,6 +87,20 @@ def test_contained_bundle_rejects_external_split(prepared: Path, tmp_path: Path)
         verify_dataset_manifest(prepared, require_contained_splits=True)
 
 
+def test_contained_bundle_rejects_symlinked_parent_directory(prepared: Path) -> None:
+    payload = json.loads(prepared.read_text(encoding="utf-8"))
+    train = next(split for split in payload["splits"] if split["name"] == "train")
+    original = Path(train["path"])
+    (prepared.parent / "split-alias").symlink_to(
+        prepared.parent / original.parent,
+        target_is_directory=True,
+    )
+    train["path"] = str(Path("split-alias") / original.name)
+    _save_manifest(prepared, payload)
+    with pytest.raises(ValueError, match="must not contain symlinks"):
+        verify_dataset_manifest(prepared, require_contained_splits=True)
+
+
 @pytest.mark.parametrize("missing", ["train", "validation", "test"])
 def test_rehashed_manifest_requires_every_split(prepared: Path, missing: str) -> None:
     payload = json.loads(prepared.read_text(encoding="utf-8"))

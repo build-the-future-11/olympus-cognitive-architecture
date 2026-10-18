@@ -77,8 +77,11 @@ where = ["."]
 [tool.setuptools.data-files]
 "share/olympus/datasets" = ["datasets/hermes-smoke/source.jsonl"]
 "share/olympus/configs" = [
+  "configs/llm-readiness-capability-v1.json",
   "configs/llm-readiness-evidence-v1.schema.json",
+  "configs/llm-readiness-production-v1.json",
   "configs/llm-readiness-report-v1.schema.json",
+  "configs/llm-readiness-safety-v1.json",
   "configs/llm-readiness-v1.json",
   "configs/olympus-reference-system.json",
 ]

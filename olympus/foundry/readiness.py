@@ -10,13 +10,15 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import sys
+import unicodedata
 from collections import Counter
 from collections.abc import Sequence
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Literal
 
-from pydantic import Field, model_validator
+from pydantic import Field, field_validator, model_validator
 
 from olympus.core.schemas import StrictModel
 from olympus.foundry.data_pipeline import ALLOWED_LICENSES, verify_dataset_manifest
@@ -49,7 +51,29 @@ REQUIRED_SAFETY_SUITES = frozenset(
 REQUIRED_DOCUMENTS = frozenset(
     {"model_card", "evaluation_report", "load_and_cost_report", "safety_and_rollback_report"}
 )
+REQUIRED_DOCUMENT_SECTIONS = {
+    "model_card": frozenset({"intended use", "limitations", "training data", "license"}),
+    "evaluation_report": frozenset(
+        {"capability evaluation", "safety evaluation", "controls", "statistical analysis"}
+    ),
+    "load_and_cost_report": frozenset(
+        {"latency", "throughput", "cost", "failure injection"}
+    ),
+    "safety_and_rollback_report": frozenset(
+        {"safety", "rollback", "monitoring", "incident response"}
+    ),
+}
 FROZEN_THRESHOLDS_SHA256 = "368073c460c05f24a874a4fcc115224b9b93bad1bdbae51e4642114c7d2dcf70"
+FROZEN_POLICY_SHA256 = {
+    "capability": "7f40890da6bd27403e3b656e50089137d2522a1085a3e59bd650e74a170c7d9b",
+    "safety": "d3a1feae2fc0cf0617ac40ee5244700e9d40302ab6e81fd10b8a2ae851febec5",
+    "production": "3e538d3dc7faee67ed31a6790fe4408394b890497899aed0dd1a21ddbda9b550",
+}
+POLICY_FILENAMES = {
+    "capability": "llm-readiness-capability-v1.json",
+    "safety": "llm-readiness-safety-v1.json",
+    "production": "llm-readiness-production-v1.json",
+}
 PROTOCOL_ID: Literal["olympus-six-family-readiness-v1"] = "olympus-six-family-readiness-v1"
 ReceiptKind = Literal[
     "training",
@@ -60,8 +84,33 @@ ReceiptKind = Literal[
     "reproduction",
     "family_gate",
 ]
+DatasetAttestationKind = Literal["rights_review", "dataset_freeze"]
 DOCUMENT_HEADER_PREFIX = "<!-- olympus-readiness:"
 DOCUMENT_HEADER_SUFFIX = "-->"
+MAXIMUM_CATEGORY_REGRESSION = 0.02
+READINESS_GATE_NAMES = (
+    "data_receipt_integrity",
+    "data_quality",
+    "data_scale",
+    "three_seed_training",
+    "strong_controls",
+    "capability_evaluation",
+    "safety_evaluation",
+    "production_qualification",
+    "independent_reproduction",
+    "family_specific_gates",
+    "release_documentation",
+)
+
+
+def _normalized_identity(value: str) -> str:
+    return unicodedata.normalize("NFKC", value).strip().casefold()
+
+
+def _canonical_claim_sha256(value: StrictModel) -> str:
+    payload = value.model_dump(mode="json", exclude={"receipt"})
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def _sha256(path: Path) -> str:
@@ -96,6 +145,70 @@ class ReadinessThresholds(StrictModel):
     maximum_cost_per_million_tokens_usd: float = Field(default=100, gt=0)
 
 
+class CapabilitySuitePolicy(StrictModel):
+    id: str
+    metric: str
+    minimum_score: float = Field(ge=0, le=1)
+    required_controls: list[str]
+
+
+class CapabilityStatisticsPolicy(StrictModel):
+    paired_bootstrap_resamples: int = Field(gt=0)
+    confidence_level: float = Field(gt=0, lt=1)
+    minimum_primary_effect: float = Field(gt=0)
+    multiple_comparison_correction: Literal["holm"]
+    regression_rule: str
+
+
+class CapabilityPolicy(StrictModel):
+    schema_version: Literal[1] = 1
+    protected_until_candidate_freeze: Literal[True]
+    minimum_examples_per_suite: int = Field(gt=0)
+    suites: list[CapabilitySuitePolicy]
+    statistics: CapabilityStatisticsPolicy
+
+
+class SafetySuitePolicy(StrictModel):
+    id: str
+    minimum_cases: int = Field(gt=0)
+    required_case_groups: list[str]
+    pass_rule: str
+
+
+class SafetyPolicy(StrictModel):
+    schema_version: Literal[1] = 1
+    protected_until_candidate_freeze: Literal[True]
+    critical_failure_tolerance: Literal[0]
+    suites: list[SafetySuitePolicy]
+
+
+class ProductionAcceptancePolicy(StrictModel):
+    p95_latency_ms_max: float = Field(gt=0)
+    p99_latency_ms_max: float = Field(gt=0)
+    error_rate_max: float = Field(ge=0, le=1)
+    throughput_requests_per_second_min: float = Field(gt=0)
+    cost_per_million_tokens_usd_max: float = Field(gt=0)
+    uncaught_process_crashes: Literal[0]
+    lost_accepted_requests: Literal[0]
+
+
+class ProductionWorkloadPolicy(StrictModel):
+    duration_hours: float = Field(gt=0)
+    traffic_phases: list[str]
+    request_classes: list[str]
+    minimum_requests: int = Field(gt=0)
+
+
+class ProductionPolicy(StrictModel):
+    schema_version: Literal[1] = 1
+    status: Literal["BLOCKED_UNTIL_A_CANDIDATE_PASSES_CAPABILITY_AND_SAFETY_GATES"]
+    environment: dict[str, str]
+    workload: ProductionWorkloadPolicy
+    acceptance: ProductionAcceptancePolicy
+    failure_injections: list[str]
+    required_behavior: list[str]
+
+
 class ArtifactIdentity(StrictModel):
     path: str = Field(min_length=1)
     sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
@@ -110,6 +223,15 @@ class EvidenceReceiptEnvelope(StrictModel):
     dataset_manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     producer: str = Field(min_length=1)
     source_commit: str = Field(pattern=r"^[0-9a-f]{40}$")
+    evidence_id: str = Field(min_length=1, max_length=200)
+    claim_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+    @field_validator("candidate_id", "producer", "evidence_id")
+    @classmethod
+    def reject_ambiguous_identity(cls, value: str) -> str:
+        if value != value.strip() or unicodedata.normalize("NFKC", value) != value:
+            raise ValueError("receipt identities must be stripped NFKC text")
+        return value
 
 
 class ReleaseDocumentHeader(StrictModel):
@@ -119,6 +241,23 @@ class ReleaseDocumentHeader(StrictModel):
     source_commit: str = Field(pattern=r"^[0-9a-f]{40}$")
     checkpoint_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     dataset_manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+
+class DatasetAttestationEnvelope(StrictModel):
+    schema_version: Literal[1] = 1
+    protocol_id: Literal["olympus-six-family-readiness-v1"]
+    kind: DatasetAttestationKind
+    dataset_manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    producer: str = Field(min_length=1)
+    source_commit: str = Field(pattern=r"^[0-9a-f]{40}$")
+    approved: bool
+
+    @field_validator("producer")
+    @classmethod
+    def reject_ambiguous_producer(cls, value: str) -> str:
+        if value != value.strip() or unicodedata.normalize("NFKC", value) != value:
+            raise ValueError("dataset attestation producer must be stripped NFKC text")
+        return value
 
 
 class DatasetEvidence(StrictModel):
@@ -134,6 +273,8 @@ class DatasetEvidence(StrictModel):
     pii_and_secret_scan_passed: bool
     splits_frozen_before_training: bool
     capability_coverage_complete: bool
+    rights_receipt: ArtifactIdentity | None = None
+    freeze_receipt: ArtifactIdentity | None = None
 
 
 class TrainingRunEvidence(StrictModel):
@@ -156,6 +297,11 @@ class ComparativeEvaluation(StrictModel):
     effect: float = Field(allow_inf_nan=False)
     confidence_interval_low: float = Field(allow_inf_nan=False)
     confidence_interval_high: float = Field(allow_inf_nan=False)
+    evaluated_examples: int = Field(gt=0)
+    bootstrap_resamples: int = Field(gt=0)
+    confidence_level: float = Field(gt=0, lt=1)
+    multiple_comparison_correction: str = Field(min_length=1)
+    worst_category_delta: float = Field(allow_inf_nan=False)
     no_material_regressions: bool
 
     @model_validator(mode="after")
@@ -170,6 +316,9 @@ class SuiteEvaluation(StrictModel):
     receipt: ArtifactIdentity
     checkpoint_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     dataset_manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    metric: str = Field(min_length=1)
+    evaluated_cases: int = Field(ge=0)
+    case_groups: list[str] = Field(default_factory=list)
     score: float = Field(ge=0, le=1)
     passed: bool
     critical_failures: int = Field(ge=0)
@@ -193,6 +342,13 @@ class ProductionEvidence(StrictModel):
     error_rate: float = Field(ge=0, le=1)
     cost_per_million_tokens_usd: float = Field(ge=0)
     soak_hours: float = Field(ge=0)
+    environment_identity: str = Field(min_length=1)
+    request_count: int = Field(ge=0)
+    traffic_phases: list[str]
+    request_classes: list[str]
+    failure_injections: list[str]
+    uncaught_process_crashes: int = Field(ge=0)
+    lost_accepted_requests: int = Field(ge=0)
     failure_injection_passed: bool
     queue_cancel_retry_backpressure_passed: bool
     rollback_passed: bool
@@ -215,6 +371,13 @@ class ReproductionEvidence(StrictModel):
     checkpoint_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     metrics_reproduced_within_tolerance: bool
 
+    @field_validator("independent_operator")
+    @classmethod
+    def reject_ambiguous_operator(cls, value: str) -> str:
+        if value != value.strip() or unicodedata.normalize("NFKC", value) != value:
+            raise ValueError("independent operator identity must be stripped NFKC text")
+        return value
+
 
 class CandidateReadinessEvidence(StrictModel):
     family_id: ModelFamilyId
@@ -231,6 +394,15 @@ class CandidateReadinessEvidence(StrictModel):
     reproduction: ReproductionEvidence | None = None
     family_gate_results: list[FamilyGateEvidence] = Field(default_factory=list)
     documents: dict[str, ArtifactIdentity] = Field(default_factory=dict)
+
+    @field_validator("candidate_id", "training_operator")
+    @classmethod
+    def reject_ambiguous_identity(cls, value: str | None) -> str | None:
+        if value is not None and (
+            value != value.strip() or unicodedata.normalize("NFKC", value) != value
+        ):
+            raise ValueError("candidate and operator identities must be stripped NFKC text")
+        return value
 
 
 class ReadinessEvidenceSet(StrictModel):
@@ -259,9 +431,23 @@ class ReadinessGate(StrictModel):
 class FamilyReadinessReport(StrictModel):
     family_id: ModelFamilyId
     candidate_id: str
-    gates: list[ReadinessGate]
+    gates: list[ReadinessGate] = Field(min_length=11, max_length=11)
     ready_for_large_scale: bool
     blockers: list[str]
+
+    @model_validator(mode="after")
+    def validate_decision_consistency(self) -> FamilyReadinessReport:
+        gate_names = [gate.gate for gate in self.gates]
+        if len(gate_names) != len(set(gate_names)) or set(gate_names) != set(
+            READINESS_GATE_NAMES
+        ):
+            raise ValueError("family report must contain each canonical gate exactly once")
+        expected_blockers = [gate.gate for gate in self.gates if not gate.passed]
+        if self.blockers != expected_blockers:
+            raise ValueError("family blockers must exactly match failed gates")
+        if self.ready_for_large_scale != (not expected_blockers):
+            raise ValueError("family readiness must exactly match gate outcomes")
+        return self
 
 
 class PortfolioReadinessReport(StrictModel):
@@ -270,12 +456,31 @@ class PortfolioReadinessReport(StrictModel):
     thresholds_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     evidence_schema_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    report_schema_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    capability_policy_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    safety_policy_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    production_policy_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     evaluator_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     decision_code_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
-    family_reports: list[FamilyReadinessReport]
-    ready_families: int
-    total_families: int
+    family_reports: list[FamilyReadinessReport] = Field(min_length=6, max_length=6)
+    ready_families: int = Field(ge=0, le=6)
+    total_families: Literal[6]
     all_families_ready: bool
+
+    @model_validator(mode="after")
+    def validate_portfolio_consistency(self) -> PortfolioReadinessReport:
+        families = [report.family_id for report in self.family_reports]
+        canonical = [spec.family_id for spec in BU1LD_MODEL_SPECS]
+        if families != canonical:
+            raise ValueError("portfolio reports must follow the canonical family order")
+        ready = sum(report.ready_for_large_scale for report in self.family_reports)
+        if self.ready_families != ready:
+            raise ValueError("portfolio ready count does not match family reports")
+        if self.total_families != len(self.family_reports):
+            raise ValueError("portfolio total does not match family reports")
+        if self.all_families_ready != (ready == len(self.family_reports)):
+            raise ValueError("portfolio readiness does not match family reports")
+        return self
 
 
 def readiness_evidence_schema_bytes() -> bytes:
@@ -312,6 +517,110 @@ def write_readiness_report_schema(output_path: Path) -> None:
     _atomic_json(output_path, PortfolioReadinessReport.model_json_schema())
 
 
+def _load_frozen_policy(path: Path, expected_sha256: str, model: type[StrictModel]) -> StrictModel:
+    if path.is_symlink() or not path.is_file():
+        raise ValueError(f"readiness policy must be a regular non-symlink file: {path.name}")
+    payload = path.read_bytes()
+    if hashlib.sha256(payload).hexdigest() != expected_sha256:
+        raise ValueError(f"readiness policy hash mismatch: {path.name}")
+    return model.model_validate_json(payload)
+
+
+def _load_policy_bundle(
+    policy_dir: Path,
+    thresholds: ReadinessThresholds,
+) -> tuple[CapabilityPolicy, SafetyPolicy, ProductionPolicy, dict[str, str]]:
+    hashes: dict[str, str] = {}
+    loaded: dict[str, StrictModel] = {}
+    models: dict[str, type[StrictModel]] = {
+        "capability": CapabilityPolicy,
+        "safety": SafetyPolicy,
+        "production": ProductionPolicy,
+    }
+    for name, filename in POLICY_FILENAMES.items():
+        path = policy_dir / filename
+        loaded[name] = _load_frozen_policy(path, FROZEN_POLICY_SHA256[name], models[name])
+        hashes[name] = FROZEN_POLICY_SHA256[name]
+    capability = loaded["capability"]
+    safety = loaded["safety"]
+    production = loaded["production"]
+    if not isinstance(capability, CapabilityPolicy):
+        raise TypeError("invalid capability policy model")
+    if not isinstance(safety, SafetyPolicy):
+        raise TypeError("invalid safety policy model")
+    if not isinstance(production, ProductionPolicy):
+        raise TypeError("invalid production policy model")
+    if capability.statistics.minimum_primary_effect != thresholds.minimum_primary_effect:
+        raise ValueError("capability policy and threshold effect floors disagree")
+    capability_ids = [suite.id for suite in capability.suites]
+    if len(capability_ids) != len(set(capability_ids)) or set(capability_ids) != set(
+        REQUIRED_CAPABILITIES
+    ):
+        raise ValueError("capability policy does not contain the canonical suite set")
+    if any(
+        set(suite.required_controls) - REQUIRED_CONTROLS
+        or len(suite.required_controls) != len(set(suite.required_controls))
+        for suite in capability.suites
+    ):
+        raise ValueError("capability policy has invalid control requirements")
+    if any(
+        suite.minimum_score
+        != (
+            thresholds.minimum_calibration_score
+            if suite.id == "calibration_and_abstention"
+            else thresholds.minimum_capability_score
+        )
+        for suite in capability.suites
+    ):
+        raise ValueError("capability policy and readiness score floors disagree")
+    safety_ids = [suite.id for suite in safety.suites]
+    if len(safety_ids) != len(set(safety_ids)) or set(safety_ids) != set(
+        REQUIRED_SAFETY_SUITES
+    ):
+        raise ValueError("safety policy does not contain the canonical suite set")
+    if any(
+        not suite.required_case_groups
+        or len(suite.required_case_groups) != len(set(suite.required_case_groups))
+        for suite in safety.suites
+    ):
+        raise ValueError("safety policy case groups must be non-empty and unique")
+    if set(production.environment) != {"required", "forbidden_substitute"}:
+        raise ValueError("production policy environment contract is incomplete")
+    for values, label in (
+        (production.workload.traffic_phases, "traffic phases"),
+        (production.workload.request_classes, "request classes"),
+        (production.failure_injections, "failure injections"),
+        (production.required_behavior, "required behavior"),
+    ):
+        if not values or len(values) != len(set(values)):
+            raise ValueError(f"production policy {label} must be non-empty and unique")
+    acceptance = production.acceptance
+    expected_thresholds = (
+        acceptance.p95_latency_ms_max == thresholds.maximum_p95_latency_ms,
+        acceptance.p99_latency_ms_max == thresholds.maximum_p99_latency_ms,
+        acceptance.error_rate_max == thresholds.maximum_error_rate,
+        acceptance.throughput_requests_per_second_min
+        == thresholds.minimum_throughput_requests_per_second,
+        acceptance.cost_per_million_tokens_usd_max
+        == thresholds.maximum_cost_per_million_tokens_usd,
+        production.workload.duration_hours == thresholds.minimum_soak_hours,
+    )
+    if not all(expected_thresholds):
+        raise ValueError("production policy and readiness thresholds disagree")
+    return capability, safety, production, hashes
+
+
+def _default_policy_dir() -> Path:
+    candidates = (
+        Path(__file__).resolve().parents[2] / "configs",
+        Path(sys.prefix) / "share/olympus/configs",
+    )
+    for candidate in candidates:
+        if all((candidate / filename).is_file() for filename in POLICY_FILENAMES.values()):
+            return candidate
+    raise ValueError("canonical readiness policy bundle is unavailable")
+
+
 def _decision_code_sha256() -> str:
     paths = (
         Path(__file__),
@@ -335,9 +644,14 @@ def _gate(name: str, passed: bool, observed: object, requirement: str) -> Readin
 
 def _contained_artifact_path(identity: ArtifactIdentity, root: Path) -> Path | None:
     path = Path(identity.path)
-    if path.is_absolute() or path.is_symlink():
+    if path.is_absolute() or ".." in path.parts or path.is_symlink():
         return None
     root = root.resolve()
+    cursor = root
+    for part in path.parts:
+        cursor = cursor / part
+        if cursor.is_symlink():
+            return None
     resolved = (root / path).resolve()
     if not resolved.is_relative_to(root) or not resolved.is_file():
         return None
@@ -376,6 +690,8 @@ def _receipt_valid(
     checkpoint_sha256: str,
     dataset_manifest_sha256: str,
     source_commit: str,
+    evidence_id: str,
+    claim_sha256: str,
     producer: str | None = None,
 ) -> bool:
     payload = _artifact_bytes(identity, root)
@@ -392,9 +708,47 @@ def _receipt_valid(
             receipt.checkpoint_sha256 == checkpoint_sha256,
             receipt.dataset_manifest_sha256 == dataset_manifest_sha256,
             receipt.source_commit == source_commit,
-            producer is None or receipt.producer.casefold() == producer.casefold(),
+            receipt.evidence_id == evidence_id,
+            receipt.claim_sha256 == claim_sha256,
+            producer is None
+            or _normalized_identity(receipt.producer) == _normalized_identity(producer),
         )
     )
+
+
+def _dataset_attestation_valid(
+    identity: ArtifactIdentity | None,
+    root: Path,
+    *,
+    kind: DatasetAttestationKind,
+    dataset_manifest_sha256: str,
+) -> bool:
+    payload = _artifact_bytes(identity, root)
+    if payload is None:
+        return False
+    try:
+        attestation = DatasetAttestationEnvelope.model_validate_json(payload)
+    except ValueError:
+        return False
+    return all(
+        (
+            attestation.kind == kind,
+            attestation.dataset_manifest_sha256 == dataset_manifest_sha256,
+            attestation.approved,
+        )
+    )
+
+
+def _item_evidence_id(
+    item: TrainingRunEvidence | ComparativeEvaluation | SuiteEvaluation | FamilyGateEvidence,
+) -> str:
+    if isinstance(item, TrainingRunEvidence):
+        return f"seed:{item.seed}"
+    if isinstance(item, ComparativeEvaluation):
+        return item.control
+    if isinstance(item, SuiteEvaluation):
+        return item.suite
+    return item.gate
 
 
 def _item_receipts_valid(
@@ -417,6 +771,8 @@ def _item_receipts_valid(
             checkpoint_sha256=item.checkpoint_sha256,
             dataset_manifest_sha256=item.dataset_manifest_sha256,
             source_commit=source_commit,
+            evidence_id=_item_evidence_id(item),
+            claim_sha256=_canonical_claim_sha256(item),
             producer=producer,
         )
         for item in items
@@ -460,7 +816,6 @@ def _dataset_receipt_valid(dataset: DatasetEvidence | None, root: Path) -> bool:
             ),
             dataset.contamination_scan_passed == (manifest.quality.split_leakage_hits == 0),
             dataset.pii_and_secret_scan_passed == (manifest.quality.pii_or_secret_hits == 0),
-            dataset.splits_frozen_before_training == bool(manifest.manifest_sha256),
             dataset.capability_coverage_complete
             == (not manifest.quality.missing_category_split_pairs),
         )
@@ -507,6 +862,13 @@ def _documents_bound_to_candidate(evidence: CandidateReadinessEvidence, root: Pa
         lines = content.splitlines()
         if not lines or not any(line.strip() for line in lines[1:]):
             return False
+        headings = {
+            line.lstrip("#").strip().casefold()
+            for line in lines[1:]
+            if line.startswith("#") and line.lstrip("#").strip()
+        }
+        if not REQUIRED_DOCUMENT_SECTIONS[name].issubset(headings):
+            return False
         first_line = lines[0]
         if not (
             first_line.startswith(DOCUMENT_HEADER_PREFIX)
@@ -538,7 +900,14 @@ def evaluate_family_readiness(
     thresholds: ReadinessThresholds,
     *,
     evidence_root: Path,
+    capability_policy: CapabilityPolicy | None = None,
+    safety_policy: SafetyPolicy | None = None,
+    production_policy: ProductionPolicy | None = None,
 ) -> FamilyReadinessReport:
+    if capability_policy is None or safety_policy is None or production_policy is None:
+        capability_policy, safety_policy, production_policy, _ = _load_policy_bundle(
+            _default_policy_dir(), thresholds
+        )
     dataset = evidence.dataset
     data_receipt_ok = _dataset_receipt_valid(dataset, evidence_root)
     data_quality_ok = (
@@ -553,6 +922,18 @@ def evaluate_family_readiness(
                 dataset.pii_and_secret_scan_passed,
                 dataset.splits_frozen_before_training,
                 dataset.capability_coverage_complete,
+                _dataset_attestation_valid(
+                    dataset.rights_receipt,
+                    evidence_root,
+                    kind="rights_review",
+                    dataset_manifest_sha256=dataset.dataset_manifest_sha256,
+                ),
+                _dataset_attestation_valid(
+                    dataset.freeze_receipt,
+                    evidence_root,
+                    kind="dataset_freeze",
+                    dataset_manifest_sha256=dataset.dataset_manifest_sha256,
+                ),
             )
         )
     )
@@ -620,13 +1001,22 @@ def evaluate_family_readiness(
         )
         and all(
             item.confidence_interval_low >= thresholds.minimum_primary_effect
+            and item.evaluated_examples >= capability_policy.minimum_examples_per_suite
+            and item.bootstrap_resamples
+            == capability_policy.statistics.paired_bootstrap_resamples
+            and item.confidence_level == capability_policy.statistics.confidence_level
+            and item.multiple_comparison_correction
+            == capability_policy.statistics.multiple_comparison_correction
+            and item.worst_category_delta >= -MAXIMUM_CATEGORY_REGRESSION
             and item.no_material_regressions
             for item in controls.values()
         )
     )
+    capability_specs = {suite.id: suite for suite in capability_policy.suites}
     capabilities = {item.suite: item for item in evidence.capabilities}
     capability_ok = (
-        set(capabilities) == REQUIRED_CAPABILITIES
+        set(capability_specs) == REQUIRED_CAPABILITIES
+        and set(capabilities) == REQUIRED_CAPABILITIES
         and _names_are_unique(evidence.capabilities, "suite")
         and _item_receipts_valid(
             evidence.capabilities,
@@ -641,18 +1031,18 @@ def evaluate_family_readiness(
         and all(
             item.passed
             and item.critical_failures == 0
-            and item.score
-            >= (
-                thresholds.minimum_calibration_score
-                if item.suite == "calibration_and_abstention"
-                else thresholds.minimum_capability_score
-            )
+            and item.metric == capability_specs[item.suite].metric
+            and item.evaluated_cases >= capability_policy.minimum_examples_per_suite
+            and not item.case_groups
+            and item.score >= capability_specs[item.suite].minimum_score
             for item in capabilities.values()
         )
     )
+    safety_specs = {suite.id: suite for suite in safety_policy.suites}
     safety = {item.suite: item for item in evidence.safety}
     safety_ok = (
-        set(safety) == REQUIRED_SAFETY_SUITES
+        set(safety_specs) == REQUIRED_SAFETY_SUITES
+        and set(safety) == REQUIRED_SAFETY_SUITES
         and _names_are_unique(evidence.safety, "suite")
         and _item_receipts_valid(
             evidence.safety,
@@ -662,7 +1052,15 @@ def evaluate_family_readiness(
             source_commit=evidence.source_commit or "",
         )
         and _bound_to_candidate(evidence.safety, evidence.candidate_checkpoint_sha256, dataset_sha)
-        and all(item.passed and item.critical_failures == 0 for item in safety.values())
+        and all(
+            item.passed
+            and item.critical_failures <= safety_policy.critical_failure_tolerance
+            and item.metric == safety_specs[item.suite].pass_rule
+            and item.evaluated_cases >= safety_specs[item.suite].minimum_cases
+            and len(item.case_groups) == len(set(item.case_groups))
+            and set(item.case_groups) == set(safety_specs[item.suite].required_case_groups)
+            for item in safety.values()
+        )
     )
     production = evidence.production
     production_ok = (
@@ -675,6 +1073,8 @@ def evaluate_family_readiness(
             checkpoint_sha256=production.checkpoint_sha256,
             dataset_manifest_sha256=dataset_sha or "",
             source_commit=evidence.source_commit or "",
+            evidence_id="production",
+            claim_sha256=_canonical_claim_sha256(production),
         )
         and production.checkpoint_sha256 == evidence.candidate_checkpoint_sha256
         and production.p95_latency_ms <= thresholds.maximum_p95_latency_ms
@@ -684,6 +1084,18 @@ def evaluate_family_readiness(
         and production.error_rate <= thresholds.maximum_error_rate
         and production.cost_per_million_tokens_usd <= thresholds.maximum_cost_per_million_tokens_usd
         and production.soak_hours >= thresholds.minimum_soak_hours
+        and production.request_count >= production_policy.workload.minimum_requests
+        and bool(production.environment_identity.strip())
+        and len(production.traffic_phases) == len(set(production.traffic_phases))
+        and set(production.traffic_phases) == set(production_policy.workload.traffic_phases)
+        and len(production.request_classes) == len(set(production.request_classes))
+        and set(production.request_classes) == set(production_policy.workload.request_classes)
+        and len(production.failure_injections) == len(set(production.failure_injections))
+        and set(production.failure_injections) == set(production_policy.failure_injections)
+        and production.uncaught_process_crashes
+        == production_policy.acceptance.uncaught_process_crashes
+        and production.lost_accepted_requests
+        == production_policy.acceptance.lost_accepted_requests
         and production.failure_injection_passed
         and production.queue_cancel_retry_backpressure_passed
         and production.rollback_passed
@@ -702,12 +1114,15 @@ def evaluate_family_readiness(
             checkpoint_sha256=reproduction.checkpoint_sha256,
             dataset_manifest_sha256=reproduction.dataset_manifest_sha256,
             source_commit=evidence.source_commit or "",
+            evidence_id="reproduction",
+            claim_sha256=_canonical_claim_sha256(reproduction),
             producer=reproduction.independent_operator,
         )
         and reproduction.metrics_reproduced_within_tolerance
         and evidence.training_operator is not None
         and reproduction.source_commit == evidence.source_commit
-        and reproduction.independent_operator.casefold() != evidence.training_operator.casefold()
+        and _normalized_identity(reproduction.independent_operator)
+        != _normalized_identity(evidence.training_operator)
         and dataset is not None
         and reproduction.dataset_manifest_sha256 == dataset.dataset_manifest_sha256
         and reproduction.checkpoint_sha256 == evidence.candidate_checkpoint_sha256
@@ -849,13 +1264,23 @@ def evaluate_portfolio_readiness(
             raise ValueError(f"{label} input must be a regular non-symlink file")
     if output_path.resolve() in {evidence_path.resolve(), thresholds_path.resolve()}:
         raise ValueError("readiness output cannot overwrite an input")
-    thresholds_sha = _sha256(thresholds_path)
+    evidence_payload = evidence_path.read_bytes()
+    thresholds_payload = thresholds_path.read_bytes()
+    thresholds_sha = hashlib.sha256(thresholds_payload).hexdigest()
     if thresholds_sha != FROZEN_THRESHOLDS_SHA256:
         raise ValueError(
             "readiness thresholds do not match the frozen v1 policy; create a versioned protocol"
         )
-    evidence = ReadinessEvidenceSet.model_validate_json(evidence_path.read_bytes())
-    thresholds = ReadinessThresholds.model_validate_json(thresholds_path.read_bytes())
+    evidence = ReadinessEvidenceSet.model_validate_json(evidence_payload)
+    thresholds = ReadinessThresholds.model_validate_json(thresholds_payload)
+    capability_policy, safety_policy, production_policy, policy_hashes = _load_policy_bundle(
+        thresholds_path.parent, thresholds
+    )
+    policy_paths = {
+        (thresholds_path.parent / filename).resolve() for filename in POLICY_FILENAMES.values()
+    }
+    if output_path.resolve() in policy_paths:
+        raise ValueError("readiness output cannot overwrite a policy input")
     candidates = {candidate.family_id: candidate for candidate in evidence.candidates}
     reports = []
     for spec in BU1LD_MODEL_SPECS:
@@ -864,18 +1289,29 @@ def evaluate_portfolio_readiness(
             candidate_id=f"{spec.family_id}-no-candidate",
         )
         reports.append(
-            evaluate_family_readiness(candidate, thresholds, evidence_root=evidence_path.parent)
+            evaluate_family_readiness(
+                candidate,
+                thresholds,
+                evidence_root=evidence_path.parent,
+                capability_policy=capability_policy,
+                safety_policy=safety_policy,
+                production_policy=production_policy,
+            )
         )
     ready = sum(report.ready_for_large_scale for report in reports)
     report = PortfolioReadinessReport(
         thresholds_sha256=thresholds_sha,
-        evidence_sha256=_sha256(evidence_path),
+        evidence_sha256=hashlib.sha256(evidence_payload).hexdigest(),
         evidence_schema_sha256=hashlib.sha256(readiness_evidence_schema_bytes()).hexdigest(),
+        report_schema_sha256=hashlib.sha256(readiness_report_schema_bytes()).hexdigest(),
+        capability_policy_sha256=policy_hashes["capability"],
+        safety_policy_sha256=policy_hashes["safety"],
+        production_policy_sha256=policy_hashes["production"],
         evaluator_sha256=_sha256(Path(__file__)),
         decision_code_sha256=_decision_code_sha256(),
         family_reports=reports,
         ready_families=ready,
-        total_families=len(reports),
+        total_families=6,
         all_families_ready=ready == len(reports),
     )
     _atomic_json(output_path, report.model_dump(mode="json"))
@@ -913,7 +1349,7 @@ def audit_instruction_dataset(manifest_path: Path, output_path: Path) -> Dataset
         ),
         contamination_scan_passed=manifest.quality.split_leakage_hits == 0,
         pii_and_secret_scan_passed=manifest.quality.pii_or_secret_hits == 0,
-        splits_frozen_before_training=bool(manifest.manifest_sha256),
+        splits_frozen_before_training=False,
         capability_coverage_complete=not manifest.quality.missing_category_split_pairs,
     )
     _atomic_json(output_path, evidence.model_dump(mode="json"))

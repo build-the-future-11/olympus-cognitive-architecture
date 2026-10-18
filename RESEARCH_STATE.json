@@ -93,19 +93,22 @@
   "history_policy": "Append revisions and failures with source identities. Preserve dated predecessor ledgers and frozen outcomes. Prior history is referenced without claiming to reconstruct missing events.",
   "large_scale_readiness_v1": {
     "status": "0_OF_6_FAMILIES_READY",
-    "integrity_revision": "LOCAL_HARDENING_COMPLETE_HOSTED_VERIFICATION_PENDING",
+    "integrity_revision": "LOCAL_ADVERSARIAL_HARDENING_COMPLETE_HOSTED_VERIFICATION_PENDING",
     "protocol": "research/llm_readiness_v1/PROTOCOL.md",
     "current_report": "research/llm_readiness_v1/CURRENT_REPORT.json",
     "thresholds": "configs/llm-readiness-v1.json",
     "evidence_schema": "configs/llm-readiness-evidence-v1.schema.json",
     "report_schema": "configs/llm-readiness-report-v1.schema.json",
+    "capability_policy": "configs/llm-readiness-capability-v1.json",
+    "safety_policy": "configs/llm-readiness-safety-v1.json",
+    "production_policy": "configs/llm-readiness-production-v1.json",
     "receipt_binding": "Every stage receipt must be a hash-verified JSON envelope matching the expected evidence kind, candidate, checkpoint, dataset, producer where applicable, and source commit.",
     "report_binding": "Every generated report records the protocol ID and SHA-256 identities of the thresholds, evidence, evidence schema, exact evaluator source, and combined evaluator/dataset-verifier/family-specification decision code.",
     "automation_gate": "olympus foundry readiness-check --require-ready writes the report and exits 1 unless all six canonical families pass.",
     "baseline_verifier": "scripts/verify_readiness_baseline.py independently checks both schemas, validates and exactly regenerates the checked-in report, and requires the documented 0/6 disposition.",
     "hermes_data_audit": "research/llm_readiness_v1/HERMES_SMOKE_DATA_AUDIT.json",
     "load_smoke": "research/llm_readiness_v1/LOAD_SMOKE.json",
-    "claim_boundary": "The Hermes smoke corpus passes bounded integrity and hygiene checks but has 12 training and 12 protected records. The health-endpoint load run is an engineering smoke. Neither is model capability, safety, production, or promotion evidence."
+    "claim_boundary": "The Hermes smoke corpus has a verified manifest and bounded structural hygiene checks, but its data-quality readiness gate fails because no hash-bound rights-review or pre-training freeze attestations exist; it also has only 12 training and 12 protected records. The health-endpoint load run is an engineering smoke. Neither is model capability, safety, production, or promotion evidence."
   },
   "history": [
     {
@@ -224,6 +227,13 @@
       "kind": "large_scale_readiness_release_verification",
       "event": "Published a machine-readable readiness-report schema, added an independent baseline verifier to CI and release workflows, repaired Python 3.11 exception syntax, and added regressions for exact schema/report reproduction, dataset-audit totals, malformed but hash-valid receipts, structured release-document headers, missing evidence, symlink rejection, and output overwrite refusal. The readiness disposition remains 0/6 ready; no protected evaluation, scientific training, model promotion, paid compute, or predecessor outcome changed.",
       "local_verification": "Across resource-isolated commands all 562 collected tests were accounted for: 560 passed and 2 expected skips, with 85.02 percent combined branch coverage. Full Ruff passed; strict MyPy passed on 154 source files; the readiness baseline verifier, Foundry golden path, web 6-test suite and production build passed. Offline npm audit found zero vulnerabilities. No-isolation wheel and source distributions built, passed Twine checks, contained the required readiness assets, and excluded external datasets. The online Python dependency audit was not run because automatic approval review rejected disclosure of project dependency and build metadata to external package and vulnerability services.",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-18",
+      "kind": "large_scale_readiness_adversarial_hardening",
+      "event": "Closed receipt-reuse and mutable-claim promotion paths by binding every stage receipt to the canonical digest and identity of its exact seed, control, suite, production, reproduction, or family-gate claim. Froze capability, safety, and production policy files as evaluator inputs; enforced suite metrics, example and case counts, case groups, control statistics, full production workload details, aggregate report consistency, substantive release-document sections, exact single-read input hashing, and rejection of symlinked parent paths. Dataset rights approval and pre-training freeze now require separate hash-bound attestations, correcting the Hermes smoke data-quality gate from pass to fail while preserving its manifest-integrity pass. No protected evidence was opened and no model was promoted.",
+      "local_verification": "The complete local Python suite passed 568 tests with 2 expected skips and 85.02 percent branch coverage. Full Ruff passed; strict MyPy passed on 155 source files; the readiness baseline verifier passed. The web suite passed 6 tests, production assets built, and offline npm audit found zero vulnerabilities. A new two-build release check first falsified source-archive reproducibility while the wheel was reproducible; canonical tar metadata and gzip epoch normalization repaired the defect, after which both wheel and source archive were byte-identical and passed Twine validation. Hosted exact-source release verification remains pending.",
       "scientific_outcomes_created": false
     }
   ],

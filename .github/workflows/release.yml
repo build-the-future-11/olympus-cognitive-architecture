@@ -10,6 +10,9 @@ permissions:
   id-token: write
   attestations: write
 
+env:
+  EXPECTED_SOURCE_SHA: ${{ github.sha }}
+
 jobs:
   publish:
     runs-on: ubuntu-24.04
@@ -18,7 +21,14 @@ jobs:
       name: pypi
       url: https://pypi.org/project/olympus-cognitive-architecture/
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Checkout exact tagged source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.EXPECTED_SOURCE_SHA }}
+          persist-credentials: false
+      - name: Verify exact source binding
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "${EXPECTED_SOURCE_SHA}"
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.14"
@@ -66,13 +76,16 @@ jobs:
           npm run build
 
       - name: Build Python distributions
-        run: uv run --locked python -m build --no-isolation
+        run: uv run --locked python scripts/verify_reproducible_build.py --output dist
       - name: Validate distribution metadata
         run: uv run --locked python -m twine check dist/*
       - name: Verify bundled Foundry corpus
         run: |
           unzip -l dist/*.whl | grep 'olympus/foundry/foundry_verification.txt'
           unzip -l dist/*.whl | grep 'share/olympus/datasets/source.jsonl'
+          unzip -l dist/*.whl | grep 'share/olympus/configs/llm-readiness-capability-v1.json'
+          unzip -l dist/*.whl | grep 'share/olympus/configs/llm-readiness-safety-v1.json'
+          unzip -l dist/*.whl | grep 'share/olympus/configs/llm-readiness-production-v1.json'
           tar -tzf dist/*.tar.gz | grep 'scripts/validate_editclevr_payload.py'
           if tar -tzf dist/*.tar.gz | grep -q 'datasets/external/'; then
             echo 'external research data must not be bundled in the source distribution'

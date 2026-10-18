@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from olympus.foundry.readiness import (
+    FROZEN_POLICY_SHA256,
+    POLICY_FILENAMES,
     PortfolioReadinessReport,
     evaluate_portfolio_readiness,
     readiness_evidence_schema_bytes,
@@ -24,6 +27,18 @@ def main() -> None:
         raise SystemExit("checked-in readiness evidence schema is stale")
     if report_schema.read_bytes() != readiness_report_schema_bytes():
         raise SystemExit("checked-in readiness report schema is stale")
+    legacy_policy_names = {
+        "capability": "CAPABILITY_SUITE.json",
+        "safety": "SAFETY_SUITE.json",
+        "production": "PRODUCTION_QUALIFICATION.json",
+    }
+    for name, filename in POLICY_FILENAMES.items():
+        payload = (ROOT / "configs" / filename).read_bytes()
+        if hashlib.sha256(payload).hexdigest() != FROZEN_POLICY_SHA256[name]:
+            raise SystemExit(f"checked-in {name} readiness policy is stale")
+        legacy = ROOT / "research/llm_readiness_v1" / legacy_policy_names[name]
+        if legacy.read_bytes() != payload:
+            raise SystemExit(f"research copy of {name} readiness policy has drifted")
 
     PortfolioReadinessReport.model_validate_json(expected_report.read_bytes())
     with TemporaryDirectory(prefix="olympus-readiness-") as directory:

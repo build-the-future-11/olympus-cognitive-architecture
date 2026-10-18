@@ -166,6 +166,11 @@
     "ComparativeEvaluation": {
       "additionalProperties": false,
       "properties": {
+        "bootstrap_resamples": {
+          "exclusiveMinimum": 0,
+          "title": "Bootstrap Resamples",
+          "type": "integer"
+        },
         "checkpoint_sha256": {
           "pattern": "^[0-9a-f]{64}$",
           "title": "Checkpoint Sha256",
@@ -177,6 +182,12 @@
         },
         "confidence_interval_low": {
           "title": "Confidence Interval Low",
+          "type": "number"
+        },
+        "confidence_level": {
+          "exclusiveMaximum": 1,
+          "exclusiveMinimum": 0,
+          "title": "Confidence Level",
           "type": "number"
         },
         "control": {
@@ -193,12 +204,26 @@
           "title": "Effect",
           "type": "number"
         },
+        "evaluated_examples": {
+          "exclusiveMinimum": 0,
+          "title": "Evaluated Examples",
+          "type": "integer"
+        },
+        "multiple_comparison_correction": {
+          "minLength": 1,
+          "title": "Multiple Comparison Correction",
+          "type": "string"
+        },
         "no_material_regressions": {
           "title": "No Material Regressions",
           "type": "boolean"
         },
         "receipt": {
           "$ref": "#/$defs/ArtifactIdentity"
+        },
+        "worst_category_delta": {
+          "title": "Worst Category Delta",
+          "type": "number"
         }
       },
       "required": [
@@ -209,6 +234,11 @@
         "effect",
         "confidence_interval_low",
         "confidence_interval_high",
+        "evaluated_examples",
+        "bootstrap_resamples",
+        "confidence_level",
+        "multiple_comparison_correction",
+        "worst_category_delta",
         "no_material_regressions"
       ],
       "title": "ComparativeEvaluation",
@@ -234,6 +264,17 @@
           "title": "Exact And Normalized Dedup Passed",
           "type": "boolean"
         },
+        "freeze_receipt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "license_approved": {
           "title": "License Approved",
           "type": "boolean"
@@ -258,6 +299,17 @@
         "provenance_complete": {
           "title": "Provenance Complete",
           "type": "boolean"
+        },
+        "rights_receipt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "splits_frozen_before_training": {
           "title": "Splits Frozen Before Training",
@@ -339,6 +391,11 @@
           "title": "Drift Failure Cost Monitoring Passed",
           "type": "boolean"
         },
+        "environment_identity": {
+          "minLength": 1,
+          "title": "Environment Identity",
+          "type": "string"
+        },
         "error_rate": {
           "maximum": 1,
           "minimum": 0,
@@ -348,6 +405,18 @@
         "failure_injection_passed": {
           "title": "Failure Injection Passed",
           "type": "boolean"
+        },
+        "failure_injections": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Failure Injections",
+          "type": "array"
+        },
+        "lost_accepted_requests": {
+          "minimum": 0,
+          "title": "Lost Accepted Requests",
+          "type": "integer"
         },
         "p50_latency_ms": {
           "minimum": 0,
@@ -371,6 +440,18 @@
         "receipt": {
           "$ref": "#/$defs/ArtifactIdentity"
         },
+        "request_classes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Request Classes",
+          "type": "array"
+        },
+        "request_count": {
+          "minimum": 0,
+          "title": "Request Count",
+          "type": "integer"
+        },
         "rollback_passed": {
           "title": "Rollback Passed",
           "type": "boolean"
@@ -384,6 +465,18 @@
           "minimum": 0,
           "title": "Throughput Requests Per Second",
           "type": "number"
+        },
+        "traffic_phases": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Traffic Phases",
+          "type": "array"
+        },
+        "uncaught_process_crashes": {
+          "minimum": 0,
+          "title": "Uncaught Process Crashes",
+          "type": "integer"
         },
         "zero_downtime_upgrade_passed": {
           "title": "Zero Downtime Upgrade Passed",
@@ -400,6 +493,13 @@
         "error_rate",
         "cost_per_million_tokens_usd",
         "soak_hours",
+        "environment_identity",
+        "request_count",
+        "traffic_phases",
+        "request_classes",
+        "failure_injections",
+        "uncaught_process_crashes",
+        "lost_accepted_requests",
         "failure_injection_passed",
         "queue_cancel_retry_backpressure_passed",
         "rollback_passed",
@@ -460,6 +560,13 @@
     "SuiteEvaluation": {
       "additionalProperties": false,
       "properties": {
+        "case_groups": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Case Groups",
+          "type": "array"
+        },
         "checkpoint_sha256": {
           "pattern": "^[0-9a-f]{64}$",
           "title": "Checkpoint Sha256",
@@ -473,6 +580,16 @@
         "dataset_manifest_sha256": {
           "pattern": "^[0-9a-f]{64}$",
           "title": "Dataset Manifest Sha256",
+          "type": "string"
+        },
+        "evaluated_cases": {
+          "minimum": 0,
+          "title": "Evaluated Cases",
+          "type": "integer"
+        },
+        "metric": {
+          "minLength": 1,
+          "title": "Metric",
           "type": "string"
         },
         "passed": {
@@ -499,6 +616,8 @@
         "receipt",
         "checkpoint_sha256",
         "dataset_manifest_sha256",
+        "metric",
+        "evaluated_cases",
         "score",
         "passed",
         "critical_failures"

@@ -325,14 +325,21 @@ def load_verified_dataset(
     examples_by_split: dict[SplitName, list[InstructionExample]] = {}
     for split in manifest.splits:
         path = Path(split.path)
-        if require_contained_splits and (path.is_absolute() or path.is_symlink()):
+        if require_contained_splits and (
+            path.is_absolute() or ".." in path.parts or path.is_symlink()
+        ):
             raise ValueError(f"dataset split must be a contained regular file: {split.name}")
         if not path.is_absolute():
             path = manifest_path.parent / path
         if require_contained_splits:
             root = manifest_path.parent.resolve()
-            if path.is_symlink():
-                raise ValueError(f"dataset split must not be a symlink: {split.name}")
+            cursor = root
+            for part in Path(split.path).parts:
+                cursor = cursor / part
+                if cursor.is_symlink():
+                    raise ValueError(
+                        f"dataset split path must not contain symlinks: {split.name}"
+                    )
             resolved = path.resolve()
             if not resolved.is_relative_to(root):
                 raise ValueError(f"dataset split escapes its bundle: {split.name}")

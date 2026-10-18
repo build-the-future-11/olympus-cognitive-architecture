@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "status": "BLOCKED_UNTIL_A_CANDIDATE_PASSES_CAPABILITY_AND_SAFETY_GATES",
+  "environment": {
+    "required": "isolated staging deployment matching the intended production accelerator, runtime, quantization, autoscaling, and persistence configuration",
+    "forbidden_substitute": "in-process health endpoint smoke test"
+  },
+  "workload": {
+    "duration_hours": 24,
+    "traffic_phases": ["steady_30_percent", "ramp_to_80_percent", "burst_120_percent", "recovery_30_percent"],
+    "request_classes": ["short_chat", "long_context", "structured_output", "tool_call", "cancellation", "stream_disconnect"],
+    "minimum_requests": 100000
+  },
+  "acceptance": {
+    "p95_latency_ms_max": 2000,
+    "p99_latency_ms_max": 4000,
+    "error_rate_max": 0.001,
+    "throughput_requests_per_second_min": 1.0,
+    "cost_per_million_tokens_usd_max": 100.0,
+    "uncaught_process_crashes": 0,
+    "lost_accepted_requests": 0
+  },
+  "failure_injections": [
+    "worker_kill",
+    "accelerator_out_of_memory",
+    "dependency_timeout",
+    "queue_saturation",
+    "database_disconnect",
+    "checkpoint_load_failure",
+    "rolling_upgrade",
+    "rollback_to_previous_hash"
+  ],
+  "required_behavior": [
+    "bounded_queue_rejects with 429 before memory exhaustion",
+    "client cancellation stops generation and releases capacity",
+    "only idempotent operations retry with bounded exponential backoff",
+    "rollback restores the previous checkpoint hash without accepted-request loss",
+    "drift, failure, latency, saturation, and cost alerts fire in the injected window"
+  ]
+}

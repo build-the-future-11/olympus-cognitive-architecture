@@ -19,8 +19,10 @@
         "exact_and_normalized_dedup_passed": true,
         "contamination_scan_passed": true,
         "pii_and_secret_scan_passed": true,
-        "splits_frozen_before_training": true,
-        "capability_coverage_complete": true
+        "splits_frozen_before_training": false,
+        "capability_coverage_complete": true,
+        "rights_receipt": null,
+        "freeze_receipt": null
       }
     },
     {"family_id": "prometheus", "candidate_id": "prometheus-no-candidate"},

@@ -59,13 +59,16 @@ jobs:
           uv export --locked --all-extras --no-emit-project --no-hashes --format requirements-txt --output-file /tmp/olympus-locked-requirements.txt
           uv run --locked python -m pip_audit --strict -r /tmp/olympus-locked-requirements.txt
       - name: Build distributions
-        run: uv run --locked python -m build --no-isolation
+        run: uv run --locked python scripts/verify_reproducible_build.py --output dist
       - name: Validate distribution metadata
         run: uv run --locked python -m twine check dist/*
       - name: Verify bundled Foundry corpus
         run: |
           unzip -l dist/*.whl | grep 'olympus/foundry/foundry_verification.txt'
           unzip -l dist/*.whl | grep 'share/olympus/datasets/source.jsonl'
+          unzip -l dist/*.whl | grep 'share/olympus/configs/llm-readiness-capability-v1.json'
+          unzip -l dist/*.whl | grep 'share/olympus/configs/llm-readiness-safety-v1.json'
+          unzip -l dist/*.whl | grep 'share/olympus/configs/llm-readiness-production-v1.json'
           tar -tzf dist/*.tar.gz | grep 'scripts/validate_editclevr_payload.py'
           if tar -tzf dist/*.tar.gz | grep -q 'datasets/external/'; then
             echo 'external research data must not be bundled in the source distribution'
