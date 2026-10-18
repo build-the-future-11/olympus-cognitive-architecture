@@ -697,7 +697,8 @@ def run_sft(
                 exclude={"epochs"}
             ):
                 raise ValueError(
-                    "resume checkpoint configuration may change only the target epoch count"
+                    "resume checkpoint configuration does not match; configuration may change "
+                    "only the target epoch count"
                 )
             completed_epochs = _checkpoint_counter(resumed, "completed_epochs")
             optimizer_steps = _checkpoint_counter(resumed, "optimizer_steps")
@@ -710,6 +711,17 @@ def run_sft(
                     "checkpoint optimizer_steps is inconsistent with its epoch schedule"
                 )
             if config.epochs <= completed_epochs:
+                run_prefix = (
+                    f"sft-{config.mode}-{manifest.manifest_sha256[:12]}-s{config.seed}"
+                )
+                if config.loss_normalization == "supervised_token_mean_v2":
+                    run_prefix += "-tokens-v2"
+                if output_root.is_dir() and any(
+                    path.is_dir() for path in output_root.glob(f"{run_prefix}-attempt-*")
+                ):
+                    raise FileExistsError(
+                        "refusing to overwrite or republish a completed training output"
+                    )
                 raise ValueError("resume epochs must exceed the completed checkpoint epochs")
             base_sha = cast(str | None, resumed.get("base_checkpoint_sha256"))
             model = _model_from_payload(resumed, device)
