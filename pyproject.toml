@@ -32,6 +32,7 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
+  "cryptography>=50.0.2,<51",
   "fastapi>=0.139.0",
   "httpx>=0.28.1",
   "numpy>=2.5.1",
@@ -80,8 +81,11 @@ where = ["."]
   "configs/llm-readiness-capability-v1.json",
   "configs/llm-readiness-evidence-v1.schema.json",
   "configs/llm-readiness-production-v1.json",
+  "configs/llm-readiness-receipt-v1.schema.json",
   "configs/llm-readiness-report-v1.schema.json",
   "configs/llm-readiness-safety-v1.json",
+  "configs/llm-readiness-trust-v1.schema.json",
+  "configs/llm-readiness-trust-v1.json",
   "configs/llm-readiness-v1.json",
   "configs/olympus-reference-system.json",
 ]

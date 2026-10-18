@@ -17,9 +17,10 @@ def test_pyproject_declares_complete_release_metadata() -> None:
     assert project["license"] == "LicenseRef-Proprietary"
     assert project["license-files"] == ["LICENSE"]
     assert project["authors"] == [{"name": "Ryan"}]
-    assert len(project["dependencies"]) == 10
+    assert len(project["dependencies"]) == 11
     assert all(">=" in dependency for dependency in project["dependencies"])
     assert any(dependency.startswith("numpy>=") for dependency in project["dependencies"])
+    assert any(dependency.startswith("cryptography>=") for dependency in project["dependencies"])
     assert project["urls"]["Source"].endswith("/olympus-cognitive-architecture")
     assert (root / "LICENSE").is_file()
 

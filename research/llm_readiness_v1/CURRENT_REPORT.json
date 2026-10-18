@@ -1,8 +1,8 @@
 {
   "all_families_ready": false,
   "capability_policy_sha256": "7f40890da6bd27403e3b656e50089137d2522a1085a3e59bd650e74a170c7d9b",
-  "decision_code_sha256": "0df9061aa5b905820a4f653b223fe9abed30bb09e8c8b1bf1e48327c86b1e92d",
-  "evaluator_sha256": "8c5de8f94e31c98fc16cd1d5581d5279335426ba7a7244016b29b3c33cd982b6",
+  "decision_code_sha256": "17a0ec6dfd72170946efc64e9d8964487cbac409438525c34875bb1e4c5eddd7",
+  "evaluator_sha256": "ddf2b29651cedd87e18205d53bfb388a384fdd5e4ff4f1a8323273ee0434943b",
   "evidence_schema_sha256": "0126e1c18dfeb907495967c46268df56841e1c94e479e837c7be676e56c43d21",
   "evidence_sha256": "6462b5681dae492ce2f33ee1b2626335a42d563bb3640e2d4ce5bc9d2a77e463",
   "family_reports": [
@@ -525,9 +525,10 @@
   "production_policy_sha256": "3e538d3dc7faee67ed31a6790fe4408394b890497899aed0dd1a21ddbda9b550",
   "protocol_id": "olympus-six-family-readiness-v1",
   "ready_families": 0,
-  "report_schema_sha256": "59261f1a025380ec74ec786b6a7ecc8495b21d5b7842dff0783c2b39161f2956",
+  "report_schema_sha256": "53a56e753c3d97b5802f734d1ceebe057434232dafc4f9a112a79632843998d5",
   "safety_policy_sha256": "d3a1feae2fc0cf0617ac40ee5244700e9d40302ab6e81fd10b8a2ae851febec5",
   "schema_version": 1,
   "thresholds_sha256": "368073c460c05f24a874a4fcc115224b9b93bad1bdbae51e4642114c7d2dcf70",
-  "total_families": 6
+  "total_families": 6,
+  "trust_policy_sha256": "2a98b732d3b279cdb11ff4c645136b5ad983616c40cd66b778b88539cf1bd557"
 }

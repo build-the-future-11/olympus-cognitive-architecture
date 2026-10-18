@@ -25,7 +25,9 @@ from olympus.foundry.readiness import (
     audit_instruction_dataset,
     evaluate_portfolio_readiness,
     write_readiness_evidence_schema,
+    write_readiness_receipt_schema,
     write_readiness_report_schema,
+    write_readiness_trust_policy_schema,
 )
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.service import FoundryService
@@ -349,6 +351,16 @@ def _default_readiness_thresholds() -> Path:
 _DEFAULT_READINESS_THRESHOLDS = _default_readiness_thresholds()
 
 
+def _default_readiness_trust_policy() -> Path:
+    repository_config = Path(__file__).resolve().parents[1] / "configs/llm-readiness-trust-v1.json"
+    if repository_config.is_file():
+        return repository_config
+    return Path(sys.prefix) / "share/olympus/configs/llm-readiness-trust-v1.json"
+
+
+_DEFAULT_READINESS_TRUST_POLICY = _default_readiness_trust_policy()
+
+
 @demo_app.command("run-all")
 def run_all_demos() -> None:
     console.print_json(json.dumps(demos()))
@@ -616,6 +628,7 @@ def foundry_audit_dataset_readiness(
 def foundry_readiness_check(
     evidence: Path,
     thresholds: Path = _DEFAULT_READINESS_THRESHOLDS,
+    trust_policy: Path = _DEFAULT_READINESS_TRUST_POLICY,
     output: Path = Path("artifacts/readiness/portfolio-report.json"),
     require_ready: bool = typer.Option(
         False,
@@ -626,7 +639,10 @@ def foundry_readiness_check(
     """Evaluate all six families against immutable large-scale readiness evidence."""
 
     report = evaluate_portfolio_readiness(
-        evidence.resolve(), thresholds.resolve(), output.resolve()
+        evidence.resolve(),
+        thresholds.resolve(),
+        output.resolve(),
+        trust_policy.resolve(),
     )
     console.print_json(report.model_dump_json())
     if require_ready and not report.all_families_ready:
@@ -647,6 +663,22 @@ def foundry_readiness_report_schema(output: Path) -> None:
 
     write_readiness_report_schema(output.resolve())
     console.print(f"Wrote readiness report schema to {output.resolve()}")
+
+
+@foundry_app.command("readiness-receipt-schema")
+def foundry_readiness_receipt_schema(output: Path) -> None:
+    """Write the JSON Schema for cryptographically signed receipt envelopes."""
+
+    write_readiness_receipt_schema(output.resolve())
+    console.print(f"Wrote readiness receipt schema to {output.resolve()}")
+
+
+@foundry_app.command("readiness-trust-schema")
+def foundry_readiness_trust_schema(output: Path) -> None:
+    """Write the JSON Schema for receipt signer trust policies."""
+
+    write_readiness_trust_policy_schema(output.resolve())
+    console.print(f"Wrote readiness trust policy schema to {output.resolve()}")
 
 
 @foundry_app.command("load-smoke")

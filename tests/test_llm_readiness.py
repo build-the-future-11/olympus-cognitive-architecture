@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
 from pathlib import Path
 
 import pytest
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 import olympus.foundry.readiness as readiness_module
 from olympus.foundry.readiness import (
@@ -22,19 +25,86 @@ from olympus.foundry.readiness import (
     DatasetEvidence,
     EvidenceReceiptEnvelope,
     FamilyGateEvidence,
+    FamilyReadinessReport,
     PortfolioReadinessReport,
     ProductionEvidence,
     ReadinessEvidenceSet,
     ReadinessThresholds,
+    ReceiptAuthorizationKind,
     ReceiptKind,
+    ReceiptTrustPolicy,
     ReleaseDocumentHeader,
     ReproductionEvidence,
     SuiteEvaluation,
     TrainingRunEvidence,
-    evaluate_family_readiness,
+    TrustedReceiptSigner,
     evaluate_portfolio_readiness,
+    receipt_signature_payload,
 )
 from olympus.models.specifications import model_spec
+
+_ALL_RECEIPT_KINDS: list[ReceiptAuthorizationKind] = [
+    "training",
+    "control",
+    "capability",
+    "safety",
+    "production",
+    "reproduction",
+    "family_gate",
+    "rights_review",
+    "dataset_freeze",
+]
+
+
+def _private_key(producer: str) -> Ed25519PrivateKey:
+    return Ed25519PrivateKey.from_private_bytes(hashlib.sha256(producer.encode()).digest())
+
+
+def _trusted_signer(
+    producer: str,
+    allowed_kinds: list[ReceiptAuthorizationKind] | None = None,
+) -> TrustedReceiptSigner:
+    public_key = _private_key(producer).public_key().public_bytes(
+        encoding=serialization.Encoding.Raw,
+        format=serialization.PublicFormat.Raw,
+    )
+    return TrustedReceiptSigner(
+        producer=producer,
+        key_id=hashlib.sha256(public_key).hexdigest(),
+        public_key_base64=base64.b64encode(public_key).decode(),
+        allowed_kinds=allowed_kinds or _ALL_RECEIPT_KINDS,
+    )
+
+
+_TEST_TRUST_POLICY = ReceiptTrustPolicy(
+    signers=[
+        _trusted_signer("primary-lab"),
+        _trusted_signer("external-lab"),
+        _trusted_signer("data-governance"),
+    ]
+)
+
+
+def _sign_receipt(
+    receipt: EvidenceReceiptEnvelope | DatasetAttestationEnvelope,
+) -> EvidenceReceiptEnvelope | DatasetAttestationEnvelope:
+    signature = _private_key(receipt.producer).sign(receipt_signature_payload(receipt))
+    return receipt.model_copy(update={"signature_base64": base64.b64encode(signature).decode()})
+
+
+def _evaluate_family_readiness(
+    evidence: CandidateReadinessEvidence,
+    thresholds: ReadinessThresholds,
+    *,
+    evidence_root: Path,
+    trust_policy: ReceiptTrustPolicy = _TEST_TRUST_POLICY,
+) -> FamilyReadinessReport:
+    return readiness_module.evaluate_family_readiness(
+        evidence,
+        thresholds,
+        evidence_root=evidence_root,
+        trust_policy=trust_policy,
+    )
 
 
 def _artifact(tmp_path: Path, name: str, content: str | None = None) -> ArtifactIdentity:
@@ -54,7 +124,8 @@ def _receipt(
     claim_sha256: str,
     producer: str = "primary-lab",
 ) -> ArtifactIdentity:
-    payload = EvidenceReceiptEnvelope(
+    signer = _trusted_signer(producer)
+    receipt = EvidenceReceiptEnvelope(
         protocol_id=PROTOCOL_ID,
         kind=kind,
         candidate_id="hermes-test",
@@ -64,7 +135,10 @@ def _receipt(
         source_commit="c" * 40,
         evidence_id=evidence_id,
         claim_sha256=claim_sha256,
-    ).model_dump_json()
+        signer_key_id=signer.key_id,
+        signature_base64=base64.b64encode(bytes(64)).decode(),
+    )
+    payload = _sign_receipt(receipt).model_dump_json()
     return _artifact(tmp_path, name, payload)
 
 
@@ -128,14 +202,18 @@ def _dataset_attestation(
     name: str,
     kind: DatasetAttestationKind,
 ) -> ArtifactIdentity:
-    payload = DatasetAttestationEnvelope(
+    signer = _trusted_signer("data-governance")
+    attestation = DatasetAttestationEnvelope(
         protocol_id=PROTOCOL_ID,
         kind=kind,
         dataset_manifest_sha256="d" * 64,
         producer="data-governance",
         source_commit="c" * 40,
         approved=True,
-    ).model_dump_json()
+        signer_key_id=signer.key_id,
+        signature_base64=base64.b64encode(bytes(64)).decode(),
+    )
+    payload = _sign_receipt(attestation).model_dump_json()
     return _artifact(tmp_path, name, payload)
 
 
@@ -344,7 +422,7 @@ def test_complete_hash_bound_evidence_passes(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setattr(readiness_module, "_dataset_receipt_valid", lambda *_: True)
-    report = evaluate_family_readiness(
+    report = _evaluate_family_readiness(
         _passing_candidate(tmp_path), ReadinessThresholds(), evidence_root=tmp_path
     )
     assert report.ready_for_large_scale
@@ -356,7 +434,7 @@ def test_tamper_and_weak_effect_fail_closed(tmp_path: Path) -> None:
     candidate = _passing_candidate(tmp_path)
     (tmp_path / "training-1.json").write_text("tampered", encoding="utf-8")
     candidate.controls[0].confidence_interval_low = 0.019
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert not report.ready_for_large_scale
     assert "three_seed_training" in report.blockers
     assert "strong_controls" in report.blockers
@@ -374,14 +452,95 @@ def test_hash_valid_receipt_with_wrong_semantics_fails_closed(tmp_path: Path) ->
         evidence_id=candidate.controls[0].control,
         claim_sha256=readiness_module._canonical_claim_sha256(candidate.controls[0]),
     )
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    assert "strong_controls" in report.blockers
+
+
+def test_forged_signature_fails_even_when_artifact_hash_matches(tmp_path: Path) -> None:
+    candidate = _passing_candidate(tmp_path)
+    receipt_path = tmp_path / candidate.controls[0].receipt.path
+    payload = json.loads(receipt_path.read_text(encoding="utf-8"))
+    signature = bytearray(base64.b64decode(payload["signature_base64"]))
+    signature[0] ^= 1
+    payload["signature_base64"] = base64.b64encode(signature).decode()
+    candidate.controls[0].receipt = _artifact(
+        tmp_path,
+        "forged-control.json",
+        json.dumps(payload, sort_keys=True),
+    )
+    report = _evaluate_family_readiness(
+        candidate, ReadinessThresholds(), evidence_root=tmp_path
+    )
+    assert "strong_controls" in report.blockers
+
+
+def test_signer_must_be_authorized_for_receipt_kind(tmp_path: Path) -> None:
+    candidate = _passing_candidate(tmp_path)
+    restricted_policy = ReceiptTrustPolicy(
+        signers=[
+            _trusted_signer("primary-lab", ["training"]),
+            _trusted_signer("external-lab"),
+            _trusted_signer("data-governance"),
+        ]
+    )
+    report = _evaluate_family_readiness(
+        candidate,
+        ReadinessThresholds(),
+        evidence_root=tmp_path,
+        trust_policy=restricted_policy,
+    )
+    assert "strong_controls" in report.blockers
+    assert "capability_evaluation" in report.blockers
+
+
+def test_trust_policy_rejects_key_reuse_across_producers() -> None:
+    signer = _trusted_signer("primary-lab")
+    reused = signer.model_copy(update={"producer": "impostor-lab"})
+    with pytest.raises(ValueError, match="cannot represent multiple producer"):
+        ReceiptTrustPolicy(signers=[signer, reused])
+
+
+@pytest.mark.parametrize(
+    ("update", "message"),
+    [
+        ({"public_key_base64": "not-base64"}, "canonical base64"),
+        (
+            {"public_key_base64": base64.b64encode(bytes(31)).decode()},
+            "32-byte Ed25519",
+        ),
+        ({"key_id": "0" * 64}, "public-key SHA-256"),
+        ({"allowed_kinds": ["training", "training"]}, "must be unique"),
+    ],
+)
+def test_trust_policy_rejects_malformed_signer_material(
+    update: dict[str, object], message: str
+) -> None:
+    payload = _trusted_signer("primary-lab").model_dump()
+    payload.update(update)
+    with pytest.raises(ValueError, match=message):
+        TrustedReceiptSigner.model_validate(payload)
+
+
+def test_signed_receipt_cannot_change_producer_identity(tmp_path: Path) -> None:
+    candidate = _passing_candidate(tmp_path)
+    receipt_path = tmp_path / candidate.controls[0].receipt.path
+    payload = json.loads(receipt_path.read_text(encoding="utf-8"))
+    payload["producer"] = "external-lab"
+    candidate.controls[0].receipt = _artifact(
+        tmp_path,
+        "producer-substitution.json",
+        json.dumps(payload, sort_keys=True),
+    )
+    report = _evaluate_family_readiness(
+        candidate, ReadinessThresholds(), evidence_root=tmp_path
+    )
     assert "strong_controls" in report.blockers
 
 
 def test_hash_valid_malformed_receipt_fails_closed(tmp_path: Path) -> None:
     candidate = _passing_candidate(tmp_path)
     candidate.controls[0].receipt = _artifact(tmp_path, "malformed-receipt.json", "{bad-json")
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert "strong_controls" in report.blockers
 
 
@@ -389,7 +548,7 @@ def test_receipt_binds_exact_claim_and_cannot_be_reused(tmp_path: Path) -> None:
     candidate = _passing_candidate(tmp_path)
     candidate.controls[0].effect = 0.045
     candidate.controls[1].receipt = candidate.controls[0].receipt
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert "strong_controls" in report.blockers
 
 
@@ -400,7 +559,7 @@ def test_dataset_quality_requires_rights_and_freeze_attestations(
     candidate = _passing_candidate(tmp_path)
     assert candidate.dataset is not None
     candidate.dataset.freeze_receipt = None
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert "data_receipt_integrity" not in report.blockers
     assert "data_quality" in report.blockers
 
@@ -440,7 +599,7 @@ def test_frozen_suite_and_production_workload_details_are_enforced(tmp_path: Pat
         evidence=candidate.production,
         evidence_id="production",
     )
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert "strong_controls" in report.blockers
     assert "capability_evaluation" in report.blockers
     assert "safety_evaluation" in report.blockers
@@ -464,7 +623,7 @@ def test_report_rejects_inconsistent_ready_count(tmp_path: Path) -> None:
 def test_hash_valid_receipt_from_wrong_source_fails_closed(tmp_path: Path) -> None:
     candidate = _passing_candidate(tmp_path)
     candidate.source_commit = "f" * 40
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert "three_seed_training" in report.blockers
     assert "strong_controls" in report.blockers
     assert "independent_reproduction" in report.blockers
@@ -484,6 +643,8 @@ def test_empty_portfolio_reports_every_family_and_gate(tmp_path: Path) -> None:
     assert not report.all_families_ready
     assert all(len(item.gates) == 11 for item in report.family_reports)
     assert json.loads(output_path.read_text())["all_families_ready"] is False
+    trust_path = Path(__file__).parents[1] / "configs/llm-readiness-trust-v1.json"
+    assert report.trust_policy_sha256 == hashlib.sha256(trust_path.read_bytes()).hexdigest()
 
 
 def test_evidence_rejects_duplicate_candidate_ids(tmp_path: Path) -> None:
@@ -502,7 +663,7 @@ def test_duplicate_suite_and_checkpoint_mismatch_fail_closed(tmp_path: Path) -> 
     candidate = _passing_candidate(tmp_path)
     candidate.capabilities.append(candidate.capabilities[0].model_copy())
     candidate.controls[0].checkpoint_sha256 = "f" * 64
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert "capability_evaluation" in report.blockers
     assert "strong_controls" in report.blockers
 
@@ -526,7 +687,7 @@ def test_duplicate_seed_and_undeclared_suite_fail_closed(tmp_path: Path) -> None
             deep=True,
         )
     )
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert "three_seed_training" in report.blockers
     assert "capability_evaluation" in report.blockers
 
@@ -534,7 +695,7 @@ def test_duplicate_seed_and_undeclared_suite_fail_closed(tmp_path: Path) -> None
 def test_documents_must_name_candidate_and_checkpoint(tmp_path: Path) -> None:
     candidate = _passing_candidate(tmp_path)
     candidate.documents["model_card"] = _artifact(tmp_path, "unbound-card.md", "generic card")
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert "release_documentation" in report.blockers
 
 
@@ -543,7 +704,7 @@ def test_documents_require_exact_set_and_structured_binding(tmp_path: Path) -> N
     checkpoint = candidate.candidate_checkpoint_sha256
     assert checkpoint is not None
     candidate.documents["extra"] = _document(tmp_path, "extra", checkpoint)
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert "release_documentation" in report.blockers
 
     candidate = _passing_candidate(tmp_path)
@@ -560,7 +721,7 @@ def test_documents_require_exact_set_and_structured_binding(tmp_path: Path) -> N
         "empty-model-card.md",
         f"{DOCUMENT_HEADER_PREFIX} {header} {DOCUMENT_HEADER_SUFFIX}\n# Model card\n",
     )
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert "release_documentation" in report.blockers
 
     candidate = _passing_candidate(tmp_path)
@@ -569,7 +730,7 @@ def test_documents_require_exact_set_and_structured_binding(tmp_path: Path) -> N
         "malformed-header-card.md",
         f"{DOCUMENT_HEADER_PREFIX} {{bad-json {DOCUMENT_HEADER_SUFFIX}\n# Model card\n",
     )
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert "release_documentation" in report.blockers
 
     candidate = _passing_candidate(tmp_path)
@@ -586,7 +747,7 @@ def test_documents_require_exact_set_and_structured_binding(tmp_path: Path) -> N
         "wrong-candidate-card.md",
         f"{DOCUMENT_HEADER_PREFIX} {header} {DOCUMENT_HEADER_SUFFIX}\n# Model card\n",
     )
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert "release_documentation" in report.blockers
 
 
@@ -599,7 +760,7 @@ def test_artifact_cannot_escape_evidence_root(tmp_path: Path) -> None:
     candidate.training_runs[0].receipt = ArtifactIdentity(
         path="../outside.json", sha256=hashlib.sha256(b"outside").hexdigest()
     )
-    report = evaluate_family_readiness(
+    report = _evaluate_family_readiness(
         candidate, ReadinessThresholds(), evidence_root=evidence_root
     )
     assert "three_seed_training" in report.blockers
@@ -617,7 +778,7 @@ def test_artifact_parent_symlink_is_rejected(tmp_path: Path) -> None:
         path="linked/control.json",
         sha256=hashlib.sha256(copied.read_bytes()).hexdigest(),
     )
-    report = evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
+    report = _evaluate_family_readiness(candidate, ReadinessThresholds(), evidence_root=tmp_path)
     assert "strong_controls" in report.blockers
 
 

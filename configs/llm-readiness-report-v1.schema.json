@@ -162,6 +162,11 @@
       "const": 6,
       "title": "Total Families",
       "type": "integer"
+    },
+    "trust_policy_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Trust Policy Sha256",
+      "type": "string"
     }
   },
   "required": [
@@ -172,6 +177,7 @@
     "capability_policy_sha256",
     "safety_policy_sha256",
     "production_policy_sha256",
+    "trust_policy_sha256",
     "evaluator_sha256",
     "decision_code_sha256",
     "family_reports",

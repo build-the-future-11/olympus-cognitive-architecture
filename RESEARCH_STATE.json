@@ -93,19 +93,22 @@
   "history_policy": "Append revisions and failures with source identities. Preserve dated predecessor ledgers and frozen outcomes. Prior history is referenced without claiming to reconstruct missing events.",
   "large_scale_readiness_v1": {
     "status": "0_OF_6_FAMILIES_READY",
-    "integrity_revision": "LOCAL_ADVERSARIAL_HARDENING_COMPLETE_HOSTED_VERIFICATION_PENDING",
+    "integrity_revision": "LOCAL_SIGNED_RECEIPT_HARDENING_COMPLETE_HOSTED_VERIFICATION_PENDING",
     "protocol": "research/llm_readiness_v1/PROTOCOL.md",
     "current_report": "research/llm_readiness_v1/CURRENT_REPORT.json",
     "thresholds": "configs/llm-readiness-v1.json",
     "evidence_schema": "configs/llm-readiness-evidence-v1.schema.json",
+    "receipt_schema": "configs/llm-readiness-receipt-v1.schema.json",
     "report_schema": "configs/llm-readiness-report-v1.schema.json",
     "capability_policy": "configs/llm-readiness-capability-v1.json",
     "safety_policy": "configs/llm-readiness-safety-v1.json",
     "production_policy": "configs/llm-readiness-production-v1.json",
-    "receipt_binding": "Every stage receipt must be a hash-verified JSON envelope matching the expected evidence kind, candidate, checkpoint, dataset, producer where applicable, and source commit.",
-    "report_binding": "Every generated report records the protocol ID and SHA-256 identities of the thresholds, evidence, evidence schema, exact evaluator source, and combined evaluator/dataset-verifier/family-specification decision code.",
+    "trust_policy": "configs/llm-readiness-trust-v1.json",
+    "trust_policy_schema": "configs/llm-readiness-trust-v1.schema.json",
+    "receipt_binding": "Every stage receipt and dataset attestation must be a hash-verified, Ed25519-signed JSON envelope matching the expected evidence kind, candidate, checkpoint, dataset, producer where applicable, source commit, claim digest, signer key, and trust-policy authorization.",
+    "report_binding": "Every generated report records the protocol ID and SHA-256 identities of the thresholds, evidence, evidence schema, report schema, frozen suite policies, exact signer trust policy, exact evaluator source, and combined evaluator/dataset-verifier/family-specification decision code.",
     "automation_gate": "olympus foundry readiness-check --require-ready writes the report and exits 1 unless all six canonical families pass.",
-    "baseline_verifier": "scripts/verify_readiness_baseline.py independently checks both schemas, validates and exactly regenerates the checked-in report, and requires the documented 0/6 disposition.",
+    "baseline_verifier": "scripts/verify_readiness_baseline.py independently checks the evidence, receipt, report, and trust-policy schemas; validates and exactly regenerates the checked-in report; and requires the documented 0/6 disposition.",
     "hermes_data_audit": "research/llm_readiness_v1/HERMES_SMOKE_DATA_AUDIT.json",
     "load_smoke": "research/llm_readiness_v1/LOAD_SMOKE.json",
     "claim_boundary": "The Hermes smoke corpus has a verified manifest and bounded structural hygiene checks, but its data-quality readiness gate fails because no hash-bound rights-review or pre-training freeze attestations exist; it also has only 12 training and 12 protected records. The health-endpoint load run is an engineering smoke. Neither is model capability, safety, production, or promotion evidence."
@@ -234,6 +237,19 @@
       "kind": "large_scale_readiness_adversarial_hardening",
       "event": "Closed receipt-reuse and mutable-claim promotion paths by binding every stage receipt to the canonical digest and identity of its exact seed, control, suite, production, reproduction, or family-gate claim. Froze capability, safety, and production policy files as evaluator inputs; enforced suite metrics, example and case counts, case groups, control statistics, full production workload details, aggregate report consistency, substantive release-document sections, exact single-read input hashing, and rejection of symlinked parent paths. Dataset rights approval and pre-training freeze now require separate hash-bound attestations, correcting the Hermes smoke data-quality gate from pass to fail while preserving its manifest-integrity pass. No protected evidence was opened and no model was promoted.",
       "local_verification": "The complete local Python suite passed 568 tests with 2 expected skips and 85.02 percent branch coverage. Full Ruff passed; strict MyPy passed on 155 source files; the readiness baseline verifier passed. The web suite passed 6 tests, production assets built, and offline npm audit found zero vulnerabilities. A new two-build release check first falsified source-archive reproducibility while the wheel was reproducible; canonical tar metadata and gzip epoch normalization repaired the defect, after which both wheel and source archive were byte-identical and passed Twine validation. Hosted exact-source release verification remains pending.",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-18",
+      "kind": "large_scale_readiness_signed_receipts",
+      "event": "Required every readiness receipt and dataset attestation to carry an Ed25519 signature over a domain-separated canonical envelope. Added an explicit producer/key/receipt-kind trust policy, rejected cross-producer key reuse and unauthorized kinds, bound the exact trust-policy hash into every report, published receipt and trust-policy schemas with CLI exporters, and packaged all trust assets. The default trust policy contains no signers and therefore fails closed. The readiness disposition remains 0/6; no protected evaluation, scientific training, promotion, paid compute, or predecessor outcome changed.",
+      "local_verification": "The complete Python suite passed 576 tests with 2 expected skips and 85.06 percent branch coverage. Full Ruff and MyPy passed on 155 source files; the exact 0/6 baseline verifier, fail-closed --require-ready exit, Foundry lifecycle integrity check, web 6-test suite, production web build, offline npm audit, and offline lock consistency check passed. Two package builds were byte-identical; wheel SHA-256 00c39c8fe56adae120ab76d88e441736934db44584a734d1ea42623cc2babb5c and source archive SHA-256 c4251bff0f9025381c4ae24b3a5808a8662f8e16e03e0146b60959e641d5af0d passed Twine and contained the new trust assets. Hosted exact-source verification remains pending.",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-18",
+      "kind": "local_verification_resource_rejection",
+      "event": "A later full-suite repeat after an optional Base64 textual-normalization edit was rejected by the existing resource governor because swap utilization reached 94 percent, above the frozen 90 percent ceiling. The optional edit was reverted, restoring the exact source that had already passed the 576-test full gate and reproducible build. The failed repeat and its resource cause are retained; no safety ceiling was weakened and no scientific outcome changed.",
       "scientific_outcomes_created": false
     }
   ],

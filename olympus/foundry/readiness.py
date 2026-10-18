@@ -7,6 +7,8 @@ capability or production claim.
 
 from __future__ import annotations
 
+import base64
+import binascii
 import hashlib
 import json
 import os
@@ -18,7 +20,9 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Literal
 
-from pydantic import Field, field_validator, model_validator
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+from pydantic import Field, TypeAdapter, field_validator, model_validator
 
 from olympus.core.schemas import StrictModel
 from olympus.foundry.data_pipeline import ALLOWED_LICENSES, verify_dataset_manifest
@@ -74,6 +78,7 @@ POLICY_FILENAMES = {
     "safety": "llm-readiness-safety-v1.json",
     "production": "llm-readiness-production-v1.json",
 }
+TRUST_POLICY_FILENAME = "llm-readiness-trust-v1.json"
 PROTOCOL_ID: Literal["olympus-six-family-readiness-v1"] = "olympus-six-family-readiness-v1"
 ReceiptKind = Literal[
     "training",
@@ -85,6 +90,17 @@ ReceiptKind = Literal[
     "family_gate",
 ]
 DatasetAttestationKind = Literal["rights_review", "dataset_freeze"]
+ReceiptAuthorizationKind = Literal[
+    "training",
+    "control",
+    "capability",
+    "safety",
+    "production",
+    "reproduction",
+    "family_gate",
+    "rights_review",
+    "dataset_freeze",
+]
 DOCUMENT_HEADER_PREFIX = "<!-- olympus-readiness:"
 DOCUMENT_HEADER_SUFFIX = "-->"
 MAXIMUM_CATEGORY_REGRESSION = 0.02
@@ -214,6 +230,50 @@ class ArtifactIdentity(StrictModel):
     sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
 
+class TrustedReceiptSigner(StrictModel):
+    producer: str = Field(min_length=1)
+    key_id: str = Field(pattern=r"^[0-9a-f]{64}$")
+    public_key_base64: str = Field(min_length=1)
+    allowed_kinds: list[ReceiptAuthorizationKind] = Field(min_length=1)
+
+    @field_validator("producer")
+    @classmethod
+    def reject_ambiguous_producer(cls, value: str) -> str:
+        if value != value.strip() or unicodedata.normalize("NFKC", value) != value:
+            raise ValueError("trusted signer producer must be stripped NFKC text")
+        return value
+
+    @model_validator(mode="after")
+    def validate_key_and_authorizations(self) -> TrustedReceiptSigner:
+        if len(self.allowed_kinds) != len(set(self.allowed_kinds)):
+            raise ValueError("trusted signer receipt kinds must be unique")
+        try:
+            public_key = base64.b64decode(self.public_key_base64, validate=True)
+        except (ValueError, binascii.Error) as error:
+            raise ValueError("trusted signer public key must be canonical base64") from error
+        if len(public_key) != 32:
+            raise ValueError("trusted signer public key must be 32-byte Ed25519 material")
+        if hashlib.sha256(public_key).hexdigest() != self.key_id:
+            raise ValueError("trusted signer key ID must equal the public-key SHA-256")
+        return self
+
+
+class ReceiptTrustPolicy(StrictModel):
+    schema_version: Literal[1] = 1
+    protocol_id: Literal["olympus-six-family-readiness-v1"] = PROTOCOL_ID
+    signers: list[TrustedReceiptSigner] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def reject_ambiguous_or_reused_signers(self) -> ReceiptTrustPolicy:
+        identities = [(_normalized_identity(item.producer), item.key_id) for item in self.signers]
+        if len(identities) != len(set(identities)):
+            raise ValueError("trust policy contains duplicate signer identities")
+        key_ids = [item.key_id for item in self.signers]
+        if len(key_ids) != len(set(key_ids)):
+            raise ValueError("one signing key cannot represent multiple producer identities")
+        return self
+
+
 class EvidenceReceiptEnvelope(StrictModel):
     schema_version: Literal[1] = 1
     protocol_id: Literal["olympus-six-family-readiness-v1"]
@@ -225,12 +285,25 @@ class EvidenceReceiptEnvelope(StrictModel):
     source_commit: str = Field(pattern=r"^[0-9a-f]{40}$")
     evidence_id: str = Field(min_length=1, max_length=200)
     claim_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    signer_key_id: str = Field(pattern=r"^[0-9a-f]{64}$")
+    signature_base64: str = Field(min_length=1)
 
     @field_validator("candidate_id", "producer", "evidence_id")
     @classmethod
     def reject_ambiguous_identity(cls, value: str) -> str:
         if value != value.strip() or unicodedata.normalize("NFKC", value) != value:
             raise ValueError("receipt identities must be stripped NFKC text")
+        return value
+
+    @field_validator("signature_base64")
+    @classmethod
+    def require_ed25519_signature(cls, value: str) -> str:
+        try:
+            signature = base64.b64decode(value, validate=True)
+        except (ValueError, binascii.Error) as error:
+            raise ValueError("receipt signature must be canonical base64") from error
+        if len(signature) != 64:
+            raise ValueError("receipt signature must be 64-byte Ed25519 material")
         return value
 
 
@@ -251,6 +324,8 @@ class DatasetAttestationEnvelope(StrictModel):
     producer: str = Field(min_length=1)
     source_commit: str = Field(pattern=r"^[0-9a-f]{40}$")
     approved: bool
+    signer_key_id: str = Field(pattern=r"^[0-9a-f]{64}$")
+    signature_base64: str = Field(min_length=1)
 
     @field_validator("producer")
     @classmethod
@@ -258,6 +333,31 @@ class DatasetAttestationEnvelope(StrictModel):
         if value != value.strip() or unicodedata.normalize("NFKC", value) != value:
             raise ValueError("dataset attestation producer must be stripped NFKC text")
         return value
+
+    @field_validator("signature_base64")
+    @classmethod
+    def require_ed25519_signature(cls, value: str) -> str:
+        try:
+            signature = base64.b64decode(value, validate=True)
+        except (ValueError, binascii.Error) as error:
+            raise ValueError("attestation signature must be canonical base64") from error
+        if len(signature) != 64:
+            raise ValueError("attestation signature must be 64-byte Ed25519 material")
+        return value
+
+
+SignedReceiptEnvelope = EvidenceReceiptEnvelope | DatasetAttestationEnvelope
+
+
+def receipt_signature_payload(receipt: SignedReceiptEnvelope) -> bytes:
+    """Return the domain-separated canonical bytes covered by an evidence signature."""
+
+    canonical = json.dumps(
+        receipt.model_dump(mode="json", exclude={"signature_base64"}),
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode()
+    return b"olympus-readiness-receipt-v1\0" + canonical
 
 
 class DatasetEvidence(StrictModel):
@@ -460,6 +560,7 @@ class PortfolioReadinessReport(StrictModel):
     capability_policy_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     safety_policy_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     production_policy_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    trust_policy_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     evaluator_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     decision_code_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     family_reports: list[FamilyReadinessReport] = Field(min_length=6, max_length=6)
@@ -498,6 +599,31 @@ def readiness_evidence_schema_bytes() -> bytes:
 
 def write_readiness_evidence_schema(output_path: Path) -> None:
     _atomic_json(output_path, ReadinessEvidenceSet.model_json_schema())
+
+
+def readiness_receipt_schema_bytes() -> bytes:
+    """Return the canonical JSON Schema for signed external receipt envelopes."""
+
+    return (
+        json.dumps(TypeAdapter(SignedReceiptEnvelope).json_schema(), indent=2, sort_keys=True)
+        + "\n"
+    ).encode()
+
+
+def write_readiness_receipt_schema(output_path: Path) -> None:
+    _atomic_json(output_path, TypeAdapter(SignedReceiptEnvelope).json_schema())
+
+
+def readiness_trust_policy_schema_bytes() -> bytes:
+    """Return the canonical JSON Schema for receipt signer authorization policies."""
+
+    return (
+        json.dumps(ReceiptTrustPolicy.model_json_schema(), indent=2, sort_keys=True) + "\n"
+    ).encode()
+
+
+def write_readiness_trust_policy_schema(output_path: Path) -> None:
+    _atomic_json(output_path, ReceiptTrustPolicy.model_json_schema())
 
 
 def readiness_report_schema_bytes() -> bytes:
@@ -681,6 +807,33 @@ def _identity_path(identity: ArtifactIdentity, root: Path) -> Path | None:
     return _contained_artifact_path(identity, root)
 
 
+def _signature_valid(
+    receipt: SignedReceiptEnvelope,
+    trust_policy: ReceiptTrustPolicy,
+    kind: ReceiptAuthorizationKind,
+) -> bool:
+    signer = next(
+        (
+            item
+            for item in trust_policy.signers
+            if item.key_id == receipt.signer_key_id
+            and _normalized_identity(item.producer) == _normalized_identity(receipt.producer)
+        ),
+        None,
+    )
+    if signer is None or kind not in signer.allowed_kinds:
+        return False
+    try:
+        public_key = base64.b64decode(signer.public_key_base64, validate=True)
+        signature = base64.b64decode(receipt.signature_base64, validate=True)
+        Ed25519PublicKey.from_public_bytes(public_key).verify(
+            signature, receipt_signature_payload(receipt)
+        )
+    except (ValueError, binascii.Error, InvalidSignature):
+        return False
+    return True
+
+
 def _receipt_valid(
     identity: ArtifactIdentity,
     root: Path,
@@ -692,6 +845,7 @@ def _receipt_valid(
     source_commit: str,
     evidence_id: str,
     claim_sha256: str,
+    trust_policy: ReceiptTrustPolicy,
     producer: str | None = None,
 ) -> bool:
     payload = _artifact_bytes(identity, root)
@@ -710,6 +864,7 @@ def _receipt_valid(
             receipt.source_commit == source_commit,
             receipt.evidence_id == evidence_id,
             receipt.claim_sha256 == claim_sha256,
+            _signature_valid(receipt, trust_policy, kind),
             producer is None
             or _normalized_identity(receipt.producer) == _normalized_identity(producer),
         )
@@ -722,6 +877,7 @@ def _dataset_attestation_valid(
     *,
     kind: DatasetAttestationKind,
     dataset_manifest_sha256: str,
+    trust_policy: ReceiptTrustPolicy,
 ) -> bool:
     payload = _artifact_bytes(identity, root)
     if payload is None:
@@ -735,6 +891,7 @@ def _dataset_attestation_valid(
             attestation.kind == kind,
             attestation.dataset_manifest_sha256 == dataset_manifest_sha256,
             attestation.approved,
+            _signature_valid(attestation, trust_policy, kind),
         )
     )
 
@@ -760,6 +917,7 @@ def _item_receipts_valid(
     kind: ReceiptKind,
     candidate_id: str,
     source_commit: str,
+    trust_policy: ReceiptTrustPolicy,
     producer: str | None = None,
 ) -> bool:
     return bool(items) and all(
@@ -773,6 +931,7 @@ def _item_receipts_valid(
             source_commit=source_commit,
             evidence_id=_item_evidence_id(item),
             claim_sha256=_canonical_claim_sha256(item),
+            trust_policy=trust_policy,
             producer=producer,
         )
         for item in items
@@ -903,11 +1062,14 @@ def evaluate_family_readiness(
     capability_policy: CapabilityPolicy | None = None,
     safety_policy: SafetyPolicy | None = None,
     production_policy: ProductionPolicy | None = None,
+    trust_policy: ReceiptTrustPolicy | None = None,
 ) -> FamilyReadinessReport:
     if capability_policy is None or safety_policy is None or production_policy is None:
         capability_policy, safety_policy, production_policy, _ = _load_policy_bundle(
             _default_policy_dir(), thresholds
         )
+    if trust_policy is None:
+        trust_policy = ReceiptTrustPolicy()
     dataset = evidence.dataset
     data_receipt_ok = _dataset_receipt_valid(dataset, evidence_root)
     data_quality_ok = (
@@ -927,12 +1089,14 @@ def evaluate_family_readiness(
                     evidence_root,
                     kind="rights_review",
                     dataset_manifest_sha256=dataset.dataset_manifest_sha256,
+                    trust_policy=trust_policy,
                 ),
                 _dataset_attestation_valid(
                     dataset.freeze_receipt,
                     evidence_root,
                     kind="dataset_freeze",
                     dataset_manifest_sha256=dataset.dataset_manifest_sha256,
+                    trust_policy=trust_policy,
                 ),
             )
         )
@@ -969,6 +1133,7 @@ def evaluate_family_readiness(
             kind="training",
             candidate_id=evidence.candidate_id,
             source_commit=evidence.source_commit,
+            trust_policy=trust_policy,
             producer=evidence.training_operator,
         )
         and all(
@@ -995,6 +1160,7 @@ def evaluate_family_readiness(
             kind="control",
             candidate_id=evidence.candidate_id,
             source_commit=evidence.source_commit or "",
+            trust_policy=trust_policy,
         )
         and _bound_to_candidate(
             evidence.controls, evidence.candidate_checkpoint_sha256, dataset_sha
@@ -1024,6 +1190,7 @@ def evaluate_family_readiness(
             kind="capability",
             candidate_id=evidence.candidate_id,
             source_commit=evidence.source_commit or "",
+            trust_policy=trust_policy,
         )
         and _bound_to_candidate(
             evidence.capabilities, evidence.candidate_checkpoint_sha256, dataset_sha
@@ -1050,6 +1217,7 @@ def evaluate_family_readiness(
             kind="safety",
             candidate_id=evidence.candidate_id,
             source_commit=evidence.source_commit or "",
+            trust_policy=trust_policy,
         )
         and _bound_to_candidate(evidence.safety, evidence.candidate_checkpoint_sha256, dataset_sha)
         and all(
@@ -1075,6 +1243,7 @@ def evaluate_family_readiness(
             source_commit=evidence.source_commit or "",
             evidence_id="production",
             claim_sha256=_canonical_claim_sha256(production),
+            trust_policy=trust_policy,
         )
         and production.checkpoint_sha256 == evidence.candidate_checkpoint_sha256
         and production.p95_latency_ms <= thresholds.maximum_p95_latency_ms
@@ -1116,6 +1285,7 @@ def evaluate_family_readiness(
             source_commit=evidence.source_commit or "",
             evidence_id="reproduction",
             claim_sha256=_canonical_claim_sha256(reproduction),
+            trust_policy=trust_policy,
             producer=reproduction.independent_operator,
         )
         and reproduction.metrics_reproduced_within_tolerance
@@ -1138,6 +1308,7 @@ def evaluate_family_readiness(
             kind="family_gate",
             candidate_id=evidence.candidate_id,
             source_commit=evidence.source_commit or "",
+            trust_policy=trust_policy,
         )
         and _bound_to_candidate(
             evidence.family_gate_results,
@@ -1258,14 +1429,26 @@ def evaluate_portfolio_readiness(
     evidence_path: Path,
     thresholds_path: Path,
     output_path: Path,
+    trust_policy_path: Path | None = None,
 ) -> PortfolioReadinessReport:
-    for path, label in ((evidence_path, "evidence"), (thresholds_path, "thresholds")):
+    if trust_policy_path is None:
+        trust_policy_path = _default_policy_dir() / TRUST_POLICY_FILENAME
+    for path, label in (
+        (evidence_path, "evidence"),
+        (thresholds_path, "thresholds"),
+        (trust_policy_path, "trust policy"),
+    ):
         if path.is_symlink() or not path.is_file():
             raise ValueError(f"{label} input must be a regular non-symlink file")
-    if output_path.resolve() in {evidence_path.resolve(), thresholds_path.resolve()}:
+    if output_path.resolve() in {
+        evidence_path.resolve(),
+        thresholds_path.resolve(),
+        trust_policy_path.resolve(),
+    }:
         raise ValueError("readiness output cannot overwrite an input")
     evidence_payload = evidence_path.read_bytes()
     thresholds_payload = thresholds_path.read_bytes()
+    trust_policy_payload = trust_policy_path.read_bytes()
     thresholds_sha = hashlib.sha256(thresholds_payload).hexdigest()
     if thresholds_sha != FROZEN_THRESHOLDS_SHA256:
         raise ValueError(
@@ -1273,6 +1456,7 @@ def evaluate_portfolio_readiness(
         )
     evidence = ReadinessEvidenceSet.model_validate_json(evidence_payload)
     thresholds = ReadinessThresholds.model_validate_json(thresholds_payload)
+    trust_policy = ReceiptTrustPolicy.model_validate_json(trust_policy_payload)
     capability_policy, safety_policy, production_policy, policy_hashes = _load_policy_bundle(
         thresholds_path.parent, thresholds
     )
@@ -1296,6 +1480,7 @@ def evaluate_portfolio_readiness(
                 capability_policy=capability_policy,
                 safety_policy=safety_policy,
                 production_policy=production_policy,
+                trust_policy=trust_policy,
             )
         )
     ready = sum(report.ready_for_large_scale for report in reports)
@@ -1307,6 +1492,7 @@ def evaluate_portfolio_readiness(
         capability_policy_sha256=policy_hashes["capability"],
         safety_policy_sha256=policy_hashes["safety"],
         production_policy_sha256=policy_hashes["production"],
+        trust_policy_sha256=hashlib.sha256(trust_policy_payload).hexdigest(),
         evaluator_sha256=_sha256(Path(__file__)),
         decision_code_sha256=_decision_code_sha256(),
         family_reports=reports,

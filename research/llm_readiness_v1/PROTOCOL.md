@@ -30,6 +30,18 @@ Rights approval and pre-training dataset freeze are separate hash-bound
 attestations tied to the exact manifest; manifest metadata or a boolean in the
 evidence bundle cannot establish either gate by itself.
 
+Every evidence receipt and dataset attestation must carry an Ed25519 signature
+over a domain-separated canonical serialization of the complete envelope. The
+signature covers the producer, receipt kind, source, dataset, checkpoint,
+evidence identity, and claim hash. The evaluator accepts a signature only when
+the supplied trust policy authorizes that exact public-key SHA-256 and producer
+identity for that receipt kind. A key cannot represent multiple producers.
+Unknown keys, producer/key mismatches, unauthorized receipt kinds, malformed
+signatures, and signed-envelope changes fail closed. The packaged trust policy
+at `configs/llm-readiness-trust-v1.json` intentionally contains no signers;
+operators must provide a reviewed policy explicitly before signed evidence can
+pass.
+
 Capability, safety, and production policies are frozen independently in
 `configs/llm-readiness-capability-v1.json`,
 `configs/llm-readiness-safety-v1.json`, and
@@ -46,7 +58,8 @@ Every report records the protocol ID plus SHA-256 identities for the frozen
 thresholds, submitted evidence, evidence schema, report schema, all three
 frozen suite/workload policies, exact evaluator source, and the complete
 decision-code bundle comprising the evaluator, dataset verifier, and canonical
-family specifications. Report models reject inconsistent ready counts,
+family specifications. The report also binds the exact trust-policy SHA-256 so
+the authorization root is part of the decision receipt. Report models reject inconsistent ready counts,
 blockers, family order, gate sets, or aggregate decisions.
 The evaluator always emits all eleven gates for all six canonical families. A
 family is ready only when every gate passes; the portfolio is ready only when

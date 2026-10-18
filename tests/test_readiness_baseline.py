@@ -8,7 +8,9 @@ from olympus.foundry.readiness import (
     blocker_counts,
     evaluate_portfolio_readiness,
     readiness_evidence_schema_bytes,
+    readiness_receipt_schema_bytes,
     readiness_report_schema_bytes,
+    readiness_trust_policy_schema_bytes,
 )
 
 ROOT = Path(__file__).parents[1]
@@ -20,6 +22,12 @@ def test_checked_in_readiness_schema_is_current() -> None:
 
     report_schema_path = ROOT / "configs/llm-readiness-report-v1.schema.json"
     assert report_schema_path.read_bytes() == readiness_report_schema_bytes()
+
+    receipt_schema_path = ROOT / "configs/llm-readiness-receipt-v1.schema.json"
+    assert receipt_schema_path.read_bytes() == readiness_receipt_schema_bytes()
+
+    trust_schema_path = ROOT / "configs/llm-readiness-trust-v1.schema.json"
+    assert trust_schema_path.read_bytes() == readiness_trust_policy_schema_bytes()
 
 
 def test_checked_in_readiness_report_is_reproducible(tmp_path: Path) -> None:

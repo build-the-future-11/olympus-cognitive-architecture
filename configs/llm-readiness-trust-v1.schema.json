@@ -1,0 +1,75 @@
+{
+  "$defs": {
+    "TrustedReceiptSigner": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_kinds": {
+          "items": {
+            "enum": [
+              "training",
+              "control",
+              "capability",
+              "safety",
+              "production",
+              "reproduction",
+              "family_gate",
+              "rights_review",
+              "dataset_freeze"
+            ],
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Allowed Kinds",
+          "type": "array"
+        },
+        "key_id": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Key Id",
+          "type": "string"
+        },
+        "producer": {
+          "minLength": 1,
+          "title": "Producer",
+          "type": "string"
+        },
+        "public_key_base64": {
+          "minLength": 1,
+          "title": "Public Key Base64",
+          "type": "string"
+        }
+      },
+      "required": [
+        "producer",
+        "key_id",
+        "public_key_base64",
+        "allowed_kinds"
+      ],
+      "title": "TrustedReceiptSigner",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "protocol_id": {
+      "const": "olympus-six-family-readiness-v1",
+      "default": "olympus-six-family-readiness-v1",
+      "title": "Protocol Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "signers": {
+      "items": {
+        "$ref": "#/$defs/TrustedReceiptSigner"
+      },
+      "title": "Signers",
+      "type": "array"
+    }
+  },
+  "title": "ReceiptTrustPolicy",
+  "type": "object"
+}

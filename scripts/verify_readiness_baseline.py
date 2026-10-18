@@ -9,10 +9,14 @@ from tempfile import TemporaryDirectory
 from olympus.foundry.readiness import (
     FROZEN_POLICY_SHA256,
     POLICY_FILENAMES,
+    TRUST_POLICY_FILENAME,
     PortfolioReadinessReport,
+    ReceiptTrustPolicy,
     evaluate_portfolio_readiness,
     readiness_evidence_schema_bytes,
+    readiness_receipt_schema_bytes,
     readiness_report_schema_bytes,
+    readiness_trust_policy_schema_bytes,
 )
 
 ROOT = Path(__file__).parents[1]
@@ -21,12 +25,19 @@ ROOT = Path(__file__).parents[1]
 def main() -> None:
     evidence_schema = ROOT / "configs/llm-readiness-evidence-v1.schema.json"
     report_schema = ROOT / "configs/llm-readiness-report-v1.schema.json"
+    receipt_schema = ROOT / "configs/llm-readiness-receipt-v1.schema.json"
+    trust_schema = ROOT / "configs/llm-readiness-trust-v1.schema.json"
     expected_report = ROOT / "research/llm_readiness_v1/CURRENT_REPORT.json"
+    trust_policy = ROOT / "configs" / TRUST_POLICY_FILENAME
 
     if evidence_schema.read_bytes() != readiness_evidence_schema_bytes():
         raise SystemExit("checked-in readiness evidence schema is stale")
     if report_schema.read_bytes() != readiness_report_schema_bytes():
         raise SystemExit("checked-in readiness report schema is stale")
+    if receipt_schema.read_bytes() != readiness_receipt_schema_bytes():
+        raise SystemExit("checked-in readiness receipt schema is stale")
+    if trust_schema.read_bytes() != readiness_trust_policy_schema_bytes():
+        raise SystemExit("checked-in readiness trust policy schema is stale")
     legacy_policy_names = {
         "capability": "CAPABILITY_SUITE.json",
         "safety": "SAFETY_SUITE.json",
@@ -39,6 +50,7 @@ def main() -> None:
         legacy = ROOT / "research/llm_readiness_v1" / legacy_policy_names[name]
         if legacy.read_bytes() != payload:
             raise SystemExit(f"research copy of {name} readiness policy has drifted")
+    ReceiptTrustPolicy.model_validate_json(trust_policy.read_bytes())
 
     PortfolioReadinessReport.model_validate_json(expected_report.read_bytes())
     with TemporaryDirectory(prefix="olympus-readiness-") as directory:
@@ -47,6 +59,7 @@ def main() -> None:
             ROOT / "research/llm_readiness_v1/CURRENT_EVIDENCE.json",
             ROOT / "configs/llm-readiness-v1.json",
             generated_report,
+            trust_policy,
         )
         if generated_report.read_bytes() != expected_report.read_bytes():
             raise SystemExit("checked-in readiness report is stale")

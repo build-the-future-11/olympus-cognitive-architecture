@@ -86,6 +86,9 @@ jobs:
           unzip -l dist/*.whl | grep 'share/olympus/configs/llm-readiness-capability-v1.json'
           unzip -l dist/*.whl | grep 'share/olympus/configs/llm-readiness-safety-v1.json'
           unzip -l dist/*.whl | grep 'share/olympus/configs/llm-readiness-production-v1.json'
+          unzip -l dist/*.whl | grep 'share/olympus/configs/llm-readiness-receipt-v1.schema.json'
+          unzip -l dist/*.whl | grep 'share/olympus/configs/llm-readiness-trust-v1.json'
+          unzip -l dist/*.whl | grep 'share/olympus/configs/llm-readiness-trust-v1.schema.json'
           tar -tzf dist/*.tar.gz | grep 'scripts/validate_editclevr_payload.py'
           if tar -tzf dist/*.tar.gz | grep -q 'datasets/external/'; then
             echo 'external research data must not be bundled in the source distribution'

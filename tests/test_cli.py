@@ -89,6 +89,8 @@ def test_readiness_check_can_enforce_unready_exit_status(tmp_path: Path) -> None
 def test_readiness_schema_commands_write_valid_schemas(tmp_path: Path) -> None:
     evidence_schema = tmp_path / "evidence.schema.json"
     report_schema = tmp_path / "report.schema.json"
+    receipt_schema = tmp_path / "receipt.schema.json"
+    trust_schema = tmp_path / "trust.schema.json"
 
     evidence_result = runner.invoke(
         app,
@@ -106,6 +108,22 @@ def test_readiness_schema_commands_write_valid_schemas(tmp_path: Path) -> None:
     assert report_result.exit_code == 0, report_result.output
     assert json.loads(report_schema.read_text(encoding="utf-8"))["title"] == (
         "PortfolioReadinessReport"
+    )
+
+    receipt_result = runner.invoke(
+        app,
+        ["foundry", "readiness-receipt-schema", str(receipt_schema)],
+    )
+    assert receipt_result.exit_code == 0, receipt_result.output
+    assert "anyOf" in json.loads(receipt_schema.read_text(encoding="utf-8"))
+
+    trust_result = runner.invoke(
+        app,
+        ["foundry", "readiness-trust-schema", str(trust_schema)],
+    )
+    assert trust_result.exit_code == 0, trust_result.output
+    assert json.loads(trust_schema.read_text(encoding="utf-8"))["title"] == (
+        "ReceiptTrustPolicy"
     )
 
 
