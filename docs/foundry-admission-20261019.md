@@ -92,6 +92,15 @@ to one, and limits the command sequence to 120 seconds with 30 seconds per child
 Deadline checks are polled; synchronous resource probes can delay termination,
 especially on macOS. The measured run here is Linux, and this is not a real-time
 scheduler guarantee.
+The first attempt stopped before launching any child because raw cgroup headroom
+was below the floor while most charged memory was file cache. Resource policy v2
+keeps the 2 GiB floor and records both raw usage and a conservative cache credit:
+`max(0, min(inactive_file, file) - shmem - mapped - dirty - writeback)`. Missing
+counters receive no credit. Every ancestor limit and host available memory still
+apply. This estimates usable headroom; it does not guarantee immediate reclamation.
+See [Docker's working-set convention](https://docs.docker.com/reference/cli/docker/container/stats/)
+and the [kernel counter definitions](https://docs.kernel.org/admin-guide/cgroup-v2.html).
+The failed v1 receipt and dependency-cache preparation records are retained.
 It accepts only the reviewed 674-byte built-in corpus, whose SHA-256 is
 `6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab`.
 

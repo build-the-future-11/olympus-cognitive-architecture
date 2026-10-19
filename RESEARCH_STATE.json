@@ -178,6 +178,10 @@
       "kind": "new_engineering_protocol",
       "event": "Opened an isolated main-based Foundry admission and checkpoint-snapshot study under the user Olympus megaprompt; preserve pending PR29 research and all dated outcomes. No scientific or paid run authorized by this revision.",
       "record": "foundry_admission_20261019"
+    },
+    {
+      "date": "2026-10-19",
+      "event": "Foundry admission repair published and locally tested; first lifecycle run stopped before children. Freeze resource-accounting v2 with the unchanged2GiBfloor and conservative inactive-cache estimate before retry. User added scientific audit/specification pipeline; protected studies remain closed."
     }
   ],
   "verification": {
@@ -291,7 +295,7 @@
   },
   "foundry_admission_20261019": {
     "id": "foundry-admission-and-checkpoint-snapshots-v1-20261019",
-    "status": "DEVELOPMENT_PROTOCOL_FROZEN",
+    "status": "IMPLEMENTED_LOCALLY_TESTED_WORKFLOW_PREFLIGHT_REVISION",
     "source_basis": {
       "branch": "main",
       "commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4"
@@ -337,6 +341,27 @@
     },
     "authorization": "User Olympus megaprompt authorizes bounded CPU engineering and a verification-family lifecycle, not Hermes promotion or deployment.",
     "historical_findings": "Retained verbatim in predecessor ledgers and state fields; no scientific reclassification.",
-    "evidence_root": "research/verification/foundry_admission_20261019"
+    "evidence_root": "research/verification/foundry_admission_20261019",
+    "implementation_commit": "2d901bc1d14e0bfc9f9bde85bef0ec287a8f4d02",
+    "verification": {
+      "python_passed": 351,
+      "python_failed": 0,
+      "python_skipped": 0,
+      "combined_statement_branch_coverage_percent": 87.99,
+      "web_passed": 7,
+      "web_build": "PASS",
+      "python_dependency_audit": "BLOCKED_EXACT_CPU_TORCH_VERSION_NOT_IN_PYPI",
+      "workflow_first_attempt": "STOPPED_AT_MEMORY_PREFLIGHT_NO_CHILD_LAUNCHED"
+    },
+    "resource_policy_v2": {
+      "reason": "Raw cgroup usage includes reclaimable cache; first workflow attempt stopped before training. Preserve failed receipt.",
+      "floor_bytes": 2147483648,
+      "cache_credit": "min(used, max(0, min(inactive_file,file)-shmem-file_mapped-file_dirty-file_writeback))",
+      "scope": "minimum estimated headroom over host and every cgroup ancestor; no active-cache or slab credit; absent or negative counters get zero credit",
+      "uncertainty": "Counter snapshots are non-atomic and reclamation may be delayed; this estimates usable headroom, not guaranteed instantaneous free RAM.",
+      "validation": "11 fresh resource-counter cases passed before the v2 retry",
+      "new_output": "artifacts/foundry-admission-run-20261019-v2",
+      "stopping_rule": "one v2 lifecycle attempt after preflight; preserve all failures; no metric-driven repeats"
+    }
   }
 }
