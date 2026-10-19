@@ -21,6 +21,14 @@ export type FoundryModel = {
   object: "model";
   owned_by: string;
   status: string;
+  available: boolean;
+  health: {
+    status: "ok" | "missing" | "corrupt";
+    model: string;
+    reason?: string;
+    checkpoint_id?: string;
+    sha256?: string;
+  };
   capabilities: string[];
   limitations: string[];
 };
@@ -162,6 +170,16 @@ export async function fetchFoundryModels(signal?: AbortSignal): Promise<FoundryM
         model.object !== "model" ||
         typeof model.owned_by !== "string" ||
         typeof model.status !== "string" ||
+        typeof model.available !== "boolean" ||
+        !isObject(model.health) ||
+        !["ok", "missing", "corrupt"].includes(String(model.health.status)) ||
+        model.health.model !== model.id ||
+        (model.health.reason !== undefined && typeof model.health.reason !== "string") ||
+        model.available !== (model.health.status === "ok" && model.status === "VERIFIED") ||
+        (model.available && (
+          typeof model.health.checkpoint_id !== "string" ||
+          typeof model.health.sha256 !== "string"
+        )) ||
         !isStringArray(model.capabilities) ||
         !isStringArray(model.limitations)
     )

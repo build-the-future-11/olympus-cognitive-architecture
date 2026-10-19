@@ -4,7 +4,6 @@ import hashlib
 import json
 import os
 import platform
-import shutil
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -12,6 +11,8 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any, Literal
 
+from olympus.foundry.admission import read_registered_dataset
+from olympus.foundry.artifacts import path_aliases, validate_output_paths
 from olympus.foundry.bigram import CharacterBigramModel, uniform_baseline_metrics
 from olympus.foundry.schemas import (
     ArtifactStatus,
@@ -36,12 +37,19 @@ def _sha256(payload: bytes) -> str:
 
 def _atomic_write(path: Path, payload: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", delete=False) as temporary:
-        temporary.write(payload)
-        temporary.flush()
-        os.fsync(temporary.fileno())
-        temporary_path = Path(temporary.name)
-    temporary_path.replace(path)
+    temporary_path: Path | None = None
+    try:
+        with NamedTemporaryFile(
+            dir=path.parent, prefix=f".{path.name}.", delete=False
+        ) as temporary:
+            temporary_path = Path(temporary.name)
+            temporary.write(payload)
+            temporary.flush()
+            os.fsync(temporary.fileno())
+        temporary_path.replace(path)
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
 
 
 class FoundryService:
@@ -122,10 +130,7 @@ class FoundryService:
             raise ValueError("text dataset must contain at least 64 characters")
         digest = _sha256(payload)
         materialized = self.root / "datasets" / dataset_id / f"{version}-{digest}.txt"
-        if materialized.exists() and _sha256(materialized.read_bytes()) != digest:
-            raise ValueError(f"materialized dataset hash mismatch: {materialized}")
-        if not materialized.exists():
-            _atomic_write(materialized, payload)
+        # Validate metadata and path components before writing any artifact.
         record = DatasetRecord(
             dataset_id=dataset_id,
             version=version,
@@ -142,6 +147,19 @@ class FoundryService:
             character_count=len(text),
             created_at=_utc_now(),
         )
+        if not materialized.resolve().is_relative_to(self.root / "datasets"):
+            raise ValueError("materialized dataset path escapes the Foundry dataset root")
+        existing = self.store.dataset(dataset_id, version)
+        if existing is not None:
+            if existing.model_dump(exclude={"created_at"}) != record.model_dump(
+                exclude={"created_at"}
+            ):
+                raise ValueError("registered dataset identity already has different metadata")
+            record = existing
+        if materialized.exists() and _sha256(materialized.read_bytes()) != digest:
+            raise ValueError(f"materialized dataset hash mismatch: {materialized}")
+        if not materialized.exists():
+            _atomic_write(materialized, payload)
         self.store.register_dataset(record)
         self._evidence(
             "dataset",
@@ -163,11 +181,13 @@ class FoundryService:
     ) -> FoundryPipelineResult:
         if not 0.5 <= train_fraction <= 0.95:
             raise ValueError("train_fraction must be between 0.5 and 0.95")
-        materialized = Path(dataset.materialized_path)
-        payload = materialized.read_bytes()
-        if _sha256(payload) != dataset.sha256:
-            raise ValueError("dataset content no longer matches the registry hash")
-        text = payload.decode("utf-8")
+        registered = self.store.dataset(dataset.dataset_id, dataset.version)
+        if registered is None or dataset.model_dump(exclude={"created_at"}) != (
+            registered.model_dump(exclude={"created_at"})
+        ):
+            raise ValueError("experiment input does not match the registered dataset")
+        dataset = registered
+        text = read_registered_dataset(dataset)
         split_index = max(2, min(len(text) - 2, int(len(text) * train_fraction)))
         training_text = text[:split_index]
         evaluation_text = text[split_index - 1 :]
@@ -196,9 +216,7 @@ class FoundryService:
             updated_at=timestamp.isoformat(),
         )
         self.store.register_experiment(experiment)
-        self._evidence(
-            "experiment", experiment_id, "started", experiment.model_dump(mode="json")
-        )
+        self._evidence("experiment", experiment_id, "started", experiment.model_dump(mode="json"))
         try:
             model = CharacterBigramModel.train(
                 training_text,
@@ -240,9 +258,7 @@ class FoundryService:
             )
 
             candidate = model.evaluate(evaluation_text)
-            baseline = uniform_baseline_metrics(
-                evaluation_text, len(model.checkpoint.alphabet)
-            )
+            baseline = uniform_baseline_metrics(evaluation_text, len(model.checkpoint.alphabet))
             passed = (
                 candidate.negative_log_likelihood < baseline.negative_log_likelihood
                 and candidate.perplexity < baseline.perplexity
@@ -390,28 +406,37 @@ class FoundryService:
     def list_models(self) -> list[ModelRecord]:
         return self.store.models()
 
-    def model_health(self, model_id: str) -> dict[str, object]:
-        model = self.store.model(model_id)
+    def _load_model(
+        self, model_id: str
+    ) -> tuple[ModelRecord, CheckpointRecord, bytes, CharacterBigramModel]:
+        try:
+            model = self.store.model(model_id)
+        except ValueError as error:
+            raise RuntimeError(str(error)) from error
         if model is None:
+            raise KeyError(f"unknown model: {model_id}")
+        try:
+            checkpoint, raw, runtime = self.store.load_admitted_checkpoint(model)
+        except (KeyError, TypeError, OSError, ValueError) as error:
+            raise RuntimeError(str(error)) from error
+        return model, checkpoint, raw, runtime
+
+    def model_health(self, model_id: str) -> dict[str, object]:
+        try:
+            _, checkpoint, _, _ = self._load_model(model_id)
+        except KeyError:
             return {"status": "missing", "model": model_id}
-        checkpoint = self.store.checkpoint(model.checkpoint_id)
-        if checkpoint is None:
-            return {"status": "corrupt", "model": model_id, "reason": "missing checkpoint"}
-        path = Path(checkpoint.path)
-        if not path.is_file():
-            return {"status": "corrupt", "model": model_id, "reason": "missing artifact"}
-        actual_sha = _sha256(path.read_bytes())
-        if actual_sha != checkpoint.sha256:
+        except (RuntimeError, ValueError) as error:
             return {
                 "status": "corrupt",
                 "model": model_id,
-                "reason": "checkpoint hash mismatch",
+                "reason": str(error),
             }
         return {
             "status": "ok",
             "model": model_id,
             "checkpoint_id": checkpoint.checkpoint_id,
-            "sha256": actual_sha,
+            "sha256": checkpoint.sha256,
         }
 
     def generate(
@@ -423,18 +448,7 @@ class FoundryService:
         temperature: float = 0.7,
         seed: int | None = None,
     ) -> GenerationResult:
-        model_record = self.store.model(model_id)
-        if model_record is None:
-            raise KeyError(f"unknown model: {model_id}")
-        checkpoint_record = self.store.checkpoint(model_record.checkpoint_id)
-        if checkpoint_record is None:
-            raise RuntimeError(f"missing checkpoint: {model_record.checkpoint_id}")
-        payload = Path(checkpoint_record.path).read_bytes()
-        if _sha256(payload) != checkpoint_record.sha256:
-            raise RuntimeError(f"checkpoint hash mismatch: {checkpoint_record.checkpoint_id}")
-        from olympus.foundry.bigram import BigramCheckpoint
-
-        model = CharacterBigramModel(BigramCheckpoint.from_bytes(payload))
+        model_record, checkpoint_record, _, model = self._load_model(model_id)
         content = model.generate(
             prompt,
             max_characters=max_characters,
@@ -467,17 +481,23 @@ class FoundryService:
         )
 
     def export_checkpoint(self, model_id: str, destination: Path) -> Path:
-        model = self.store.model(model_id)
-        if model is None:
-            raise KeyError(f"unknown model: {model_id}")
-        checkpoint = self.store.checkpoint(model.checkpoint_id)
-        if checkpoint is None:
-            raise RuntimeError(f"missing checkpoint: {model.checkpoint_id}")
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(checkpoint.path, destination)
-        if _sha256(destination.read_bytes()) != checkpoint.sha256:
-            destination.unlink(missing_ok=True)
-            raise RuntimeError("export verification failed")
+        _, checkpoint, raw, _ = self._load_model(model_id)
+        if destination.resolve() == Path(checkpoint.path).resolve():
+            return destination
+        if any(path.is_relative_to(self.root) for path in path_aliases(destination)):
+            raise ValueError(
+                "portable export destination must be outside the Foundry registry root"
+            )
+        validate_output_paths(
+            [destination],
+            [
+                self.store.path,
+                *(Path(record.path) for record in self.store.checkpoints()),
+                *(Path(record.materialized_path) for record in self.store.datasets()),
+            ],
+            require_fresh=False,
+        )
+        _atomic_write(destination, raw)
         return destination
 
     def status(self) -> dict[str, object]:

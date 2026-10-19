@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+import torch
 
 from olympus.foundry import eval_suite, quantization, sft
 from olympus.foundry.data_pipeline import (
@@ -137,11 +138,12 @@ def test_quantization_encodes_the_verified_test_snapshot(
     # Exercise actual quantized serialization but stop before any scoring.
     checkpoint: dict[str, Any] = {
         "training_config": config.model_dump(mode="json"),
+        "model_config": config.model.model_dump(mode="json"),
+        "model_state": model.state_dict(),
         "dataset_manifest_sha256": prepared.manifest.manifest_sha256,
     }
     checkpoint_path = tmp_path / "untrained-fixture.pt"
-    checkpoint_path.write_bytes(b"artificial-untrained-checkpoint")
-    monkeypatch.setattr(quantization, "_model_from_checkpoint", lambda *_: (model, checkpoint))
+    torch.save(checkpoint, checkpoint_path)
     reads = change_after_read(monkeypatch, prepared.split_paths["test"], mutation)
     observed: list[list[InstructionExample]] = []
 

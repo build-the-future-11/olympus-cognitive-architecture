@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import sqlite3
 import threading
 from collections.abc import Iterator
@@ -9,7 +10,15 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from olympus.core.schemas import StrictModel
 from olympus.core.sqlite_journal import apply_durable_journal_mode
+from olympus.foundry.admission import (
+    evaluation_passes,
+    load_registered_checkpoint,
+    read_registered_dataset,
+    validate_model_identity,
+)
+from olympus.foundry.bigram import CharacterBigramModel, uniform_baseline_metrics
 from olympus.foundry.schemas import (
     ArtifactStatus,
     CheckpointRecord,
@@ -164,11 +173,7 @@ class FoundryStore:
     @staticmethod
     def _json(
         record: (
-            DatasetRecord
-            | ExperimentRecord
-            | CheckpointRecord
-            | EvaluationRecord
-            | ModelRecord
+            DatasetRecord | ExperimentRecord | CheckpointRecord | EvaluationRecord | ModelRecord
         ),
     ) -> str:
         return record.model_dump_json()
@@ -203,6 +208,9 @@ class FoundryStore:
 
     def register_experiment(self, record: ExperimentRecord) -> None:
         with self.transaction() as connection:
+            dataset = self.dataset(record.dataset_id, record.dataset_version)
+            if dataset is None or dataset.sha256 != record.dataset_sha256:
+                raise ValueError("experiment does not reference the registered dataset hash")
             connection.execute(
                 """INSERT INTO experiments(
                     experiment_id, dataset_id, dataset_version, status, record_json
@@ -218,6 +226,12 @@ class FoundryStore:
 
     def update_experiment(self, record: ExperimentRecord) -> None:
         with self.transaction() as connection:
+            existing = self.experiment(record.experiment_id)
+            mutable = {"status", "failure_reason", "updated_at"}
+            if existing is None:
+                raise KeyError(f"unknown experiment: {record.experiment_id}")
+            if existing.model_dump(exclude=mutable) != record.model_dump(exclude=mutable):
+                raise ValueError("registered experiment identity and configuration are immutable")
             changed = connection.execute(
                 "UPDATE experiments SET status = ?, record_json = ? WHERE experiment_id = ?",
                 (record.status.value, self._json(record), record.experiment_id),
@@ -227,6 +241,8 @@ class FoundryStore:
 
     def register_checkpoint(self, record: CheckpointRecord) -> None:
         with self.transaction() as connection:
+            experiment, dataset = self._checkpoint_context(record)
+            load_registered_checkpoint(record, experiment, dataset)
             connection.execute(
                 """INSERT INTO checkpoints(
                     checkpoint_id, experiment_id, sha256, record_json
@@ -236,6 +252,12 @@ class FoundryStore:
 
     def register_evaluation(self, record: EvaluationRecord) -> None:
         with self.transaction() as connection:
+            checkpoint = self.checkpoint(record.checkpoint_id)
+            if checkpoint is None:
+                raise ValueError("evaluation references a missing checkpoint")
+            experiment, dataset = self._checkpoint_context(checkpoint)
+            _, model = load_registered_checkpoint(checkpoint, experiment, dataset)
+            evaluation_passes(record, checkpoint, experiment, model)
             connection.execute(
                 """INSERT INTO evaluations(evaluation_id, checkpoint_id, record_json)
                 VALUES (?, ?, ?)""",
@@ -246,11 +268,90 @@ class FoundryStore:
         if record.status is not ArtifactStatus.VERIFIED:
             raise ValueError("only verified checkpoints can be promoted to the model registry")
         with self.transaction() as connection:
+            self._load_admitted_checkpoint(record, verify_metrics=True)
             connection.execute(
                 """INSERT INTO models(model_id, checkpoint_id, status, record_json)
                 VALUES (?, ?, ?, ?)""",
                 (record.model_id, record.checkpoint_id, record.status.value, self._json(record)),
             )
+
+    def _checkpoint_context(
+        self, checkpoint: CheckpointRecord
+    ) -> tuple[ExperimentRecord, DatasetRecord]:
+        experiment = self.experiment(checkpoint.experiment_id)
+        if experiment is None:
+            raise ValueError("missing checkpoint experiment")
+        dataset = self.dataset(experiment.dataset_id, experiment.dataset_version)
+        if dataset is None:
+            raise ValueError("missing registered dataset")
+        return experiment, dataset
+
+    def _load_admitted_checkpoint(
+        self, record: ModelRecord, *, verify_metrics: bool = False
+    ) -> tuple[CheckpointRecord, bytes, CharacterBigramModel]:
+        checkpoint = self.checkpoint(record.checkpoint_id)
+        if checkpoint is None:
+            raise ValueError("missing checkpoint")
+        validate_model_identity(record, checkpoint)
+        experiment, dataset = self._checkpoint_context(checkpoint)
+        if experiment.status not in {
+            ArtifactStatus.CHECKPOINTED,
+            ArtifactStatus.EVALUATED,
+            ArtifactStatus.VERIFIED,
+        }:
+            raise ValueError("checkpoint experiment is not eligible for serving")
+        raw, model = load_registered_checkpoint(checkpoint, experiment, dataset)
+        rows = self._connection.execute(
+            "SELECT record_json FROM evaluations WHERE checkpoint_id = ?",
+            (record.checkpoint_id,),
+        ).fetchall()
+        passing: list[EvaluationRecord] = []
+        for row in rows:
+            evaluation = EvaluationRecord.model_validate_json(row["record_json"])
+            if evaluation_passes(evaluation, checkpoint, experiment, model):
+                passing.append(evaluation)
+        if not passing:
+            raise ValueError("checkpoint has no matching passing held-out evaluation")
+        if verify_metrics:
+            text = read_registered_dataset(dataset)
+            fraction = experiment.config.get("train_fraction")
+            if not isinstance(fraction, (int, float)) or not 0.5 <= fraction <= 0.95:
+                raise ValueError("invalid experiment split fraction")
+            split_index = max(2, min(len(text) - 2, int(len(text) * fraction)))
+            held_out = text[split_index - 1 :]
+            if model.checkpoint.training_characters != split_index or len(
+                held_out
+            ) != experiment.config.get("evaluation_characters"):
+                raise ValueError("experiment split counts do not match the registered dataset")
+            expected = CharacterBigramModel.train(
+                text[:split_index], smoothing=model.checkpoint.smoothing, seed=experiment.seed
+            ).checkpoint
+            if (
+                model.checkpoint.alphabet != expected.alphabet
+                or model.checkpoint.counts != expected.counts
+            ):
+                raise ValueError("checkpoint was not fitted to the registered training split")
+            observed = model.evaluate(held_out).as_dict()
+            baseline = uniform_baseline_metrics(held_out, len(expected.alphabet)).as_dict()
+            if not all(
+                observed[key] < baseline[key] for key in ("negative_log_likelihood", "perplexity")
+            ):
+                raise ValueError("checkpoint does not beat the frozen held-out baseline")
+            if not any(
+                all(
+                    math.isclose(observed[key], value, rel_tol=1e-12, abs_tol=1e-12)
+                    for key, value in evaluation.candidate_metrics.items()
+                )
+                for evaluation in passing
+            ):
+                raise ValueError("held-out evaluation metrics do not match the checkpoint")
+        return checkpoint, raw, model
+
+    def load_admitted_checkpoint(
+        self, record: ModelRecord
+    ) -> tuple[CheckpointRecord, bytes, CharacterBigramModel]:
+        with self._lock:
+            return self._load_admitted_checkpoint(record)
 
     def append_evidence(
         self,
@@ -293,11 +394,43 @@ class FoundryStore:
         if table not in allowed:
             raise ValueError(f"unsupported registry table: {table}")
         with self._lock:
-            rows = self._connection.execute(f"SELECT record_json FROM {table}").fetchall()
-        return [model.model_validate_json(row["record_json"]) for row in rows]
+            rows = self._connection.execute(f"SELECT * FROM {table}").fetchall()
+        records = [model.model_validate_json(row["record_json"]) for row in rows]
+        for row, record in zip(rows, records, strict=True):
+            self._validate_registry_columns(row, record)
+        return records
+
+    @staticmethod
+    def _validate_registry_columns(row: sqlite3.Row, record: StrictModel) -> None:
+        values = record.model_dump(mode="json")
+        if any(row[key] != values[key] for key in row.keys() if key in values):
+            raise ValueError("registry columns contradict the stored record identity")
 
     def datasets(self) -> list[DatasetRecord]:
         return self._records("datasets", DatasetRecord)
+
+    def dataset(self, dataset_id: str, version: str) -> DatasetRecord | None:
+        with self._lock:
+            row = self._connection.execute(
+                "SELECT * FROM datasets WHERE dataset_id = ? AND version = ?",
+                (dataset_id, version),
+            ).fetchone()
+        if row is None:
+            return None
+        record = DatasetRecord.model_validate_json(row["record_json"])
+        self._validate_registry_columns(row, record)
+        return record
+
+    def experiment(self, experiment_id: str) -> ExperimentRecord | None:
+        with self._lock:
+            row = self._connection.execute(
+                "SELECT * FROM experiments WHERE experiment_id = ?", (experiment_id,)
+            ).fetchone()
+        if row is None:
+            return None
+        record = ExperimentRecord.model_validate_json(row["record_json"])
+        self._validate_registry_columns(row, record)
+        return record
 
     def experiments(self) -> list[ExperimentRecord]:
         return self._records("experiments", ExperimentRecord)
@@ -314,16 +447,24 @@ class FoundryStore:
     def model(self, model_id: str) -> ModelRecord | None:
         with self._lock:
             row = self._connection.execute(
-                "SELECT record_json FROM models WHERE model_id = ?", (model_id,)
+                "SELECT * FROM models WHERE model_id = ?", (model_id,)
             ).fetchone()
-        return None if row is None else ModelRecord.model_validate_json(row["record_json"])
+        if row is None:
+            return None
+        record = ModelRecord.model_validate_json(row["record_json"])
+        self._validate_registry_columns(row, record)
+        return record
 
     def checkpoint(self, checkpoint_id: str) -> CheckpointRecord | None:
         with self._lock:
             row = self._connection.execute(
-                "SELECT record_json FROM checkpoints WHERE checkpoint_id = ?", (checkpoint_id,)
+                "SELECT * FROM checkpoints WHERE checkpoint_id = ?", (checkpoint_id,)
             ).fetchone()
-        return None if row is None else CheckpointRecord.model_validate_json(row["record_json"])
+        if row is None:
+            return None
+        record = CheckpointRecord.model_validate_json(row["record_json"])
+        self._validate_registry_columns(row, record)
+        return record
 
     def evidence(self) -> list[EvidenceRecord]:
         with self._lock:

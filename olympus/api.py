@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import sqlite3
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from functools import lru_cache
@@ -190,19 +191,30 @@ def verify_foundry(
 def list_foundry_models(
     service: FoundryDependency,
 ) -> dict[str, object]:
-    return {
-        "object": "list",
-        "data": [
+    records: list[dict[str, object]] = []
+    try:
+        models = service.list_models()
+    except (sqlite3.Error, OSError, ValueError) as error:
+        raise HTTPException(
+            status_code=503, detail=f"Model registry unavailable: {error}"
+        ) from error
+    for model in models:
+        health = service.model_health(model.model_id)
+        records.append(
             {
                 "id": model.model_id,
                 "object": "model",
                 "owned_by": "bu1ld-olympus",
                 "status": model.status.value,
+                "available": health["status"] == "ok",
+                "health": health,
                 "capabilities": model.capabilities,
                 "limitations": model.limitations,
             }
-            for model in service.list_models()
-        ],
+        )
+    return {
+        "object": "list",
+        "data": records,
     }
 
 

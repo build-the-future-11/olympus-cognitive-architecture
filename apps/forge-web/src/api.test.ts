@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   fetchDemos,
+  fetchFoundryModels,
   fetchFoundryStatus,
   generateWithFoundry,
   runFoundryVerification
@@ -9,6 +10,24 @@ import {
 
 afterEach(() => {
   vi.restoreAllMocks();
+});
+
+describe("model availability", () => {
+  it.each(["missing-health", "contradictory-availability"])(
+    "rejects %s instead of claiming a model is available", async (caseName) => {
+      const model: Record<string, unknown> = {
+        id: "fixture-model", object: "model", owned_by: "test", status: "VERIFIED",
+        available: true, capabilities: [], limitations: []
+      };
+      if (caseName === "contradictory-availability") {
+        model.health = { status: "corrupt", model: "fixture-model", reason: "missing artifact" };
+      }
+      vi.spyOn(globalThis, "fetch").mockResolvedValue(
+        new Response(JSON.stringify({ data: [model] }), { status: 200 })
+      );
+      await expect(fetchFoundryModels()).rejects.toThrow("invalid model registry");
+    }
+  );
 });
 
 describe("fetchDemos", () => {

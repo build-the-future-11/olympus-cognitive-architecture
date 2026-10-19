@@ -41,6 +41,11 @@ function responseFor(url: string, method = "GET"): Response {
             object: "model",
             owned_by: "bu1ld-olympus",
             status: "VERIFIED",
+            available: true,
+            health: {
+              status: "ok", model: "foundry-verification-bigram-abc12345",
+              checkpoint_id: "ckpt_abc1234500000000", sha256: "a".repeat(64)
+            },
             capabilities: ["text-generation"],
             limitations: ["Not Hermes."]
           }
@@ -134,5 +139,69 @@ describe("App", () => {
     fireEvent.click(screen.getByRole("button", { name: "Retry" }));
     expect(await screen.findByText("Graph executed")).toBeInTheDocument();
     await waitFor(() => expect(screen.getByText("Registry healthy")).toBeInTheDocument());
+  });
+
+  it("shows a corrupt checkpoint and removes it from generation choices", async () => {
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+      const response = responseFor(String(input), init?.method);
+      if (String(input) !== "/api/v1/models") return response;
+      const payload = await response.json();
+      payload.data[0].available = false;
+      payload.data[0].health = {
+        status: "corrupt", model: payload.data[0].id, reason: "checkpoint hash mismatch"
+      };
+      return new Response(JSON.stringify(payload), { status: 200 });
+    });
+
+    render(<App />);
+    expect(await screen.findByText(/checkpoint hash mismatch/)).toBeInTheDocument();
+    expect(screen.getByText("0 available")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Generate through stable API" })).toBeDisabled();
+    expect(screen.queryByRole("option", { name: /foundry-verification-bigram/ })).not.toBeInTheDocument();
+    expect(screen.getByText(/Admission: VERIFIED/)).toBeInTheDocument();
+  });
+
+  it("clears a stale selection and disables generation after a failed refresh", async () => {
+    let unavailable = false;
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+      if (unavailable && String(input) === "/api/v1/models") {
+        return new Response(JSON.stringify({ detail: "registry unavailable" }), { status: 503 });
+      }
+      return responseFor(String(input), init?.method);
+    });
+    render(<App />);
+    const generate = screen.getByRole("button", { name: "Generate through stable API" });
+    await waitFor(() => expect(generate).toBeEnabled());
+    unavailable = true;
+    fireEvent.click(screen.getByRole("button", { name: "Refresh live state" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("registry unavailable");
+    expect(generate).toBeDisabled();
+    expect(screen.getByLabelText("Model")).toHaveValue("");
+    expect(screen.queryByText(/No model has passed promotion gates/)).not.toBeInTheDocument();
+  });
+
+  it("refreshes preserved run state after a verification failure", async () => {
+    let failed = false;
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+      if (String(input) === "/api/foundry/verify") {
+        failed = true;
+        return new Response(JSON.stringify({ detail: "held-out gate rejected candidate" }), { status: 422 });
+      }
+      const response = responseFor(String(input), init?.method);
+      if (failed && String(input) === "/api/foundry/status") {
+        const payload = await response.json();
+        payload.experiments = 2;
+        return new Response(JSON.stringify(payload), { status: 200 });
+      }
+      return response;
+    });
+    render(<App />);
+    await screen.findByText("Registry healthy");
+    fireEvent.click(screen.getByRole("button", { name: "Run verified Foundry pipeline" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("held-out gate rejected candidate");
+    await waitFor(() => expect(
+      fetchMock.mock.calls.filter(([url]) => String(url) === "/api/foundry/status")
+    ).toHaveLength(2));
+    expect(screen.getByText("Experiments").nextElementSibling).toHaveTextContent("2");
   });
 });

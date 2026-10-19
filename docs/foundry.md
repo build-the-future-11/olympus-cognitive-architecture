@@ -30,7 +30,7 @@ Run it:
 Generate through the stable API using the first promoted model:
 
 ```bash
-MODEL_ID="$(curl -s http://127.0.0.1:8000/v1/models | jq -er '.data[0].id')"
+MODEL_ID="$(curl -s http://127.0.0.1:8000/v1/models | jq -er '.data[] | select(.available) | .id' | head -n 1)"
 curl -s http://127.0.0.1:8000/v1/chat/completions \
   -H 'content-type: application/json' \
   -d "{\"model\":\"${MODEL_ID}\",\"messages\":[{\"role\":\"user\",\"content\":\"request verify evidence\"}],\"temperature\":0,\"seed\":7,\"stream\":false}"
@@ -42,9 +42,14 @@ curl -s http://127.0.0.1:8000/v1/chat/completions \
 - Every experiment references the exact dataset SHA-256 and code commit.
 - Every checkpoint has an immutable content hash and owning experiment.
 - Evaluation records preserve baseline and candidate metrics together.
-- Only a passing checkpoint can enter the model registry.
-- Model health re-hashes the checkpoint before reporting `ok`.
-- Generation refuses a modified checkpoint.
+- Initial model admission validates the checkpoint against its immutable experiment
+  and dataset identity, reconstructs the exact bigram training-prefix counts, and
+  recomputes the held-out comparison. A status field or fabricated passing receipt
+  alone cannot admit a model; a true baseline tie still fails.
+- Model health and generation use the same single-read checkpoint loader to check
+  hash, size, format, provenance, supported runtime, model identity, and recorded
+  passing evaluation. These serving checks do not refit the dataset on each request.
+- Generation refuses a modified, missing, unsupported, or unverified checkpoint.
 - Evidence is append-only and sequence ordered.
 - SQLite foreign keys, WAL journaling, full synchronization, and explicit
   transactions are enabled.
@@ -72,6 +77,34 @@ The API exposes `GET /v1/models` and non-streaming
 not model tokens, and labels usage accordingly. Ollama uses a separate provider
 adapter and health endpoint so an installed external model cannot be mistaken
 for a Foundry-trained Olympus checkpoint.
+
+`GET /v1/models` now includes `available` and `health` for every registered model.
+The historical `status` remains visible even if the checkpoint later becomes
+unavailable. The web console selects only currently available models, clears
+stale selections after failed refreshes, and refreshes preserved run state after
+a failed verification. Registry decoding failures return HTTP 503; invalid model
+artifacts return HTTP 422 on generation; unknown model IDs return HTTP 404.
+
+`FoundryService.export_checkpoint(model_id, destination)` validates the source
+before an atomic replacement. Portable exports must target a location outside
+the managed Foundry root and cannot replace any other registered artifact,
+including symlink aliases. Exporting to the verified source checkpoint itself is
+a no-op. The pipeline retains its own internal export under `exports/`.
+
+Run the complete bounded engineering check, including separate fresh CLI/API
+processes and an isolated corruption fixture:
+
+```bash
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 \
+  .venv/bin/python scripts/verify_foundry_integrity.py \
+  --output artifacts/integrity-attempt-1
+```
+
+Choose a new output directory for each attempt. The script uses the reviewed
+repository corpus, starts only loopback API processes, stops them before exit,
+and retains command exits, source/data hashes, metrics, exports, failure receipts,
+and process peak RSS. The dated execution, resource-accounting qualification, and
+source-to-test map are in [the integrity handoff](foundry-integrity-20261019.md).
 
 ## Promotion truth boundary
 
@@ -140,6 +173,20 @@ These commands do not promote by naming. The promotion check emits a release
 manifest only when checkpoint/dataset identities, rights, data scale, held-out
 quality, category regressions, quantized tool reliability, fresh-process
 serving, and model-card gates all pass.
+
+Evaluation and quantization reports identify the exact checkpoint snapshot they
+consumed. Promotion reads the actual quantized artifact, verifies its hash, size,
+source, schema, tensor encoding, finite values, and runtime loadability, and checks
+that complete category/workflow evidence and quantization summaries agree. These
+are artifact and report-consistency checks; supplied measurements and serving
+claims are not independently authenticated by this gate.
+
+Evaluation, quantization, and promotion require fresh output files. Promotion
+also requires a fresh sibling `release-manifest.json`, so a later attempt cannot
+overwrite or ambiguously reuse a previous release receipt. Use a separate output
+directory for each quantization bit width and each promotion attempt. Output paths
+must not alias inputs or each other. These checks preserve earlier negative and
+positive evidence without changing historical quality thresholds.
 
 ## Deep dataset and resource invariants
 

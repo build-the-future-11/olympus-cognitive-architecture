@@ -1,0 +1,297 @@
+{
+  "archive": {
+    "bytes": 108175,
+    "contents": "Original logs, all healthy/corruption workflow artifacts including SQLite and checkpoints, failed preflight, environment, final regression sources, and two original base modules.",
+    "path": "verification-logs.zip",
+    "sha256": "f5551f815a2868e980712524e175587a05a7ad0fdb6e7124393e934c4befe7c4"
+  },
+  "base_commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
+  "baseline": {
+    "base_commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
+    "command": "timeout --kill-after=5 100 env PYTHONPATH=/workspace/scratch/20e3ac3d2d4a/olympus-integrity-baseline OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 /workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/.venv/bin/python -m pytest --import-mode=importlib -q /workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/tests/test_foundry_admission.py /workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/tests/test_deep_artifact_integrity.py",
+    "cwd": "/workspace/scratch/20e3ac3d2d4a/olympus-integrity-baseline",
+    "exit_code": 1,
+    "failed": 108,
+    "log": "final-regressions-baseline.log",
+    "log_sha256": "5f163b980d7b7f88a8c4c8ea0376beb13a482a6d251e185e494473872c0cb87b",
+    "passed_controls": 2,
+    "source_binding": {
+      "commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
+      "runtime_modules": {
+        "olympus.foundry.promotion": {
+          "path": "/workspace/scratch/20e3ac3d2d4a/olympus-integrity-baseline/olympus/foundry/promotion.py",
+          "sha256": "88885642ba659e34e09f475b5e9c93cfbb60c01b6e8d4b80408e553f180bb620"
+        },
+        "olympus.foundry.service": {
+          "path": "/workspace/scratch/20e3ac3d2d4a/olympus-integrity-baseline/olympus/foundry/service.py",
+          "sha256": "869f0e277bed42fb2214e9944012b05652d184f167df9ca8c27007b40207b46e"
+        }
+      },
+      "test_files_sha256": {
+        "tests/conftest.py": "de0a2558cae899c449612d2262c372a201d0ae80e38f378cc2634bddcf480e36",
+        "tests/test_deep_artifact_integrity.py": "bcb2d266bccabcb5f25efe3fb218899c30472b2d9b5fec0a7cbac4954e896ea4",
+        "tests/test_foundry_admission.py": "0ac3530681598c158de8854457d61fbbdbfdcc93df02d04469b5d4d1b6158919"
+      },
+      "working_tree": ""
+    }
+  },
+  "branch": "codex/olympus-foundry-integrity-20261019",
+  "historical_science": "Historical tiny Transformer zero task/tool completion and NOT_PROMOTED disposition remain unchanged. No protected capability runs, independent reproductions, or new efficiency/novelty claims.",
+  "next_action": "Run scripts/verify_foundry_integrity.py from this branch on the intended 16 GiB Mac in a fresh output directory; retain and compare its report before integration.",
+  "package_source_binding": {
+    "bundled_corpora_verified": 2,
+    "tested_source_files_match_current_checkout": 101,
+    "wheel": "dist/olympus_cognitive_architecture-0.2.0-py3-none-any.whl",
+    "wheel_runtime_files_match_tested_source": 65,
+    "wheel_sha256": "2e4e77229586f098a68fab41218870e05ae4948ba218fb01dbed8a5cf36acee6"
+  },
+  "preserved_failed_attempts": [
+    {
+      "disposition": "Collection failed due to Starlette TestClient/httpx deprecation under warnings-as-errors; replaced only the test transport with the existing ASGITransport pattern.",
+      "log": "admission-baseline.log"
+    },
+    {
+      "disposition": "Restricted test harness stalled; partial output has no accepted test count. Retried with authorized normal process/thread support.",
+      "exit_code": 124,
+      "log": "admission-baseline-v2.log"
+    },
+    {
+      "disposition": "Initial durable regression witness against unmodified durable implementation.",
+      "failed": 27,
+      "log": "admission-baseline-v3.log",
+      "passed": 1
+    },
+    {
+      "disposition": "Initial deep-artifact witness against unmodified deep implementation.",
+      "failed": 60,
+      "log": "deep-baseline.log",
+      "passed": 1
+    },
+    {
+      "disposition": "Test variable reused with incompatible type; corrected and strict typing passed.",
+      "errors": 2,
+      "exit_code": 1,
+      "log": "mypy-v1.log"
+    },
+    {
+      "disposition": "New test fixture referenced a nonexistent SQL path column; corrected to existing JSON schema.",
+      "failed": 1,
+      "log": "full-python-v2.log",
+      "passed": 408
+    },
+    {
+      "disposition": "Workflow line lengths corrected; final lint passed.",
+      "errors": 3,
+      "exit_code": 1,
+      "log": "ruff-workflow-v1.log"
+    },
+    {
+      "disposition": "Resource preflight stopped before any child command/training; source and raw host counters retained. Cache accounting correction is versioned in the protocol.",
+      "report": "blocked-workflow-v1.json"
+    }
+  ],
+  "recorded_utc": "2026-10-19T11:54:11.953146+00:00",
+  "remote_state": {
+    "account_actions_allowance": "Not available through the repository connector; not assumed exhausted or available.",
+    "ci_trigger_policy": "push main or pull_request; no development-branch push trigger",
+    "main_rechecked": "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
+    "pull_request_created": false,
+    "related_pr29": "Separate open work; source inspected read-only; no merge or updates."
+  },
+  "repository": "build-the-future-11/olympus-cognitive-architecture",
+  "schema_version": 1,
+  "scope": "Foundry artifact admission, report identity/consistency, preservation, live availability, and a deterministic engineering lifecycle. No new Hermes or capability promotion.",
+  "source_binding": "The 101 workflow-recorded implementation/test/config file hashes match this deliverable. Execution used the recorded base plus dirty patch, not clean main. Documentation/evidence were added after execution.",
+  "source_files_manifest_sha256": "52f0742f0bb3517b0ee293afab7a8472d8e27b01c38e3808993c4ba4aa11df31",
+  "status": {
+    "IMPLEMENTED": true,
+    "INDEPENDENTLY_REPRODUCED": false,
+    "LOCALLY_TESTED": true,
+    "REMOTELY_EXECUTED": false,
+    "SCIENTIFICALLY_SUPPORTED": false
+  },
+  "study_id": "foundry-artifact-admission-v1-20261019",
+  "validation": [
+    {
+      "branch_enabled_coverage_percent": 87.61,
+      "command": "timeout --kill-after=5 100 env OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 .venv/bin/python -m pytest --cov=olympus --cov-branch --cov-report=term-missing -q",
+      "cwd": ".",
+      "exit_code": 0,
+      "failed": 0,
+      "log": "full-python-final.log",
+      "log_sha256": "5fb3d897bcd8e734f7d5f9b9934826027c5a8dd0f7a904ce6bb259fadcccbf1d",
+      "name": "python_full_suite",
+      "passed": 409,
+      "required_coverage_percent": 85,
+      "skipped": 0
+    },
+    {
+      "checked_files": 89,
+      "command": "timeout --kill-after=5 100 .venv/bin/python -m mypy olympus tests",
+      "cwd": ".",
+      "exit_code": 0,
+      "log": "mypy-v2.log",
+      "log_sha256": "14c86ee194cc9406b4f38866ce2eb1ba7e54c55437faf1ccc89f0195c485674d",
+      "name": "strict_types"
+    },
+    {
+      "command": ".venv/bin/python -m ruff check .",
+      "cwd": ".",
+      "exit_code": 0,
+      "log": "ruff-source-final.log",
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "lint"
+    },
+    {
+      "command": "timeout --kill-after=5 100 npm test",
+      "cwd": "apps/forge-web",
+      "exit_code": 0,
+      "failed": 0,
+      "log": "web-tests-v1.log",
+      "log_sha256": "67c01be94503cb6cd3bbe91d6fa0e9db60b4066dfa0a2032ce5ee10dfc330c07",
+      "name": "web_tests",
+      "passed": 11,
+      "skipped": 0
+    },
+    {
+      "command": "timeout --kill-after=5 100 npm run build",
+      "cwd": "apps/forge-web",
+      "exit_code": 0,
+      "log": "web-build-v1.log",
+      "log_sha256": "8b6c4805657001678629d4c1b162a844e43ac461efcf03267909720bc3d666fb",
+      "name": "web_build"
+    },
+    {
+      "command": "timeout --kill-after=5 100 .venv/bin/python -m pip_audit --strict .",
+      "cwd": ".",
+      "exit_code": 0,
+      "log": "python-audit-v1.log",
+      "log_sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "name": "python_dependency_audit",
+      "reported": "No known vulnerabilities found"
+    },
+    {
+      "command": "timeout --kill-after=5 100 npm audit --audit-level=moderate",
+      "cwd": "apps/forge-web",
+      "exit_code": 0,
+      "log": "web-audit-v1.log",
+      "log_sha256": "68d7b0e53628962865da889964201260d748d6d98ba492735e201d6b80cc9bb5",
+      "name": "web_dependency_audit",
+      "reported_vulnerabilities": 0
+    },
+    {
+      "command": "timeout --kill-after=5 100 .venv/bin/python -m build",
+      "cwd": ".",
+      "distributions": 2,
+      "exit_code": 0,
+      "log": "package-build-v1.log",
+      "log_sha256": "b513036b40077d4c4d208722f23a728a28220fca883fbbfeeb9c84e1e5f9c11e",
+      "name": "package_build"
+    },
+    {
+      "command": "timeout --kill-after=5 60 .venv/bin/python -m twine check dist/*.whl dist/*.tar.gz",
+      "cwd": ".",
+      "exit_code": 0,
+      "log": "package-metadata-v1.log",
+      "log_sha256": "65c1952074d1c38c3185bd12838355be3f3a364783722b404d32ba72f406ae69",
+      "name": "package_metadata",
+      "passed": 2
+    },
+    {
+      "asserted_contracts_passed": 10,
+      "command": "timeout --kill-after=5 120 env OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 .venv/bin/python scripts/verify_foundry_integrity.py --output artifacts/foundry-integrity-20261019/workflow-v2",
+      "cwd": ".",
+      "elapsed_seconds": 16.42832616400119,
+      "exit_code": 0,
+      "log": "workflow-v2.log",
+      "log_sha256": "e7a5217aae22e8820dce82b78d996cd0f1df0a32555d5e363b0bbb6b8c02370f",
+      "name": "bounded_lifecycle"
+    }
+  ],
+  "workflow": {
+    "checkpoint": "verified-model.json",
+    "checkpoint_sha256": "b749d3f93fcef0c182a22da3a80ce1ee7f49807dc06227a4ca5c49626cc8dace",
+    "elapsed_seconds": 16.42832616400119,
+    "expected_failures": "Corrupted fixture: CLI exit 1, API 422, unknown model 404. API worker exit -15 records intentional shutdown.",
+    "held_out": {
+      "baseline_metrics": {
+        "evaluated_transitions": 135.0,
+        "negative_log_likelihood": 3.1780538303479458,
+        "perplexity": 24.0,
+        "top1_accuracy": 0.041666666666666664
+      },
+      "candidate_metrics": {
+        "evaluated_transitions": 135.0,
+        "negative_log_likelihood": 1.9001575710987069,
+        "perplexity": 6.686948029017607,
+        "top1_accuracy": 0.3925925925925926
+      },
+      "checkpoint_id": "ckpt_b749d3f93fcef0c1",
+      "created_at": "2026-10-19T11:38:53.213323+00:00",
+      "dataset_sha256": "6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab",
+      "decision": "Candidate beat the frozen uniform baseline on held-out negative log-likelihood and perplexity.",
+      "evaluation_id": "eval_15456e3d70c92b22",
+      "passed": true,
+      "suite": "held-out-character-model-v1"
+    },
+    "host_after": {
+      "cgroup_inactive_file_bytes": 2153590784,
+      "cgroup_memory_current_bytes": 7759622144,
+      "cgroup_memory_limit_bytes": 8589934592,
+      "cgroup_reclaimable_estimate_bytes": 2150289408,
+      "cgroup_swap_current_bytes": 0,
+      "cgroup_unallocated_bytes": 830312448,
+      "device": "CPU",
+      "disk_free_bytes": 21929086976,
+      "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/foundry-integrity-20261019/workflow-v2",
+      "effective_available_estimate_bytes": 2980601856,
+      "machine": "x86_64",
+      "memory": {
+        "available_bytes": 9392447488,
+        "process_peak_rss_bytes": 277049344,
+        "swap_fraction": 0.0,
+        "swap_total_bytes": 0,
+        "swap_used_bytes": 0,
+        "total_bytes": 10451439616
+      },
+      "memory_accounting": "host-and-cgroup-working-set-v2",
+      "numeric_library_thread_request": 2,
+      "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+      "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+      "visible_cpus": 9
+    },
+    "host_before": {
+      "cgroup_inactive_file_bytes": 2259587072,
+      "cgroup_memory_current_bytes": 7745335296,
+      "cgroup_memory_limit_bytes": 8589934592,
+      "cgroup_reclaimable_estimate_bytes": 2257854464,
+      "cgroup_swap_current_bytes": 0,
+      "cgroup_unallocated_bytes": 844599296,
+      "device": "CPU",
+      "disk_free_bytes": 21930508288,
+      "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/foundry-integrity-20261019/workflow-v2",
+      "effective_available_estimate_bytes": 3102453760,
+      "machine": "x86_64",
+      "memory": {
+        "available_bytes": 9430204416,
+        "process_peak_rss_bytes": 269639680,
+        "swap_fraction": 0.0,
+        "swap_total_bytes": 0,
+        "swap_used_bytes": 0,
+        "total_bytes": 10451439616
+      },
+      "memory_accounting": "host-and-cgroup-working-set-v2",
+      "numeric_library_thread_request": 2,
+      "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+      "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+      "visible_cpus": 9
+    },
+    "largest_child_process_peak_rss_bytes": 283013120,
+    "minimum_preflight_estimated_headroom_bytes": 2983297024,
+    "orchestrator_peak_rss_bytes": 277049344,
+    "passed": true,
+    "report": "workflow.json",
+    "sha256": "3f04bb43c2439f933cf18af9cc12adeb39b61b22e794be871de1b9405a82fac0"
+  },
+  "writer": "Root agent owns delivery branch; separate agent implementation worktree was integrated by root."
+}

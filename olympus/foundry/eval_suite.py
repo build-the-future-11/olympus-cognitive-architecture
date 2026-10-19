@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import json
 import math
 import os
@@ -14,6 +13,7 @@ import torch
 from pydantic import Field
 
 from olympus.core.schemas import StrictModel
+from olympus.foundry.artifacts import validate_output_paths
 from olympus.foundry.data_pipeline import InstructionExample, load_verified_dataset
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.sft import (
@@ -22,14 +22,17 @@ from olympus.foundry.sft import (
     TinyModelConfig,
     _checkpoint_training_config,
     _encode_examples,
-    _model_from_checkpoint,
+    _model_from_payload,
+    _read_checkpoint,
     evaluate_loss,
     generate_text,
 )
 
-
-def _sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+WORKFLOW_CATEGORIES: dict[str, tuple[str, ...]] = {
+    "tool_workflow": ("tool_use", "agent_behavior"),
+    "result_comparison": ("reasoning", "self_correction", "research"),
+    "multi_step_planning": ("planning", "safety"),
+}
 
 
 def _atomic_json(path: Path, payload: object) -> None:
@@ -96,8 +99,9 @@ def _baseline_model(
     checkpoint: dict[str, Any], base_checkpoint: Path | None
 ) -> tuple[TinyCausalLM, str]:
     if base_checkpoint is not None:
-        model, _ = _model_from_checkpoint(base_checkpoint, torch.device("cpu"))
-        return model, f"checkpoint:{_sha256(base_checkpoint)}"
+        payload, source_sha = _read_checkpoint(base_checkpoint)
+        model = _model_from_payload(payload, torch.device("cpu"))
+        return model, f"checkpoint:{source_sha}"
     training = _checkpoint_training_config(checkpoint)
     torch.manual_seed(training.seed)
     return TinyCausalLM(TinyModelConfig.model_validate(checkpoint["model_config"])), (
@@ -122,13 +126,8 @@ def _format_compliant(expected: str, generated: str) -> bool:
 def _workflow_scores(
     examples: list[InstructionExample], generated: dict[str, str]
 ) -> list[WorkflowScore]:
-    definitions = {
-        "tool_workflow": ["tool_use", "agent_behavior"],
-        "result_comparison": ["reasoning", "self_correction", "research"],
-        "multi_step_planning": ["planning", "safety"],
-    }
     results: list[WorkflowScore] = []
-    for name, categories in definitions.items():
+    for name, categories in WORKFLOW_CATEGORIES.items():
         selected = [example for example in examples if example.category in categories]
         exact = sum(
             _normalize(generated[item.id]) == _normalize(item.response) for item in selected
@@ -137,7 +136,7 @@ def _workflow_scores(
         results.append(
             WorkflowScore(
                 name=name,
-                categories=categories,
+                categories=list(categories),
                 examples=len(selected),
                 exact_match_rate=exact / len(selected),
                 nonempty_rate=nonempty / len(selected),
@@ -154,8 +153,13 @@ def evaluate_checkpoint(
     base_checkpoint: Path | None = None,
     max_generation_tokens: int = 48,
 ) -> HeldOutEvaluation:
+    validate_output_paths(
+        [output_path],
+        [checkpoint_path, manifest_path, *([base_checkpoint] if base_checkpoint else [])],
+    )
     device = torch.device("cpu")
-    candidate, checkpoint = _model_from_checkpoint(checkpoint_path, device)
+    checkpoint, checkpoint_sha = _read_checkpoint(checkpoint_path)
+    candidate = _model_from_payload(checkpoint, device)
     baseline, baseline_identity = _baseline_model(checkpoint, base_checkpoint)
     manifest_sha, examples = _load_test_examples(manifest_path)
     if checkpoint["dataset_manifest_sha256"] != manifest_sha:
@@ -220,7 +224,7 @@ def evaluate_checkpoint(
     report = HeldOutEvaluation(
         loss_normalization=training.loss_normalization,
         checkpoint_path=str(checkpoint_path.resolve()),
-        checkpoint_sha256=_sha256(checkpoint_path),
+        checkpoint_sha256=checkpoint_sha,
         dataset_manifest_sha256=manifest_sha,
         baseline_identity=baseline_identity,
         test_records=len(examples),
@@ -234,9 +238,7 @@ def evaluate_checkpoint(
         format_compliance_rate=format_rate,
         workflow_scores=_workflow_scores(examples, generated),
         median_generation_latency_ms=statistics.median(latencies) * 1_000,
-        generated_bytes_per_second=(
-            generated_bytes / sum(latencies) if sum(latencies) else 0.0
-        ),
+        generated_bytes_per_second=(generated_bytes / sum(latencies) if sum(latencies) else 0.0),
         peak_rss_bytes=memory_snapshot().process_peak_rss_bytes,
         passed_smoke_quality_gate=passed,
         decision=decision,

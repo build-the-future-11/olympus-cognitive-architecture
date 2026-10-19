@@ -2,51 +2,62 @@
   "schema_version": 1,
   "project": "Olympus Cognitive Architecture",
   "repository": "build-the-future-11/olympus-cognitive-architecture",
-  "updated_utc": "2026-10-17",
-  "current_phase": "DEVELOPMENT_ENGINEERING_HOSTED_VERIFIED_PENDING_DRAFT_REVIEW",
+  "updated_utc": "2026-10-19",
+  "current_phase": "LOCAL_ENGINEERING_VERIFIED_FOUNDRY_ARTIFACT_ADMISSION",
   "scientific_disposition": "NOT_REASSESSED",
-  "research_question": "Can the actual SFT trainer continue an unchanged schedule without changing its optimizer trajectory or overwriting prior attempts?",
+  "research_question": "Do admitted dataset, checkpoint, evaluation and export identities remain bound to the exact bytes consumed, and do invalid artifacts stay unavailable?",
   "scientific_objective": "Reliable, inspectable research infrastructure; this engineering study makes no model capability claim.",
-  "hypothesis": "Restore the consumed stochastic state, admit exact configuration/optimizer policy/counters, and own a fresh immutable attempt directory.",
-  "intended_contribution": "Exact epoch continuation of the actual SFT optimizer trajectory, explicit resume admission and append-only attempt ownership.",
-  "falsifier": "Any full/LoRA/QLoRA model or optimizer tensor differs after equivalent uninterrupted versus split CPU dropout training.; A mismatched data/configuration/optimizer policy or malformed counter is admitted.; A later attempt changes an earlier checkpoint, metrics log, or failure receipt.; A nonfinite training result is marked COMPLETED.",
+  "hypothesis": "Single-read artifact snapshots and registry/evidence admission checks prevent substitution and false availability without changing model objectives or preserved results.",
+  "intended_contribution": "Bind durable and deep Foundry artifact admission, retained evidence, exports, and live availability to their consumed identities.",
+  "falsifier": "An evaluation, baseline or quantization report names bytes other than the checkpoint it consumed.; Missing, changed or incompatible quantized weights can pass artifact admission.; A caller can substitute a registered dataset, omit a passing held-out evaluation, or relabel the bigram runtime as a reserved model.; A corrupt or unsupported checkpoint is shown as available or produces a response.; A rejected export destroys an existing destination or predecessor evidence.",
   "scope": {
     "included": [
-      "Dataset verification and consumption",
-      "Artificial regression fixtures",
-      "Exact source-bound local tests and hosted release checks"
+      "Artificial CPU mechanism regressions and the complete existing test suite",
+      "One deterministic repository-corpus bigram lifecycle with a separate corruption fixture",
+      "Artifact admission, export preservation, and live API/CLI/web availability",
+      "Isolated development-branch code publication"
     ],
     "excluded": [
-      "Scientific training",
-      "Hermes base selection",
-      "Model promotion",
-      "Held-out capability reevaluation",
-      "Parameter or architecture changes",
-      "Prior-run replacement"
+      "Protected capability evaluation",
+      "Hermes family promotion",
+      "Default-branch merges and release publication",
+      "External deployment or paid compute",
+      "Related repository writes and Worldcastr",
+      "Changing historical model results"
     ]
   },
   "development_budget": {
-    "engineering_hypotheses": 1,
-    "scientific_training_epochs": 0,
+    "compute_lanes": 1,
+    "threads_requested": 2,
+    "workflow_timeout_seconds": 120,
     "protected_evaluations": 0,
-    "external_dataset_downloads": 0
+    "external_model_or_dataset_downloads": 0
   },
   "compute_budget": {
-    "local_device": "CPU",
+    "compute_lanes": 1,
+    "device": "CPU",
+    "threads": 2,
+    "per_test_command_seconds": 120,
+    "workflow_seconds": 120,
+    "max_new_bigram_characters": 2000,
+    "max_artificial_sft_records": 36,
+    "max_artificial_sft_epochs": 3,
+    "max_artificial_sft_width": 32,
+    "protected_capability_evaluations": 0,
     "paid_jobs": 0,
-    "large_model_runs": 0,
-    "per_test_command_timeout_seconds": 120
+    "external_model_or_dataset_downloads": 0
   },
   "protected_evaluation_boundary": "The dated prior model ledgers and retained experiments remain unchanged. Artificial unit tests do not authorize capability evaluation or promotion.",
   "source_basis": {
-    "base_pr": 23,
-    "base_branch": "codex/olympus-dataset-contract-20261010-b805",
-    "base_commit": "c37066fa5c349eaca0acf43b0e9a57306fdf42ec",
-    "base_tree": "b9bf5fd77e430fd1686301b7b7513850df6743e5"
+    "repository": "build-the-future-11/olympus-cognitive-architecture",
+    "base_commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
+    "base_tree": "eea94fd950e4134af0a36368798f4bca4fe62636",
+    "development_branch": "codex/olympus-foundry-integrity-20261019",
+    "execution_identity": "Base plus recorded dirty implementation/test patch; 101 file hashes in retained workflow."
   },
   "datasets": {
-    "development": "New artificial 36-record unit fixtures",
-    "protected": "No protected data accessed by this change"
+    "development": "Fresh artificial engineering fixtures and repository-owned 674-character Foundry corpus",
+    "protected": "No new protected capability campaign"
   },
   "artifacts": [
     "research/REALITY_LEDGER.md",
@@ -58,7 +69,11 @@
     "docs/foundry-window-and-dataset-20261010.md",
     "research/verification/foundry_integration_20261010/receipt.json",
     "docs/sft-continuation-20261010.md",
-    "research/ENGINEERING_SFT_CONTINUATION_20261010.json"
+    "research/ENGINEERING_SFT_CONTINUATION_20261010.json",
+    "research/ENGINEERING_FOUNDRY_INTEGRITY_20261019.json",
+    "docs/foundry-integrity-20261019.md",
+    "research/verification/foundry_integrity_20261019/receipt.json",
+    "scripts/verify_foundry_integrity.py"
   ],
   "claims": [
     {
@@ -70,12 +85,23 @@
       "claim": "The proposed snapshot repair preserves the identity of consumed records.",
       "status": "SUPPORTED_BY_BOUNDED_ENGINEERING_REGRESSION",
       "evidence": "research/DATASET_CONSUMER_SNAPSHOT_20261010.json"
+    },
+    {
+      "claim": "The repaired Foundry slice passes 409 Python tests, 11 web tests, and a bounded fresh-process lifecycle/error verification.",
+      "status": "LOCALLY_TESTED_ENGINEERING",
+      "evidence": "research/verification/foundry_integrity_20261019/receipt.json"
+    },
+    {
+      "claim": "No new Hermes capability or independent Mac efficiency result is established.",
+      "status": "NOT_REASSESSED",
+      "evidence": "research/ENGINEERING_FOUNDRY_INTEGRITY_20261019.json"
     }
   ],
   "decisions": [
-    "Stack on the reviewed dataset-contract PR; do not rewrite its branch.",
-    "Preserve the existing manifest verifier return type.",
-    "Treat data identity fixes as engineering behavior, not evidence of model capability."
+    "Use one root writer for the delivery branch and one CPU execution lane.",
+    "Retain historical model outcomes and all current failed attempts.",
+    "Require genuine held-out improvement for the verification bigram and actual loadable quantized artifacts for deep admission.",
+    "Publish a development branch without a PR-triggered CI run while current Actions allowance is unverified."
   ],
   "failures": [
     "Existing consumers verify split bytes and then reread files without binding the later content to those hashes.",
@@ -172,6 +198,19 @@
       "main_commit": "9bdf374834ce088c91793eb46a8c76fcb4b25a3b",
       "sampling_head": "0409d8f54e20b21e1bfe30c695fba60bc1fe6559",
       "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19",
+      "kind": "engineering_study_opened",
+      "event": "Fresh main and unmerged PR29 inspected. Opening a distinct bounded artifact identity, promotion admission and live-availability repair. Root owns a new isolated branch; earlier ledgers, failed results and studies are retained.",
+      "source_commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
+      "record": "research/ENGINEERING_FOUNDRY_INTEGRITY_20261019.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19",
+      "event": "Completed artifact-admission/availability repair from dc46b831e2aa88a5e669e1343463dc74ef1270a4. Final regression sources produced 108 failures and two controls on the clean base; repaired full suite passed 409 with 87.61% branch-enabled coverage. Eleven web tests, typing/lint, builds/audits, and the 16.428-second bounded lifecycle passed. First resource preflight and all diagnostic failures are preserved. Historical scientific outcomes remain unchanged.",
+      "record": "research/ENGINEERING_FOUNDRY_INTEGRITY_20261019.json"
     }
   ],
   "verification": {
@@ -269,7 +308,7 @@
     "hosted_tests_passed": 276,
     "hosted_branch_enabled_coverage_percent": 87.27
   },
-  "active_study_key": "active_development_study",
+  "active_study_key": "active_foundry_integrity_study",
   "portfolio_integration": {
     "date": "2026-10-17",
     "merged_prs": [
@@ -282,5 +321,156 @@
     "current_change": "PR25 stable low-temperature reference-model sampling",
     "verification": "Alphabet integration release run39041484835 passed all Python/web steps; fresh sampling integration checks pending.",
     "scientific_disposition": "Historical NOT_PROMOTED and frozen outcomes preserved."
+  },
+  "active_foundry_integrity_study": {
+    "study_id": "foundry-artifact-admission-v1-20261019",
+    "phase": "DEVELOPMENT_ENGINEERING",
+    "base_commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
+    "branch": "codex/olympus-foundry-integrity-20261019",
+    "writer": "ChatGPT root; audit agents read-only",
+    "question": "Do admitted dataset, checkpoint, evaluation and export identities remain bound to the exact bytes consumed, and do invalid artifacts stay unavailable?",
+    "hypothesis": "Single-read artifact snapshots and registry/evidence admission checks prevent substitution and false availability without changing model objectives or preserved results.",
+    "falsifiers": [
+      "An evaluation, baseline or quantization report names bytes other than the checkpoint it consumed.",
+      "Missing, changed or incompatible quantized weights can pass artifact admission.",
+      "A caller can substitute a registered dataset, omit a passing held-out evaluation, or relabel the bigram runtime as a reserved model.",
+      "A corrupt or unsupported checkpoint is shown as available or produces a response.",
+      "A rejected export destroys an existing destination or predecessor evidence."
+    ],
+    "budget": {
+      "compute_lanes": 1,
+      "device": "CPU",
+      "threads": 2,
+      "per_test_command_seconds": 120,
+      "workflow_seconds": 120,
+      "max_new_bigram_characters": 2000,
+      "max_artificial_sft_records": 36,
+      "max_artificial_sft_epochs": 3,
+      "max_artificial_sft_width": 32,
+      "protected_capability_evaluations": 0,
+      "paid_jobs": 0,
+      "external_model_or_dataset_downloads": 0
+    },
+    "workflow": {
+      "data": "Fresh local engineering fixtures plus repository-owned Foundry verification corpus; no protected capability campaign.",
+      "training": "Exact character-bigram maximum likelihood, seed 7, smoothing 0.25, prefix fraction 0.8.",
+      "split": "Nonoverlapping target transition positions; last training character supplies context only for first held-out target.",
+      "independent_unit": "This is a deterministic engineering execution, not an independent scientific sample.",
+      "baseline": "Frozen uniform distribution over training alphabet.",
+      "admission": "Candidate must strictly improve held-out NLL and perplexity; supported checkpoint format, exact source provenance and passing recorded evaluation are required.",
+      "confirmation": "No scientific confirmation stage. Artificial failure injections are engineering regressions.",
+      "outputs": "Source/config/data/checkpoint identities, held-out metrics, export, fresh-process API and CLI responses, health/error results, timing/RSS, commands and exit codes."
+    },
+    "preserved": "All historical model results and prior study records remain unchanged; no Hermes promotion or new capability/efficiency claim.",
+    "opened_utc": "2026-10-19T11:02:00.964455+00:00",
+    "workflow_resource_protocol": {
+      "version": "host-and-cgroup-working-set-v2",
+      "threshold_bytes": 2147483648,
+      "formula": "min(host MemAvailable, max(0, cgroup limit - current + max(0, inactive_file - file_dirty - file_writeback)))",
+      "interpretation": "Conservative working-set estimate; not a guaranteed physical allocation reservation. Rechecked before every subprocess stage. No credit for active file cache or reclaimable slab.",
+      "predecessor": "workflow-v1 stopped before any child command/training under a conservative limit-current calculation. Original receipt retained unchanged.",
+      "resource_observation": "No training/serving jobs were present. Container memory.stat was dominated by filesystem cache; clean-cache advice on this task dependencies released 633016320 bytes without changing files.",
+      "sources": [
+        "https://docs.docker.com/reference/cli/docker/container/stats/",
+        "https://docs.kernel.org/admin-guide/cgroup-v2.html"
+      ],
+      "scientific_protocol_changed": false
+    },
+    "status": "IMPLEMENTED_AND_LOCALLY_TESTED",
+    "closed_utc": "2026-10-19T11:56:06.716392+00:00",
+    "outcomes": {
+      "baseline_final_regressions": {
+        "source_commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
+        "failed": 108,
+        "passed_controls": 2,
+        "log": "final-regressions-baseline.log"
+      },
+      "python_full_suite": {
+        "passed": 409,
+        "failed": 0,
+        "skipped": 0,
+        "branch_enabled_coverage_percent": 87.61
+      },
+      "web_tests": {
+        "passed": 11,
+        "failed": 0,
+        "skipped": 0
+      },
+      "lint_types_build_audits": "All final local gates passed; exact commands and logs in receipt.",
+      "workflow": {
+        "passed": true,
+        "contracts_passed": 10,
+        "elapsed_seconds": 16.42832616400119,
+        "report": "research/verification/foundry_integrity_20261019/workflow.json",
+        "checkpoint_sha256": "b749d3f93fcef0c182a22da3a80ce1ee7f49807dc06227a4ca5c49626cc8dace"
+      },
+      "protected_capability_runs": 0,
+      "hermes_models_promoted": 0,
+      "independent_reproductions": 0,
+      "paid_jobs": 0,
+      "scientific_disposition": "NOT_REASSESSED; historical NOT_PROMOTED result unchanged."
+    },
+    "verification_receipt": "research/verification/foundry_integrity_20261019/receipt.json",
+    "handoff": "docs/foundry-integrity-20261019.md",
+    "source_files_manifest_sha256": "52f0742f0bb3517b0ee293afab7a8472d8e27b01c38e3808993c4ba4aa11df31",
+    "limitations": [
+      "Deterministic bigram lifecycle and artificial tensor regressions are not assistant-quality evidence.",
+      "Initial bigram registration reconstructs training counts/recomputes metrics; serving validates artifact identity and recorded evidence without refitting historical entries.",
+      "Deep reports are checked for structural and numerical consistency, not authenticated as measurements by an independent evaluator.",
+      "Output freshness is an intentional compatibility change; each deep attempt needs fresh files and a fresh sibling release manifest.",
+      "Working-set headroom is estimated from host/cgroup counters; per-process RSS is not a simultaneous process-tree peak.",
+      "Mac/MPS/CUDA/Kaggle/Ollama and hosted CI were not independently executed for this source."
+    ]
+  },
+  "predecessor_top_level_context": {
+    "source_commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
+    "preserved_before_current_slice": {
+      "research_question": "Can the actual SFT trainer continue an unchanged schedule without changing its optimizer trajectory or overwriting prior attempts?",
+      "hypothesis": "Restore the consumed stochastic state, admit exact configuration/optimizer policy/counters, and own a fresh immutable attempt directory.",
+      "intended_contribution": "Exact epoch continuation of the actual SFT optimizer trajectory, explicit resume admission and append-only attempt ownership.",
+      "falsifier": "Any full/LoRA/QLoRA model or optimizer tensor differs after equivalent uninterrupted versus split CPU dropout training.; A mismatched data/configuration/optimizer policy or malformed counter is admitted.; A later attempt changes an earlier checkpoint, metrics log, or failure receipt.; A nonfinite training result is marked COMPLETED.",
+      "scope": {
+        "included": [
+          "Dataset verification and consumption",
+          "Artificial regression fixtures",
+          "Exact source-bound local tests and hosted release checks"
+        ],
+        "excluded": [
+          "Scientific training",
+          "Hermes base selection",
+          "Model promotion",
+          "Held-out capability reevaluation",
+          "Parameter or architecture changes",
+          "Prior-run replacement"
+        ]
+      },
+      "development_budget": {
+        "engineering_hypotheses": 1,
+        "scientific_training_epochs": 0,
+        "protected_evaluations": 0,
+        "external_dataset_downloads": 0
+      },
+      "compute_budget": {
+        "local_device": "CPU",
+        "paid_jobs": 0,
+        "large_model_runs": 0,
+        "per_test_command_timeout_seconds": 120
+      },
+      "source_basis": {
+        "base_pr": 23,
+        "base_branch": "codex/olympus-dataset-contract-20261010-b805",
+        "base_commit": "c37066fa5c349eaca0acf43b0e9a57306fdf42ec",
+        "base_tree": "b9bf5fd77e430fd1686301b7b7513850df6743e5"
+      },
+      "datasets": {
+        "development": "New artificial 36-record unit fixtures",
+        "protected": "No protected data accessed by this change"
+      },
+      "decisions": [
+        "Stack on the reviewed dataset-contract PR; do not rewrite its branch.",
+        "Preserve the existing manifest verifier return type.",
+        "Treat data identity fixes as engineering behavior, not evidence of model capability."
+      ]
+    }
   }
 }

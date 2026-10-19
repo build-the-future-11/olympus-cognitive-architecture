@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import os
 import time
@@ -12,6 +13,7 @@ import torch
 from pydantic import Field
 
 from olympus.core.schemas import StrictModel
+from olympus.foundry.artifacts import validate_output_paths
 from olympus.foundry.data_pipeline import load_verified_dataset
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.sft import (
@@ -20,18 +22,16 @@ from olympus.foundry.sft import (
     TinyModelConfig,
     _checkpoint_training_config,
     _encode_examples,
-    _model_from_checkpoint,
+    _model_from_payload,
     _pack_nibbles,
+    _read_checkpoint,
+    _require_finite,
     _unpack_nibbles,
     evaluate_loss,
     generate_text,
 )
 
 QuantizationBits = Literal[4, 8]
-
-
-def _sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _atomic_torch_save(path: Path, payload: object) -> None:
@@ -135,17 +135,73 @@ def _dequantize_tensor(payload: dict[str, Any], bits: QuantizationBits) -> torch
     return signed * scale
 
 
-def load_quantized_model(path: Path) -> TinyCausalLM:
-    payload = cast(dict[str, Any], torch.load(path, map_location="cpu", weights_only=True))
-    bits = cast(QuantizationBits, int(payload["bits"]))
+def _read_quantized_payload(path: Path) -> tuple[dict[str, Any], str, int]:
+    """Bind all artifact metadata and weights to one deserialized byte snapshot."""
+    raw = path.read_bytes()
+    payload = torch.load(io.BytesIO(raw), map_location="cpu", weights_only=True)
+    if not isinstance(payload, dict):
+        raise ValueError("quantized artifact must contain a mapping")
+    if type(payload.get("schema_version")) is not int or payload["schema_version"] != 1:
+        raise ValueError("unsupported quantized artifact schema")
+    bits = payload.get("bits")
+    if type(bits) is not int or bits not in {4, 8}:
+        raise ValueError("unsupported quantized artifact bits")
+    if payload.get("format") != f"olympus-symmetric-int{bits}-v1":
+        raise ValueError("quantized artifact format does not match its bits")
+    return payload, hashlib.sha256(raw).hexdigest(), len(raw)
+
+
+def _model_from_quantized_payload(payload: dict[str, Any]) -> TinyCausalLM:
+    bits = cast(QuantizationBits, payload["bits"])
     model = TinyCausalLM(TinyModelConfig.model_validate(payload["model_config"]))
-    state = {
-        name: _dequantize_tensor(tensor_payload, bits)
-        for name, tensor_payload in cast(dict[str, dict[str, Any]], payload["tensors"]).items()
-    }
+    expected = model.state_dict()
+    tensors = payload.get("tensors")
+    if not isinstance(tensors, dict) or tensors.keys() != expected.keys():
+        raise ValueError("quantized artifact tensor names do not match its model")
+    state: dict[str, torch.Tensor] = {}
+    for name, reference in expected.items():
+        tensor = tensors[name]
+        if (
+            not isinstance(tensor, dict)
+            or tensor.get("shape") != list(reference.shape)
+            or tensor.get("floating") is not reference.is_floating_point()
+        ):
+            raise ValueError("quantized artifact tensor metadata does not match its model")
+        if reference.is_floating_point():
+            axis = 0 if reference.ndim >= 2 else None
+            encoded = tensor.get("quantized")
+            scale = tensor.get("scale")
+            scale_shape = [reference.shape[0]] if axis == 0 else [1]
+            encoded_count = (reference.numel() + 1) // 2 if bits == 4 else reference.numel()
+            if (
+                tensor.get("axis") != axis
+                or type(tensor.get("count")) is not int
+                or tensor["count"] != reference.numel()
+                or not isinstance(encoded, torch.Tensor)
+                or encoded.dtype != (torch.uint8 if bits == 4 else torch.int8)
+                or encoded.numel() != encoded_count
+                or not isinstance(scale, torch.Tensor)
+                or not scale.is_floating_point()
+                or list(scale.shape) != scale_shape
+            ):
+                raise ValueError("quantized artifact encoding does not match its declared bits")
+            _require_finite(scale, "quantized artifact scales")
+            if not bool((scale > 0).all()):
+                raise ValueError("quantized artifact scales must be positive")
+        else:
+            value = tensor.get("value")
+            if not isinstance(value, torch.Tensor) or value.dtype != reference.dtype:
+                raise ValueError("quantized artifact nonfloating tensor dtype does not match")
+        state[name] = _dequantize_tensor(tensor, bits)
+    _require_finite(state, "quantized artifact model state")
     model.load_state_dict(state)
     model.eval()
     return model
+
+
+def load_quantized_model(path: Path) -> TinyCausalLM:
+    payload, _, _ = _read_quantized_payload(path)
+    return _model_from_quantized_payload(payload)
 
 
 def _latency(model: TinyCausalLM, prompt: str) -> float:
@@ -161,7 +217,14 @@ def quantize_checkpoint(
     *,
     bits: QuantizationBits,
 ) -> QuantizationReport:
-    source, checkpoint = _model_from_checkpoint(checkpoint_path, torch.device("cpu"))
+    if type(bits) is not int or bits not in {4, 8}:
+        raise ValueError("bits must be 4 or 8")
+    float_path = output_root / "float32-model.pt"
+    artifact = output_root / f"model-int{bits}.pt"
+    report_path = output_root / f"int{bits}-report.json"
+    validate_output_paths([float_path, artifact, report_path], [checkpoint_path, manifest_path])
+    checkpoint, source_sha = _read_checkpoint(checkpoint_path)
+    source = _model_from_payload(checkpoint, torch.device("cpu"))
     training = _checkpoint_training_config(checkpoint)
     if training.mode != "full":
         raise ValueError("post-training quantization currently requires a merged full checkpoint")
@@ -171,9 +234,7 @@ def quantize_checkpoint(
     examples = examples_by_split["test"]
     del examples_by_split
     output_root.mkdir(parents=True, exist_ok=True)
-    float_path = output_root / "float32-model.pt"
     _atomic_torch_save(float_path, source.state_dict())
-    artifact = output_root / f"model-int{bits}.pt"
     tensor_payloads = {
         name: _quantize_tensor(tensor, bits) for name, tensor in source.state_dict().items()
     }
@@ -184,12 +245,19 @@ def quantize_checkpoint(
             "format": f"olympus-symmetric-int{bits}-v1",
             "bits": bits,
             "model_config": training.model.model_dump(mode="json"),
-            "source_checkpoint_sha256": _sha256(checkpoint_path),
+            "source_checkpoint_sha256": source_sha,
             "tensors": tensor_payloads,
         },
     )
     start = time.perf_counter()
-    quantized = load_quantized_model(artifact)
+    artifact_payload, artifact_sha, quantized_size = _read_quantized_payload(artifact)
+    if (
+        artifact_payload.get("source_checkpoint_sha256") != source_sha
+        or artifact_payload["bits"] != bits
+        or TinyModelConfig.model_validate(artifact_payload["model_config"]) != training.model
+    ):
+        raise ValueError("quantized artifact changed before evaluation admission")
+    quantized = _model_from_quantized_payload(artifact_payload)
     startup_ms = (time.perf_counter() - start) * 1_000
 
     eval_config = training.model_copy(update={"pack_sequences": False})
@@ -217,15 +285,14 @@ def quantize_checkpoint(
     except ValueError:
         context_limit_enforced = True
     float_size = float_path.stat().st_size
-    quantized_size = artifact.stat().st_size
     loss_change = (quantized_loss - source_loss) / max(source_loss, 1e-12)
     report = QuantizationReport(
         loss_normalization=training.loss_normalization,
         format=f"olympus-symmetric-int{bits}-v1",
         bits=bits,
-        source_checkpoint_sha256=_sha256(checkpoint_path),
+        source_checkpoint_sha256=source_sha,
         artifact_path=str(artifact.resolve()),
-        artifact_sha256=_sha256(artifact),
+        artifact_sha256=artifact_sha,
         float_weights_bytes=float_size,
         quantized_bytes=quantized_size,
         size_reduction_fraction=1.0 - quantized_size / float_size,
@@ -241,6 +308,5 @@ def quantize_checkpoint(
         peak_rss_bytes=memory_snapshot().process_peak_rss_bytes,
         passed_quality_gate=(abs(loss_change) <= 0.02 and context_limit_enforced),
     )
-    report_path = output_root / f"int{bits}-report.json"
     _atomic_json(report_path, report.model_dump(mode="json"))
     return report

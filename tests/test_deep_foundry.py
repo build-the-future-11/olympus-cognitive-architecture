@@ -2,27 +2,22 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 import torch
 from pydantic import ValidationError
 
-from olympus.foundry import promotion, resources
+from olympus.foundry import resources
 from olympus.foundry.data_pipeline import (
     InstructionExample,
     prepare_instruction_dataset,
     sha256_bytes,
     verify_dataset_manifest,
 )
-from olympus.foundry.eval_suite import (
-    CategoryEvaluation,
-    HeldOutEvaluation,
-    WorkflowScore,
-    evaluate_checkpoint,
-)
+from olympus.foundry.eval_suite import evaluate_checkpoint
 from olympus.foundry.promotion import evaluate_promotion
 from olympus.foundry.quantization import (
-    QuantizationReport,
     load_quantized_model,
     quantize_checkpoint,
 )
@@ -301,114 +296,14 @@ def test_held_out_evaluation_quantization_and_negative_promotion(
 
 
 def test_promotion_gate_can_emit_a_hash_bound_release_manifest(
-    trained_foundry: dict[str, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    deep_promotion_evidence: dict[str, Any],
 ) -> None:
-    checkpoint = trained_foundry["full"]
-    checkpoint_sha = sha256_bytes(checkpoint.read_bytes())
-    manifest = verify_dataset_manifest(trained_foundry["manifest"])
-    enlarged_splits = []
-    for split in manifest.splits:
-        split = split.model_copy(
-            update={"path": str(trained_foundry["manifest"].parent / split.path)}
-        )
-        if split.name == "train":
-            enlarged_splits.append(split.model_copy(update={"records": 10_000}))
-        elif split.name == "test":
-            enlarged_splits.append(
-                split.model_copy(
-                    update={"records": 1_200, "categories": {key: 100 for key in split.categories}}
-                )
-            )
-        else:
-            enlarged_splits.append(split)
-    manifest = manifest.model_copy(update={"splits": enlarged_splits, "manifest_sha256": None})
-    manifest.manifest_sha256 = sha256_bytes(manifest.canonical_bytes(include_hash=False))
-    manifest_path = tmp_path / "manifest.json"
-    manifest_path.write_bytes(manifest.canonical_bytes())
-    monkeypatch.setattr(promotion, "verify_dataset_manifest", lambda _: manifest)
-
-    category_results = [
-        CategoryEvaluation(
-            category=category,
-            records=100,
-            baseline_loss=2.0,
-            candidate_loss=1.0,
-            loss_change_fraction=-0.5,
-            regressed=False,
-        )
-        for category in manifest.splits[-1].categories
-    ]
-    workflows = [
-        WorkflowScore(
-            name=name,
-            categories=["planning"],
-            examples=100,
-            exact_match_rate=0.9,
-            nonempty_rate=1.0,
-        )
-        for name in ("tool_workflow", "result_comparison", "multi_step_planning")
-    ]
-    evaluation = HeldOutEvaluation(
-        checkpoint_path=str(checkpoint),
-        checkpoint_sha256=checkpoint_sha,
-        dataset_manifest_sha256=manifest.manifest_sha256,
-        baseline_identity="frozen",
-        test_records=1_200,
-        overall_baseline_loss=2.0,
-        overall_candidate_loss=1.0,
-        overall_baseline_perplexity=7.0,
-        overall_candidate_perplexity=3.0,
-        category_results=category_results,
-        regression_count=0,
-        exact_match_rate=0.9,
-        format_compliance_rate=0.98,
-        workflow_scores=workflows,
-        median_generation_latency_ms=10,
-        generated_bytes_per_second=100,
-        peak_rss_bytes=1_000,
-        passed_smoke_quality_gate=True,
-        decision="fixture passed",
-    )
-    evaluation_path = tmp_path / "evaluation.json"
-    evaluation_path.write_text(evaluation.model_dump_json(), encoding="utf-8")
-    quantization = QuantizationReport(
-        format="fixture-int4",
-        bits=4,
-        source_checkpoint_sha256=checkpoint_sha,
-        artifact_path="fixture",
-        artifact_sha256="a" * 64,
-        float_weights_bytes=100,
-        quantized_bytes=40,
-        size_reduction_fraction=0.6,
-        source_loss=1.0,
-        quantized_loss=1.01,
-        loss_change_fraction=0.01,
-        source_latency_ms=10,
-        quantized_latency_ms=8,
-        startup_latency_ms=5,
-        max_context_tokens=1_024,
-        context_limit_enforced=True,
-        tool_exact_match_rate=0.8,
-        peak_rss_bytes=1_000,
-        passed_quality_gate=True,
-    )
-    quantization_path = tmp_path / "quantization.json"
-    quantization_path.write_text(quantization.model_dump_json(), encoding="utf-8")
-    card = tmp_path / "MODEL_CARD.md"
-    card.write_text(
-        f"# Test model\n\nCheckpoint: {checkpoint_sha}\n\nLicense: Apache-2.0\n\nLimitations\n",
-        encoding="utf-8",
-    )
-    report = evaluate_promotion(
-        requested_model_id="fixture-model",
-        checkpoint_path=checkpoint,
-        dataset_manifest_path=manifest_path,
-        evaluation_path=evaluation_path,
-        quantization_report_path=quantization_path,
-        model_card_path=card,
-        output_path=tmp_path / "promotion.json",
-        approved_base_license="Apache-2.0",
-        serving_verification={"passed": True, "checkpoint_sha256": checkpoint_sha},
-    )
+    report = evaluate_promotion(**deep_promotion_evidence)
     assert report.status == "PROMOTED"
-    assert Path(report.release_manifest_path or "").is_file()
+    release = Path(report.release_manifest_path or "")
+    assert release.is_file()
+    manifest = json.loads(release.read_bytes())
+    artifact = Path(manifest["artifact_path"])
+    assert artifact.is_file()
+    assert manifest["artifact_sha256"] == sha256_bytes(artifact.read_bytes())
+    assert manifest["artifact_bytes"] == artifact.stat().st_size

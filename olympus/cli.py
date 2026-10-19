@@ -37,9 +37,7 @@ console = Console()
 
 
 def _default_instruction_source() -> Path:
-    repository_source = (
-        Path(__file__).resolve().parents[1] / "datasets/hermes-smoke/source.jsonl"
-    )
+    repository_source = Path(__file__).resolve().parents[1] / "datasets/hermes-smoke/source.jsonl"
     if repository_source.is_file():
         return repository_source
     return Path(sys.prefix) / "share/olympus/datasets/source.jsonl"
@@ -115,9 +113,17 @@ def foundry_status(root: Path = Path("artifacts/foundry")) -> None:
 @foundry_app.command("list-models")
 def list_foundry_models(root: Path = Path("artifacts/foundry")) -> None:
     with _foundry_service(root) as service:
-        console.print_json(
-            json.dumps([model.model_dump(mode="json") for model in service.list_models()])
-        )
+        records = []
+        for model in service.list_models():
+            health = service.model_health(model.model_id)
+            records.append(
+                {
+                    **model.model_dump(mode="json"),
+                    "available": health["status"] == "ok",
+                    "health": health,
+                }
+            )
+        console.print_json(json.dumps(records))
 
 
 @foundry_app.command("generate")
@@ -345,9 +351,7 @@ def validate(
     _print_records_table(records)
     for record in records:
         for issue in record.validation.issues:
-            console.print(
-                f"[{issue.severity}] {record.manifest.project_id}: {issue.message}"
-            )
+            console.print(f"[{issue.severity}] {record.manifest.project_id}: {issue.message}")
 
 
 @labos_app.command("run-smoke")

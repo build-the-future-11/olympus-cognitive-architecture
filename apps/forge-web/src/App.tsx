@@ -41,6 +41,9 @@ export function App(): ReactElement {
   const [completion, setCompletion] = useState<ChatCompletion | null>(null);
   const [generating, setGenerating] = useState<boolean>(false);
   const [generationError, setGenerationError] = useState<string>("");
+  const availableModels = models.filter((model) => model.available);
+  const canGenerate = !foundryState.loading && !foundryState.error && !generating &&
+    availableModels.some((model) => model.id === selectedModel) && Boolean(prompt.trim());
 
   const reload = useCallback(() => setReloadToken((value) => value + 1), []);
 
@@ -77,13 +80,17 @@ export function App(): ReactElement {
         if (!controller.signal.aborted) {
           setFoundryStatus(status);
           setModels(registeredModels);
-          setSelectedModel((current) => current || registeredModels[0]?.id || "");
+          const available = registeredModels.filter((model) => model.available);
+          setSelectedModel((current) =>
+            available.some((model) => model.id === current) ? current : available[0]?.id || ""
+          );
         }
       })
       .catch((caught: unknown) => {
         if (!controller.signal.aborted) {
           setFoundryStatus(null);
           setModels([]);
+          setSelectedModel("");
           setFoundryState({
             error: caught instanceof Error ? caught.message : "Unable to load Foundry state",
             loading: false
@@ -119,19 +126,19 @@ export function App(): ReactElement {
     try {
       const result = await runFoundryVerification();
       setVerification(result);
-      reload();
     } catch (caught: unknown) {
       setVerificationError(
         caught instanceof Error ? caught.message : "Foundry verification failed"
       );
     } finally {
       setVerifying(false);
+      reload();
     }
   };
 
   const generate = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    if (!selectedModel || !prompt.trim()) return;
+    if (!canGenerate) return;
     setGenerating(true);
     setCompletion(null);
     setGenerationError("");
@@ -139,6 +146,7 @@ export function App(): ReactElement {
       setCompletion(await generateWithFoundry(selectedModel, prompt));
     } catch (caught: unknown) {
       setGenerationError(caught instanceof Error ? caught.message : "Generation failed");
+      reload();
     } finally {
       setGenerating(false);
     }
@@ -249,9 +257,9 @@ export function App(): ReactElement {
             <p className="eyebrow">Percy contract</p>
             <h2 id="models-heading">Verified model registry</h2>
           </div>
-          <span>{models.length} available</span>
+          <span>{foundryState.loading ? "Checking availability…" : `${availableModels.length} available`}</span>
         </div>
-        {models.length === 0 && !foundryState.loading ? (
+        {models.length === 0 && !foundryState.loading && !foundryState.error ? (
           <p className="empty-state">
             No model has passed promotion gates. Run the verified pipeline above to create the
             bounded infrastructure-verification model.
@@ -262,8 +270,15 @@ export function App(): ReactElement {
             <article className="card" key={model.id}>
               <div className="card-header">
                 <h3>{model.id}</h3>
-                <span data-status="passed">{model.status}</span>
+                <span data-status={model.available ? "passed" : "failed"}>
+                  {model.available ? model.status : "Unavailable"}
+                </span>
               </div>
+              {!model.available ? (
+                <p className="inline-error">
+                  {model.health.reason || "Checkpoint unavailable"}. Admission: {model.status}.
+                </p>
+              ) : null}
               <p>{model.capabilities.join(" · ")}</p>
               <small>{model.limitations[0]}</small>
             </article>
@@ -272,13 +287,13 @@ export function App(): ReactElement {
         <form className="generation-form" onSubmit={(event) => void generate(event)}>
           <label htmlFor="model">Model</label>
           <select
-            disabled={models.length === 0 || generating}
+            disabled={availableModels.length === 0 || generating || foundryState.loading}
             id="model"
             onChange={(event) => setSelectedModel(event.target.value)}
             value={selectedModel}
           >
             <option value="">Select a verified model</option>
-            {models.map((model) => (
+            {availableModels.map((model) => (
               <option key={model.id} value={model.id}>
                 {model.id}
               </option>
@@ -293,7 +308,7 @@ export function App(): ReactElement {
             rows={4}
             value={prompt}
           />
-          <button disabled={!selectedModel || !prompt.trim() || generating} type="submit">
+          <button disabled={!canGenerate} type="submit">
             {generating ? "Generating…" : "Generate through stable API"}
           </button>
         </form>
