@@ -153,11 +153,12 @@ manifest only when checkpoint/dataset identities, rights, data scale, held-out
 quality, category regressions, quantized tool reliability, fresh-process
 serving, and model-card gates all pass.
 
-The October 19 source review found that the separate deep-promotion check still
-trusts some summary flags without fully validating the underlying measurements,
-quantized artifact, or evaluation completeness. Treat the preceding list as its
-intended contract. The verification-registry repair does not close that deep gate
-or establish Hermes promotion readiness.
+The October 19 repair validates evaluation populations, recomputes category and
+quantization quality checks, and binds the actual artifact and consumed reports to
+their digests. This enforces consistency of trusted local evidence. It does not
+independently reproduce quality, artifact loadability, licensing, or fresh-process
+serving. Those claims require their own executable evidence; this repair does not
+establish Hermes promotion readiness. See the [dated verification contract](foundry-admission-20261019.md).
 
 ## Deep dataset and resource invariants
 

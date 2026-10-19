@@ -14,13 +14,9 @@ from olympus.core.workspace import LatentWorkspace
 from olympus.forge.compiler import NaturalLanguageBehaviorCompiler
 from olympus.forge.runtime import ForgeRuntime
 from olympus.foundry.data_pipeline import prepare_instruction_dataset
-from olympus.foundry.eval_suite import evaluate_checkpoint
 from olympus.foundry.ollama import OllamaClient
-from olympus.foundry.promotion import evaluate_promotion
-from olympus.foundry.quantization import quantize_checkpoint
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.service import FoundryService
-from olympus.foundry.sft import SFTConfig, TinyModelConfig, run_sft
 from olympus.labos.manifest import ProjectRecord, ResourceProfile
 from olympus.labos.portfolio import PortfolioService
 
@@ -212,6 +208,8 @@ def foundry_train_sft(
     gradient_accumulation_steps: int = 2,
     loss_normalization: str = "supervised_token_mean_v2",
 ) -> None:
+    from olympus.foundry.sft import SFTConfig, TinyModelConfig, run_sft
+
     if mode not in {"full", "lora", "qlora"}:
         raise typer.BadParameter("mode must be full, lora, or qlora")
     if loss_normalization not in {"legacy_batch_mean_v1", "supervised_token_mean_v2"}:
@@ -251,6 +249,8 @@ def foundry_evaluate_checkpoint(
     base_checkpoint: Path | None = None,
     max_generation_tokens: int = 48,
 ) -> None:
+    from olympus.foundry.eval_suite import evaluate_checkpoint
+
     report = evaluate_checkpoint(
         checkpoint.resolve(),
         manifest.resolve(),
@@ -268,6 +268,8 @@ def foundry_quantize_checkpoint(
     output: Path,
     bits: int = 8,
 ) -> None:
+    from olympus.foundry.quantization import quantize_checkpoint
+
     if bits not in {4, 8}:
         raise typer.BadParameter("bits must be 4 or 8")
     report = quantize_checkpoint(
@@ -290,6 +292,8 @@ def foundry_promotion_check(
     output: Path,
     approved_base_license: str,
 ) -> None:
+    from olympus.foundry.promotion import evaluate_promotion
+
     report = evaluate_promotion(
         requested_model_id=requested_model_id,
         checkpoint_path=checkpoint.resolve(),

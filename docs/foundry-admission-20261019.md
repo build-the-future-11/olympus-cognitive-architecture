@@ -47,14 +47,35 @@ Candidate, explicit baseline, and quantized-source identities therefore describe
 actual consumed tensors even when the path is replaced or deleted after loading.
 The existing two-value private loader remains as a compatibility wrapper.
 
+Deep promotion now checks the internal evidence contract as well. It validates
+evaluation populations and schema, recomputes category regressions and quality
+fractions, binds quantization measurements to the evaluated source loss and
+normalization, and hashes the actual quantized artifact. A contradictory summary
+flag or missing/mismatched artifact cannot substitute for these checks. Release
+digests identify the report, model card, and artifact snapshots actually consumed.
+Output alias checks protect inputs, and temporary publication files are cleaned up.
+These checks preserve the producer's existing quality thresholds.
+
+CLI and API startup now defer tensor demos and deep-model backends until the
+requesting command or endpoint executes. A verification-family process therefore
+does not import Torch merely to inspect or serve its small JSON checkpoint.
+
 ## Verification contract
 
 The new tests use artificial records and tiny, untrained tensor fixtures. They are
-engineering regressions, not research evaluation. Of 52 new cases, 45 fail on the
-exact predecessor and seven are unchanged controls. The repaired complete Python
-suite passes 351 tests, with 87.99% combined statement/branch coverage against an 85%
-gate. All seven web tests and the TypeScript/Vite production build pass. Ruff, strict
-Mypy, distribution construction, and distribution metadata validation pass.
+engineering regressions, not research evaluation. The first 52 new cases reproduce
+45 predecessor failures and retain seven unchanged controls. Eleven additional
+resource-accounting cases validate conservative cgroup estimates. Two fresh-process
+import-blocker cases fail before startup deferral and pass afterward. Of 68 new
+promotion-evidence cases, 57 fail against the preceding implementation and 11 pass.
+These are cases, not a count of independent defects or scientific samples.
+
+The expanded complete Python suite passes 432 tests in 14.42 seconds, with 88.53%
+combined statement/branch coverage against an 85% gate. This supersedes the initial
+351-test, 87.99% implementation check; both raw results are retained. All seven web
+tests and the TypeScript/Vite production build pass. Ruff and strict Mypy pass on
+the expanded source. Initial distribution construction and metadata checks passed;
+final distribution validation follows the last implementation changes.
 
 The dependency checks have different dispositions: npm reports zero vulnerabilities;
 the strict Python audit cannot fully audit the installed CPU Torch build because
@@ -101,6 +122,10 @@ apply. This estimates usable headroom; it does not guarantee immediate reclamati
 See [Docker's working-set convention](https://docs.docker.com/reference/cli/docker/container/stats/)
 and the [kernel counter definitions](https://docs.kernel.org/admin-guide/cgroup-v2.html).
 The failed v1 receipt and dependency-cache preparation records are retained.
+The v2 attempt passed initial admission but stopped during eager Torch startup when
+the memory estimate crossed the same floor. No training output was produced. The
+startup import repair has a distinct frozen v3 attempt; it keeps the corpus, seed,
+quality thresholds, and resource policy unchanged.
 It accepts only the reviewed 674-byte built-in corpus, whose SHA-256 is
 `6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab`.
 
@@ -154,14 +179,17 @@ authenticate a malicious database writer, and it requires an applicable passing
 receipt rather than implementing later-receipt revocation. Historical artifact
 metadata was reviewed, but unavailable historical checkpoint bytes were not rerun.
 
-The separate deep-promotion gate still trusts some summary flags without fully
-validating quantization measurements/artifact identity and evaluation completeness.
-Quantization also retains its pre-existing fixed-filename overwrite behavior; the
+The deep-promotion repair checks consistency and byte identity. It does not prove
+that arbitrary hash-matching artifact bytes load as the claimed model, independently
+reproduce quality or fresh-process serving, or authenticate a report writer. Report
+and release publication are individually atomic but not a joint crash-atomic
+transaction. A rejected later attempt does not revoke an older release file.
+Quantization retains its pre-existing fixed-filename overwrite behavior; the
 snapshot identity repair does not make repeated quantization publication atomic.
 Mac/MPS behavior, QLoRA efficacy, Hermes readiness, lazy reconstruction efficiency,
 and scientific capability are unproven by this work.
 
-The next single implementation action is to make `promotion.py` reject contradictory
-quantization/evaluation facts and missing or mismatched artifacts before emitting
-`PROMOTED`, with fresh artificial regression fixtures and the existing negative
-scientific results preserved.
+The next promotion implementation action is to require an executable artifact
+contract with fresh-process load and serving evidence bound to the exact artifact
+and runtime, before a real model can claim deployment readiness. This requires its
+own bounded protocol and preserves the existing negative scientific results.

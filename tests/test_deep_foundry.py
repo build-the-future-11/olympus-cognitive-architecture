@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 
 import pytest
@@ -338,15 +339,20 @@ def test_promotion_gate_can_emit_a_hash_bound_release_manifest(
         )
         for category in manifest.splits[-1].categories
     ]
+    workflow_categories = {
+        "tool_workflow": ["tool_use", "agent_behavior"],
+        "result_comparison": ["reasoning", "self_correction", "research"],
+        "multi_step_planning": ["planning", "safety"],
+    }
     workflows = [
         WorkflowScore(
             name=name,
-            categories=["planning"],
-            examples=100,
+            categories=categories,
+            examples=100 * len(categories),
             exact_match_rate=0.9,
             nonempty_rate=1.0,
         )
-        for name in ("tool_workflow", "result_comparison", "multi_step_planning")
+        for name, categories in workflow_categories.items()
     ]
     evaluation = HeldOutEvaluation(
         checkpoint_path=str(checkpoint),
@@ -356,8 +362,8 @@ def test_promotion_gate_can_emit_a_hash_bound_release_manifest(
         test_records=1_200,
         overall_baseline_loss=2.0,
         overall_candidate_loss=1.0,
-        overall_baseline_perplexity=7.0,
-        overall_candidate_perplexity=3.0,
+        overall_baseline_perplexity=math.exp(2.0),
+        overall_candidate_perplexity=math.exp(1.0),
         category_results=category_results,
         regression_count=0,
         exact_match_rate=0.9,
@@ -371,12 +377,14 @@ def test_promotion_gate_can_emit_a_hash_bound_release_manifest(
     )
     evaluation_path = tmp_path / "evaluation.json"
     evaluation_path.write_text(evaluation.model_dump_json(), encoding="utf-8")
+    artifact = tmp_path / "fixture-int4.bin"
+    artifact.write_bytes(b"artificial quantization gate fixture".ljust(40, b"."))
     quantization = QuantizationReport(
-        format="fixture-int4",
+        format="olympus-symmetric-int4-v1",
         bits=4,
         source_checkpoint_sha256=checkpoint_sha,
-        artifact_path="fixture",
-        artifact_sha256="a" * 64,
+        artifact_path=str(artifact),
+        artifact_sha256=sha256_bytes(artifact.read_bytes()),
         float_weights_bytes=100,
         quantized_bytes=40,
         size_reduction_fraction=0.6,

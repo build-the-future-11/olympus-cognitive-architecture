@@ -15,15 +15,6 @@ from pydantic import BaseModel, ConfigDict, Field
 from olympus import __version__
 from olympus.core.interpretation import InterpretiveSuperpositionNetwork
 from olympus.core.workspace import LatentWorkspace
-from olympus.demos import (
-    run_ambiguous_interpretation_demo,
-    run_division_demo,
-    run_forge_demo,
-    run_hermes_demo,
-    run_representation_demo,
-    run_retrodiction_demo,
-    run_transform_demo,
-)
 from olympus.forge.compiler import NaturalLanguageBehaviorCompiler
 from olympus.forge.runtime import ForgeRuntime
 from olympus.foundry.ollama import OllamaClient
@@ -153,6 +144,16 @@ def run_behavior(request: RunRequest) -> dict[str, object]:
 
 @lru_cache(maxsize=1)
 def demos() -> dict[str, object]:
+    from olympus.demos import (
+        run_ambiguous_interpretation_demo,
+        run_division_demo,
+        run_forge_demo,
+        run_hermes_demo,
+        run_representation_demo,
+        run_retrodiction_demo,
+        run_transform_demo,
+    )
+
     with TemporaryDirectory(prefix="olympus-demos-") as directory:
         return {
             **run_ambiguous_interpretation_demo(),

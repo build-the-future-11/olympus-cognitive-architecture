@@ -3,50 +3,57 @@
   "project": "Olympus Cognitive Architecture",
   "repository": "build-the-future-11/olympus-cognitive-architecture",
   "updated_utc": "2026-10-19",
-  "current_phase": "DEVELOPMENT_ENGINEERING_HOSTED_VERIFIED_PENDING_DRAFT_REVIEW",
-  "scientific_disposition": "NOT_REASSESSED",
-  "research_question": "Can the actual SFT trainer continue an unchanged schedule without changing its optimizer trajectory or overwriting prior attempts?",
-  "scientific_objective": "Reliable, inspectable research infrastructure; this engineering study makes no model capability claim.",
-  "hypothesis": "Restore the consumed stochastic state, admit exact configuration/optimizer policy/counters, and own a fresh immutable attempt directory.",
-  "intended_contribution": "Exact epoch continuation of the actual SFT optimizer trajectory, explicit resume admission and append-only attempt ownership.",
-  "falsifier": "Any full/LoRA/QLoRA model or optimizer tensor differs after equivalent uninterrupted versus split CPU dropout training.; A mismatched data/configuration/optimizer policy or malformed counter is admitted.; A later attempt changes an earlier checkpoint, metrics log, or failure receipt.; A nonfinite training result is marked COMPLETED.",
+  "current_phase": "DEVELOPMENT_ENGINEERING_TESTED_BOUNDED_WORKFLOWS_PENDING",
+  "scientific_disposition": "PRIOR_NEGATIVES_PRESERVED_NEW_CAPABILITY_UNASSESSED",
+  "research_question": "Can the Foundry reject inconsistent evidence, consume and report exact artifact bytes, and complete its verification-family lifecycle within a declared CPU budget?",
+  "scientific_objective": "Reliable research infrastructure and a falsifiable model contract; no new capability or novelty claim.",
+  "hypothesis": "Shared admission, single-read identity, non-destructive publication, consistent promotion evidence, and deferred tensor imports satisfy the declared engineering invariants.",
+  "intended_contribution": "Tested admission and provenance repairs, reproducible lifecycle evidence, and a separate artificial residency-ownership diagnostic.",
+  "falsifier": "Any declared invalid admission succeeds, a consumer identity differs from consumed bytes, publication damages prior output, evidence contradictions pass promotion, or a bounded workflow fails its recorded contract.",
   "scope": {
     "included": [
-      "Dataset verification and consumption",
-      "Artificial regression fixtures",
-      "Exact source-bound local tests and hosted release checks"
+      "Artificial regression fixtures and complete existing engineering tests",
+      "One built-in FoundryVerificationBigram lifecycle after each distinct source repair",
+      "Read-only literature and scientific evidence audit",
+      "One frozen artificial CPU residency-ownership diagnostic of exact PR29 source"
     ],
     "excluded": [
-      "Scientific training",
-      "Hermes base selection",
-      "Model promotion",
-      "Held-out capability reevaluation",
-      "Parameter or architecture changes",
-      "Prior-run replacement"
+      "Protected capability reevaluation",
+      "Scientific training or parameter tuning",
+      "Hermes promotion or deployment",
+      "Paid compute, outreach, schedules, and main merge",
+      "Worldcastr and writes to reference repositories"
     ]
   },
   "development_budget": {
-    "engineering_hypotheses": 1,
-    "scientific_training_epochs": 0,
     "protected_evaluations": 0,
-    "external_dataset_downloads": 0
+    "external_dataset_downloads": 0,
+    "scientific_training_epochs": 0,
+    "lifecycle_selection": "Fixed corpus, seed, and thresholds; no quality-driven reruns",
+    "residency_diagnostic_matrices": 1
   },
   "compute_budget": {
     "local_device": "CPU",
+    "compute_lanes": 1,
     "paid_jobs": 0,
     "large_model_runs": 0,
-    "per_test_command_timeout_seconds": 120
+    "per_test_command_timeout_seconds": 120,
+    "lifecycle_wall_seconds": 120,
+    "residency_diagnostic_wall_seconds": 90,
+    "minimum_estimated_headroom_bytes": 2147483648,
+    "maximum_swap_fraction": 0.9
   },
   "protected_evaluation_boundary": "The dated prior model ledgers and retained experiments remain unchanged. Artificial unit tests do not authorize capability evaluation or promotion.",
   "source_basis": {
-    "base_pr": 23,
-    "base_branch": "codex/olympus-dataset-contract-20261010-b805",
-    "base_commit": "c37066fa5c349eaca0acf43b0e9a57306fdf42ec",
-    "base_tree": "b9bf5fd77e430fd1686301b7b7513850df6743e5"
+    "base_branch": "main",
+    "base_commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
+    "development_branch": "fix/olympus-foundry-admission-20261019",
+    "current_parent_commit": "37cb1b678e1666d33208147964fedcdf4a1f5167",
+    "experimental_diagnostic_subject": "12b7c785958b741ec48834a74e81df0c674d327b:olympus/models/spatiotemporal_lazy.py"
   },
   "datasets": {
-    "development": "New artificial 36-record unit fixtures",
-    "protected": "No protected data accessed by this change"
+    "development": "Artificial metadata/tensor regressions; 674-byte built-in verification corpus; artificial three-shard diagnostic",
+    "protected": "No protected data accessed or prior capability outcome regenerated"
   },
   "artifacts": [
     "research/REALITY_LEDGER.md",
@@ -182,34 +189,31 @@
     {
       "date": "2026-10-19",
       "event": "Foundry admission repair published and locally tested; first lifecycle run stopped before children. Freeze resource-accounting v2 with the unchanged2GiBfloor and conservative inactive-cache estimate before retry. User added scientific audit/specification pipeline; protected studies remain closed."
+    },
+    {
+      "date": "2026-10-19",
+      "event": "Freeze deep-promotion evidence guard v1 and startup-only import deferral v3 before new outcome checks. Preserve the v2 resource-guard termination and both import regressions."
+    },
+    {
+      "date": "2026-10-19",
+      "event": "Preserved the previous canonical state as predecessor_canonical_state_20261019. Expanded source passes 432 tests with 88.53% combined statement/branch coverage, Ruff, and strict Mypy. Freeze the exact-source v3 lifecycle and residency ownership protocol v2 before their execution. No protected scientific outcome changed."
     }
   ],
   "verification": {
-    "local_tests_passed": 34,
-    "new_regression_cases": 15,
-    "baseline_failed_cases": 10,
-    "full_release_status": "PASSED_FOR_VALIDATED_CODE_SNAPSHOT",
-    "independent_review": {
-      "date": "2026-10-10",
-      "reviewer": "Independent parent research agent",
-      "status": "NO_BLOCKING_FINDINGS",
-      "validated_source_commit": "fef543387eb0b5d612f8ad9a5452530ac3f7ca4f",
-      "scope": [
-        "Same-byte hash verification and parsed-record binding",
-        "All complete-dataset checks before returning",
-        "Evaluation, SFT and quantization consume verified records",
-        "Compatibility verifier return type",
-        "Release of unused split dictionaries"
-      ],
-      "independent_test_rerun": false,
-      "limit": "Source review only; full integration evidence comes from the hosted Python3.14.8 release gate."
-    },
-    "research_complete": false,
-    "validated_source_commit": "fef543387eb0b5d612f8ad9a5452530ac3f7ca4f",
-    "hosted_release_url": "https://github.com/build-the-future-11/olympus-cognitive-architecture/actions/runs/38026180950",
-    "hosted_python": "3.14.8",
-    "hosted_tests_passed": 194,
-    "hosted_branch_coverage_percent": 87.4
+    "python_passed": 432,
+    "python_failed": 0,
+    "python_skipped": 0,
+    "combined_statement_branch_coverage_percent": 88.53,
+    "web_passed": 7,
+    "web_build": "PASS",
+    "python_dependency_audit": "BLOCKED_EXACT_CPU_TORCH_VERSION_NOT_IN_PYPI",
+    "workflow_first_attempt": "STOPPED_AT_MEMORY_PREFLIGHT_NO_CHILD_LAUNCHED",
+    "python_elapsed_seconds": 14.42,
+    "new_regression_cases": 133,
+    "ruff": "PASS",
+    "mypy": "PASS_89_SOURCE_FILES",
+    "workflow_v2": "STOPPED_DURING_EAGER_TORCH_IMPORT_NO_TRAINING_OUTPUT",
+    "exact_revision_binding": "The next lifecycle receipt will bind its clean source commit and all source hashes; the final evidence manifest will bind test logs."
   },
   "active_engineering_revision": {
     "phase": "LOCALLY_AND_HOSTED_VERIFIED_PENDING_INTEGRATION",
@@ -295,7 +299,7 @@
   },
   "foundry_admission_20261019": {
     "id": "foundry-admission-and-checkpoint-snapshots-v1-20261019",
-    "status": "IMPLEMENTED_LOCALLY_TESTED_WORKFLOW_PREFLIGHT_REVISION",
+    "status": "EXPANDED_SOURCE_TESTED_BEFORE_V3_LIFECYCLE",
     "source_basis": {
       "branch": "main",
       "commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4"
@@ -344,14 +348,19 @@
     "evidence_root": "research/verification/foundry_admission_20261019",
     "implementation_commit": "2d901bc1d14e0bfc9f9bde85bef0ec287a8f4d02",
     "verification": {
-      "python_passed": 351,
+      "python_passed": 432,
       "python_failed": 0,
       "python_skipped": 0,
-      "combined_statement_branch_coverage_percent": 87.99,
+      "combined_statement_branch_coverage_percent": 88.53,
       "web_passed": 7,
       "web_build": "PASS",
       "python_dependency_audit": "BLOCKED_EXACT_CPU_TORCH_VERSION_NOT_IN_PYPI",
-      "workflow_first_attempt": "STOPPED_AT_MEMORY_PREFLIGHT_NO_CHILD_LAUNCHED"
+      "workflow_first_attempt": "STOPPED_AT_MEMORY_PREFLIGHT_NO_CHILD_LAUNCHED",
+      "python_elapsed_seconds": 14.42,
+      "new_regression_cases": 133,
+      "ruff": "PASS",
+      "mypy": "PASS_89_SOURCE_FILES",
+      "workflow_v2": "STOPPED_DURING_EAGER_TORCH_IMPORT_NO_TRAINING_OUTPUT"
     },
     "resource_policy_v2": {
       "reason": "Raw cgroup usage includes reclaimable cache; first workflow attempt stopped before training. Preserve failed receipt.",
@@ -362,6 +371,131 @@
       "validation": "11 fresh resource-counter cases passed before the v2 retry",
       "new_output": "artifacts/foundry-admission-run-20261019-v2",
       "stopping_rule": "one v2 lifecycle attempt after preflight; preserve all failures; no metric-driven repeats"
+    },
+    "promotion_guard_v1": {
+      "hypothesis": "Internally contradictory evaluation or quantization reports, incomplete populations, and missing/mismatched quantized artifact bytes must not produce a release.",
+      "baseline_commit": "37cb1b678e1666d33208147964fedcdf4a1f5167",
+      "fixtures": "Artificial records and bytes; dataset verifier stub explicitly supplies scale metadata. No capability result is measured.",
+      "independent_unit": "one constructed contradiction or unchanged boundary/control",
+      "primary_metric": "fail-closed report decision and digest identity",
+      "scope": "Evidence consistency, not authenticity or independent quality reproduction",
+      "maximum_command_seconds": 120,
+      "compute_lanes": 1,
+      "scientific_threshold_changes": 0,
+      "baseline_failed": 57,
+      "baseline_passed": 11,
+      "fixed_passed": 68
+    },
+    "workflow_startup_v3": {
+      "predecessor_result": "v2 killed verify-pipeline during eager Torch import at 235749376 bytes peak RSS; no training output",
+      "hypothesis": "Import tensor demos and deep training/evaluation backends only when their commands execute; verification-family startup should not require Torch.",
+      "regression": "Two import-blocker cases failed before and passed after the import deferral.",
+      "new_output": "artifacts/foundry-admission-run-20261019-v3",
+      "resource_policy": "unchanged v2 memory estimate and 2 GiB floor",
+      "stopping_rule": "One post-repair lifecycle; no protected runs and no quality-driven reruns."
+    },
+    "initial_verification": {
+      "python_passed": 351,
+      "python_failed": 0,
+      "python_skipped": 0,
+      "combined_statement_branch_coverage_percent": 87.99,
+      "web_passed": 7,
+      "web_build": "PASS",
+      "python_dependency_audit": "BLOCKED_EXACT_CPU_TORCH_VERSION_NOT_IN_PYPI",
+      "workflow_first_attempt": "STOPPED_AT_MEMORY_PREFLIGHT_NO_CHILD_LAUNCHED"
     }
+  },
+  "predecessor_canonical_state_20261019": {
+    "current_phase": "DEVELOPMENT_ENGINEERING_HOSTED_VERIFIED_PENDING_DRAFT_REVIEW",
+    "scientific_disposition": "NOT_REASSESSED",
+    "research_question": "Can the actual SFT trainer continue an unchanged schedule without changing its optimizer trajectory or overwriting prior attempts?",
+    "scientific_objective": "Reliable, inspectable research infrastructure; this engineering study makes no model capability claim.",
+    "hypothesis": "Restore the consumed stochastic state, admit exact configuration/optimizer policy/counters, and own a fresh immutable attempt directory.",
+    "intended_contribution": "Exact epoch continuation of the actual SFT optimizer trajectory, explicit resume admission and append-only attempt ownership.",
+    "falsifier": "Any full/LoRA/QLoRA model or optimizer tensor differs after equivalent uninterrupted versus split CPU dropout training.; A mismatched data/configuration/optimizer policy or malformed counter is admitted.; A later attempt changes an earlier checkpoint, metrics log, or failure receipt.; A nonfinite training result is marked COMPLETED.",
+    "scope": {
+      "included": [
+        "Dataset verification and consumption",
+        "Artificial regression fixtures",
+        "Exact source-bound local tests and hosted release checks"
+      ],
+      "excluded": [
+        "Scientific training",
+        "Hermes base selection",
+        "Model promotion",
+        "Held-out capability reevaluation",
+        "Parameter or architecture changes",
+        "Prior-run replacement"
+      ]
+    },
+    "development_budget": {
+      "engineering_hypotheses": 1,
+      "scientific_training_epochs": 0,
+      "protected_evaluations": 0,
+      "external_dataset_downloads": 0
+    },
+    "compute_budget": {
+      "local_device": "CPU",
+      "paid_jobs": 0,
+      "large_model_runs": 0,
+      "per_test_command_timeout_seconds": 120
+    },
+    "source_basis": {
+      "base_pr": 23,
+      "base_branch": "codex/olympus-dataset-contract-20261010-b805",
+      "base_commit": "c37066fa5c349eaca0acf43b0e9a57306fdf42ec",
+      "base_tree": "b9bf5fd77e430fd1686301b7b7513850df6743e5"
+    },
+    "datasets": {
+      "development": "New artificial 36-record unit fixtures",
+      "protected": "No protected data accessed by this change"
+    },
+    "verification": {
+      "local_tests_passed": 34,
+      "new_regression_cases": 15,
+      "baseline_failed_cases": 10,
+      "full_release_status": "PASSED_FOR_VALIDATED_CODE_SNAPSHOT",
+      "independent_review": {
+        "date": "2026-10-10",
+        "reviewer": "Independent parent research agent",
+        "status": "NO_BLOCKING_FINDINGS",
+        "validated_source_commit": "fef543387eb0b5d612f8ad9a5452530ac3f7ca4f",
+        "scope": [
+          "Same-byte hash verification and parsed-record binding",
+          "All complete-dataset checks before returning",
+          "Evaluation, SFT and quantization consume verified records",
+          "Compatibility verifier return type",
+          "Release of unused split dictionaries"
+        ],
+        "independent_test_rerun": false,
+        "limit": "Source review only; full integration evidence comes from the hosted Python3.14.8 release gate."
+      },
+      "research_complete": false,
+      "validated_source_commit": "fef543387eb0b5d612f8ad9a5452530ac3f7ca4f",
+      "hosted_release_url": "https://github.com/build-the-future-11/olympus-cognitive-architecture/actions/runs/38026180950",
+      "hosted_python": "3.14.8",
+      "hosted_tests_passed": 194,
+      "hosted_branch_coverage_percent": 87.4
+    }
+  },
+  "residency_ownership_20261019": {
+    "study_id": "olympus-residency-ownership-dev-v1-20261019",
+    "status": "FROZEN_NOT_EXECUTED",
+    "protocol_version": 2,
+    "protocol_sha256": "d937e38dc7b3d3c32f0fcafecd2f65a98ed532b7e368ee8ff17cd495c2af7a25",
+    "script_sha256": "fd63cd8aacab03b1e80733e3d9b8546400307784dc5be7ae70d6c47eae6b9fee",
+    "subject_commit": "12b7c785958b741ec48834a74e81df0c674d327b",
+    "interpretation": "Test the stronger whole-module residency interpretation separately from the explicit dictionary-cache budget contract.",
+    "budget": {
+      "matrices": 1,
+      "fixture_processes": 1,
+      "arm_processes": 2,
+      "total_selected_layer_forwards": 12,
+      "training_updates": 0,
+      "protected_evaluations": 0,
+      "wall_seconds": 90,
+      "compute_lanes": 1
+    },
+    "stopping_rule": "One matrix with fixed three-shard fixture, trace, seed, and control; retain any failure or block without scientific resampling."
   }
 }
