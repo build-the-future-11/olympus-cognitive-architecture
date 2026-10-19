@@ -18,11 +18,13 @@ from olympus.foundry.data_pipeline import InstructionExample, load_verified_data
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.sft import (
     LossNormalization,
+    OutputProtocol,
     TinyCausalLM,
     TinyModelConfig,
     _checkpoint_training_config,
     _encode_examples,
     _model_from_payload,
+    _output_protocol_version,
     _read_checkpoint,
     evaluate_loss,
     generate_text,
@@ -86,6 +88,9 @@ class HeldOutEvaluation(StrictModel):
     passed_smoke_quality_gate: bool
     decision: str
     loss_normalization: LossNormalization = "legacy_batch_mean_v1"
+    # Absent metadata belongs to the historical raw-byte evaluation protocol.
+    output_protocol: OutputProtocol = "legacy_raw_bytes_v1"
+    max_generation_tokens: int | None = Field(default=None, gt=0)
 
 
 def _load_test_examples(manifest_path: Path) -> tuple[str, list[InstructionExample]]:
@@ -152,7 +157,11 @@ def evaluate_checkpoint(
     *,
     base_checkpoint: Path | None = None,
     max_generation_tokens: int = 48,
+    output_protocol: OutputProtocol = "framed_answer_eos_v2",
 ) -> HeldOutEvaluation:
+    protocol_version = _output_protocol_version(output_protocol)
+    if max_generation_tokens < 1:
+        raise ValueError("max_generation_tokens must be positive")
     validate_output_paths(
         [output_path],
         [checkpoint_path, manifest_path, *([base_checkpoint] if base_checkpoint else [])],
@@ -206,6 +215,7 @@ def evaluate_checkpoint(
             example.prompt,
             device=device,
             max_new_tokens=max_generation_tokens,
+            output_protocol=output_protocol,
         )
         latencies.append(time.perf_counter() - start)
         generated_bytes += len(answer.encode())
@@ -222,6 +232,10 @@ def evaluate_checkpoint(
         else "Failed the infrastructure smoke gate and is ineligible for model promotion."
     )
     report = HeldOutEvaluation(
+        schema_version=protocol_version,
+        suite=f"olympus-held-out-capabilities-v{protocol_version}",
+        output_protocol=output_protocol,
+        max_generation_tokens=max_generation_tokens,
         loss_normalization=training.loss_normalization,
         checkpoint_path=str(checkpoint_path.resolve()),
         checkpoint_sha256=checkpoint_sha,

@@ -1,0 +1,53 @@
+{
+  "checked_utc": "2026-10-19T12:56:23.457364+00:00",
+  "source_parent_commit": "3641551eabcaff91651c1aa1386657e7f68106c5",
+  "python_tests": {
+    "passed": 520,
+    "failed": 0,
+    "skipped": 0,
+    "branch_enabled_coverage_percent": 87.82,
+    "seconds": 13.04
+  },
+  "focused_tests": {
+    "passed": 111,
+    "failed": 0,
+    "seconds": 2.01
+  },
+  "web_tests": {
+    "passed": 11,
+    "failed": 0
+  },
+  "checks": {
+    "ruff": "PASS",
+    "mypy_standard_93_files": "PASS",
+    "mypy_all_scripts_99_files": "PASS",
+    "web_build": "PASS",
+    "python_audit": "PASS_NO_KNOWN_VULNERABILITIES",
+    "npm_audit": "PASS_ZERO_VULNERABILITIES",
+    "sdist_and_wheel": "PASS",
+    "twine": "PASS"
+  },
+  "logs_sha256": {
+    "mypy-all.log": "36dda6f9cde9c4724b81d27ea2de1d55f45a24bcb058ea63cdcf553e01f019e1",
+    "mypy.log": "e82a76bfc0eb45231afea17b5228a00a04ed2e11d057f838437ba67a912b5bd8",
+    "pytest-full.log": "9b52cc7d1b8beffad3642acc9b2ab5ad5d55d4e0167bb6b257844ef125192607",
+    "python-audit.log": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+    "python-build.log": "bc76ed3b600f30f2fb528dc5a5214c4929c939183fd4c46accf2102da1cfed27",
+    "ruff.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "twine.log": "be053ff717e28b23c701d8c10efd5ec5624c8e2efc08f138375a616755ebfaa9",
+    "web-audit.log": "68d7b0e53628962865da889964201260d748d6d98ba492735e201d6b80cc9bb5",
+    "web-build.log": "d584f7ef0c1c4c8e7e0008b7ed6c94e8f319527684a10c449eb1c9e414ba6b70",
+    "web-tests.log": "fcaecc5fcc0dd7963a3d71b244ece883e44679305125935cc785f6ac8834194d"
+  },
+  "labels": [
+    "IMPLEMENTED",
+    "LOCALLY_TESTED"
+  ],
+  "not_claimed": [
+    "REMOTE_EXECUTION",
+    "EXTERNAL_INDEPENDENT_REPLICATION",
+    "HERMES_CAPABILITY",
+    "SCIENTIFIC_SUPPORT"
+  ],
+  "wheel_matches_source_runtime_files": 65
+}

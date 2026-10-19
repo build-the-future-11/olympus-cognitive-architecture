@@ -249,13 +249,17 @@ def foundry_evaluate_checkpoint(
     output: Path,
     base_checkpoint: Path | None = None,
     max_generation_tokens: int = 48,
+    output_protocol: str = "framed_answer_eos_v2",
 ) -> None:
+    if output_protocol not in {"legacy_raw_bytes_v1", "framed_answer_eos_v2"}:
+        raise typer.BadParameter("unsupported output protocol")
     report = evaluate_checkpoint(
         checkpoint.resolve(),
         manifest.resolve(),
         output.resolve(),
         base_checkpoint=base_checkpoint.resolve() if base_checkpoint else None,
         max_generation_tokens=max_generation_tokens,
+        output_protocol=output_protocol,  # type: ignore[arg-type]
     )
     console.print_json(report.model_dump_json())
 
@@ -266,14 +270,20 @@ def foundry_quantize_checkpoint(
     manifest: Path,
     output: Path,
     bits: int = 8,
+    max_generation_tokens: int = 48,
+    output_protocol: str = "framed_answer_eos_v2",
 ) -> None:
     if bits not in {4, 8}:
         raise typer.BadParameter("bits must be 4 or 8")
+    if output_protocol not in {"legacy_raw_bytes_v1", "framed_answer_eos_v2"}:
+        raise typer.BadParameter("unsupported output protocol")
     report = quantize_checkpoint(
         checkpoint.resolve(),
         manifest.resolve(),
         output.resolve(),
         bits=bits,  # type: ignore[arg-type]
+        max_generation_tokens=max_generation_tokens,
+        output_protocol=output_protocol,  # type: ignore[arg-type]
     )
     console.print_json(report.model_dump_json())
 

@@ -1,0 +1,21 @@
+{
+  "before": {
+    "current": 7433859072,
+    "limit": 8589934592,
+    "inactive_file": 715612160,
+    "dirty": 19537920,
+    "writeback": 0,
+    "estimate": 1852149760
+  },
+  "root": "/tmp/olympus-20261019-python",
+  "utc": "2026-10-19T12:30:15Z",
+  "files": 3790,
+  "after": {
+    "current": 7400026112,
+    "limit": 8589934592,
+    "inactive_file": 710098944,
+    "dirty": 19537920,
+    "writeback": 0,
+    "estimate": 1880469504
+  }
+}

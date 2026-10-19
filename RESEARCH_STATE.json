@@ -2,62 +2,59 @@
   "schema_version": 1,
   "project": "Olympus Cognitive Architecture",
   "repository": "build-the-future-11/olympus-cognitive-architecture",
-  "updated_utc": "2026-10-19",
-  "current_phase": "LOCAL_ENGINEERING_VERIFIED_FOUNDRY_ARTIFACT_ADMISSION",
-  "scientific_disposition": "NOT_REASSESSED",
-  "research_question": "Do admitted dataset, checkpoint, evaluation and export identities remain bound to the exact bytes consumed, and do invalid artifacts stay unavailable?",
-  "scientific_objective": "Reliable, inspectable research infrastructure; this engineering study makes no model capability claim.",
-  "hypothesis": "Single-read artifact snapshots and registry/evidence admission checks prevent substitution and false availability without changing model objectives or preserved results.",
-  "intended_contribution": "Bind durable and deep Foundry artifact admission, retained evidence, exports, and live availability to their consumed identities.",
-  "falsifier": "An evaluation, baseline or quantization report names bytes other than the checkpoint it consumed.; Missing, changed or incompatible quantized weights can pass artifact admission.; A caller can substitute a registered dataset, omit a passing held-out evaluation, or relabel the bigram runtime as a reserved model.; A corrupt or unsupported checkpoint is shown as available or produces a response.; A rejected export destroys an existing destination or predecessor evidence.",
+  "updated_utc": "2026-10-19T12:56:23.457364+00:00",
+  "current_phase": "READY_FOR_CODE_AND_CONFIRMATORY_FREEZE",
+  "scientific_disposition": "PENDING_NEW_STUDY",
+  "research_question": "Does latent target prediction add measurable observable-state autoregressive forecasting value over the same trainable direct predictor on fresh controlled dynamical trajectories?",
+  "scientific_objective": "Measure whether the predictive mechanism improves observable forecasting under fair controls, then reach a defensible terminal conclusion.",
+  "hypothesis": "EMA temporal latent loss plus coordinate variance improves20-step shifted-initial-condition observable forecast NMSE by at least10% over identical architecture with matched training process CPU time, subject to prespecified ID/family/divergence guards.",
+  "intended_contribution": "A falsifiable applicability and validity study of the current predictive mechanism; EMA, variance regularization and latent prediction are established ideas, not claimed inventions.",
+  "falsifier": "A frozen comparison finds no prespecified practical improvement, or an identified confound explains the effect.",
   "scope": {
     "included": [
-      "Artificial CPU mechanism regressions and the complete existing test suite",
-      "One deterministic repository-corpus bigram lifecycle with a separate corruption fixture",
-      "Artifact admission, export preservation, and live API/CLI/web availability",
-      "Isolated development-branch code publication"
+      "Existing-model scientific audit",
+      "Versioned evaluation framing correction if confirmed",
+      "Fresh synthetic observable prediction study",
+      "Paper, artifacts, independent review and isolated branch publication"
     ],
     "excluded": [
-      "Protected capability evaluation",
-      "Hermes family promotion",
-      "Default-branch merges and release publication",
-      "External deployment or paid compute",
-      "Related repository writes and Worldcastr",
-      "Changing historical model results"
+      "Historical holdout reuse",
+      "Model-family promotion",
+      "Default-branch merge",
+      "Release publication",
+      "Paid or unbounded compute",
+      "Related repositories and Worldcastr"
     ]
   },
   "development_budget": {
-    "compute_lanes": 1,
-    "threads_requested": 2,
-    "workflow_timeout_seconds": 120,
-    "protected_evaluations": 0,
-    "external_model_or_dataset_downloads": 0
+    "max_configurations": 2,
+    "max_independent_development_seeds": 2,
+    "confirmation_is_not_development": true
   },
   "compute_budget": {
     "compute_lanes": 1,
-    "device": "CPU",
-    "threads": 2,
-    "per_test_command_seconds": 120,
-    "workflow_seconds": 120,
-    "max_new_bigram_characters": 2000,
-    "max_artificial_sft_records": 36,
-    "max_artificial_sft_epochs": 3,
-    "max_artificial_sft_width": 32,
-    "protected_capability_evaluations": 0,
+    "device": "cpu",
+    "numeric_threads_requested": 2,
+    "total_scientific_wall_seconds": 900,
+    "development_configurations_max": 2,
+    "confirmation_replicates_max": 8,
+    "per_command_timeout_seconds": 120,
+    "minimum_estimated_available_bytes": 1073741824,
     "paid_jobs": 0,
-    "external_model_or_dataset_downloads": 0
+    "external_model_or_dataset_downloads": 0,
+    "historical_protected_reevaluations": 0,
+    "resource_contract": "working-set-supervised-v2",
+    "sampled_child_rss_ceiling_bytes": 805306368
   },
-  "protected_evaluation_boundary": "The dated prior model ledgers and retained experiments remain unchanged. Artificial unit tests do not authorize capability evaluation or promotion.",
+  "protected_evaluation_boundary": "Historical datasets and outcomes unchanged. New confirmatory synthetic trajectory outcomes must not be generated or inspected until final code and protocol are frozen.",
   "source_basis": {
-    "repository": "build-the-future-11/olympus-cognitive-architecture",
-    "base_commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
-    "base_tree": "eea94fd950e4134af0a36368798f4bca4fe62636",
-    "development_branch": "codex/olympus-foundry-integrity-20261019",
-    "execution_identity": "Base plus recorded dirty implementation/test patch; 101 file hashes in retained workflow."
+    "base_commit": "3641551eabcaff91651c1aa1386657e7f68106c5",
+    "development_branch": "codex/olympus-research-successor-20261019",
+    "ownership": "ChatGPT root; three read-only reviewers"
   },
   "datasets": {
-    "development": "Fresh artificial engineering fixtures and repository-owned 674-character Foundry corpus",
-    "protected": "No new protected capability campaign"
+    "development": "Two declared synthetic families; train64 trajectories and development24 per block. Only seeds701/702 configurationsa/b may be inspected.",
+    "protected": "Seeds1701..1708 not generated; require frozen code commit and exact protocol before confirmation."
   },
   "artifacts": [
     "research/REALITY_LEDGER.md",
@@ -105,7 +102,8 @@
   ],
   "failures": [
     "Existing consumers verify split bytes and then reread files without binding the later content to those hashes.",
-    "The prior recorded transformer had zero exact task and tool completion; no Hermes model was promoted."
+    "The prior recorded transformer had zero exact task and tool completion; no Hermes model was promoted.",
+    "2026-10-19 dry-v1 stopped before training because estimated available memory was below the initial2GiB floor; original report lacked sampled counters, which are unavailable retrospectively. Report and subsequent cache-advice receipts retained unchanged."
   ],
   "history_policy": "Append revisions and failures with source identities. Preserve dated predecessor ledgers and frozen outcomes. Prior history is referenced without claiming to reconstruct missing events.",
   "history": [
@@ -211,6 +209,31 @@
       "date": "2026-10-19",
       "event": "Completed artifact-admission/availability repair from dc46b831e2aa88a5e669e1343463dc74ef1270a4. Final regression sources produced 108 failures and two controls on the clean base; repaired full suite passed 409 with 87.61% branch-enabled coverage. Eleven web tests, typing/lint, builds/audits, and the 16.428-second bounded lifecycle passed. First resource preflight and all diagnostic failures are preserved. Historical scientific outcomes remain unchanged.",
       "record": "research/ENGINEERING_FOUNDRY_INTEGRITY_20261019.json"
+    },
+    {
+      "date": "2026-10-19T12:07:07.225769+00:00",
+      "event": "Published engineering predecessor 3641551eabcaff91651c1aa1386657e7f68106c5, then opened separately versioned scientific successor under new explicit user instruction. No new scientific runs yet.",
+      "study_id": "olympus-observable-prediction-v1-20261019"
+    },
+    {
+      "date": "2026-10-19T12:39:09.342640+00:00",
+      "kind": "pre_outcome_resource_contract_revision",
+      "event": "Retain dry-v1 failure before warmup/training (no families generated). Initial2GiB working-set floor was a conservative study choice, not a user-prescribed threshold. After337MiB import peak and independent source review, prospectively define1GiB remaining estimated headroom plus external0.25s child-RSS/host monitor with768MiB sampled RSS ceiling, same one lane/two threads/900s budget. Freeze resource-v1 bytes separately. No scientific outcome or quality threshold changed. Revalidate full dry pipeline before development.",
+      "predecessor_protocol_sha256": "f59e67e36df4c5a853a61ae1488a53583cdcb74daf025b9a52bdbdb04e4093fb",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19T12:47:41.879082+00:00",
+      "kind": "run_ready",
+      "event": "111 focused artificial/engineering tests passed. Ruff passed and strict MyPy98files passed. Monitored dry-v2 completed2families\u00d710arms; raw evidence verifier passed every forecast, metric, hash, split and export. Peak child RSS377053184bytes; sampled remaining headroom minimum1352998912bytes;4.011234354seconds supervisor duration. Begin only the declared four development blocks.",
+      "scientific_confirmation_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19T12:56:23.457364+00:00",
+      "kind": "development_complete",
+      "event": "All four prospectively declared development blocks and full ten-arm matrices completed. Selectedconfigurationb using the declared rule; no additional tuning. Recorded unfavorable direct/cubic comparisons. Full520Python/11web tests, coverage87.82%, type/lint/dependency/build gates pass. Protected outcomes remain ungenerated.",
+      "record": "research/studies/observable_prediction_v1/development-selection.json",
+      "scientific_confirmation_outcomes_created": false
     }
   ],
   "verification": {
@@ -308,7 +331,7 @@
     "hosted_tests_passed": 276,
     "hosted_branch_enabled_coverage_percent": 87.27
   },
-  "active_study_key": "active_foundry_integrity_study",
+  "active_study_key": "active_observable_prediction_study",
   "portfolio_integration": {
     "date": "2026-10-17",
     "merged_prs": [
@@ -472,5 +495,89 @@
         "Treat data identity fixes as engineering behavior, not evidence of model capability."
       ]
     }
+  },
+  "successor_predecessor_contexts": [
+    {
+      "source_commit": "3641551eabcaff91651c1aa1386657e7f68106c5",
+      "preserved_before_successor": {
+        "current_phase": "LOCAL_ENGINEERING_VERIFIED_FOUNDRY_ARTIFACT_ADMISSION",
+        "scientific_disposition": "NOT_REASSESSED",
+        "research_question": "Do admitted dataset, checkpoint, evaluation and export identities remain bound to the exact bytes consumed, and do invalid artifacts stay unavailable?",
+        "scientific_objective": "Reliable, inspectable research infrastructure; this engineering study makes no model capability claim.",
+        "hypothesis": "Single-read artifact snapshots and registry/evidence admission checks prevent substitution and false availability without changing model objectives or preserved results.",
+        "intended_contribution": "Bind durable and deep Foundry artifact admission, retained evidence, exports, and live availability to their consumed identities.",
+        "falsifier": "An evaluation, baseline or quantization report names bytes other than the checkpoint it consumed.; Missing, changed or incompatible quantized weights can pass artifact admission.; A caller can substitute a registered dataset, omit a passing held-out evaluation, or relabel the bigram runtime as a reserved model.; A corrupt or unsupported checkpoint is shown as available or produces a response.; A rejected export destroys an existing destination or predecessor evidence.",
+        "scope": {
+          "included": [
+            "Artificial CPU mechanism regressions and the complete existing test suite",
+            "One deterministic repository-corpus bigram lifecycle with a separate corruption fixture",
+            "Artifact admission, export preservation, and live API/CLI/web availability",
+            "Isolated development-branch code publication"
+          ],
+          "excluded": [
+            "Protected capability evaluation",
+            "Hermes family promotion",
+            "Default-branch merges and release publication",
+            "External deployment or paid compute",
+            "Related repository writes and Worldcastr",
+            "Changing historical model results"
+          ]
+        },
+        "development_budget": {
+          "compute_lanes": 1,
+          "threads_requested": 2,
+          "workflow_timeout_seconds": 120,
+          "protected_evaluations": 0,
+          "external_model_or_dataset_downloads": 0
+        },
+        "compute_budget": {
+          "compute_lanes": 1,
+          "device": "CPU",
+          "threads": 2,
+          "per_test_command_seconds": 120,
+          "workflow_seconds": 120,
+          "max_new_bigram_characters": 2000,
+          "max_artificial_sft_records": 36,
+          "max_artificial_sft_epochs": 3,
+          "max_artificial_sft_width": 32,
+          "protected_capability_evaluations": 0,
+          "paid_jobs": 0,
+          "external_model_or_dataset_downloads": 0
+        },
+        "protected_evaluation_boundary": "The dated prior model ledgers and retained experiments remain unchanged. Artificial unit tests do not authorize capability evaluation or promotion.",
+        "source_basis": {
+          "repository": "build-the-future-11/olympus-cognitive-architecture",
+          "base_commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
+          "base_tree": "eea94fd950e4134af0a36368798f4bca4fe62636",
+          "development_branch": "codex/olympus-foundry-integrity-20261019",
+          "execution_identity": "Base plus recorded dirty implementation/test patch; 101 file hashes in retained workflow."
+        },
+        "datasets": {
+          "development": "Fresh artificial engineering fixtures and repository-owned 674-character Foundry corpus",
+          "protected": "No new protected capability campaign"
+        }
+      }
+    }
+  ],
+  "active_observable_prediction_study": {
+    "study_id": "olympus-observable-prediction-v1-20261019",
+    "protocol": "research/studies/observable_prediction_v1/protocol.json",
+    "specification": "research/studies/observable_prediction_v1/specification.md",
+    "phase": "DEVELOPMENT_COMPLETE_FREEZE_PENDING",
+    "checkpoints": {
+      "1_IDEA_READY": "PASS_NARROW_APPLICABILITY_STUDY",
+      "2_MODEL_SPECIFICATION_READY": "PASS_PROSPECTIVE",
+      "3_METHODOLOGY_READY": "PASS_PROSPECTIVE",
+      "4_MODEL_IMPLEMENTED": "PASS_FOCUSED_TESTS",
+      "5_EXPERIMENT_SYSTEM_IMPLEMENTED": "PASS_DRY_RAW_EVIDENCE",
+      "6_RUN_READY": "PASS_MONITORED_DRY",
+      "7_CONFIRMATORY_PROTOCOL_FROZEN": "PENDING",
+      "8_EVIDENCE_LOCKED": "PENDING",
+      "9_VERIFIED": "PENDING",
+      "10_RESEARCH_COMPLETE": "PENDING"
+    },
+    "confirmation_generated": false,
+    "selected_configuration": "b",
+    "development_result": "SelectedbGM0.01862981669 vs a0.02250838672; b is worse than CPU-matched direct on development and cubic control is much better. This is evidence against benefit, retained before confirmation."
   }
 }

@@ -27,12 +27,18 @@ import urllib.error
 import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
+
+
+class GenerationSettings(TypedDict):
+    max_characters: int
+    temperature: float
+    seed: int
 
 REPOSITORY = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPOSITORY))
 PROMPT = "user: request verify evidence"
-GENERATION = {"max_characters": 80, "temperature": 0.7, "seed": 7}
+GENERATION: GenerationSettings = {"max_characters": 80, "temperature": 0.7, "seed": 7}
 GIB = 1024**3
 
 

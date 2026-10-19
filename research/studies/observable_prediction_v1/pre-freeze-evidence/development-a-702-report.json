@@ -1,0 +1,1874 @@
+{
+  "command": [
+    "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/scripts/run_observable_prediction.py",
+    "--phase",
+    "development",
+    "--seed",
+    "702",
+    "--configuration",
+    "a",
+    "--output",
+    "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702",
+    "--supervisor-pid",
+    "54763"
+  ],
+  "configuration": {
+    "id": "a",
+    "latent_weight": 0.1,
+    "variance_weight": 0.01
+  },
+  "elapsed_seconds": 13.042325479000283,
+  "environment": {
+    "numpy": "2.5.4",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+    "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+    "torch": "2.14.1+cpu"
+  },
+  "families": {
+    "duffing": {
+      "arms": {
+        "cubic_ridge": {
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 1.158598627652927e-09,
+                "10": 2.3837251898144637e-08,
+                "20": 3.2051468666089336e-08,
+                "50": 7.208540304223901e-08
+              },
+              "rollout_wall_seconds": 0.002679533004993573
+            }
+          },
+          "forecasts_sha256": "787648dc2eba7ee274336c6de1619b853870150dd38e9cd12988abb04c1abba4",
+          "trainable_parameters": 20,
+          "training_wall_seconds": 0.00043725999421440065
+        },
+        "direct": {
+          "after": {
+            "cgroup_inactive_file_bytes": 843608064,
+            "cgroup_memory_current_bytes": 8321740800,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838385664,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 268193792,
+            "device": "CPU",
+            "disk_free_bytes": 20119461888,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/duffing/direct",
+            "effective_available_estimate_bytes": 1106579456,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9136050176,
+              "process_peak_rss_bytes": 377155584,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "cap_reached": false,
+          "checkpoint_bytes": 43189,
+          "checkpoint_sha256": "3257885ba05c63f44baf6b60b601537e370913226b2239529d9c4f356e62b3cf",
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.00023535323366726012,
+                "10": 0.00516950651538899,
+                "20": 0.014546748818304514,
+                "50": 0.07216904498728048
+              },
+              "rollout_wall_seconds": 0.008079090002865996
+            }
+          },
+          "cpu_budget_seconds": null,
+          "cpu_match_valid": true,
+          "error": null,
+          "forecasts_sha256": "4e8ac0f44341ad9358e1557ae520aceaa97dacc4c2d0687da44694b005fa94c7",
+          "inference_checkpoint_bytes": 9955,
+          "inference_checkpoint_sha256": "d90837f52ff0ee8a2f0fe0a8fa63761bb42073bdc3cc1eb5dfb09e0d48b447c6",
+          "inference_export_equal": true,
+          "inference_parameter_bytes": 5064,
+          "losses_sha256": "ee75ae9c035ef69844cd0f8c08e4d4a8d143f975888fcf0ccf18ffd8882f4ca2",
+          "maximum_steps": 500,
+          "optimizer_steps": 500,
+          "optimizer_tensor_bytes": 10176,
+          "preflight": {
+            "cgroup_inactive_file_bytes": 843608064,
+            "cgroup_memory_current_bytes": 8321478656,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838385664,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 268455936,
+            "device": "CPU",
+            "disk_free_bytes": 20119588864,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/duffing/direct",
+            "effective_available_estimate_bytes": 1106841600,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9133256704,
+              "process_peak_rss_bytes": 377155584,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "reload_bitwise_equal": true,
+          "representation": {
+            "coordinate_std": [
+              0.43048264000865655,
+              0.6412485011422938,
+              0.3310428269875708,
+              0.5443731287536754,
+              0.8474184726032448,
+              0.3572022797364162,
+              0.5351751326384643,
+              0.62079519585273
+            ],
+            "covariance_eigenvalues": [
+              3.271912972289525e-05,
+              7.638329186101767e-05,
+              9.88067215857673e-05,
+              0.002443971783696835,
+              0.0031968993343379822,
+              0.03931951500229256,
+              1.0119164526193904,
+              1.4628722864386978
+            ],
+            "effective_rank": 2.144815581114174
+          },
+          "status": "COMPLETED",
+          "target_parameter_bytes": 1440,
+          "trainable_parameters": 1266,
+          "training_cpu_seconds": 1.2026715220000028,
+          "training_wall_seconds": 0.6027992789968266
+        },
+        "direct_cpu_matched": {
+          "after": {
+            "cgroup_inactive_file_bytes": 844156928,
+            "cgroup_memory_current_bytes": 8322723840,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838184960,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 267210752,
+            "device": "CPU",
+            "disk_free_bytes": 20118560768,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/duffing/direct_cpu_matched",
+            "effective_available_estimate_bytes": 1105395712,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9157726208,
+              "process_peak_rss_bytes": 377155584,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "cap_reached": false,
+          "checkpoint_bytes": 43253,
+          "checkpoint_sha256": "920d2fabc04d0b4c9bf9ac524a410d118e2547c575155570b01cec804c46f110",
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.00014784164442687437,
+                "10": 0.003329891229710119,
+                "20": 0.009137823447782722,
+                "50": 0.03491195739339338
+              },
+              "rollout_wall_seconds": 0.007903316000010818
+            }
+          },
+          "cpu_budget_seconds": 1.7173229530000018,
+          "cpu_match_valid": true,
+          "error": null,
+          "forecasts_sha256": "49d0716e639595dbf374d6c762028910b976176c699721cf9017bf767a6f0794",
+          "inference_checkpoint_bytes": 9955,
+          "inference_checkpoint_sha256": "b59d40d54366dd27e4956bec352029bab34eee52dc5ead14609a612cea2ed624",
+          "inference_export_equal": true,
+          "inference_parameter_bytes": 5064,
+          "losses_sha256": "fa9baeda4e12f48e71fbc8e00f5dd7bc1199d9a7cc56be1a59084bfb559191c5",
+          "maximum_steps": 1500,
+          "optimizer_steps": 680,
+          "optimizer_tensor_bytes": 10176,
+          "preflight": {
+            "cgroup_inactive_file_bytes": 844156928,
+            "cgroup_memory_current_bytes": 8318812160,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838184960,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 271122432,
+            "device": "CPU",
+            "disk_free_bytes": 20118712320,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/duffing/direct_cpu_matched",
+            "effective_available_estimate_bytes": 1109307392,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9158483968,
+              "process_peak_rss_bytes": 377155584,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "reload_bitwise_equal": true,
+          "representation": {
+            "coordinate_std": [
+              0.43211633680296174,
+              0.6321029927792863,
+              0.3200168911909599,
+              0.5513924264027364,
+              0.8338019281224104,
+              0.3583344918234144,
+              0.5316647525668194,
+              0.6133476673133071
+            ],
+            "covariance_eigenvalues": [
+              2.624399162978769e-05,
+              6.631524386760847e-05,
+              8.784771885542592e-05,
+              0.0024498674870729073,
+              0.0031898688633917056,
+              0.04123810487795782,
+              0.9826929992582853,
+              1.4454639266049107
+            ],
+            "effective_rank": 2.149602505864763
+          },
+          "status": "COMPLETED",
+          "target_parameter_bytes": 1440,
+          "trainable_parameters": 1266,
+          "training_cpu_seconds": 1.7196196939999986,
+          "training_wall_seconds": 0.859759122999094
+        },
+        "frozen_target": {
+          "after": {
+            "cgroup_inactive_file_bytes": 843919360,
+            "cgroup_memory_current_bytes": 8320860160,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838250496,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 269074432,
+            "device": "CPU",
+            "disk_free_bytes": 20118933504,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/duffing/frozen_target",
+            "effective_available_estimate_bytes": 1107324928,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9152958464,
+              "process_peak_rss_bytes": 377155584,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "cap_reached": false,
+          "checkpoint_bytes": 43189,
+          "checkpoint_sha256": "2205e6c8638be9b4192a8709e3aa9c220cfba92c4145892373deeafe91181ff3",
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.0003815603296091314,
+                "10": 0.006996439962113936,
+                "20": 0.019750484126161042,
+                "50": 0.049468654140793294
+              },
+              "rollout_wall_seconds": 0.009742850001202896
+            }
+          },
+          "cpu_budget_seconds": null,
+          "cpu_match_valid": true,
+          "error": null,
+          "forecasts_sha256": "b7b03ba405ca0c3f18719050a8dc79bff6da386dc69a91cbbc26cf7564c4c07f",
+          "inference_checkpoint_bytes": 9955,
+          "inference_checkpoint_sha256": "ebb71003c8483dc9485f55a6a06c7a6163fd24e1116762f2ef359081e21601a0",
+          "inference_export_equal": true,
+          "inference_parameter_bytes": 5064,
+          "losses_sha256": "5f99dade8bb1648ce92690d090ea319fea7f283abca871fd7f705d792d1db13d",
+          "maximum_steps": 500,
+          "optimizer_steps": 500,
+          "optimizer_tensor_bytes": 10176,
+          "preflight": {
+            "cgroup_inactive_file_bytes": 843919360,
+            "cgroup_memory_current_bytes": 8318320640,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838250496,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 271613952,
+            "device": "CPU",
+            "disk_free_bytes": 20119072768,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/duffing/frozen_target",
+            "effective_available_estimate_bytes": 1109864448,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9151004672,
+              "process_peak_rss_bytes": 377155584,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "reload_bitwise_equal": true,
+          "representation": {
+            "coordinate_std": [
+              0.244430491227393,
+              0.4180399269581482,
+              0.21433168958015064,
+              0.2639523129120062,
+              0.3812799365782916,
+              0.1127854920289964,
+              0.203275499119199,
+              0.23275442186607675
+            ],
+            "covariance_eigenvalues": [
+              4.1767269485446065e-05,
+              4.596387794000702e-05,
+              0.00028853681458459156,
+              0.0012667642514844414,
+              0.002376033809253518,
+              0.011438069329570809,
+              0.24526940293982671,
+              0.3429765106203123
+            ],
+            "effective_rank": 2.2301913802371582
+          },
+          "status": "COMPLETED",
+          "target_parameter_bytes": 1440,
+          "trainable_parameters": 1266,
+          "training_cpu_seconds": 1.7368298240000009,
+          "training_wall_seconds": 0.8689224480040139
+        },
+        "full": {
+          "after": {
+            "cgroup_inactive_file_bytes": 843608064,
+            "cgroup_memory_current_bytes": 8321536000,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838385664,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 268398592,
+            "device": "CPU",
+            "disk_free_bytes": 20119629824,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/duffing/full",
+            "effective_available_estimate_bytes": 1106784256,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9133256704,
+              "process_peak_rss_bytes": 377155584,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "cap_reached": false,
+          "checkpoint_bytes": 43189,
+          "checkpoint_sha256": "93a0aa0b818d2a7dca9a1ba04ada3285579a591b9626124ac75ca9db5275fd7e",
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.0002777829462852174,
+                "10": 0.005126131820052097,
+                "20": 0.013764456113382355,
+                "50": 0.07275182805635837
+              },
+              "rollout_wall_seconds": 0.0069141119965934195
+            }
+          },
+          "cpu_budget_seconds": null,
+          "cpu_match_valid": true,
+          "error": null,
+          "forecasts_sha256": "de12395862955d499df2f4119b7f0f4a9906bd0bb214fd33a0dfa5521cf9669c",
+          "inference_checkpoint_bytes": 9955,
+          "inference_checkpoint_sha256": "786b6d1a5a2b82186f9687e6ae268dbf23d25c20cb015b03a5d73d2fcd058d5e",
+          "inference_export_equal": true,
+          "inference_parameter_bytes": 5064,
+          "losses_sha256": "ff99e92c6cf88140a33319ceee4c3a0fc54e6595ca4e3e1fe3bcd702914ef470",
+          "maximum_steps": 500,
+          "optimizer_steps": 500,
+          "optimizer_tensor_bytes": 10176,
+          "preflight": {
+            "cgroup_inactive_file_bytes": 844144640,
+            "cgroup_memory_current_bytes": 8321187840,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 839057408,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 268746752,
+            "device": "CPU",
+            "disk_free_bytes": 20119769088,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/duffing/full",
+            "effective_available_estimate_bytes": 1107804160,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9129578496,
+              "process_peak_rss_bytes": 377155584,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "reload_bitwise_equal": true,
+          "representation": {
+            "coordinate_std": [
+              0.36512464953251256,
+              0.5168889399876004,
+              0.22486605448764013,
+              0.45635756451786846,
+              0.6262880353757269,
+              0.23043181815109817,
+              0.24358309401779302,
+              0.4873388693216119
+            ],
+            "covariance_eigenvalues": [
+              4.51453400176792e-05,
+              8.015192459244662e-05,
+              0.00041875038142860546,
+              0.001535698664846364,
+              0.002816060187142117,
+              0.01926969152647757,
+              0.5697737428020294,
+              0.8075453376188876
+            ],
+            "effective_rank": 2.1506609655133153
+          },
+          "status": "COMPLETED",
+          "target_parameter_bytes": 1440,
+          "trainable_parameters": 1266,
+          "training_cpu_seconds": 1.7173229530000018,
+          "training_wall_seconds": 0.8599711770002614
+        },
+        "latent": {
+          "after": {
+            "cgroup_inactive_file_bytes": 843939840,
+            "cgroup_memory_current_bytes": 8317714432,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838287360,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 272220160,
+            "device": "CPU",
+            "disk_free_bytes": 20119113728,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/duffing/latent",
+            "effective_available_estimate_bytes": 1110507520,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9152036864,
+              "process_peak_rss_bytes": 377155584,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "cap_reached": false,
+          "checkpoint_bytes": 43189,
+          "checkpoint_sha256": "635da267d55289b6dbf2ad245e240fd8415b2663d94387d96b0c064e413767f9",
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.00027366614585305494,
+                "10": 0.0051881870508559726,
+                "20": 0.014257411245697205,
+                "50": 0.07642635820031449
+              },
+              "rollout_wall_seconds": 0.00832393000018783
+            }
+          },
+          "cpu_budget_seconds": null,
+          "cpu_match_valid": true,
+          "error": null,
+          "forecasts_sha256": "aeef4c25c5b15270c0599b2955618058d1d3d64c1796d82c24487c0930cef4fe",
+          "inference_checkpoint_bytes": 9955,
+          "inference_checkpoint_sha256": "774ebddd7705dc6bcbc96f03b82e7a6899fb7bdacad2abe751e1010bec169cec",
+          "inference_export_equal": true,
+          "inference_parameter_bytes": 5064,
+          "losses_sha256": "ee38c5a54324edb1598180e7ebd0d4610bd3dbd4a2b740adf3543ae854a65c3b",
+          "maximum_steps": 500,
+          "optimizer_steps": 500,
+          "optimizer_tensor_bytes": 10176,
+          "preflight": {
+            "cgroup_inactive_file_bytes": 843821056,
+            "cgroup_memory_current_bytes": 8313929728,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838316032,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 276004864,
+            "device": "CPU",
+            "disk_free_bytes": 20119248896,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/duffing/latent",
+            "effective_available_estimate_bytes": 1114320896,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9151942656,
+              "process_peak_rss_bytes": 377155584,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "reload_bitwise_equal": true,
+          "representation": {
+            "coordinate_std": [
+              0.3808544671374806,
+              0.5265678829068933,
+              0.1708616775429625,
+              0.4673160517288469,
+              0.6281286226842235,
+              0.14833084790430773,
+              0.24240917564387437,
+              0.4992661779955056
+            ],
+            "covariance_eigenvalues": [
+              4.188366339415737e-05,
+              8.795287392247322e-05,
+              0.00044742825174897934,
+              0.0014882575109590938,
+              0.0028544473658354674,
+              0.01918774000420491,
+              0.5604714752997322,
+              0.8098992125358313
+            ],
+            "effective_rank": 2.1476778077055125
+          },
+          "status": "COMPLETED",
+          "target_parameter_bytes": 1440,
+          "trainable_parameters": 1266,
+          "training_cpu_seconds": 1.7748041139999984,
+          "training_wall_seconds": 0.8868954819990904
+        },
+        "linear_ridge": {
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.000659546265682869,
+                "10": 0.0125656165947847,
+                "20": 0.018374675977578157,
+                "50": 0.041962509942617764
+              },
+              "rollout_wall_seconds": 0.001693917001830414
+            }
+          },
+          "forecasts_sha256": "5a08ae11ceaa5d61216973e9269cb660bac6d011dee249ca2b9951abd8362020",
+          "trainable_parameters": 6,
+          "training_wall_seconds": 0.00016217400116147473
+        },
+        "persistence": {
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.023842043388436197,
+                "10": 0.7238282413224797,
+                "20": 1.8106130064886359,
+                "50": 2.2520814873242294
+              },
+              "rollout_wall_seconds": 0.0008891719990060665
+            }
+          },
+          "forecasts_sha256": "769022f9e885b960c2b5a23c14f5d79ba06a7b7d31dff2a5f8af1a4a8bb202cf",
+          "trainable_parameters": 0,
+          "training_wall_seconds": 0.0
+        },
+        "shuffled_target": {
+          "after": {
+            "cgroup_inactive_file_bytes": 844177408,
+            "cgroup_memory_current_bytes": 8318132224,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838221824,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 271802368,
+            "device": "CPU",
+            "disk_free_bytes": 20118753280,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/duffing/shuffled_target",
+            "effective_available_estimate_bytes": 1110024192,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9158221824,
+              "process_peak_rss_bytes": 377155584,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "cap_reached": false,
+          "checkpoint_bytes": 43253,
+          "checkpoint_sha256": "af96b552554688e40fef9a044621c705bb69af72a0b3551c0cee3df45bcf3653",
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.0005307243918182578,
+                "10": 0.013092067924429079,
+                "20": 0.03388075546212018,
+                "50": 0.07402889067236135
+              },
+              "rollout_wall_seconds": 0.007665976001590025
+            }
+          },
+          "cpu_budget_seconds": null,
+          "cpu_match_valid": true,
+          "error": null,
+          "forecasts_sha256": "1f94679e441c1fd6a09c22baae37bd3da93e33c73c0b2d02bcc6365acfedaa0c",
+          "inference_checkpoint_bytes": 9955,
+          "inference_checkpoint_sha256": "f96fb0eb62b2ece1cb65283dfcd400c1799b453d05211de0d401783cc4134b41",
+          "inference_export_equal": true,
+          "inference_parameter_bytes": 5064,
+          "losses_sha256": "f22bfb61e0cb1a35e67657473f8982a349a167b97cba5df2d9e7d48efeb6b459",
+          "maximum_steps": 500,
+          "optimizer_steps": 500,
+          "optimizer_tensor_bytes": 10176,
+          "preflight": {
+            "cgroup_inactive_file_bytes": 844038144,
+            "cgroup_memory_current_bytes": 8308113408,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838217728,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 281821184,
+            "device": "CPU",
+            "disk_free_bytes": 20118892544,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/duffing/shuffled_target",
+            "effective_available_estimate_bytes": 1120038912,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9160892416,
+              "process_peak_rss_bytes": 377155584,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "reload_bitwise_equal": true,
+          "representation": {
+            "coordinate_std": [
+              0.19217137155228886,
+              0.22009794515991954,
+              0.20833146079693832,
+              0.19998092611383061,
+              0.29857734048325435,
+              0.1165423309672248,
+              0.16763259278188108,
+              0.22333760042799042
+            ],
+            "covariance_eigenvalues": [
+              2.9414049274400373e-05,
+              4.8834577638345935e-05,
+              0.00034853941454309346,
+              0.0009839411848276412,
+              0.0016548184488574076,
+              0.009765542443760543,
+              0.16346154174265556,
+              0.17318559109851742
+            ],
+            "effective_rank": 2.3492589030435016
+          },
+          "status": "COMPLETED",
+          "target_parameter_bytes": 1440,
+          "trainable_parameters": 1266,
+          "training_cpu_seconds": 1.8158673410000006,
+          "training_wall_seconds": 0.9079806180016021
+        },
+        "variance": {
+          "after": {
+            "cgroup_inactive_file_bytes": 843821056,
+            "cgroup_memory_current_bytes": 8313737216,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838316032,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 276197376,
+            "device": "CPU",
+            "disk_free_bytes": 20119293952,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/duffing/variance",
+            "effective_available_estimate_bytes": 1114513408,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9150930944,
+              "process_peak_rss_bytes": 377155584,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "cap_reached": false,
+          "checkpoint_bytes": 43189,
+          "checkpoint_sha256": "518e51cec99363f8ab7a153822e07464eb553b3e8047f132a3470ffc1951a356",
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.00023503779328176732,
+                "10": 0.0051592790955664195,
+                "20": 0.014516254499397344,
+                "50": 0.07207179311143884
+              },
+              "rollout_wall_seconds": 0.00984179900115123
+            }
+          },
+          "cpu_budget_seconds": null,
+          "cpu_match_valid": true,
+          "error": null,
+          "forecasts_sha256": "d2f2e74b1a484f1ca8145499200cd217c724749e8f3b8725a7bee29f7def5817",
+          "inference_checkpoint_bytes": 9955,
+          "inference_checkpoint_sha256": "0cc3dc7283587a08922b3b51d1329f89031473bdad009da062ab2875a8a32236",
+          "inference_export_equal": true,
+          "inference_parameter_bytes": 5064,
+          "losses_sha256": "a7d21ad43fbc99261efba7b842a4ea69637c0ab133f7567e36a2e3d58d27aaf9",
+          "maximum_steps": 500,
+          "optimizer_steps": 500,
+          "optimizer_tensor_bytes": 10176,
+          "preflight": {
+            "cgroup_inactive_file_bytes": 843694080,
+            "cgroup_memory_current_bytes": 8321679360,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838311936,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 268255232,
+            "device": "CPU",
+            "disk_free_bytes": 20119420928,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/duffing/variance",
+            "effective_available_estimate_bytes": 1106567168,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9136050176,
+              "process_peak_rss_bytes": 377155584,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "reload_bitwise_equal": true,
+          "representation": {
+            "coordinate_std": [
+              0.4313802750562501,
+              0.6412900844687325,
+              0.3349250939966742,
+              0.5451527446860821,
+              0.8474889571200243,
+              0.3573215651717883,
+              0.5348351351389683,
+              0.6204941566229235
+            ],
+            "covariance_eigenvalues": [
+              3.250560829017933e-05,
+              7.638583110882343e-05,
+              9.907688382275973e-05,
+              0.002448175901874623,
+              0.0031948654535298403,
+              0.03935117030690133,
+              1.0136190103186804,
+              1.464864911028278
+            ],
+            "effective_rank": 2.1447639208749014
+          },
+          "status": "COMPLETED",
+          "target_parameter_bytes": 1440,
+          "trainable_parameters": 1266,
+          "training_cpu_seconds": 1.4469134879999999,
+          "training_wall_seconds": 0.7229844519970356
+        }
+      },
+      "array_hashes": {
+        "development": "74749e2cec26cfb64a65f354373285358419276db51e47b1b1cbf5a1f36223c7",
+        "train": "a4e2cf9f260cafb7d4f99e4925c91da424138daf4479f12f88727f4bf7ee54fc"
+      },
+      "data_sha256": "66e8f1a11256239f5db4aafd5ddf6053ea13f80ec64d2b925917ac5be2cd6566",
+      "forecasts_sha256": "865fb6e149f573cdacd7ac9e75ce3d4eb65bb9294ade7b0e527ceec41b596980",
+      "initial_condition_hashes": {
+        "development": "0026864d776b213761587cec232e6e7249d0d99e83dff67c0b437fcc51b8dba7",
+        "train": "1beb636cc9ce9daee26d5ae80010284ede8fff5888109fe4b6cbe4f3139c55b6"
+      },
+      "initial_state_sha256": "cbf75b5c2ad8e27243449f4b389a62fdd7ff7c3e9c6772e8fabe97c8cc78b4bd",
+      "mean": [
+        0.0020027308114192992,
+        -0.05235604373635867
+      ],
+      "std": [
+        0.6961190653555421,
+        0.81351016898677
+      ]
+    },
+    "pendulum": {
+      "arms": {
+        "cubic_ridge": {
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 4.312933825435181e-07,
+                "10": 1.5257238104122032e-05,
+                "20": 3.8891356658575785e-05,
+                "50": 9.233504999097775e-05
+              },
+              "rollout_wall_seconds": 0.002391409005213063
+            }
+          },
+          "forecasts_sha256": "69f1d24aa6c0d0650d0950b072541256de0987dd57257116fef22bbde8dce4b4",
+          "trainable_parameters": 20,
+          "training_wall_seconds": 0.0005326130049070343
+        },
+        "direct": {
+          "after": {
+            "cgroup_inactive_file_bytes": 843157504,
+            "cgroup_memory_current_bytes": 8321003520,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 839114752,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 268931072,
+            "device": "CPU",
+            "disk_free_bytes": 20121022464,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/pendulum/direct",
+            "effective_available_estimate_bytes": 1108045824,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9130897408,
+              "process_peak_rss_bytes": 375316480,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "cap_reached": false,
+          "checkpoint_bytes": 43189,
+          "checkpoint_sha256": "4eda5a2e8f3ad84ad92844c7a62561eaabe0d4f96936184c174b8bdccdb77e8a",
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.0003997231117758559,
+                "10": 0.00923089770659099,
+                "20": 0.0263603332076157,
+                "50": 0.09538955971939843
+              },
+              "rollout_wall_seconds": 0.00911240099958377
+            }
+          },
+          "cpu_budget_seconds": null,
+          "cpu_match_valid": true,
+          "error": null,
+          "forecasts_sha256": "d671d3a2eee801f34d843ecd66b25f7daa747d63aca739b11bf2124631e40616",
+          "inference_checkpoint_bytes": 9955,
+          "inference_checkpoint_sha256": "ecfa301741c5ea2b96fd53505229b3c2d2ef607b8fa93a04042d51cd433e4b98",
+          "inference_export_equal": true,
+          "inference_parameter_bytes": 5064,
+          "losses_sha256": "95fe1435ec390a78ee704ea88e3ca6ee97aa6b7e3736ee65a183f778984c5b09",
+          "maximum_steps": 500,
+          "optimizer_steps": 500,
+          "optimizer_tensor_bytes": 10176,
+          "preflight": {
+            "cgroup_inactive_file_bytes": 843157504,
+            "cgroup_memory_current_bytes": 8320495616,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 839114752,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 269438976,
+            "device": "CPU",
+            "disk_free_bytes": 20121145344,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/pendulum/direct",
+            "effective_available_estimate_bytes": 1108553728,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9129717760,
+              "process_peak_rss_bytes": 375316480,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "reload_bitwise_equal": true,
+          "representation": {
+            "coordinate_std": [
+              0.5802115390606156,
+              0.6270640171125019,
+              0.4034321033035478,
+              0.5045481900898301,
+              0.2852528143885022,
+              0.5294564662374812,
+              0.6293301136585664,
+              0.9677385807205511
+            ],
+            "covariance_eigenvalues": [
+              2.899844142018005e-05,
+              3.700572005015148e-05,
+              8.990202363311179e-05,
+              0.0009457928610696119,
+              0.003791076769560401,
+              0.013432983861233299,
+              1.1614414556582657,
+              1.6616815047097453
+            ],
+            "effective_rank": 2.0479240499920977
+          },
+          "status": "COMPLETED",
+          "target_parameter_bytes": 1440,
+          "trainable_parameters": 1266,
+          "training_cpu_seconds": 1.4422129020000005,
+          "training_wall_seconds": 0.722278177003318
+        },
+        "direct_cpu_matched": {
+          "after": {
+            "cgroup_inactive_file_bytes": 843841536,
+            "cgroup_memory_current_bytes": 8320348160,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838778880,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 269586432,
+            "device": "CPU",
+            "disk_free_bytes": 20120137728,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/pendulum/direct_cpu_matched",
+            "effective_available_estimate_bytes": 1108365312,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9130766336,
+              "process_peak_rss_bytes": 376107008,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "cap_reached": false,
+          "checkpoint_bytes": 43253,
+          "checkpoint_sha256": "df0b4acf9c38c8bf28d0d0c60a1ec8e32a80fb9e2053fd0f1d2e01bb8bbbd130",
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.00031240780870133073,
+                "10": 0.005894280496125239,
+                "20": 0.01785915307064417,
+                "50": 0.06742784630395882
+              },
+              "rollout_wall_seconds": 0.008979479003755841
+            }
+          },
+          "cpu_budget_seconds": 1.665091505,
+          "cpu_match_valid": true,
+          "error": null,
+          "forecasts_sha256": "6485814956433cc198e09a19e3d1d4e8d09eaad796f9cb4f185808c4e7ce54b0",
+          "inference_checkpoint_bytes": 9955,
+          "inference_checkpoint_sha256": "fbcad766d3a97acb2de7fec1471d77d78afadfc942283b40a3eb8fe7c96a0ead",
+          "inference_export_equal": true,
+          "inference_parameter_bytes": 5064,
+          "losses_sha256": "3e97a2dc5ee36841409a392a924c22e367e3ba262276990e36275caa626f4578",
+          "maximum_steps": 1500,
+          "optimizer_steps": 570,
+          "optimizer_tensor_bytes": 10176,
+          "preflight": {
+            "cgroup_inactive_file_bytes": 843587584,
+            "cgroup_memory_current_bytes": 8306233344,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838807552,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 283701248,
+            "device": "CPU",
+            "disk_free_bytes": 20120272896,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/pendulum/direct_cpu_matched",
+            "effective_available_estimate_bytes": 1122508800,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9146564608,
+              "process_peak_rss_bytes": 376107008,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "reload_bitwise_equal": true,
+          "representation": {
+            "coordinate_std": [
+              0.5718861959719529,
+              0.6182293454633957,
+              0.4016350914939557,
+              0.501728608641007,
+              0.28344720217708597,
+              0.5260931477902409,
+              0.6249596528928943,
+              0.9606061575572752
+            ],
+            "covariance_eigenvalues": [
+              2.7634397058338147e-05,
+              3.455228504360611e-05,
+              8.558306182336271e-05,
+              0.0009345839591192925,
+              0.003852014861695084,
+              0.014203655713046659,
+              1.151144638362036,
+              1.6224760997985694
+            ],
+            "effective_rank": 2.05445661481021
+          },
+          "status": "COMPLETED",
+          "target_parameter_bytes": 1440,
+          "trainable_parameters": 1266,
+          "training_cpu_seconds": 1.6686038169999993,
+          "training_wall_seconds": 0.8327068639991921
+        },
+        "frozen_target": {
+          "after": {
+            "cgroup_inactive_file_bytes": 843608064,
+            "cgroup_memory_current_bytes": 8318357504,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838844416,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 271577088,
+            "device": "CPU",
+            "disk_free_bytes": 20120494080,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/pendulum/frozen_target",
+            "effective_available_estimate_bytes": 1110421504,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9145077760,
+              "process_peak_rss_bytes": 375447552,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "cap_reached": false,
+          "checkpoint_bytes": 43189,
+          "checkpoint_sha256": "331d73f5db8ba2b24e4967613ca617124f7e750c655fb6e8fb2006ce8d4d73fb",
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.0011717782900475494,
+                "10": 0.015360316613390492,
+                "20": 0.03401368454971303,
+                "50": 0.14337220421437896
+              },
+              "rollout_wall_seconds": 0.008236318004492205
+            }
+          },
+          "cpu_budget_seconds": null,
+          "cpu_match_valid": true,
+          "error": null,
+          "forecasts_sha256": "6fedf10eb1ef3db81c2879d4aa5419a5eb09296d2fb0a75d28674151f6fa101e",
+          "inference_checkpoint_bytes": 9955,
+          "inference_checkpoint_sha256": "a6438684c717dac4f7e5c3414342ab7de3f7c9669c291be6d333bde53883fb69",
+          "inference_export_equal": true,
+          "inference_parameter_bytes": 5064,
+          "losses_sha256": "27eacc7d74ac6495133f66f3b864fb7d130cf5139cd148c80b973d86481b089e",
+          "maximum_steps": 500,
+          "optimizer_steps": 500,
+          "optimizer_tensor_bytes": 10176,
+          "preflight": {
+            "cgroup_inactive_file_bytes": 843468800,
+            "cgroup_memory_current_bytes": 8305487872,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838844416,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 284446720,
+            "device": "CPU",
+            "disk_free_bytes": 20120633344,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/pendulum/frozen_target",
+            "effective_available_estimate_bytes": 1123291136,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9152569344,
+              "process_peak_rss_bytes": 375447552,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "reload_bitwise_equal": true,
+          "representation": {
+            "coordinate_std": [
+              0.3446449093134006,
+              0.24881502091755653,
+              0.20296049208466177,
+              0.2965187443967897,
+              0.20373494111283574,
+              0.2610558110243534,
+              0.25338693397514495,
+              0.4631763810216687
+            ],
+            "covariance_eigenvalues": [
+              3.894285909892874e-06,
+              4.112553272391251e-05,
+              0.0003076275195950471,
+              0.001001539142477778,
+              0.0020381407985132637,
+              0.003882307142746764,
+              0.31558986640605674,
+              0.37533621539320833
+            ],
+            "effective_rank": 2.1210903609377927
+          },
+          "status": "COMPLETED",
+          "target_parameter_bytes": 1440,
+          "trainable_parameters": 1266,
+          "training_cpu_seconds": 1.639537656,
+          "training_wall_seconds": 0.8196142830056488
+        },
+        "full": {
+          "after": {
+            "cgroup_inactive_file_bytes": 843177984,
+            "cgroup_memory_current_bytes": 8320253952,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 839147520,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 269680640,
+            "device": "CPU",
+            "disk_free_bytes": 20121186304,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/pendulum/full",
+            "effective_available_estimate_bytes": 1108828160,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9129717760,
+              "process_peak_rss_bytes": 371605504,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "cap_reached": false,
+          "checkpoint_bytes": 43189,
+          "checkpoint_sha256": "b04fd8d8337c88ba4505e73f0057d1728693d755812d7c12f01de9ddff11a3ec",
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.0011508502692120723,
+                "10": 0.015810745590085735,
+                "20": 0.039198105470411214,
+                "50": 0.1631839727353742
+              },
+              "rollout_wall_seconds": 0.007246765999298077
+            }
+          },
+          "cpu_budget_seconds": null,
+          "cpu_match_valid": true,
+          "error": null,
+          "forecasts_sha256": "2185ea40b16ad05c785937a9dddf3edaf5c73ab8fc656825fa78589347eb4844",
+          "inference_checkpoint_bytes": 9955,
+          "inference_checkpoint_sha256": "debfe8839c0e1e459bc444de34032d55d22c01ff0299a395b89077ff54eb5592",
+          "inference_export_equal": true,
+          "inference_parameter_bytes": 5064,
+          "losses_sha256": "74f8b2d24de6046bc42eb4aa9a7079f1353762fc418ac241f1d7bcd9d8404875",
+          "maximum_steps": 500,
+          "optimizer_steps": 500,
+          "optimizer_tensor_bytes": 10176,
+          "preflight": {
+            "cgroup_inactive_file_bytes": 843042816,
+            "cgroup_memory_current_bytes": 8316076032,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 839151616,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 273858560,
+            "device": "CPU",
+            "disk_free_bytes": 20121321472,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/pendulum/full",
+            "effective_available_estimate_bytes": 1113010176,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9141800960,
+              "process_peak_rss_bytes": 368177152,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "reload_bitwise_equal": true,
+          "representation": {
+            "coordinate_std": [
+              0.5128420067949442,
+              0.428249104821659,
+              0.27427534878138415,
+              0.43599510267949787,
+              0.2232434600108606,
+              0.3617506413004996,
+              0.3908766249628296,
+              0.5911601778237184
+            ],
+            "covariance_eigenvalues": [
+              7.278644878953534e-06,
+              2.9100791401819172e-05,
+              0.0003706451621252202,
+              0.001586186627902538,
+              0.003702864168410005,
+              0.004405386908706096,
+              0.5717540964501777,
+              0.812823418175918
+            ],
+            "effective_rank": 2.063367595045496
+          },
+          "status": "COMPLETED",
+          "target_parameter_bytes": 1440,
+          "trainable_parameters": 1266,
+          "training_cpu_seconds": 1.665091505,
+          "training_wall_seconds": 0.8342676519969245
+        },
+        "latent": {
+          "after": {
+            "cgroup_inactive_file_bytes": 843489280,
+            "cgroup_memory_current_bytes": 8307314688,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838877184,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 282619904,
+            "device": "CPU",
+            "disk_free_bytes": 20120674304,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/pendulum/latent",
+            "effective_available_estimate_bytes": 1121497088,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9150869504,
+              "process_peak_rss_bytes": 375447552,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "cap_reached": false,
+          "checkpoint_bytes": 43189,
+          "checkpoint_sha256": "82b44788a7bcc20c3c2cc21b4907171d1445b11c8e7722586b740ff96b7eb454",
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.001184724712238027,
+                "10": 0.016498256200072548,
+                "20": 0.04076515370009212,
+                "50": 0.1611625524728672
+              },
+              "rollout_wall_seconds": 0.007299594995856751
+            }
+          },
+          "cpu_budget_seconds": null,
+          "cpu_match_valid": true,
+          "error": null,
+          "forecasts_sha256": "c89df64dcd00c3aa1dfc46049a26b4f5b8bbd713cbe69a9084bc2640f33e1422",
+          "inference_checkpoint_bytes": 9955,
+          "inference_checkpoint_sha256": "f1a8648620120d55bd8cd7732bd8798013863706e15669b0401cf8f2297d1563",
+          "inference_export_equal": true,
+          "inference_parameter_bytes": 5064,
+          "losses_sha256": "7f480ade5030982ea2169f0c71cac84626f23c15957f8f1ae7cedd1c3b5bc4b3",
+          "maximum_steps": 500,
+          "optimizer_steps": 500,
+          "optimizer_tensor_bytes": 10176,
+          "preflight": {
+            "cgroup_inactive_file_bytes": 843354112,
+            "cgroup_memory_current_bytes": 8306929664,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838873088,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 283004928,
+            "device": "CPU",
+            "disk_free_bytes": 20120809472,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/pendulum/latent",
+            "effective_available_estimate_bytes": 1121878016,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9158369280,
+              "process_peak_rss_bytes": 375447552,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "reload_bitwise_equal": true,
+          "representation": {
+            "coordinate_std": [
+              0.514545133727741,
+              0.43026066137990815,
+              0.2752421359262851,
+              0.44538883461422685,
+              0.19294783844715935,
+              0.36740534432125016,
+              0.3937025470784278,
+              0.5917622793333842
+            ],
+            "covariance_eigenvalues": [
+              7.6663603138022e-06,
+              3.013673520657344e-05,
+              0.00037011927718925795,
+              0.001616999241843276,
+              0.0036432654135825013,
+              0.004426075515904999,
+              0.5726008778577564,
+              0.8187150845755914
+            ],
+            "effective_rank": 2.0619543321350444
+          },
+          "status": "COMPLETED",
+          "target_parameter_bytes": 1440,
+          "trainable_parameters": 1266,
+          "training_cpu_seconds": 1.4328471759999992,
+          "training_wall_seconds": 0.7169261309973081
+        },
+        "linear_ridge": {
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 5.187105715520723e-05,
+                "10": 0.0015806951697838214,
+                "20": 0.004129594759054258,
+                "50": 0.015268259861278291
+              },
+              "rollout_wall_seconds": 0.0015718309950898401
+            }
+          },
+          "forecasts_sha256": "23283f207612ef4dfd86b740678e62bab52b7be4bdf1e68c2023d90b068e5810",
+          "trainable_parameters": 6,
+          "training_wall_seconds": 0.000327414003550075
+        },
+        "persistence": {
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.00792717617700297,
+                "10": 0.2780733143098253,
+                "20": 0.8718916892847891,
+                "50": 1.9441074859228364
+              },
+              "rollout_wall_seconds": 0.0008159709977917373
+            }
+          },
+          "forecasts_sha256": "04d9b31cadbba1b47fbeec45530fbf0d33d9af0a12c7ce9dec53e2d26d5da1f5",
+          "trainable_parameters": 0,
+          "training_wall_seconds": 0.0
+        },
+        "shuffled_target": {
+          "after": {
+            "cgroup_inactive_file_bytes": 843587584,
+            "cgroup_memory_current_bytes": 8306016256,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838807552,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 283918336,
+            "device": "CPU",
+            "disk_free_bytes": 20120313856,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/pendulum/shuffled_target",
+            "effective_available_estimate_bytes": 1122725888,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9146564608,
+              "process_peak_rss_bytes": 376107008,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "cap_reached": false,
+          "checkpoint_bytes": 43253,
+          "checkpoint_sha256": "01e1ff04fd19db4c0b184531ba7b4711f2b2cd70316bab3db58bfeab5fa68524",
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.0009535020600194851,
+                "10": 0.013041830350398714,
+                "20": 0.029682074908031077,
+                "50": 0.08218867507433164
+              },
+              "rollout_wall_seconds": 0.007814620999852195
+            }
+          },
+          "cpu_budget_seconds": null,
+          "cpu_match_valid": true,
+          "error": null,
+          "forecasts_sha256": "66e22910c83b9b514a4e381df09e6847c3462b5ac3750909074e0d17b1ff5f74",
+          "inference_checkpoint_bytes": 9955,
+          "inference_checkpoint_sha256": "1f18dfcc5e9c9f792515900682ccf98e311762b1cf5fbce3db419fbcb0bc80d0",
+          "inference_export_equal": true,
+          "inference_parameter_bytes": 5064,
+          "losses_sha256": "106f5eab25d28b063cbd3c7b2506c0545a4e661abd9cc2b2f3234e331c27a833",
+          "maximum_steps": 500,
+          "optimizer_steps": 500,
+          "optimizer_tensor_bytes": 10176,
+          "preflight": {
+            "cgroup_inactive_file_bytes": 843608064,
+            "cgroup_memory_current_bytes": 8318840832,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838844416,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 271093760,
+            "device": "CPU",
+            "disk_free_bytes": 20120453120,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/pendulum/shuffled_target",
+            "effective_available_estimate_bytes": 1109938176,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9145077760,
+              "process_peak_rss_bytes": 375578624,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "reload_bitwise_equal": true,
+          "representation": {
+            "coordinate_std": [
+              0.22755233345674014,
+              0.19752771059192237,
+              0.18016120785974454,
+              0.19519818620035914,
+              0.1683203440967572,
+              0.16763060894777776,
+              0.20527195231478187,
+              0.29068675926835064
+            ],
+            "covariance_eigenvalues": [
+              8.804911801061106e-06,
+              5.1844083849568355e-05,
+              0.00014966730744153257,
+              0.0006842972731239828,
+              0.0022212438487054713,
+              0.0031566456044675004,
+              0.1595352233815779,
+              0.17861705292983035
+            ],
+            "effective_rank": 2.203082564587077
+          },
+          "status": "COMPLETED",
+          "target_parameter_bytes": 1440,
+          "trainable_parameters": 1266,
+          "training_cpu_seconds": 1.9702369750000006,
+          "training_wall_seconds": 1.009129796999332
+        },
+        "variance": {
+          "after": {
+            "cgroup_inactive_file_bytes": 843374592,
+            "cgroup_memory_current_bytes": 8306221056,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 838918144,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 283713536,
+            "device": "CPU",
+            "disk_free_bytes": 20120850432,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/pendulum/variance",
+            "effective_available_estimate_bytes": 1122631680,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9158369280,
+              "process_peak_rss_bytes": 375447552,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "cap_reached": false,
+          "checkpoint_bytes": 43189,
+          "checkpoint_sha256": "26bf9b4504b50d714c32b2f65fcdec638f7a769e24bef5578b8d186abb03d960",
+          "conditions": {
+            "development": {
+              "divergent_trajectories": 0,
+              "horizons": {
+                "1": 0.00039992190620044316,
+                "10": 0.009226046300678971,
+                "20": 0.02634532597861289,
+                "50": 0.0954521136933492
+              },
+              "rollout_wall_seconds": 0.007378713999059983
+            }
+          },
+          "cpu_budget_seconds": null,
+          "cpu_match_valid": true,
+          "error": null,
+          "forecasts_sha256": "720b591976a2c16f495d6896ec4b3fc4eaf5aaa46cebea7097aa1ad2714e01fa",
+          "inference_checkpoint_bytes": 9955,
+          "inference_checkpoint_sha256": "77292a6f8d5d3e152f9f29ef079e0e8e505a541c3924db7bf50831c1dde5f628",
+          "inference_export_equal": true,
+          "inference_parameter_bytes": 5064,
+          "losses_sha256": "c1c79b6e657b563cbaa649e0737609df94414c08794b088a602113f06106a200",
+          "maximum_steps": 500,
+          "optimizer_steps": 500,
+          "optimizer_tensor_bytes": 10176,
+          "preflight": {
+            "cgroup_inactive_file_bytes": 843157504,
+            "cgroup_memory_current_bytes": 8321216512,
+            "cgroup_memory_limit_bytes": 8589934592,
+            "cgroup_reclaimable_estimate_bytes": 839114752,
+            "cgroup_swap_current_bytes": 0,
+            "cgroup_unallocated_bytes": 268718080,
+            "device": "CPU",
+            "disk_free_bytes": 20120977408,
+            "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702/pendulum/variance",
+            "effective_available_estimate_bytes": 1107832832,
+            "machine": "x86_64",
+            "memory": {
+              "available_bytes": 9130635264,
+              "process_peak_rss_bytes": 375447552,
+              "swap_fraction": 0.0,
+              "swap_total_bytes": 0,
+              "swap_used_bytes": 0,
+              "total_bytes": 10451439616
+            },
+            "memory_accounting": "host-and-cgroup-working-set-v2",
+            "numeric_library_thread_request": 2,
+            "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+            "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+            "visible_cpus": 9
+          },
+          "reload_bitwise_equal": true,
+          "representation": {
+            "coordinate_std": [
+              0.5801184533046824,
+              0.6265029682724567,
+              0.40369709774760254,
+              0.5039851858187958,
+              0.28976095913412325,
+              0.5282874912886497,
+              0.6296413617916737,
+              0.9676113468317148
+            ],
+            "covariance_eigenvalues": [
+              2.8754439807149805e-05,
+              3.68367004010286e-05,
+              8.808758007831954e-05,
+              0.0009505924232494941,
+              0.0037943540426764286,
+              0.013400652592726017,
+              1.161002288899355,
+              1.6624832865819041
+            ],
+            "effective_rank": 2.0476786647741227
+          },
+          "status": "COMPLETED",
+          "target_parameter_bytes": 1440,
+          "trainable_parameters": 1266,
+          "training_cpu_seconds": 1.7103965749999999,
+          "training_wall_seconds": 0.860658515994146
+        }
+      },
+      "array_hashes": {
+        "development": "d4a0584f9d3cebd75bb7408c46c4354ddef66b2cecfb49494f74e720db55f80d",
+        "train": "daf45b47c6d95f96aed3af5ce84f0e2dae79df6cce3afa22fbdb76e361fa7a4f"
+      },
+      "data_sha256": "5f19ad3b456d12bbe03ccb3fa0f7d865e5fccefdf7e8897611425e8bd815f037",
+      "forecasts_sha256": "43aecbfc9b4bef1bcf8cf05b3ae561fd394493ceb72305553ed58345344ed083",
+      "initial_condition_hashes": {
+        "development": "a3301eceed0c6425439b9289354dd465b97e156416fc8f18ca54cddeac9419c0",
+        "train": "886fbe61384e13f09479d245e080ac7f35e42b80c1d06b7f5820d57b68c0d258"
+      },
+      "initial_state_sha256": "a35782d20488fbeedb3fc810377eca5255cdbfe6a34fc81286f8bcb36170618e",
+      "mean": [
+        -0.039815140826556523,
+        0.09175629221024689
+      ],
+      "std": [
+        0.8573830507377334,
+        0.7241377638815317
+      ]
+    }
+  },
+  "finished_utc": "2026-10-19T12:48:28Z",
+  "freeze_sha256": null,
+  "peak_rss_bytes": 377155584,
+  "phase": "development",
+  "preflight": {
+    "cgroup_inactive_file_bytes": 842989568,
+    "cgroup_memory_current_bytes": 8315842560,
+    "cgroup_memory_limit_bytes": 8589934592,
+    "cgroup_reclaimable_estimate_bytes": 839098368,
+    "cgroup_swap_current_bytes": 0,
+    "cgroup_unallocated_bytes": 274092032,
+    "device": "CPU",
+    "disk_free_bytes": 20121382912,
+    "disk_path": "/workspace/scratch/20e3ac3d2d4a/olympus-cognitive-architecture/artifacts/observable-prediction-v1/development-a-702",
+    "effective_available_estimate_bytes": 1113190400,
+    "machine": "x86_64",
+    "memory": {
+      "available_bytes": 9143238656,
+      "process_peak_rss_bytes": 353226752,
+      "swap_fraction": 0.0,
+      "swap_total_bytes": 0,
+      "swap_used_bytes": 0,
+      "total_bytes": 10451439616
+    },
+    "memory_accounting": "host-and-cgroup-working-set-v2",
+    "numeric_library_thread_request": 2,
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+    "python": "3.14.8 (main, Oct  3 2026, 01:04:31) [Clang 22.1.3 ]",
+    "visible_cpus": 9
+  },
+  "protocol_sha256": "232862f29f55eba01c48215b6ed0995409d4732447d043f4d0327fdccc61076a",
+  "seed": 702,
+  "source": {
+    "base_commit": "3641551eabcaff91651c1aa1386657e7f68106c5",
+    "branch": "codex/olympus-research-successor-20261019",
+    "files_manifest_sha256": "77db2d11908917a96781606c37ed01c45b85acd5e4cf4ea93f2488f71a464ee6",
+    "files_sha256": {
+      "apps/forge-web/package-lock.json": "fca3edd7a0008bf6d8a046170ef5f9a8385b3b1aad6ccc8713721be767206909",
+      "apps/forge-web/src/App.test.tsx": "e8a456200dc2a83e14ed45dd9a5946f2dd66e977735a966a4bc014f7d2d9abb1",
+      "apps/forge-web/src/App.tsx": "2f6439aa6b865bbca2065ecd45f12ec5743aa83382ac2d8dcf36ec06384cf6ac",
+      "apps/forge-web/src/api.test.ts": "f027f3816d4a1566aef49777709ca9457e271336258f2901b53a42b66041eff4",
+      "apps/forge-web/src/api.ts": "4164051cfb440898c3c4db3096542bd87f8e499c6460c25bc95109f68b6dd5e3",
+      "apps/forge-web/src/main.tsx": "a31c0a3c762c0f2204dcd323f7aafa4c5371363c39939299ac4ecd34da62eaf5",
+      "apps/forge-web/src/styles.css": "90ac8d36936b9080e22b1bbb1904e33d61135e86c5bca4ff8acc7bef187301ea",
+      "apps/forge-web/src/test-setup.ts": "9b328c4843431fa76d8de00008fc159e95f99a840211085ff3b8f25e53d14409",
+      "olympus/__init__.py": "eafe1014c570830813220dfcfdfe880e1ada9faf4bba3a3d6311a8af80192efe",
+      "olympus/api.py": "cfa8fd5de21a1f2436694f5d67c73e521c15e0155cf7fc4734fd537f6f259045",
+      "olympus/cli.py": "9fd434ebca70847a9d10e660384b86eb373d9fba05ef69c7edeb38b8feb1fa8c",
+      "olympus/core/__init__.py": "990c5157585a49d86fe4e605b667f2985785f7f92b5cc1d3eff69151e6b8a9b6",
+      "olympus/core/budget.py": "d4ea7843b31888d60c76410c3c6e22e279b38faeb942c43e6206e0541e54d01c",
+      "olympus/core/division.py": "a189dc9f498c9abec25138c8b420d4d5a4d91fe518e7eb5d2420a45b7857dcd4",
+      "olympus/core/forecasting.py": "a1a58a9621b479acad3a849ed781a60f8bcfa2523e57c85978c8609d33344cd8",
+      "olympus/core/interpretation.py": "6110433e0965c62c33514f6977e8fcb3c3d6ade86ac943264b68b63751ff2ebe",
+      "olympus/core/mapping.py": "efde41cf5caa58f64ea80e463413a93824cdacd0917ff10b34eb2a2f93b18e39",
+      "olympus/core/modalities.py": "e31662d3f950bf3d87d269d8e61b02bad737d9ec39c52a0b46e9e921d0f2ce40",
+      "olympus/core/observability.py": "5184a3adf97a0e842f35929af47ed40f00aea99ae781d6a2be8452bbfef4508d",
+      "olympus/core/outcome.py": "6b06a54a4bc00b822fa3de8f77495938cb91dfbfb0166e8df4ec6031cbc3f296",
+      "olympus/core/perspective.py": "9067a6540a9b86a1c128932fb266ce10cb50a7ca5a8cf5b5be40c3539062c1a7",
+      "olympus/core/prediction.py": "beef7ad50e25a54006abc3d95d46da259bf30673c956d2b0b50ed0999f611b16",
+      "olympus/core/representation.py": "e369de60759ddfbfb2aa58624621e88a404c5db4c53b2b2127b6fa319ff4e465",
+      "olympus/core/retrodiction.py": "81f4baf7dda3a5e89bcefb2df665019b4b01646d3ea0848e2df4f12d94b57c2c",
+      "olympus/core/schemas.py": "e89c498176fb86b52f1a49b8c9961aa8f5cb431ef6a953abfff09cbef1e597f0",
+      "olympus/core/security.py": "1e33d05c8316d39dec9bd4bb27879cb4ae8bbdad958a600ee8f7de1c98ad959b",
+      "olympus/core/sqlite_journal.py": "d577ca0e3e5e0c1b3807386cc93efb797ae81c9a0f63c43cd7936db68c3845b5",
+      "olympus/core/transform.py": "2f608764a1cfe924c3d1b1b565bc053c17f4bd4faf3de10792ac76a9afdc034d",
+      "olympus/core/verification.py": "7f76edc54a733107798f994de38587d12ceccb61e9e512f1188a6077469f5623",
+      "olympus/core/workspace.py": "623f077705e27254712decda3160598ff895681abcf4af82f67c9e161d6b3f68",
+      "olympus/data/__init__.py": "d46e701d41d0ed6eb0bfa6e8ec5134b683fb985f1dba3eb635807ad72af0197d",
+      "olympus/data/ingestion.py": "6d6599177e01eaf84baf41d2c24e6026765cd189ff32027032865e7a9da072bd",
+      "olympus/data/manifests.py": "91875d590c50d0b3dca7126c6bca235d75cf7fe5ba9489e11498df7e9f2a7999",
+      "olympus/data/registry.py": "23834ae066cb9b38318baf819b7d23c176cb3d6bc00f003c8df0193ae011bb32",
+      "olympus/data/retrieval.py": "4316227d671a3dc8c0d7b49b4b76c9472658c2e183da030c428e107d4b0a8861",
+      "olympus/demos.py": "ffed31e5a5eede5adaa0274f97588ee6135f71acdbb9c17293712b9860957a85",
+      "olympus/evaluation/__init__.py": "f449c9ce782ca03d42fc8d52c372adad800e09326e700d611d382277c48f8eba",
+      "olympus/evaluation/harness.py": "99d1966c0d7d783a3773c92b61c501e722cc8f25810610cb427f2823754527ec",
+      "olympus/forge/__init__.py": "6f11962b71aec233a5417d3dbfe118d5dc9440feeb9af9de79a6147d2fba6b9e",
+      "olympus/forge/compiler.py": "c74bafa8606f28bb3ec24f5d3f0d723f252f02ec52359b2daaa6dd678263c2d9",
+      "olympus/forge/experiments.py": "c5a8d11609420f52aeb7b8145be4ccb2ccb2ad3c133f03345ecf1c7572cf03e5",
+      "olympus/forge/language.py": "5d5a355469e8e6d20a768e0eed74fd8b09b2e7bed97a01ea2d9998de88f41af1",
+      "olympus/forge/runtime.py": "0beeff2d03954bc046ccc9844342539664822a47ce92b52e76754f55b35b0c17",
+      "olympus/foundry/__init__.py": "8478c8acc64a9acfd87e26b3ef436923caa7ca83afd4e6bf81434ab78b8a9431",
+      "olympus/foundry/admission.py": "6f5d8fdfba4e8cae59406c3c95b16330cf134946dee81e6f98d3b3ae282f5899",
+      "olympus/foundry/artifacts.py": "d7334dc03c946f20fae273a84235df7fb009abf840de1718a7b9e631ae98971e",
+      "olympus/foundry/bigram.py": "371ffe3ccd1f7f1e535ad18fa067924f8af0780448f54ec4e1d7848a0ba96f53",
+      "olympus/foundry/data_pipeline.py": "782a443e233c5bbd8b96cbe4758e44b92498c2f581bdadd41fea5ba2c05b4d24",
+      "olympus/foundry/eval_suite.py": "4c530545d938a3761c5312a1deb18fce45afef0014fde5c462d52f21101066ce",
+      "olympus/foundry/foundry_verification.txt": "6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab",
+      "olympus/foundry/ollama.py": "4371570711b19015c2720691ac2c37535520e5b6b5c29972f5b3f363087827a3",
+      "olympus/foundry/promotion.py": "f74ae67b0c5e99ff0017825ac66ecfe69ebbbc063a54fcf7c5bcd651703bdf21",
+      "olympus/foundry/quantization.py": "c04f9702637557d699210f349b802bb2a400e7bf4b3c4a5e6d2e9e1bb2d8aee7",
+      "olympus/foundry/resources.py": "83c95b1ba70b5e3fd6ff4d29179f5b48212eadb184da122fe6a40f4c83ac26f0",
+      "olympus/foundry/schemas.py": "a369de90bd86b8e2709e8c5a4a8ff9f2629f61b043f18b9dea7670ed6a3cd9e9",
+      "olympus/foundry/service.py": "5c6fbd65bac9f236973ad929ac8d04abe27f90d7c4d5eae594eb790d9bd5d535",
+      "olympus/foundry/sft.py": "e81272ee3666a15d072a92158170f2ad13d99888601c97a1d290fdb7828187e4",
+      "olympus/foundry/store.py": "4c14ccac6e8d8adbe840e2f12750ba4de3044197fad1ca84d9f210c749bbb9be",
+      "olympus/labos/__init__.py": "1785439a11bf594dc7a042eb9005ab0a2586e34ac8cf06d4e36231cee9a18ff7",
+      "olympus/labos/discovery.py": "b700da24bb355946e245a0b8097cf75b8fd06d04be7b99ed8ddf32bdaddc8e58",
+      "olympus/labos/manifest.py": "9da9f6b93b905117af9cddca2a3186c7a77cd5fbf2dee39c53cb9e0819376be7",
+      "olympus/labos/portfolio.py": "768719f78da837fe015ad33d0d551dde3d0df0025452e3752f2aa20874b9b53a",
+      "olympus/labos/reports.py": "ff174d504ead84ac8ecc9d634b9aaf733a783def25908bf6c8586f841fa94d46",
+      "olympus/labos/runner.py": "21fc396eb8bcb952fa24dc1fdcd7fab6207bd6ef2e4f2ef8ee4bcf9b670b42b6",
+      "olympus/labos/scheduler.py": "9a9fb0b1834c09d1d6de21f96e984c6cf8aca188093187265e71546fea8064cf",
+      "olympus/labos/validation.py": "3758f74c38e9148e585e675f7e064909243e384924827420133d4e574bd174a1",
+      "olympus/memory/__init__.py": "9a8ad140f0403fb7f1d2dbd2440db3201e5eb0a5807b67c8f9e74642959886f4",
+      "olympus/memory/store.py": "27823c8aac59e2718e420515504f88b12411ff99833859ea9c4452b087bfe2e1",
+      "olympus/models/__init__.py": "70b3c08a92e275c497e623f05fc933901dcd5ecac49aa0ff1a01e78c2773731a",
+      "olympus/models/families.py": "1144b12e02ba5840157c0546bd541db4147edfa30da4f41a71f553a41a5616a2",
+      "olympus/sdk.py": "1a3811422972240b013291b279418e55ead8a875240f04eaddedec0027807266",
+      "olympus/training/__init__.py": "a6c17a8ec8867f67ec9f30764f9579f390f45189913638714a611a7d22dd05e4",
+      "olympus/training/synthetic.py": "1a7290890ea1a8c7750e333cbb0cd03db3ede25d5cd90729c0792548486e5888",
+      "olympus/training/trainer.py": "2aad19a32437cfb5c1d2672b331623450785c0fa2f90722bf8de92f0ff27ab05",
+      "pyproject.toml": "1dda99a1f71fa62c6c578dc4eb061ae42860699c2087ff4810bfc2a98f13e4e6",
+      "scripts/analyze_observable_prediction.py": "af7714b3a824fd8003dfd541cc7c30c642567978ed0b2f94f014fba41a33e1f4",
+      "scripts/execute_observable_study.py": "8d9566173f403e979d5d24bb34a5ccce45775d28c1f2d58ee7e02e7fa09cf841",
+      "scripts/loc_count.py": "e052914d69a3887932bcb452327a180fcd7c167cb52de8595464652e8be4bd7c",
+      "scripts/run_observable_prediction.py": "20a4d1c6dc8761ece7eb9bdded63776443d4fc7531eb9b028663df43b690b70f",
+      "scripts/verify_foundry_integrity.py": "9797671f27d0ec4f8d59c69b50370d766a1712f8166e81026ef537e10677b2da",
+      "tests/conftest.py": "de0a2558cae899c449612d2262c372a201d0ae80e38f378cc2634bddcf480e36",
+      "tests/test_bigram_alphabet.py": "449ebf504f1d224bb135d0fbd06f6e9a27bc100df1adeea2f99c196ff3831b1b",
+      "tests/test_bigram_sampling.py": "0a963dbf1a8504218ebf279c7e817de3e1853488a054607bd732268267ed03c3",
+      "tests/test_cli.py": "034f41802d446792e89b822f91fa0c53c2f873cfcf9d94bac0cfb02a5ee80b11",
+      "tests/test_core_runtime.py": "0263c6b7bb9cb23d54359cc73f10c6ae28e9a7a3083101ce95a6851dc4ff73f9",
+      "tests/test_data_memory_sdk.py": "a687348a63b6382b6bbffb2027c078eb61e70836b4cd35c13acc3fbe0c01a7b3",
+      "tests/test_dataset_consumer_snapshot.py": "63d6379958931840443fa4c0925df12acb5c4b0c264c01b81fc6847afc5a03ca",
+      "tests/test_dataset_manifest_integrity.py": "135e15531dd3ffc163538768c3a2f855bd8aeef8b12862788dd498e2ac8467ab",
+      "tests/test_deep_artifact_integrity.py": "bcb2d266bccabcb5f25efe3fb218899c30472b2d9b5fec0a7cbac4954e896ea4",
+      "tests/test_deep_foundry.py": "8e5a56eaf0ebf14e80e59ed22b316a2ab07d692132bce48eea058ada3a35d857",
+      "tests/test_extended_runtime.py": "a810901ff84a355e8ddc83cfe5ae0c9549a70f4910f806d63e131a42159b0e12",
+      "tests/test_forge_and_api.py": "a2867ad50db9b5d6f8d9a529a3022e8ed79c2fd22566299a027471641e9cb21a",
+      "tests/test_foundry.py": "83272539c3b67cdecc1e58b9f8d176cb57083e795b308cc548753e46c86df05a",
+      "tests/test_foundry_admission.py": "0ac3530681598c158de8854457d61fbbdbfdcc93df02d04469b5d4d1b6158919",
+      "tests/test_ingestion_security.py": "7e99d1f267b847350cee6e2367949bf08203e4c1fbd53e614e5a1a3b45ba9517",
+      "tests/test_labos.py": "3a206cb0f0d6a269c5ee8d5970eec769515c296c1437fc3b81db0c42663efe56",
+      "tests/test_learning_and_retrodiction.py": "1737e0864e7b92952d06b72d0c99db566248ac7272f7c4ccece7e1ae183df04e",
+      "tests/test_memory_atomicity.py": "8c2fb7f5d9efb64e8044a15a9f2b4daa106a4b446bf83eb169e6d1d1d6b2ec69",
+      "tests/test_memory_concurrency.py": "af02cf7323f484bf56ef56514227828d9e4251b6dc91695b8b9b03d603729fd3",
+      "tests/test_observable_evidence_guards.py": "cca35f75dadb84b8412c94bf8bceff5ce32475350416358fc6270c015d58f4bc",
+      "tests/test_observable_forecasting.py": "7679a5e647350a2029a9634310120f66727d6357d70fdee0f8c5fd13eeabc10d",
+      "tests/test_packaging_metadata.py": "fb0b2beb8066e0f38d45609269ba903d9ae38aa3b18de18c748971ad39cf250f",
+      "tests/test_quantization_dataset_binding.py": "bca6755033fde3dd301f925d4e51eac6817944382e86537a4c23aa1f2a49466c",
+      "tests/test_response_framing.py": "33a60b335ec3b8c5b1aad6c2549e2541287528d634f86316f55a3d680bd3a1e2",
+      "tests/test_sft_continuation.py": "3fe38ec3e549fe716e4bbe6ebf8c30694dd3fb571286d46f8ff3f27d4b22a92e",
+      "tests/test_sft_token_normalization.py": "742cdafa391ae617352a33e1348328a37eedab75b91fd7158bd269f800a27d0d",
+      "tests/test_sft_window_memory.py": "c43385eae37f44d0ae799d0267291c84c16d0cfb0df64fc0729842b58334a35b",
+      "tests/test_sqlite_journal.py": "c82346aac4be73b2be7138bcfad9085055760d99ba5e122f63a9377a4a21f9d2"
+    },
+    "repository": "build-the-future-11/olympus-cognitive-architecture",
+    "working_tree": "M RESEARCH_STATE.json\n M olympus/cli.py\n M olympus/foundry/eval_suite.py\n M olympus/foundry/promotion.py\n M olympus/foundry/quantization.py\n M olympus/foundry/sft.py\n M scripts/verify_foundry_integrity.py\n?? docs/response-framing-20261019.md\n?? olympus/core/forecasting.py\n?? research/studies/\n?? scripts/analyze_observable_prediction.py\n?? scripts/execute_observable_study.py\n?? scripts/run_observable_prediction.py\n?? tests/test_observable_evidence_guards.py\n?? tests/test_observable_forecasting.py\n?? tests/test_response_framing.py"
+  },
+  "started_utc": "2026-10-19T12:48:15Z",
+  "status": "COMPLETED",
+  "study_id": "olympus-observable-prediction-v1-20261019",
+  "thread_settings": {
+    "deterministic": true,
+    "interop": 1,
+    "intraop": 2
+  }
+}

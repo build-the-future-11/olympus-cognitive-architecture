@@ -1,0 +1,203 @@
+{
+  "study_id": "olympus-observable-prediction-v1-20261019",
+  "version": 2,
+  "phase": "DEVELOPMENT_SPECIFIED_BEFORE_OUTCOMES",
+  "predecessor_commit": "3641551eabcaff91651c1aa1386657e7f68106c5",
+  "question": "Does an EMA temporal latent objective plus coordinate variance regularization improve observable autoregressive forecasting over an identical network given the same training CPU time?",
+  "contribution": "A controlled applicability/falsification study of an Olympus prediction adaptation, not a new JEPA architecture or a language-model capability claim.",
+  "families": [
+    "pendulum",
+    "duffing"
+  ],
+  "dynamics": {
+    "pendulum": "dq/dt=v; dv/dt=-sin(q)-0.15*v",
+    "duffing": "dq/dt=v; dv/dt=-q-0.5*q**3-0.2*v",
+    "integrator": "classical RK4 in float64; each observation interval has four equal integration substeps",
+    "observation_interval": 0.1,
+    "train_steps_per_trajectory": 32,
+    "test_steps_per_trajectory": 50,
+    "units": "dimensionless state and time; fully observed deterministic autonomous systems"
+  },
+  "data": {
+    "provenance": "New synthetic trajectories generated solely by the included equations/code; no external data or historical Hermes examples.",
+    "licensing": "Repository ownership/license unchanged; no new rights or redistribution license granted.",
+    "train_trajectories": 64,
+    "development_trajectories": 24,
+    "test_trajectories_per_condition": 64,
+    "id_initial_state": "q and v independently Uniform[-1.5,1.5]",
+    "ood_initial_state": "q has equiprobable sign and Uniform[1.75,2.5] magnitude; v Uniform[-1.5,1.5]; dynamical law unchanged",
+    "split_unit": "Entire trajectory, with distinct SeedSequence([replicate_seed,family_index,split_index]) streams",
+    "split_indices": {
+      "train": 0,
+      "development": 1,
+      "id": 2,
+      "ood": 3,
+      "observation_noise": 4
+    },
+    "normalization": "Per-coordinate mean and population standard deviation from all training trajectory states only; std floor1e-6",
+    "noise_test": "ID initial observation plus Gaussian noise of0.05 training standard deviations; future targets remain clean",
+    "missing_test": "ID initial velocity replaced with zero in raw state space; diagnostic, no identifiability claim",
+    "ood_scope": "Shifted initial-condition distribution; does not assert that every visited test state is outside the training state cloud."
+  },
+  "model": {
+    "encoder": [
+      2,
+      32,
+      8
+    ],
+    "predictor": [
+      8,
+      32,
+      8
+    ],
+    "decoder": [
+      8,
+      32,
+      2
+    ],
+    "activation": "tanh between linear layers; biases on every linear layer",
+    "forward": "z=E(x); z_next=z+P(z); x_next=D(z_next), all in training-normalized coordinates",
+    "target": "Exact initial clone of E; gradients disabled; EMA after each optimizer update",
+    "ema_momentum": 0.99,
+    "loss": "MSE(x_next,y)+0.1*MSE(D(E(x)),x)+lambda_latent*MSE(z_next,stopgrad(E_target(y)))+lambda_variance*mean(relu(0.2-sqrt(population_var(E(x))+1e-4)))",
+    "variance_scope": "Coordinate variance only; not full VICReg and not a guarantee against rank collapse",
+    "optimizer": "AdamW",
+    "learning_rate": 0.003,
+    "weight_decay": 0.0001,
+    "gradient_clip_norm": 1.0,
+    "batch_size": 128,
+    "steps": 500,
+    "dtype": "float32",
+    "device": "cpu",
+    "initialization": "PyTorch Linear defaults, identical full initial state across neural arms within each family/replicate",
+    "sampling": "Identical minibatch index stream prefix across neural arms; with replacement from all training transitions",
+    "active_parameters": 1266,
+    "frozen_target_parameters": 360,
+    "adamw_betas": [
+      0.9,
+      0.999
+    ],
+    "adamw_epsilon": 1e-08,
+    "adamw_amsgrad": false,
+    "adamw_foreach": false,
+    "adamw_fused": false,
+    "initialization_seed": "replicate_seed*100+family_index",
+    "minibatch_seed": "replicate_seed*10000+family_index*100+11",
+    "shuffle_seed": "replicate_seed*10000+family_index*100+12",
+    "inactive_auxiliary_loss_logging": "0 marks not computed; it is not a measured zero"
+  },
+  "development": {
+    "seeds": [
+      701,
+      702
+    ],
+    "configurations": [
+      {
+        "id": "a",
+        "latent_weight": 0.1,
+        "variance_weight": 0.01
+      },
+      {
+        "id": "b",
+        "latent_weight": 0.5,
+        "variance_weight": 0.05
+      }
+    ],
+    "selection": "Lowest geometric mean20-step free-running development NMSE of the full arm across both seeds and both families; exact ties choose a. No other tuning.",
+    "maximum_configurations": 2,
+    "test_splits_generated": false
+  },
+  "confirmation": {
+    "seeds": [
+      1701,
+      1702,
+      1703,
+      1704,
+      1705,
+      1706,
+      1707,
+      1708
+    ],
+    "generate_after_freeze_only": true,
+    "code_commit_required": true,
+    "independent_unit": "Eight paired blocks, each with independently generated train/evaluation trajectories and initialization, containing both fixed dynamical families",
+    "primary_endpoint": "Mean squared training-normalized state error, averaged equally across coordinates,20 forecast steps and trajectories, on amplitude-OOD initial conditions",
+    "primary_comparison": "full versus direct_cpu_matched",
+    "block_contrast": "Mean across two families of log((baseline_NMSE+1e-12)/(candidate_NMSE+1e-12))",
+    "effect": "1-exp(-mean(block_contrast)); positive means lower candidate NMSE",
+    "practical_effect_threshold": 0.1,
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 93005,
+      "unit": "paired replicate blocks",
+      "interval": "95% percentile"
+    },
+    "test": "Predeclared one-sided exact sign test of positive block contrast, ties counted as non-wins; alpha0.05; one primary claim",
+    "supported": "95% effect interval lower bound >=0.10 AND sign p<=0.05 AND positive average contrast in each family AND ID aggregate regression<=5% AND no candidate divergence AND valid CPU matching",
+    "negative": "Valid95% effect interval upper bound<0.10: predefined practical benefit is not supported in this scope",
+    "mixed": "Primary interval/sign criteria met but a prespecified family, ID or divergence guard fails",
+    "inconclusive": "Interval overlaps the practical threshold or resource/precision limits prevent the planned valid comparison",
+    "invalid": "Genuine protocol, implementation, leakage or analysis defect; retain original evidence and issue a separate corrected version",
+    "additional_runs_after_outcomes": 0,
+    "decision_precedence": [
+      "INVALID for a demonstrated validity defect; preserve outputs and document corrected successor",
+      "INCONCLUSIVE if planned matrix missing or CPU matching invalid",
+      "SUPPORTED if primary interval/sign criteria and every guard pass",
+      "MIXED if primary interval/sign criteria pass but family, ID or divergence guard fails",
+      "NEGATIVE if valid practical-effect interval upper bound is below0.10",
+      "INCONCLUSIVE otherwise"
+    ],
+    "id_guard": "exp(-mean_eight_blocks(mean_two_families(log((direct_cpu_matched_id20+1e-12)/(full_id20+1e-12))))) <=1.05",
+    "family_guard": "Mean across eight blocks of log((direct_cpu_matched_ood20+1e-12)/(full_ood20+1e-12)) is positive in each fixed family",
+    "uncertainty_limit": "Eight-block percentile bootstrap interval has nominal95% coverage; exact sign test concerns positive paired block contrasts, not the magnitude of the10% effect"
+  },
+  "arms": {
+    "direct": "Same encoder/predictor/decoder, state and reconstruction losses; no latent/variance terms",
+    "variance": "direct plus selected variance term",
+    "latent": "direct plus selected temporal EMA latent term",
+    "full": "direct plus both selected terms",
+    "frozen_target": "full with EMA momentum1; tests fixed versus moving targets",
+    "shuffled_target": "full with a separate deterministic permutation of only latent future targets inside each minibatch; supervised future labels unchanged",
+    "direct_cpu_matched": "Fresh direct arm, train until its process CPU training time reaches full-arm training CPU time; at most1500 updates; report overshoot and step count. Capped runs or relative time difference>5% invalidate matching.",
+    "persistence": "x_next=x",
+    "linear_ridge": "Current normalized state monomials total degree<=1, intercept, ridge1e-6 on mean normal equations, intercept unpenalized",
+    "cubic_ridge": "Same with all monomials total degree<=3; no latent state, no teacher information"
+  },
+  "secondary": [
+    "ID and OOD horizon1/10/20/50 errors",
+    "initial-observation noise and missing-velocity errors",
+    "all ablations",
+    "per-coordinate latent standard deviation and effective covariance rank",
+    "training loss curves",
+    "parameter/buffer/optimizer bytes",
+    "model checkpoint bytes",
+    "training wall and CPU time",
+    "inference time including50-step rollout",
+    "serialization/reload equivalence",
+    "per-process peak RSS and host/cgroup preflight"
+  ],
+  "failures": {
+    "training_nonfinite": "Retain failed arm receipt/checkpoint/log; no positive conclusion from an incomplete matrix",
+    "rollout_divergence": "For each trajectory separately, predicted normalized coordinate absolute value>1e6 or nonfinite marks cumulative divergence. Assign coordinate-mean squared error1e12 at the offending and every subsequent step; retain raw predictions, reset its inference input to zero, and continue all unaffected trajectories.",
+    "resource_failure": "Stop the lane; retain partial outputs; do not rerun to obtain a favorable score",
+    "exclusions": "No completed seed, family, arm, or trajectory may be removed"
+  },
+  "budget": {
+    "scientific_wall_seconds": 900,
+    "compute_lanes": 1,
+    "threads_requested": 2,
+    "per_process_seconds": 100,
+    "min_estimated_available_bytes": 1073741824,
+    "paid_jobs": 0,
+    "external_downloads": 0,
+    "resource_contract": "working-set-supervised-v2",
+    "max_child_rss_bytes": 805306368,
+    "monitor_interval_seconds": 0.25,
+    "rss_enforcement": "External parent samples child VmRSS from launch through exit and terminates on violation; sampled limit, not a kernel hard memory reservation. RLIMIT_RSS is not used.",
+    "accounting": "Parent wall clock charges every executed child attempt, including failures and preflight;900seconds aggregate; no launch unless a full100second attempt fits. Original dry-v1 elapsed1.017155267seconds is charged.",
+    "warmup": "Fixed two-state artificial forward/backward/AdamW warmup before any measured scientific arm; dry pass must measure post-warmup resources."
+  },
+  "evidence": "Fresh per-attempt directory; atomic JSON publication; immutable per-arm raw forecast files and one final aggregate; full and teacher-free inference checkpoints; source/config/data/hash/environment/loss/timing/failure receipts. Supervisor retains monitored resources and charges every attempt. Confirmation requires actual committed source plus frozen manifest.",
+  "revision_kind": "PRE_OUTCOME_RESOURCE_AND_EVIDENCE_CONTRACT_CALIBRATION",
+  "predecessor_protocol_sha256": "f59e67e36df4c5a853a61ae1488a53583cdcb74daf025b9a52bdbdb04e4093fb"
+}

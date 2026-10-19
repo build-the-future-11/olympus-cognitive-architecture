@@ -1,0 +1,68 @@
+{
+  "additional_tuning_permitted": false,
+  "configuration": {
+    "id": "b",
+    "latent_weight": 0.5,
+    "variance_weight": 0.05
+  },
+  "geometric_mean_development20": {
+    "a": 0.02250838671504566,
+    "b": 0.018629816693557427
+  },
+  "protected_outcomes_used": false,
+  "protocol_sha256": "232862f29f55eba01c48215b6ed0995409d4732447d043f4d0327fdccc61076a",
+  "selected_configuration": "b",
+  "selection_inputs": {
+    "a": [
+      {
+        "family": "pendulum",
+        "nmse20": 0.016648080744061003,
+        "seed": 701
+      },
+      {
+        "family": "duffing",
+        "nmse20": 0.02857519260882396,
+        "seed": 701
+      },
+      {
+        "family": "pendulum",
+        "nmse20": 0.039198105470411214,
+        "seed": 702
+      },
+      {
+        "family": "duffing",
+        "nmse20": 0.013764456113382355,
+        "seed": 702
+      }
+    ],
+    "b": [
+      {
+        "family": "pendulum",
+        "nmse20": 0.0137877056415125,
+        "seed": 701
+      },
+      {
+        "family": "duffing",
+        "nmse20": 0.022196460307369364,
+        "seed": 701
+      },
+      {
+        "family": "pendulum",
+        "nmse20": 0.033747802118437496,
+        "seed": 702
+      },
+      {
+        "family": "duffing",
+        "nmse20": 0.011663076047912427,
+        "seed": 702
+      }
+    ]
+  },
+  "source_reports": {
+    "artifacts/observable-prediction-v1/development-a-701/report.json": "0eb3f0d71c5b17d063eef096a97adfbab3e6bda73dea6247bafd48e69604523d",
+    "artifacts/observable-prediction-v1/development-a-702/report.json": "f667fd366a177765c3f88711f3b2eeccf9c8eaf9e84fc21db3897d83f6183a04",
+    "artifacts/observable-prediction-v1/development-b-701/report.json": "9c46276edfc595abbdc631fac99aa6cb6da6a4575c1093f45dbbdae2fffef691",
+    "artifacts/observable-prediction-v1/development-b-702/report.json": "612ccf5afbd25b2f3cb557d7387d6a0e828f7860dc7feef1c29a966276acd3fb"
+  },
+  "study_id": "olympus-observable-prediction-v1-20261019"
+}

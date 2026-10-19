@@ -1,0 +1,27 @@
+{
+  "started_utc": "2026-10-19T12:25:13Z",
+  "before": {
+    "current": 7818973184,
+    "limit": 8589934592,
+    "inactive_file": 975228928,
+    "file_dirty": 64245760,
+    "file_writeback": 0,
+    "estimated_available": 1681944576
+  },
+  "action": "POSIX_FADV_DONTNEED advice on this task reproducible dependency files only; no file content changed",
+  "paths": [
+    ".venv",
+    "apps/forge-web/node_modules",
+    "/tmp/olympus-20261019-uv-cache"
+  ],
+  "files_advised": 49959,
+  "errors": 0,
+  "after": {
+    "current": 7322832896,
+    "limit": 8589934592,
+    "inactive_file": 667062272,
+    "file_dirty": 64241664,
+    "file_writeback": 0,
+    "estimated_available": 1869922304
+  }
+}

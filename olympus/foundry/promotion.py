@@ -27,6 +27,7 @@ from olympus.foundry.sft import (
     SFTConfig,
     TinyModelConfig,
     _checkpoint_training_config,
+    _output_protocol_version,
     _read_checkpoint,
 )
 
@@ -93,9 +94,11 @@ def _close(actual: float, expected: float) -> bool:
 
 def _evaluation_consistent(evaluation: HeldOutEvaluation, test: SplitDescriptor) -> bool:
     """Admit complete suite evidence without changing its historical loss objective."""
+    protocol_version = _output_protocol_version(evaluation.output_protocol)
     if (
-        evaluation.schema_version != 1
-        or evaluation.suite != "olympus-held-out-capabilities-v1"
+        evaluation.schema_version != protocol_version
+        or evaluation.suite != f"olympus-held-out-capabilities-v{protocol_version}"
+        or (protocol_version == 2 and evaluation.max_generation_tokens is None)
         or not _finite_numbers(evaluation.model_dump())
         or evaluation.test_records != test.records
         or set(test.categories) != set(REQUIRED_CATEGORIES)
@@ -149,8 +152,18 @@ def _evaluation_consistent(evaluation: HeldOutEvaluation, test: SplitDescriptor)
 def _quantization_consistent(
     report: QuantizationReport, evaluation: HeldOutEvaluation, training: SFTConfig
 ) -> bool:
+    protocol_version = _output_protocol_version(report.output_protocol)
     if (
-        report.schema_version != 1
+        report.schema_version != protocol_version
+        or report.suite != f"olympus-quantization-evaluation-v{protocol_version}"
+        or report.output_protocol != evaluation.output_protocol
+        or (
+            protocol_version == 2
+            and (
+                report.max_generation_tokens is None
+                or report.max_generation_tokens != evaluation.max_generation_tokens
+            )
+        )
         or report.format != f"olympus-symmetric-int{report.bits}-v1"
         or not _finite_numbers(report.model_dump())
         or min(
@@ -291,7 +304,7 @@ def evaluate_promotion(
             "quantization_evidence",
             quantization_consistent,
             f"consistent={quantization_consistent}",
-            "Source loss, objective, context, size, loss change, and quality flag must agree.",
+            "Output protocol/budget, source loss, objective, context, size and gates must agree.",
         ),
         _gate(
             "quantized_artifact_identity",

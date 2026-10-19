@@ -18,11 +18,13 @@ from olympus.foundry.data_pipeline import load_verified_dataset
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.sft import (
     LossNormalization,
+    OutputProtocol,
     TinyCausalLM,
     TinyModelConfig,
     _checkpoint_training_config,
     _encode_examples,
     _model_from_payload,
+    _output_protocol_version,
     _pack_nibbles,
     _read_checkpoint,
     _require_finite,
@@ -67,6 +69,7 @@ class QuantizedTensor(StrictModel):
 
 class QuantizationReport(StrictModel):
     schema_version: int = 1
+    suite: str = "olympus-quantization-evaluation-v1"
     format: str
     bits: QuantizationBits
     source_checkpoint_sha256: str
@@ -87,6 +90,8 @@ class QuantizationReport(StrictModel):
     peak_rss_bytes: int = Field(ge=0)
     passed_quality_gate: bool
     loss_normalization: LossNormalization = "legacy_batch_mean_v1"
+    output_protocol: OutputProtocol = "legacy_raw_bytes_v1"
+    max_generation_tokens: int | None = Field(default=None, gt=0)
 
 
 def _quantize_tensor(tensor: torch.Tensor, bits: QuantizationBits) -> dict[str, Any]:
@@ -204,9 +209,12 @@ def load_quantized_model(path: Path) -> TinyCausalLM:
     return _model_from_quantized_payload(payload)
 
 
-def _latency(model: TinyCausalLM, prompt: str) -> float:
+def _latency(model: TinyCausalLM, prompt: str, output_protocol: OutputProtocol) -> float:
     start = time.perf_counter()
-    generate_text(model, prompt, device=torch.device("cpu"), max_new_tokens=16)
+    generate_text(
+        model, prompt, device=torch.device("cpu"), max_new_tokens=16,
+        output_protocol=output_protocol,
+    )
     return (time.perf_counter() - start) * 1_000
 
 
@@ -216,9 +224,14 @@ def quantize_checkpoint(
     output_root: Path,
     *,
     bits: QuantizationBits,
+    max_generation_tokens: int = 48,
+    output_protocol: OutputProtocol = "framed_answer_eos_v2",
 ) -> QuantizationReport:
+    protocol_version = _output_protocol_version(output_protocol)
     if type(bits) is not int or bits not in {4, 8}:
         raise ValueError("bits must be 4 or 8")
+    if max_generation_tokens < 1:
+        raise ValueError("max_generation_tokens must be positive")
     float_path = output_root / "float32-model.pt"
     artifact = output_root / f"model-int{bits}.pt"
     report_path = output_root / f"int{bits}-report.json"
@@ -269,11 +282,14 @@ def quantize_checkpoint(
         quantized, rows, device=torch.device("cpu"), normalization=training.loss_normalization
     )
     prompt = "List the safe steps before starting a memory-heavy local model workload."
-    source_latency = _latency(source, prompt)
-    quantized_latency = _latency(quantized, prompt)
+    source_latency = _latency(source, prompt, output_protocol)
+    quantized_latency = _latency(quantized, prompt, output_protocol)
     tool_examples = [item for item in examples if item.category in {"tool_use", "agent_behavior"}]
     tool_exact = sum(
-        generate_text(quantized, item.prompt, device=torch.device("cpu"), max_new_tokens=48)
+        generate_text(
+            quantized, item.prompt, device=torch.device("cpu"),
+            max_new_tokens=max_generation_tokens, output_protocol=output_protocol,
+        )
         .strip()
         .casefold()
         == item.response.strip().casefold()
@@ -287,6 +303,10 @@ def quantize_checkpoint(
     float_size = float_path.stat().st_size
     loss_change = (quantized_loss - source_loss) / max(source_loss, 1e-12)
     report = QuantizationReport(
+        schema_version=protocol_version,
+        suite=f"olympus-quantization-evaluation-v{protocol_version}",
+        output_protocol=output_protocol,
+        max_generation_tokens=max_generation_tokens,
         loss_normalization=training.loss_normalization,
         format=f"olympus-symmetric-int{bits}-v1",
         bits=bits,

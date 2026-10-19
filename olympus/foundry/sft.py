@@ -28,6 +28,15 @@ from olympus.foundry.resources import ResourceGovernor, memory_snapshot
 
 AdapterMode = Literal["full", "lora", "qlora"]
 LossNormalization = Literal["legacy_batch_mean_v1", "supervised_token_mean_v2"]
+OutputProtocol = Literal["legacy_raw_bytes_v1", "framed_answer_eos_v2"]
+
+
+def _output_protocol_version(output_protocol: OutputProtocol) -> int:
+    if output_protocol == "legacy_raw_bytes_v1":
+        return 1
+    if output_protocol == "framed_answer_eos_v2":
+        return 2
+    raise ValueError("unsupported output protocol")
 
 
 def _require_finite(value: Any, name: str) -> None:
@@ -441,8 +450,11 @@ def generate_text(
     *,
     device: torch.device,
     max_new_tokens: int = 64,
+    output_protocol: OutputProtocol = "framed_answer_eos_v2",
 ) -> str:
-    prefix = ByteTokenizer.encode(f"<|user|>\n{prompt}\n<|assistant|>\n", bos=True)
+    version = _output_protocol_version(output_protocol)
+    serialized_prompt = prompt.strip() if version == 2 else prompt
+    prefix = ByteTokenizer.encode(f"<|user|>\n{serialized_prompt}\n<|assistant|>\n", bos=True)
     window = prefix[-model.config.max_sequence_tokens :]
     tokens = torch.tensor([window], device=device)
     generated_start = tokens.shape[1]
@@ -454,7 +466,15 @@ def generate_text(
             tokens = torch.cat((tokens, next_token), dim=1)
             if int(next_token.item()) == ByteTokenizer.eos_id:
                 break
-    return ByteTokenizer.decode(tokens[0, generated_start:].tolist())
+    generated = tokens[0, generated_start:].tolist()
+    if version == 2:
+        # The marker is also valid answer content. Remove one exact terminal
+        # frame only after the model emits EOS, never at an interior marker or
+        # at the output budget. Token matching preserves truncated frames.
+        terminator = ByteTokenizer.encode("\n<|end|>", eos=True)
+        if generated[-len(terminator) :] == terminator:
+            generated = generated[: -len(terminator)]
+    return ByteTokenizer.decode(generated)
 
 
 def _resolve_device(name: str) -> torch.device:
