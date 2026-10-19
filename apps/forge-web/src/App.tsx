@@ -41,6 +41,10 @@ export function App(): ReactElement {
   const [completion, setCompletion] = useState<ChatCompletion | null>(null);
   const [generating, setGenerating] = useState<boolean>(false);
   const [generationError, setGenerationError] = useState<string>("");
+  const availableModels = models.filter(
+    (model) => model.status === "VERIFIED" && model.health.status === "ok"
+  );
+  const selectedModelAvailable = availableModels.some((model) => model.id === selectedModel);
 
   const reload = useCallback(() => setReloadToken((value) => value + 1), []);
 
@@ -77,7 +81,12 @@ export function App(): ReactElement {
         if (!controller.signal.aborted) {
           setFoundryStatus(status);
           setModels(registeredModels);
-          setSelectedModel((current) => current || registeredModels[0]?.id || "");
+          const available = registeredModels.filter(
+            (model) => model.status === "VERIFIED" && model.health.status === "ok"
+          );
+          setSelectedModel((current) =>
+            available.some((model) => model.id === current) ? current : available[0]?.id || ""
+          );
         }
       })
       .catch((caught: unknown) => {
@@ -131,7 +140,7 @@ export function App(): ReactElement {
 
   const generate = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    if (!selectedModel || !prompt.trim()) return;
+    if (!selectedModelAvailable || !prompt.trim()) return;
     setGenerating(true);
     setCompletion(null);
     setGenerationError("");
@@ -249,7 +258,7 @@ export function App(): ReactElement {
             <p className="eyebrow">Percy contract</p>
             <h2 id="models-heading">Verified model registry</h2>
           </div>
-          <span>{models.length} available</span>
+          <span>{availableModels.length} available</span>
         </div>
         {models.length === 0 && !foundryState.loading ? (
           <p className="empty-state">
@@ -262,23 +271,26 @@ export function App(): ReactElement {
             <article className="card" key={model.id}>
               <div className="card-header">
                 <h3>{model.id}</h3>
-                <span data-status="passed">{model.status}</span>
+                <span data-status={model.health.status === "ok" ? "passed" : "failed"}>
+                  {model.status}
+                </span>
               </div>
               <p>{model.capabilities.join(" · ")}</p>
               <small>{model.limitations[0]}</small>
+              {model.health.reason ? <p className="inline-error">{model.health.reason}</p> : null}
             </article>
           ))}
         </div>
         <form className="generation-form" onSubmit={(event) => void generate(event)}>
           <label htmlFor="model">Model</label>
           <select
-            disabled={models.length === 0 || generating}
+            disabled={availableModels.length === 0 || generating}
             id="model"
             onChange={(event) => setSelectedModel(event.target.value)}
             value={selectedModel}
           >
             <option value="">Select a verified model</option>
-            {models.map((model) => (
+            {availableModels.map((model) => (
               <option key={model.id} value={model.id}>
                 {model.id}
               </option>
@@ -293,7 +305,7 @@ export function App(): ReactElement {
             rows={4}
             value={prompt}
           />
-          <button disabled={!selectedModel || !prompt.trim() || generating} type="submit">
+          <button disabled={!selectedModelAvailable || !prompt.trim() || generating} type="submit">
             {generating ? "Generating…" : "Generate through stable API"}
           </button>
         </form>

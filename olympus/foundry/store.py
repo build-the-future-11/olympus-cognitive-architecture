@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import hashlib
 import json
+import math
 import sqlite3
 import threading
 from collections.abc import Iterator
@@ -10,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from olympus.core.sqlite_journal import apply_durable_journal_mode
+from olympus.foundry.bigram import BigramCheckpoint, CharacterBigramModel
 from olympus.foundry.schemas import (
     ArtifactStatus,
     CheckpointRecord,
@@ -164,11 +167,7 @@ class FoundryStore:
     @staticmethod
     def _json(
         record: (
-            DatasetRecord
-            | ExperimentRecord
-            | CheckpointRecord
-            | EvaluationRecord
-            | ModelRecord
+            DatasetRecord | ExperimentRecord | CheckpointRecord | EvaluationRecord | ModelRecord
         ),
     ) -> str:
         return record.model_dump_json()
@@ -243,14 +242,128 @@ class FoundryStore:
             )
 
     def register_model(self, record: ModelRecord) -> None:
-        if record.status is not ArtifactStatus.VERIFIED:
-            raise ValueError("only verified checkpoints can be promoted to the model registry")
         with self.transaction() as connection:
+            self.load_admitted_checkpoint(record)
             connection.execute(
                 """INSERT INTO models(model_id, checkpoint_id, status, record_json)
                 VALUES (?, ?, ?, ?)""",
                 (record.model_id, record.checkpoint_id, record.status.value, self._json(record)),
             )
+
+    @staticmethod
+    def _passing_bigram_evaluation(evaluation: EvaluationRecord) -> bool:
+        if not evaluation.passed or evaluation.suite != "held-out-character-model-v1":
+            return False
+        baseline, candidate = evaluation.baseline_metrics, evaluation.candidate_metrics
+        keys = ("negative_log_likelihood", "perplexity", "evaluated_transitions")
+        if any(
+            key not in metrics or not math.isfinite(metrics[key])
+            for metrics in (baseline, candidate)
+            for key in keys
+        ):
+            return False
+        transitions = candidate["evaluated_transitions"]
+        return (
+            transitions > 0
+            and transitions.is_integer()
+            and transitions == baseline["evaluated_transitions"]
+            and 0 <= candidate["negative_log_likelihood"] < baseline["negative_log_likelihood"]
+            and 1 <= candidate["perplexity"] < baseline["perplexity"]
+        )
+
+    def _admission_records(self, record: ModelRecord) -> tuple[CheckpointRecord, ExperimentRecord]:
+        if record.status is not ArtifactStatus.VERIFIED:
+            raise ValueError("only verified checkpoints can be promoted to the model registry")
+        if record.family != "FoundryVerificationBigram" or (
+            record.runtime != "olympus-character-bigram-v1"
+        ):
+            raise ValueError("unsupported model family or runtime for the verification registry")
+        # One query provides a consistent registry snapshot, including reads from
+        # a separate service connection. Register_model also holds a write transaction.
+        rows = self._connection.execute(
+            """SELECT c.record_json AS checkpoint_json, e.record_json AS experiment_json,
+                      d.record_json AS dataset_json, v.record_json AS evaluation_json
+               FROM checkpoints c
+               LEFT JOIN experiments e ON e.experiment_id = c.experiment_id
+               LEFT JOIN datasets d ON d.dataset_id = e.dataset_id
+                                   AND d.version = e.dataset_version
+               LEFT JOIN evaluations v ON v.checkpoint_id = c.checkpoint_id
+               WHERE c.checkpoint_id = ?""",
+            (record.checkpoint_id,),
+        ).fetchall()
+        if not rows:
+            raise ValueError("missing checkpoint")
+        checkpoint = CheckpointRecord.model_validate_json(rows[0]["checkpoint_json"])
+        if (
+            checkpoint.checkpoint_id != record.checkpoint_id
+            or checkpoint.checkpoint_id != f"ckpt_{checkpoint.sha256[:16]}"
+            or checkpoint.format != record.runtime
+            or record.model_id != f"foundry-verification-bigram-{checkpoint.sha256[:8]}"
+            or record.version != checkpoint.sha256[:12]
+        ):
+            raise ValueError("model identity or checkpoint runtime does not match its artifact")
+        if rows[0]["experiment_json"] is None:
+            raise ValueError("missing checkpoint experiment")
+        experiment = ExperimentRecord.model_validate_json(rows[0]["experiment_json"])
+        if (
+            experiment.experiment_id != checkpoint.experiment_id
+            or experiment.model_family != record.family
+            or experiment.status
+            not in {ArtifactStatus.CHECKPOINTED, ArtifactStatus.EVALUATED, ArtifactStatus.VERIFIED}
+        ):
+            raise ValueError("checkpoint experiment is ineligible for model admission")
+        if rows[0]["dataset_json"] is None:
+            raise ValueError("missing experiment dataset")
+        dataset = DatasetRecord.model_validate_json(rows[0]["dataset_json"])
+        if (
+            dataset.dataset_id != experiment.dataset_id
+            or dataset.version != experiment.dataset_version
+            or dataset.sha256 != experiment.dataset_sha256
+        ):
+            raise ValueError("experiment dataset identity does not match the registry")
+        for row in rows:
+            if row["evaluation_json"] is None:
+                continue
+            try:
+                evaluation = EvaluationRecord.model_validate_json(row["evaluation_json"])
+            except ValueError:
+                continue
+            if (
+                evaluation.checkpoint_id == checkpoint.checkpoint_id
+                and evaluation.dataset_sha256 == dataset.sha256
+                and self._passing_bigram_evaluation(evaluation)
+            ):
+                return checkpoint, experiment
+        raise ValueError("checkpoint has no passing, identity-bound held-out evaluation")
+
+    def load_admitted_checkpoint(self, record: ModelRecord) -> tuple[CheckpointRecord, bytes]:
+        """Validate current evidence and return the same artifact bytes that were checked.
+
+        Historical rows are checked too; an old VERIFIED label is not proof of
+        admission. This is a consistency boundary for the local registry, not
+        authentication of evidence supplied by a hostile database writer.
+        """
+        with self._lock:
+            checkpoint, experiment = self._admission_records(record)
+        payload = Path(checkpoint.path).read_bytes()
+        if hashlib.sha256(payload).hexdigest() != checkpoint.sha256:
+            raise RuntimeError("checkpoint hash mismatch")
+        if len(payload) != checkpoint.byte_count:
+            raise RuntimeError("checkpoint byte count mismatch")
+        parsed = BigramCheckpoint.from_bytes(payload)
+        CharacterBigramModel(parsed)
+        if parsed.schema_version != 1 or parsed.model_type != "character-bigram":
+            raise ValueError("unsupported checkpoint schema or model type")
+        expected_provenance = {
+            "experiment_id": experiment.experiment_id,
+            "dataset_id": experiment.dataset_id,
+            "dataset_version": experiment.dataset_version,
+            "dataset_sha256": experiment.dataset_sha256,
+            "code_commit": experiment.code_commit,
+        }
+        if parsed.training_provenance != expected_provenance:
+            raise ValueError("checkpoint provenance does not match its admitted experiment")
+        return checkpoint, payload
 
     def append_evidence(
         self,

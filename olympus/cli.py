@@ -115,9 +115,16 @@ def foundry_status(root: Path = Path("artifacts/foundry")) -> None:
 @foundry_app.command("list-models")
 def list_foundry_models(root: Path = Path("artifacts/foundry")) -> None:
     with _foundry_service(root) as service:
-        console.print_json(
-            json.dumps([model.model_dump(mode="json") for model in service.list_models()])
-        )
+        models = []
+        for model in service.list_models():
+            health = service.model_health(model.model_id)
+            models.append({
+                **model.model_dump(mode="json"),
+                "registered_status": model.status.value,
+                "status": model.status.value if health["status"] == "ok" else "UNAVAILABLE",
+                "health": health,
+            })
+        console.print_json(json.dumps(models))
 
 
 @foundry_app.command("generate")

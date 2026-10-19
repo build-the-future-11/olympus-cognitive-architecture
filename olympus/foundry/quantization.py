@@ -20,7 +20,7 @@ from olympus.foundry.sft import (
     TinyModelConfig,
     _checkpoint_training_config,
     _encode_examples,
-    _model_from_checkpoint,
+    _model_from_checkpoint_snapshot,
     _pack_nibbles,
     _unpack_nibbles,
     evaluate_loss,
@@ -161,7 +161,9 @@ def quantize_checkpoint(
     *,
     bits: QuantizationBits,
 ) -> QuantizationReport:
-    source, checkpoint = _model_from_checkpoint(checkpoint_path, torch.device("cpu"))
+    source, checkpoint, source_sha = _model_from_checkpoint_snapshot(
+        checkpoint_path, torch.device("cpu")
+    )
     training = _checkpoint_training_config(checkpoint)
     if training.mode != "full":
         raise ValueError("post-training quantization currently requires a merged full checkpoint")
@@ -184,7 +186,7 @@ def quantize_checkpoint(
             "format": f"olympus-symmetric-int{bits}-v1",
             "bits": bits,
             "model_config": training.model.model_dump(mode="json"),
-            "source_checkpoint_sha256": _sha256(checkpoint_path),
+            "source_checkpoint_sha256": source_sha,
             "tensors": tensor_payloads,
         },
     )
@@ -223,7 +225,7 @@ def quantize_checkpoint(
         loss_normalization=training.loss_normalization,
         format=f"olympus-symmetric-int{bits}-v1",
         bits=bits,
-        source_checkpoint_sha256=_sha256(checkpoint_path),
+        source_checkpoint_sha256=source_sha,
         artifact_path=str(artifact.resolve()),
         artifact_sha256=_sha256(artifact),
         float_weights_bytes=float_size,

@@ -4,7 +4,6 @@ import hashlib
 import json
 import os
 import platform
-import shutil
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -36,12 +35,19 @@ def _sha256(payload: bytes) -> str:
 
 def _atomic_write(path: Path, payload: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", delete=False) as temporary:
-        temporary.write(payload)
-        temporary.flush()
-        os.fsync(temporary.fileno())
-        temporary_path = Path(temporary.name)
-    temporary_path.replace(path)
+    temporary_path: Path | None = None
+    try:
+        with NamedTemporaryFile(
+            dir=path.parent, prefix=f".{path.name}.", delete=False
+        ) as temporary:
+            temporary_path = Path(temporary.name)
+            temporary.write(payload)
+            temporary.flush()
+            os.fsync(temporary.fileno())
+        temporary_path.replace(path)
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
 
 
 class FoundryService:
@@ -196,9 +202,7 @@ class FoundryService:
             updated_at=timestamp.isoformat(),
         )
         self.store.register_experiment(experiment)
-        self._evidence(
-            "experiment", experiment_id, "started", experiment.model_dump(mode="json")
-        )
+        self._evidence("experiment", experiment_id, "started", experiment.model_dump(mode="json"))
         try:
             model = CharacterBigramModel.train(
                 training_text,
@@ -240,9 +244,7 @@ class FoundryService:
             )
 
             candidate = model.evaluate(evaluation_text)
-            baseline = uniform_baseline_metrics(
-                evaluation_text, len(model.checkpoint.alphabet)
-            )
+            baseline = uniform_baseline_metrics(evaluation_text, len(model.checkpoint.alphabet))
             passed = (
                 candidate.negative_log_likelihood < baseline.negative_log_likelihood
                 and candidate.perplexity < baseline.perplexity
@@ -394,24 +396,23 @@ class FoundryService:
         model = self.store.model(model_id)
         if model is None:
             return {"status": "missing", "model": model_id}
-        checkpoint = self.store.checkpoint(model.checkpoint_id)
-        if checkpoint is None:
-            return {"status": "corrupt", "model": model_id, "reason": "missing checkpoint"}
-        path = Path(checkpoint.path)
-        if not path.is_file():
+        try:
+            checkpoint, _ = self.store.load_admitted_checkpoint(model)
+        except FileNotFoundError:
             return {"status": "corrupt", "model": model_id, "reason": "missing artifact"}
-        actual_sha = _sha256(path.read_bytes())
-        if actual_sha != checkpoint.sha256:
+        except OSError as error:
             return {
                 "status": "corrupt",
                 "model": model_id,
-                "reason": "checkpoint hash mismatch",
+                "reason": f"unreadable artifact: {error}",
             }
+        except (RuntimeError, ValueError) as error:
+            return {"status": "corrupt", "model": model_id, "reason": str(error)}
         return {
             "status": "ok",
             "model": model_id,
             "checkpoint_id": checkpoint.checkpoint_id,
-            "sha256": actual_sha,
+            "sha256": checkpoint.sha256,
         }
 
     def generate(
@@ -426,12 +427,7 @@ class FoundryService:
         model_record = self.store.model(model_id)
         if model_record is None:
             raise KeyError(f"unknown model: {model_id}")
-        checkpoint_record = self.store.checkpoint(model_record.checkpoint_id)
-        if checkpoint_record is None:
-            raise RuntimeError(f"missing checkpoint: {model_record.checkpoint_id}")
-        payload = Path(checkpoint_record.path).read_bytes()
-        if _sha256(payload) != checkpoint_record.sha256:
-            raise RuntimeError(f"checkpoint hash mismatch: {checkpoint_record.checkpoint_id}")
+        checkpoint_record, payload = self.store.load_admitted_checkpoint(model_record)
         from olympus.foundry.bigram import BigramCheckpoint
 
         model = CharacterBigramModel(BigramCheckpoint.from_bytes(payload))
@@ -470,14 +466,8 @@ class FoundryService:
         model = self.store.model(model_id)
         if model is None:
             raise KeyError(f"unknown model: {model_id}")
-        checkpoint = self.store.checkpoint(model.checkpoint_id)
-        if checkpoint is None:
-            raise RuntimeError(f"missing checkpoint: {model.checkpoint_id}")
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(checkpoint.path, destination)
-        if _sha256(destination.read_bytes()) != checkpoint.sha256:
-            destination.unlink(missing_ok=True)
-            raise RuntimeError("export verification failed")
+        _, payload = self.store.load_admitted_checkpoint(model)
+        _atomic_write(destination, payload)
         return destination
 
     def status(self) -> dict[str, object]:

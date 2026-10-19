@@ -513,9 +513,17 @@ def _model_from_payload(checkpoint: dict[str, Any], device: torch.device) -> Tin
     return model.to(device)
 
 
+def _model_from_checkpoint_snapshot(
+    path: Path, device: torch.device,
+) -> tuple[TinyCausalLM, dict[str, Any], str]:
+    """Return the model, metadata and SHA from one consumed checkpoint snapshot."""
+    checkpoint, checkpoint_sha = _read_checkpoint(path)
+    return _model_from_payload(checkpoint, device), checkpoint, checkpoint_sha
+
+
 def _model_from_checkpoint(path: Path, device: torch.device) -> tuple[TinyCausalLM, dict[str, Any]]:
-    checkpoint, _ = _read_checkpoint(path)
-    return _model_from_payload(checkpoint, device), checkpoint
+    model, checkpoint, _ = _model_from_checkpoint_snapshot(path, device)
+    return model, checkpoint
 
 
 def _capture_rng_state(device: torch.device) -> dict[str, Any]:

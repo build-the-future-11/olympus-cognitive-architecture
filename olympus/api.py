@@ -190,19 +190,24 @@ def verify_foundry(
 def list_foundry_models(
     service: FoundryDependency,
 ) -> dict[str, object]:
-    return {
-        "object": "list",
-        "data": [
+    models = []
+    for model in service.list_models():
+        health = service.model_health(model.model_id)
+        models.append(
             {
                 "id": model.model_id,
                 "object": "model",
                 "owned_by": "bu1ld-olympus",
-                "status": model.status.value,
+                "status": model.status.value if health["status"] == "ok" else "UNAVAILABLE",
+                "registered_status": model.status.value,
+                "health": health,
                 "capabilities": model.capabilities,
                 "limitations": model.limitations,
             }
-            for model in service.list_models()
-        ],
+        )
+    return {
+        "object": "list",
+        "data": models,
     }
 
 

@@ -21,6 +21,7 @@ export type FoundryModel = {
   object: "model";
   owned_by: string;
   status: string;
+  health: { status: "ok" | "corrupt" | "missing"; reason?: string };
   capabilities: string[];
   limitations: string[];
 };
@@ -162,6 +163,9 @@ export async function fetchFoundryModels(signal?: AbortSignal): Promise<FoundryM
         model.object !== "model" ||
         typeof model.owned_by !== "string" ||
         typeof model.status !== "string" ||
+        !isObject(model.health) ||
+        !["ok", "corrupt", "missing"].includes(String(model.health.status)) ||
+        (model.health.reason !== undefined && typeof model.health.reason !== "string") ||
         !isStringArray(model.capabilities) ||
         !isStringArray(model.limitations)
     )

@@ -41,6 +41,7 @@ function responseFor(url: string, method = "GET"): Response {
             object: "model",
             owned_by: "bu1ld-olympus",
             status: "VERIFIED",
+            health: { status: "ok" },
             capabilities: ["text-generation"],
             limitations: ["Not Hermes."]
           }
@@ -95,6 +96,31 @@ function responseFor(url: string, method = "GET"): Response {
 }
 
 describe("App", () => {
+  it("shows corrupt artifacts and removes stale selections after a live refresh", async () => {
+    let corrupt = false;
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+      if (String(input) === "/api/v1/models" && corrupt) {
+        return new Response(JSON.stringify({ object: "list", data: [{
+          id: "foundry-verification-bigram-abc12345", object: "model",
+          owned_by: "bu1ld-olympus", status: "UNAVAILABLE",
+          health: { status: "corrupt", reason: "checkpoint hash mismatch" },
+          capabilities: ["text-generation"], limitations: ["Not Hermes."]
+        }] }), { status: 200, headers: { "Content-Type": "application/json" } });
+      }
+      return responseFor(String(input), init?.method);
+    });
+    render(<App />);
+    await screen.findByText("1 available");
+    expect(screen.getByRole("button", { name: "Generate through stable API" })).toBeEnabled();
+    corrupt = true;
+    fireEvent.click(screen.getByRole("button", { name: "Refresh live state" }));
+    expect(await screen.findByText("checkpoint hash mismatch")).toBeInTheDocument();
+    expect(screen.getByText("UNAVAILABLE")).toHaveAttribute("data-status", "failed");
+    expect(screen.getByText("0 available")).toBeInTheDocument();
+    expect(screen.getByLabelText("Model")).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Generate through stable API" })).toBeDisabled();
+  });
+
   it("renders only live API state and executes real controls", async () => {
     vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) =>
       responseFor(String(input), init?.method)

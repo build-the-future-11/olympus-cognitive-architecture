@@ -28,7 +28,10 @@ def test_quantization_rejects_unbound_dataset_before_creating_artifacts(
     }
     if identity is not None:
         checkpoint["dataset_manifest_sha256"] = identity
-    monkeypatch.setattr(quantization, "_model_from_checkpoint", lambda *_: (model, checkpoint))
+    monkeypatch.setattr(
+        quantization, "_model_from_checkpoint_snapshot",
+        lambda *_: (model, checkpoint, "a" * 64),
+    )
 
     def no_weight_publication(*args: Any, **kwargs: Any) -> None:
         pytest.fail("unbound data reached weight publication before dataset admission")
@@ -58,7 +61,10 @@ def test_corrupt_dataset_is_rejected_before_creating_artifacts(
         "training_config": config.model_dump(mode="json"),
         "dataset_manifest_sha256": manifest.manifest_sha256,
     }
-    monkeypatch.setattr(quantization, "_model_from_checkpoint", lambda *_: (model, checkpoint))
+    monkeypatch.setattr(
+        quantization, "_model_from_checkpoint_snapshot",
+        lambda *_: (model, checkpoint, "a" * 64),
+    )
 
     def no_weight_publication(*args: Any, **kwargs: Any) -> None:
         pytest.fail("corrupt data reached weight publication before dataset admission")

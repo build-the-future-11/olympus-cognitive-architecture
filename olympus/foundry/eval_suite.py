@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import json
 import math
 import os
@@ -22,14 +21,10 @@ from olympus.foundry.sft import (
     TinyModelConfig,
     _checkpoint_training_config,
     _encode_examples,
-    _model_from_checkpoint,
+    _model_from_checkpoint_snapshot,
     evaluate_loss,
     generate_text,
 )
-
-
-def _sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _atomic_json(path: Path, payload: object) -> None:
@@ -96,8 +91,8 @@ def _baseline_model(
     checkpoint: dict[str, Any], base_checkpoint: Path | None
 ) -> tuple[TinyCausalLM, str]:
     if base_checkpoint is not None:
-        model, _ = _model_from_checkpoint(base_checkpoint, torch.device("cpu"))
-        return model, f"checkpoint:{_sha256(base_checkpoint)}"
+        model, _, base_sha = _model_from_checkpoint_snapshot(base_checkpoint, torch.device("cpu"))
+        return model, f"checkpoint:{base_sha}"
     training = _checkpoint_training_config(checkpoint)
     torch.manual_seed(training.seed)
     return TinyCausalLM(TinyModelConfig.model_validate(checkpoint["model_config"])), (
@@ -155,7 +150,7 @@ def evaluate_checkpoint(
     max_generation_tokens: int = 48,
 ) -> HeldOutEvaluation:
     device = torch.device("cpu")
-    candidate, checkpoint = _model_from_checkpoint(checkpoint_path, device)
+    candidate, checkpoint, checkpoint_sha = _model_from_checkpoint_snapshot(checkpoint_path, device)
     baseline, baseline_identity = _baseline_model(checkpoint, base_checkpoint)
     manifest_sha, examples = _load_test_examples(manifest_path)
     if checkpoint["dataset_manifest_sha256"] != manifest_sha:
@@ -220,7 +215,7 @@ def evaluate_checkpoint(
     report = HeldOutEvaluation(
         loss_normalization=training.loss_normalization,
         checkpoint_path=str(checkpoint_path.resolve()),
-        checkpoint_sha256=_sha256(checkpoint_path),
+        checkpoint_sha256=checkpoint_sha,
         dataset_manifest_sha256=manifest_sha,
         baseline_identity=baseline_identity,
         test_records=len(examples),

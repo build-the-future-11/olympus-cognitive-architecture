@@ -30,7 +30,7 @@ Run it:
 Generate through the stable API using the first promoted model:
 
 ```bash
-MODEL_ID="$(curl -s http://127.0.0.1:8000/v1/models | jq -er '.data[0].id')"
+MODEL_ID="$(curl -s http://127.0.0.1:8000/v1/models | jq -er 'first(.data[] | select(.health.status == "ok")) | .id')"
 curl -s http://127.0.0.1:8000/v1/chat/completions \
   -H 'content-type: application/json' \
   -d "{\"model\":\"${MODEL_ID}\",\"messages\":[{\"role\":\"user\",\"content\":\"request verify evidence\"}],\"temperature\":0,\"seed\":7,\"stream\":false}"
@@ -42,9 +42,15 @@ curl -s http://127.0.0.1:8000/v1/chat/completions \
 - Every experiment references the exact dataset SHA-256 and code commit.
 - Every checkpoint has an immutable content hash and owning experiment.
 - Evaluation records preserve baseline and candidate metrics together.
-- Only a passing checkpoint can enter the model registry.
-- Model health re-hashes the checkpoint before reporting `ok`.
-- Generation refuses a modified checkpoint.
+- The verification registry validates a passing evaluation against the exact
+  checkpoint and dataset, the owning experiment, and the implemented family/runtime.
+  A caller-supplied `VERIFIED` label is insufficient.
+- Admission, health, generation, and export validate the same checkpoint byte
+  snapshot, including its hash, length, structure, and training provenance.
+- CLI/API model listings expose live health and report `UNAVAILABLE` for invalid
+  artifacts while preserving `registered_status`. The console disables their selection.
+- A failed export preserves an existing destination; a verified snapshot is
+  published with an atomic replacement.
 - Evidence is append-only and sequence ordered.
 - SQLite foreign keys, WAL journaling, full synchronization, and explicit
   transactions are enabled.
@@ -86,6 +92,12 @@ stored in the registry:
 Hermes will require a licensed base decision, baseline suite, actual
 post-training evidence, quantization measurements, stable local serving, and
 Percy integration before promotion under a Hermes name.
+
+The dated [admission repair and reproduction guide](foundry-admission-20261019.md)
+records the October 19 engineering slice and its limits. The verification registry
+is a consistency boundary for trusted local records, not authentication of evidence
+supplied by a malicious database writer. A passing applicable evaluation is required;
+later evaluation receipts do not currently implement revocation.
 
 ## Deep model-development commands
 
@@ -140,6 +152,12 @@ These commands do not promote by naming. The promotion check emits a release
 manifest only when checkpoint/dataset identities, rights, data scale, held-out
 quality, category regressions, quantized tool reliability, fresh-process
 serving, and model-card gates all pass.
+
+The October 19 source review found that the separate deep-promotion check still
+trusts some summary flags without fully validating the underlying measurements,
+quantized artifact, or evaluation completeness. Treat the preceding list as its
+intended contract. The verification-registry repair does not close that deep gate
+or establish Hermes promotion readiness.
 
 ## Deep dataset and resource invariants
 

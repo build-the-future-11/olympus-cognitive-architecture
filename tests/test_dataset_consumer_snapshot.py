@@ -141,7 +141,11 @@ def test_quantization_encodes_the_verified_test_snapshot(
     }
     checkpoint_path = tmp_path / "untrained-fixture.pt"
     checkpoint_path.write_bytes(b"artificial-untrained-checkpoint")
-    monkeypatch.setattr(quantization, "_model_from_checkpoint", lambda *_: (model, checkpoint))
+    monkeypatch.setattr(
+        quantization,
+        "_model_from_checkpoint_snapshot",
+        lambda *_: (model, checkpoint, "a" * 64),
+    )
     reads = change_after_read(monkeypatch, prepared.split_paths["test"], mutation)
     observed: list[list[InstructionExample]] = []
 
