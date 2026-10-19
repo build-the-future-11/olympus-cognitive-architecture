@@ -1,0 +1,14 @@
+{
+  "version": 4,
+  "frozen_at_utc": "2026-10-19T13:55:19.748150+00:00",
+  "source_commit": "92cc121e6f1074de72eaee5a8cb670170107bbc7",
+  "reason": "v3 stopped before any child; development tests refilled installation/build file cache. One final environment-only preparation and attempt if admitted. No quality outcome has been observed.",
+  "changes": "POSIX_FADV_DONTNEED advisory on already-used task dependency/build caches; file contents unchanged. No source, resource policy, floor, data, seed, or quality threshold changes.",
+  "maximum_preparation_seconds": 45,
+  "maximum_new_lifecycle_attempts": 1,
+  "child_seconds": 30,
+  "total_lifecycle_seconds": 120,
+  "minimum_estimated_headroom_bytes": 2147483648,
+  "selection": "Run only if the same v2 estimator admits the host. If blocked or failed, retain all evidence and stop lifecycle attempts in this session.",
+  "output": "artifacts/foundry-admission-run-20261019-v4"
+}

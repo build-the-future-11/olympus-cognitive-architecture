@@ -1,0 +1,122 @@
+[
+  {
+    "id": "eligible_admission",
+    "claim": "Registration and consumption require coherent eligible verification-family evidence.",
+    "status": "IMPLEMENTED_AND_LOCALLY_TESTED",
+    "code": [
+      "olympus/foundry/store.py",
+      "olympus/foundry/service.py"
+    ],
+    "tests": [
+      "tests/test_foundry_admission.py"
+    ],
+    "raw_evidence": "evidence.tar.gz:test_logs/expanded_tests.xml (web: web_tests_final.log)",
+    "limitation": "Trusted local consistency; no malicious-writer authentication or later-receipt revocation."
+  },
+  {
+    "id": "consumed_identity",
+    "claim": "Recorded checkpoint digests identify the exact byte snapshots consumed.",
+    "status": "IMPLEMENTED_AND_LOCALLY_TESTED",
+    "code": [
+      "olympus/foundry/sft.py",
+      "olympus/foundry/eval_suite.py",
+      "olympus/foundry/quantization.py"
+    ],
+    "tests": [
+      "tests/test_checkpoint_consumer_identity.py"
+    ],
+    "raw_evidence": "evidence.tar.gz:test_logs/expanded_tests.xml (web: web_tests_final.log)",
+    "limitation": "No numerical-objective change or model-efficacy proof."
+  },
+  {
+    "id": "safe_export",
+    "claim": "Rejected or failed publication preserves an earlier export and cleans temporary files.",
+    "status": "IMPLEMENTED_AND_LOCALLY_TESTED",
+    "code": [
+      "olympus/foundry/service.py"
+    ],
+    "tests": [
+      "tests/test_foundry_admission.py"
+    ],
+    "raw_evidence": "evidence.tar.gz:test_logs/expanded_tests.xml (web: web_tests_final.log)",
+    "limitation": "Does not make repeated quantization or paired report/release publication jointly atomic."
+  },
+  {
+    "id": "live_health",
+    "claim": "CLI/API and console selection reflect current artifact availability.",
+    "status": "IMPLEMENTED_AND_LOCALLY_TESTED",
+    "code": [
+      "olympus/api.py",
+      "olympus/cli.py",
+      "apps/forge-web/src/App.tsx",
+      "apps/forge-web/src/api.ts"
+    ],
+    "tests": [
+      "tests/test_foundry_admission.py",
+      "apps/forge-web/src/App.test.tsx"
+    ],
+    "raw_evidence": "evidence.tar.gz:test_logs/expanded_tests.xml (web: web_tests_final.log)",
+    "limitation": "Component and ASGI tests do not establish browser or network deployment."
+  },
+  {
+    "id": "promotion_consistency",
+    "claim": "Contradictory promotion reports, incomplete populations, and artifact-identity failures are rejected.",
+    "status": "IMPLEMENTED_AND_LOCALLY_TESTED",
+    "code": [
+      "olympus/foundry/promotion.py"
+    ],
+    "tests": [
+      "tests/test_promotion_evidence_integrity.py"
+    ],
+    "raw_evidence": "evidence.tar.gz:test_logs/expanded_tests.xml (web: web_tests_final.log)",
+    "limitation": "Artificial metadata/bytes; no actual Hermes promotion, independent quality reproduction, or tensor-loadability proof."
+  },
+  {
+    "id": "lightweight_startup",
+    "claim": "Verification CLI/API imports do not load Torch.",
+    "status": "IMPLEMENTED_AND_LOCALLY_TESTED",
+    "code": [
+      "olympus/api.py",
+      "olympus/cli.py"
+    ],
+    "tests": [
+      "tests/test_foundry_lightweight_imports.py"
+    ],
+    "raw_evidence": "evidence.tar.gz:test_logs/expanded_tests.xml (web: web_tests_final.log)",
+    "limitation": "Tensor commands/endpoints still require Torch."
+  },
+  {
+    "id": "lifecycle",
+    "claim": "The fixed bigram lifecycle completed with coherent evaluation, export, CLI, and API identities.",
+    "status": "EXECUTED_AND_EVIDENCE_VERIFIED_ENGINEERING_ONLY",
+    "experiment": "FND_20261019T135557927274",
+    "source_commit": "92cc121e6f1074de72eaee5a8cb670170107bbc7",
+    "evidence": [
+      "workflow-receipt.json",
+      "RESULTS.md",
+      "verification-model.json",
+      "evidence.tar.gz:workflow_v4/"
+    ],
+    "limitation": "One synthetic character-bigram fixture; no independent experiment reproduction or assistant-quality result."
+  },
+  {
+    "id": "residency",
+    "claim": "The stronger whole-module residency interpretation is supported or falsified.",
+    "status": "UNANSWERED_RESOURCE_BLOCKED",
+    "evidence": [
+      "../../olympus_audit_20261019/RESIDENCY_OUTCOME.json",
+      "../../olympus_audit_20261019/residency-diagnostic-v2.tar.gz"
+    ],
+    "limitation": "No fixture, selected-layer output, arm result, or primary metric exists."
+  },
+  {
+    "id": "new_model",
+    "claim": "Broad learned-reconstruction/selection novelty or efficacy is established.",
+    "status": "NOT_ESTABLISHED",
+    "evidence": [
+      "../../olympus_audit_20261019/RELATED_WORK_AND_MODEL_CONTRACT.md",
+      "../../olympus_audit_20261019/SCIENTIFIC_AUDIT.md"
+    ],
+    "limitation": "Closest prior work and minimum contract documented; complete novel model and confirmatory evidence absent."
+  }
+]

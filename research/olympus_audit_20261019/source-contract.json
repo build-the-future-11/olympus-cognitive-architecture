@@ -1,0 +1,283 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-10-19T13:39:50.776959+00:00",
+  "repository": "/workspace/scratch/5d7183878ded/olympus",
+  "git_head": "37cb1b678e1666d33208147964fedcdf4a1f5167",
+  "git_status_porcelain": " M olympus/api.py\n M olympus/cli.py\n?? tests/test_foundry_lightweight_imports.py\n",
+  "scope": "Read-only source contract; no source imports, model runs, tests, or protected-data reads",
+  "user_pipeline_sha256": "afd9d4f11cc233fae8811f742017ddfe39d9fc8f392a1044256d39d2e57a7fa1",
+  "files": [
+    {
+      "path": "olympus/core/representation.py",
+      "bytes": 3183,
+      "sha256": "e369de60759ddfbfb2aa58624621e88a404c5db4c53b2b2127b6fa319ff4e465",
+      "symbols": [
+        {
+          "name": "RepresentationDescriptor",
+          "kind": "ClassDef",
+          "start_line": 27,
+          "end_line": 31
+        },
+        {
+          "name": "DynamicRepresentationTheory",
+          "kind": "ClassDef",
+          "start_line": 34,
+          "end_line": 87
+        }
+      ]
+    },
+    {
+      "path": "olympus/core/interpretation.py",
+      "bytes": 6955,
+      "sha256": "6110433e0965c62c33514f6977e8fcb3c3d6ade86ac943264b68b63751ff2ebe",
+      "symbols": [
+        {
+          "name": "_make_branch",
+          "kind": "FunctionDef",
+          "start_line": 120,
+          "end_line": 163
+        },
+        {
+          "name": "_score_evidence",
+          "kind": "FunctionDef",
+          "start_line": 165,
+          "end_line": 190
+        }
+      ]
+    },
+    {
+      "path": "olympus/core/schemas.py",
+      "bytes": 1896,
+      "sha256": "e89c498176fb86b52f1a49b8c9961aa8f5cb431ef6a953abfff09cbef1e597f0",
+      "symbols": [
+        {
+          "name": "ComputeBudget",
+          "kind": "ClassDef",
+          "start_line": 42,
+          "end_line": 50
+        },
+        {
+          "name": "BranchScore",
+          "kind": "ClassDef",
+          "start_line": 53,
+          "end_line": 64
+        }
+      ]
+    },
+    {
+      "path": "olympus/core/budget.py",
+      "bytes": 1158,
+      "sha256": "d4ea7843b31888d60c76410c3c6e22e279b38faeb942c43e6206e0541e54d01c",
+      "symbols": [
+        {
+          "name": "AdaptiveComputeAllocator",
+          "kind": "ClassDef",
+          "start_line": 13,
+          "end_line": 35
+        }
+      ]
+    },
+    {
+      "path": "olympus/core/verification.py",
+      "bytes": 2719,
+      "sha256": "7f76edc54a733107798f994de38587d12ceccb61e9e512f1188a6077469f5623",
+      "symbols": [
+        {
+          "name": "CalibrationVerifier",
+          "kind": "ClassDef",
+          "start_line": 72,
+          "end_line": 82
+        }
+      ]
+    },
+    {
+      "path": "olympus/core/transform.py",
+      "bytes": 2514,
+      "sha256": "2f608764a1cfe924c3d1b1b565bc053c17f4bd4faf3de10792ac76a9afdc034d",
+      "symbols": [
+        {
+          "name": "LearnedTransformNetwork",
+          "kind": "ClassDef",
+          "start_line": 17,
+          "end_line": 26
+        },
+        {
+          "name": "train_learned_transform",
+          "kind": "FunctionDef",
+          "start_line": 29,
+          "end_line": 68
+        }
+      ]
+    },
+    {
+      "path": "olympus/models/families.py",
+      "bytes": 1037,
+      "sha256": "1144b12e02ba5840157c0546bd541db4147edfa30da4f41a71f553a41a5616a2",
+      "symbols": [
+        {
+          "name": "HermesNano",
+          "kind": "ClassDef",
+          "start_line": 15,
+          "end_line": 36
+        }
+      ]
+    },
+    {
+      "path": "olympus/foundry/sft.py",
+      "bytes": 39343,
+      "sha256": "a962231e8078fefbb583e2a0b501975f9def6a30ef8313a80ea98478afcbd421",
+      "symbols": [
+        {
+          "name": "TransformerBlock",
+          "kind": "ClassDef",
+          "start_line": 276,
+          "end_line": 290
+        },
+        {
+          "name": "TinyCausalLM",
+          "kind": "ClassDef",
+          "start_line": 293,
+          "end_line": 310
+        },
+        {
+          "name": "generate_text",
+          "kind": "FunctionDef",
+          "start_line": 438,
+          "end_line": 457
+        },
+        {
+          "name": "_read_checkpoint",
+          "kind": "FunctionDef",
+          "start_line": 490,
+          "end_line": 496
+        },
+        {
+          "name": "_model_from_payload",
+          "kind": "FunctionDef",
+          "start_line": 499,
+          "end_line": 513
+        },
+        {
+          "name": "_model_from_checkpoint_snapshot",
+          "kind": "FunctionDef",
+          "start_line": 516,
+          "end_line": 521
+        }
+      ]
+    },
+    {
+      "path": "olympus/foundry/quantization.py",
+      "bytes": 9075,
+      "sha256": "5ba092e25dca2159bf05f8e8e171e5fecefd5643a7e31a5cfa27f98e3209831d",
+      "symbols": [
+        {
+          "name": "_dequantize_tensor",
+          "kind": "FunctionDef",
+          "start_line": 122,
+          "end_line": 135
+        },
+        {
+          "name": "load_quantized_model",
+          "kind": "FunctionDef",
+          "start_line": 138,
+          "end_line": 148
+        },
+        {
+          "name": "quantize_checkpoint",
+          "kind": "FunctionDef",
+          "start_line": 157,
+          "end_line": 248
+        }
+      ]
+    },
+    {
+      "path": "olympus/foundry/eval_suite.py",
+      "bytes": 9034,
+      "sha256": "1bed9d0fff20137739495e084be5b056a7f7299f184f92af5c3829328cdd94de",
+      "symbols": [
+        {
+          "name": "_baseline_model",
+          "kind": "FunctionDef",
+          "start_line": 90,
+          "end_line": 100
+        },
+        {
+          "name": "evaluate_checkpoint",
+          "kind": "FunctionDef",
+          "start_line": 144,
+          "end_line": 240
+        }
+      ]
+    }
+  ],
+  "handoff_review": {
+    "reviewed_utc": "2026-10-19T13:59:49.343248+00:00",
+    "engineering_revision": "92cc121e6f1074de72eaee5a8cb670170107bbc7",
+    "engineering_branch": "fix/olympus-foundry-admission-20261019",
+    "observed_main_base": "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
+    "scope": "Read-only source bytes and metadata review; no subject imports, tests, model execution, scientific evaluation, or remote mutation",
+    "engineering_files": [
+      {
+        "path": "olympus/core/representation.py",
+        "sha256": "e369de60759ddfbfb2aa58624621e88a404c5db4c53b2b2127b6fa319ff4e465",
+        "unchanged_from_original_inspection": true
+      },
+      {
+        "path": "olympus/core/interpretation.py",
+        "sha256": "6110433e0965c62c33514f6977e8fcb3c3d6ade86ac943264b68b63751ff2ebe",
+        "unchanged_from_original_inspection": true
+      },
+      {
+        "path": "olympus/core/schemas.py",
+        "sha256": "e89c498176fb86b52f1a49b8c9961aa8f5cb431ef6a953abfff09cbef1e597f0",
+        "unchanged_from_original_inspection": true
+      },
+      {
+        "path": "olympus/core/budget.py",
+        "sha256": "d4ea7843b31888d60c76410c3c6e22e279b38faeb942c43e6206e0541e54d01c",
+        "unchanged_from_original_inspection": true
+      },
+      {
+        "path": "olympus/core/verification.py",
+        "sha256": "7f76edc54a733107798f994de38587d12ceccb61e9e512f1188a6077469f5623",
+        "unchanged_from_original_inspection": true
+      },
+      {
+        "path": "olympus/core/transform.py",
+        "sha256": "2f608764a1cfe924c3d1b1b565bc053c17f4bd4faf3de10792ac76a9afdc034d",
+        "unchanged_from_original_inspection": true
+      },
+      {
+        "path": "olympus/models/families.py",
+        "sha256": "1144b12e02ba5840157c0546bd541db4147edfa30da4f41a71f553a41a5616a2",
+        "unchanged_from_original_inspection": true
+      },
+      {
+        "path": "olympus/foundry/sft.py",
+        "sha256": "a962231e8078fefbb583e2a0b501975f9def6a30ef8313a80ea98478afcbd421",
+        "unchanged_from_original_inspection": true
+      },
+      {
+        "path": "olympus/foundry/quantization.py",
+        "sha256": "5ba092e25dca2159bf05f8e8e171e5fecefd5643a7e31a5cfa27f98e3209831d",
+        "unchanged_from_original_inspection": true
+      },
+      {
+        "path": "olympus/foundry/eval_suite.py",
+        "sha256": "1bed9d0fff20137739495e084be5b056a7f7299f184f92af5c3829328cdd94de",
+        "unchanged_from_original_inspection": true
+      }
+    ],
+    "separate_pr29_subject": {
+      "commit": "12b7c785958b741ec48834a74e81df0c674d327b",
+      "repository_path": "olympus/models/spatiotemporal_lazy.py",
+      "url": "https://github.com/build-the-future-11/olympus-cognitive-architecture/blob/12b7c785958b741ec48834a74e81df0c674d327b/olympus/models/spatiotemporal_lazy.py",
+      "sha256": "09c7a7aa4a1edcf19f3e4c4084e44d627dc606a43172e8853c02d3fa59fff939",
+      "git_blob": "8cb9839530bdb165f50b9c716deebd21417b0472",
+      "bytes": 13969,
+      "provenance": "Inspected the unmodified source copy prepared by the science-audit agent; its SHA256 and Git blob match SOURCE_MANIFEST.json. That manifest reports GitHub connector retrieval at the exact commit; this handoff did not repeat remote retrieval.",
+      "ownership_result": "No ownership diagnostic was executed or evaluated by this literature audit.",
+      "implementation_boundary": "Real deterministic lazy-shard store and module materializer; not a learned numerical-weight reconstructor or verified whole-process RAM bound."
+    }
+  }
+}

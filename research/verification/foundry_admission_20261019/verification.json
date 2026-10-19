@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "repository": "build-the-future-11/olympus-cognitive-architecture",
+  "branch": "fix/olympus-foundry-admission-20261019",
+  "executed_source_commit": "92cc121e6f1074de72eaee5a8cb670170107bbc7",
+  "source_tree": "abed3df4bd3e9309eda1e93884247b11f53e4045",
+  "verification": {
+    "implementation": "IMPLEMENTED",
+    "python": {
+      "passed": 432,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "pytest_elapsed_seconds": 14.42,
+      "combined_statement_branch_coverage_percent": 88.53193873739261,
+      "statement_coverage_percent": 92.01931922723091,
+      "branch_only_coverage_percent": 73.45924453280318,
+      "configured_combined_gate_percent": 85,
+      "new_cases": 133,
+      "cases_failing_on_applicable_predecessors": 104,
+      "raw": "evidence.tar.gz:test_logs/expanded_tests.log; expanded_tests.xml; expanded_coverage.json"
+    },
+    "web": {
+      "passed": 7,
+      "failed": 0,
+      "suite_elapsed_seconds": 2.2,
+      "command_elapsed_seconds": 3.037788941001054,
+      "build": "PASS",
+      "node": "v24.19.0",
+      "npm": "11.9.0",
+      "hosted_node_pin": "22.23.2",
+      "raw": "evidence.tar.gz:test_logs/web_tests_final.log; web_build_final.log; final_gate_receipt.json"
+    },
+    "static_checks": {
+      "ruff": "PASS",
+      "strict_mypy": "PASS_89_SOURCE_FILES",
+      "evidence_helper_ruff": "PASS"
+    },
+    "distribution": {
+      "wheel": "BUILT_AND_TWINE_CHECK_PASSED",
+      "sdist": "BUILT_AND_TWINE_CHECK_PASSED",
+      "raw": "evidence.tar.gz:test_logs/final_gate_receipt.json"
+    },
+    "dependency_audits": {
+      "npm": "ZERO_VULNERABILITIES_REPORTED",
+      "python": "BLOCKED_EXACT_CPU_TORCH_VERSION_NOT_IN_PYPI",
+      "full_release_gate": "NOT_CLAIMED"
+    },
+    "independent_review": {
+      "source_review": "NO_MATERIAL_BLOCKER",
+      "saved_evidence_review": "HASHES_AND_RECORDED_ARITHMETIC_MATCH",
+      "independent_experiment_reproduction": false,
+      "reviewers_executed_tests_or_models": false
+    }
+  },
+  "lifecycle": {
+    "status": "PASSED_ENGINEERING_ONLY",
+    "experiment_id": "FND_20261019T135557927274",
+    "model_id": "foundry-verification-bigram-0292e4d0",
+    "checkpoint_sha256": "0292e4d08ff43c4638b42ba5013eb897dad60ab4fbbdb609f661b0b731ccdb06",
+    "checkpoint_bytes": 1712,
+    "elapsed_seconds": 4.272114744002465,
+    "minimum_estimated_headroom_bytes": 2231209984,
+    "max_child_rss_bytes": 67338240,
+    "swap_change_bytes": 0,
+    "attempts_retained": 4,
+    "attempts_producing_training_output": 1,
+    "source_verification": "attempt-source-verification.json"
+  },
+  "residency": {
+    "status": "BLOCKED",
+    "primary_result": null,
+    "commands_launched": 1,
+    "training_updates": 0,
+    "selected_layer_forwards": 0,
+    "minimum_estimated_headroom_bytes": 2123210752,
+    "shortfall_bytes": 24272896,
+    "receipt": "../../olympus_audit_20261019/RESIDENCY_OUTCOME.json"
+  },
+  "new_capability_evaluations": 0,
+  "protected_runs": 0,
+  "paid_jobs": 0,
+  "kaggle_jobs_launched": 0,
+  "main_merge": false,
+  "release_or_deployment": false,
+  "git_actions_dispatch": false,
+  "limits": [
+    "Fresh-process ASGI, not a network server or browser deployment.",
+    "Sampled headroom estimate, not a guaranteed instantaneous free-memory or hard real-time bound.",
+    "Historical memory.stat components were not retained; saved credit arithmetic is verifiable but historical component derivation is not.",
+    "Deep-promotion consistency does not independently validate artifact tensor loadability, quality, licenses, or serving.",
+    "Python dependency audit is incomplete and local Node differs from hosted pin.",
+    "Historical scientific outputs remain source-reported until retained archives are retrieved; no independent retraining."
+  ]
+}

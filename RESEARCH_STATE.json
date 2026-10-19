@@ -3,8 +3,8 @@
   "project": "Olympus Cognitive Architecture",
   "repository": "build-the-future-11/olympus-cognitive-architecture",
   "updated_utc": "2026-10-19",
-  "current_phase": "DEVELOPMENT_ENGINEERING_TESTED_BOUNDED_WORKFLOWS_PENDING",
-  "scientific_disposition": "PRIOR_NEGATIVES_PRESERVED_NEW_CAPABILITY_UNASSESSED",
+  "current_phase": "ENGINEERING_SLICE_COMPLETE_SCIENTIFIC_AUDIT_COMPLETE_BROADER_MODEL_NOT_READY",
+  "scientific_disposition": "PRIOR_NEGATIVES_PRESERVED_NO_NEW_CAPABILITY_RESULT_RESIDENCY_BLOCKED",
   "research_question": "Can the Foundry reject inconsistent evidence, consume and report exact artifact bytes, and complete its verification-family lifecycle within a declared CPU budget?",
   "scientific_objective": "Reliable research infrastructure and a falsifiable model contract; no new capability or novelty claim.",
   "hypothesis": "Shared admission, single-read identity, non-destructive publication, consistent promotion evidence, and deferred tensor imports satisfy the declared engineering invariants.",
@@ -49,7 +49,9 @@
     "base_commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
     "development_branch": "fix/olympus-foundry-admission-20261019",
     "current_parent_commit": "37cb1b678e1666d33208147964fedcdf4a1f5167",
-    "experimental_diagnostic_subject": "12b7c785958b741ec48834a74e81df0c674d327b:olympus/models/spatiotemporal_lazy.py"
+    "experimental_diagnostic_subject": "12b7c785958b741ec48834a74e81df0c674d327b:olympus/models/spatiotemporal_lazy.py",
+    "executed_implementation_commit": "92cc121e6f1074de72eaee5a8cb670170107bbc7",
+    "source_manifest": "research/verification/foundry_admission_20261019/source-manifest.json"
   },
   "datasets": {
     "development": "Artificial metadata/tensor regressions; 674-byte built-in verification corpus; artificial three-shard diagnostic",
@@ -65,7 +67,14 @@
     "docs/foundry-window-and-dataset-20261010.md",
     "research/verification/foundry_integration_20261010/receipt.json",
     "docs/sft-continuation-20261010.md",
-    "research/ENGINEERING_SFT_CONTINUATION_20261010.json"
+    "research/ENGINEERING_SFT_CONTINUATION_20261010.json",
+    "docs/foundry-admission-20261019.md",
+    "research/verification/foundry_admission_20261019/README.md",
+    "research/verification/foundry_admission_20261019/verification.json",
+    "research/verification/foundry_admission_20261019/claim-evidence.json",
+    "research/olympus_audit_20261019/SCIENTIFIC_AUDIT.md",
+    "research/olympus_audit_20261019/RELATED_WORK_AND_MODEL_CONTRACT.md",
+    "research/olympus_audit_20261019/RESIDENCY_OUTCOME.json"
   ],
   "claims": [
     {
@@ -77,16 +86,32 @@
       "claim": "The proposed snapshot repair preserves the identity of consumed records.",
       "status": "SUPPORTED_BY_BOUNDED_ENGINEERING_REGRESSION",
       "evidence": "research/DATASET_CONSUMER_SNAPSHOT_20261010.json"
+    },
+    {
+      "claim": "The bounded Foundry v4 lifecycle passed on source 92cc121e6f1074de72eaee5a8cb670170107bbc7 with consistent consumed, exported, and served artifact identities.",
+      "status": "SUPPORTED_WITHIN_ENGINEERING_FIXTURE",
+      "evidence": "research/verification/foundry_admission_20261019/workflow-receipt.json"
+    },
+    {
+      "claim": "New learned reconstruction/selection efficacy or novelty is established.",
+      "status": "NOT_ESTABLISHED",
+      "evidence": "research/olympus_audit_20261019/SCIENTIFIC_AUDIT.md"
     }
   ],
   "decisions": [
     "Stack on the reviewed dataset-contract PR; do not rewrite its branch.",
     "Preserve the existing manifest verifier return type.",
-    "Treat data identity fixes as engineering behavior, not evidence of model capability."
+    "Treat data identity fixes as engineering behavior, not evidence of model capability.",
+    "Close the declared admission/provenance engineering slice after verified source tests and one completed fixed-corpus lifecycle.",
+    "Retain all lifecycle resource stops and the single blocked ownership diagnostic; do not seek scientific positivity through reruns.",
+    "Keep the broader new-model research gates unmet until a differentiated executable mechanism and complete protocol are justified."
   ],
   "failures": [
     "Existing consumers verify split bytes and then reread files without binding the later content to those hashes.",
-    "The prior recorded transformer had zero exact task and tool completion; no Hermes model was promoted."
+    "The prior recorded transformer had zero exact task and tool completion; no Hermes model was promoted.",
+    "Foundry v1 and v3 stopped before children; v2 stopped during tensor-backend startup. Their receipts remain retained.",
+    "The single residency fixture worker crossed the estimated-headroom floor before creating experiment artifacts. No ownership result was produced.",
+    "The exact installed CPU Torch version could not be completely checked by the PyPI dependency audit."
   ],
   "history_policy": "Append revisions and failures with source identities. Preserve dated predecessor ledgers and frozen outcomes. Prior history is referenced without claiming to reconstruct missing events.",
   "history": [
@@ -197,23 +222,70 @@
     {
       "date": "2026-10-19",
       "event": "Preserved the previous canonical state as predecessor_canonical_state_20261019. Expanded source passes 432 tests with 88.53% combined statement/branch coverage, Ruff, and strict Mypy. Freeze the exact-source v3 lifecycle and residency ownership protocol v2 before their execution. No protected scientific outcome changed."
+    },
+    {
+      "date": "2026-10-19",
+      "event": "Source 92cc121e6f1074de72eaee5a8cb670170107bbc7 passed the bounded Foundry v4 lifecycle in 4.272115 s. V1/v2/v3 memory stops are preserved. V4 used one frozen final environment-only advisory cache preparation; no data, seed, source, quality threshold, or resource policy changed. Only v4 produced training output.",
+      "record": "research/verification/foundry_admission_20261019/workflow-receipt.json"
+    },
+    {
+      "date": "2026-10-19",
+      "event": "Frozen residency diagnostic v2 launched one fixture worker and stopped at the 2 GiB memory floor before creating any fixture or arm result. BLOCKED is retained; no ownership conclusion and no retry. Hash/arithmetic reviews do not constitute independent experimental reproduction.",
+      "record": "research/olympus_audit_20261019/RESIDENCY_OUTCOME.json"
+    },
+    {
+      "date": "2026-10-19",
+      "event": "Completed 20-primary-source review and 28-row scientific flaw/evidence audit, preserving historical routing/EditCLEVR negatives and limited temporal positive with attribution gap. Broader new-model IDEA_READY and RESEARCH_COMPLETE remain unmet. Repeated user attachments are one continuing specification; no protected runs or frozen outcomes were reset."
     }
   ],
   "verification": {
-    "python_passed": 432,
-    "python_failed": 0,
-    "python_skipped": 0,
-    "combined_statement_branch_coverage_percent": 88.53,
-    "web_passed": 7,
-    "web_build": "PASS",
-    "python_dependency_audit": "BLOCKED_EXACT_CPU_TORCH_VERSION_NOT_IN_PYPI",
-    "workflow_first_attempt": "STOPPED_AT_MEMORY_PREFLIGHT_NO_CHILD_LAUNCHED",
-    "python_elapsed_seconds": 14.42,
-    "new_regression_cases": 133,
-    "ruff": "PASS",
-    "mypy": "PASS_89_SOURCE_FILES",
-    "workflow_v2": "STOPPED_DURING_EAGER_TORCH_IMPORT_NO_TRAINING_OUTPUT",
-    "exact_revision_binding": "The next lifecycle receipt will bind its clean source commit and all source hashes; the final evidence manifest will bind test logs."
+    "implementation": "IMPLEMENTED",
+    "python": {
+      "passed": 432,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "pytest_elapsed_seconds": 14.42,
+      "combined_statement_branch_coverage_percent": 88.53193873739261,
+      "statement_coverage_percent": 92.01931922723091,
+      "branch_only_coverage_percent": 73.45924453280318,
+      "configured_combined_gate_percent": 85,
+      "new_cases": 133,
+      "cases_failing_on_applicable_predecessors": 104,
+      "raw": "evidence.tar.gz:test_logs/expanded_tests.log; expanded_tests.xml; expanded_coverage.json"
+    },
+    "web": {
+      "passed": 7,
+      "failed": 0,
+      "suite_elapsed_seconds": 2.2,
+      "command_elapsed_seconds": 3.037788941001054,
+      "build": "PASS",
+      "node": "v24.19.0",
+      "npm": "11.9.0",
+      "hosted_node_pin": "22.23.2",
+      "raw": "evidence.tar.gz:test_logs/web_tests_final.log; web_build_final.log; final_gate_receipt.json"
+    },
+    "static_checks": {
+      "ruff": "PASS",
+      "strict_mypy": "PASS_89_SOURCE_FILES",
+      "evidence_helper_ruff": "PASS"
+    },
+    "distribution": {
+      "wheel": "BUILT_AND_TWINE_CHECK_PASSED",
+      "sdist": "BUILT_AND_TWINE_CHECK_PASSED",
+      "raw": "evidence.tar.gz:test_logs/final_gate_receipt.json"
+    },
+    "dependency_audits": {
+      "npm": "ZERO_VULNERABILITIES_REPORTED",
+      "python": "BLOCKED_EXACT_CPU_TORCH_VERSION_NOT_IN_PYPI",
+      "full_release_gate": "NOT_CLAIMED"
+    },
+    "independent_review": {
+      "source_review": "NO_MATERIAL_BLOCKER",
+      "saved_evidence_review": "HASHES_AND_RECORDED_ARITHMETIC_MATCH",
+      "independent_experiment_reproduction": false,
+      "reviewers_executed_tests_or_models": false
+    }
   },
   "active_engineering_revision": {
     "phase": "LOCALLY_AND_HOSTED_VERIFIED_PENDING_INTEGRATION",
@@ -299,7 +371,7 @@
   },
   "foundry_admission_20261019": {
     "id": "foundry-admission-and-checkpoint-snapshots-v1-20261019",
-    "status": "EXPANDED_SOURCE_TESTED_BEFORE_V3_LIFECYCLE",
+    "status": "IMPLEMENTED_LOCALLY_TESTED_LIFECYCLE_PASSED_EVIDENCE_VERIFIED",
     "source_basis": {
       "branch": "main",
       "commit": "dc46b831e2aa88a5e669e1343463dc74ef1270a4"
@@ -348,19 +420,53 @@
     "evidence_root": "research/verification/foundry_admission_20261019",
     "implementation_commit": "2d901bc1d14e0bfc9f9bde85bef0ec287a8f4d02",
     "verification": {
-      "python_passed": 432,
-      "python_failed": 0,
-      "python_skipped": 0,
-      "combined_statement_branch_coverage_percent": 88.53,
-      "web_passed": 7,
-      "web_build": "PASS",
-      "python_dependency_audit": "BLOCKED_EXACT_CPU_TORCH_VERSION_NOT_IN_PYPI",
-      "workflow_first_attempt": "STOPPED_AT_MEMORY_PREFLIGHT_NO_CHILD_LAUNCHED",
-      "python_elapsed_seconds": 14.42,
-      "new_regression_cases": 133,
-      "ruff": "PASS",
-      "mypy": "PASS_89_SOURCE_FILES",
-      "workflow_v2": "STOPPED_DURING_EAGER_TORCH_IMPORT_NO_TRAINING_OUTPUT"
+      "implementation": "IMPLEMENTED",
+      "python": {
+        "passed": 432,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "pytest_elapsed_seconds": 14.42,
+        "combined_statement_branch_coverage_percent": 88.53193873739261,
+        "statement_coverage_percent": 92.01931922723091,
+        "branch_only_coverage_percent": 73.45924453280318,
+        "configured_combined_gate_percent": 85,
+        "new_cases": 133,
+        "cases_failing_on_applicable_predecessors": 104,
+        "raw": "evidence.tar.gz:test_logs/expanded_tests.log; expanded_tests.xml; expanded_coverage.json"
+      },
+      "web": {
+        "passed": 7,
+        "failed": 0,
+        "suite_elapsed_seconds": 2.2,
+        "command_elapsed_seconds": 3.037788941001054,
+        "build": "PASS",
+        "node": "v24.19.0",
+        "npm": "11.9.0",
+        "hosted_node_pin": "22.23.2",
+        "raw": "evidence.tar.gz:test_logs/web_tests_final.log; web_build_final.log; final_gate_receipt.json"
+      },
+      "static_checks": {
+        "ruff": "PASS",
+        "strict_mypy": "PASS_89_SOURCE_FILES",
+        "evidence_helper_ruff": "PASS"
+      },
+      "distribution": {
+        "wheel": "BUILT_AND_TWINE_CHECK_PASSED",
+        "sdist": "BUILT_AND_TWINE_CHECK_PASSED",
+        "raw": "evidence.tar.gz:test_logs/final_gate_receipt.json"
+      },
+      "dependency_audits": {
+        "npm": "ZERO_VULNERABILITIES_REPORTED",
+        "python": "BLOCKED_EXACT_CPU_TORCH_VERSION_NOT_IN_PYPI",
+        "full_release_gate": "NOT_CLAIMED"
+      },
+      "independent_review": {
+        "source_review": "NO_MATERIAL_BLOCKER",
+        "saved_evidence_review": "HASHES_AND_RECORDED_ARITHMETIC_MATCH",
+        "independent_experiment_reproduction": false,
+        "reviewers_executed_tests_or_models": false
+      }
     },
     "resource_policy_v2": {
       "reason": "Raw cgroup usage includes reclaimable cache; first workflow attempt stopped before training. Preserve failed receipt.",
@@ -370,7 +476,8 @@
       "uncertainty": "Counter snapshots are non-atomic and reclamation may be delayed; this estimates usable headroom, not guaranteed instantaneous free RAM.",
       "validation": "11 fresh resource-counter cases passed before the v2 retry",
       "new_output": "artifacts/foundry-admission-run-20261019-v2",
-      "stopping_rule": "one v2 lifecycle attempt after preflight; preserve all failures; no metric-driven repeats"
+      "stopping_rule": "one v2 lifecycle attempt after preflight; preserve all failures; no metric-driven repeats",
+      "limitation": "Raw usage and aggregate cache credit were recorded, but individual historical memory.stat components were not retained."
     },
     "promotion_guard_v1": {
       "hypothesis": "Internally contradictory evaluation or quantization reports, incomplete populations, and missing/mismatched quantized artifact bytes must not produce a release.",
@@ -392,7 +499,8 @@
       "regression": "Two import-blocker cases failed before and passed after the import deferral.",
       "new_output": "artifacts/foundry-admission-run-20261019-v3",
       "resource_policy": "unchanged v2 memory estimate and 2 GiB floor",
-      "stopping_rule": "One post-repair lifecycle; no protected runs and no quality-driven reruns."
+      "stopping_rule": "One post-repair lifecycle; no protected runs and no quality-driven reruns.",
+      "result": "STOPPED_BEFORE_CHILD_AT_MEMORY_PREFLIGHT; source and script hashes subsequently matched committed bytes."
     },
     "initial_verification": {
       "python_passed": 351,
@@ -403,6 +511,29 @@
       "web_build": "PASS",
       "python_dependency_audit": "BLOCKED_EXACT_CPU_TORCH_VERSION_NOT_IN_PYPI",
       "workflow_first_attempt": "STOPPED_AT_MEMORY_PREFLIGHT_NO_CHILD_LAUNCHED"
+    },
+    "final_implementation_commit": "92cc121e6f1074de72eaee5a8cb670170107bbc7",
+    "lifecycle_result": {
+      "status": "PASSED_ENGINEERING_ONLY",
+      "experiment_id": "FND_20261019T135557927274",
+      "model_id": "foundry-verification-bigram-0292e4d0",
+      "checkpoint_sha256": "0292e4d08ff43c4638b42ba5013eb897dad60ab4fbbdb609f661b0b731ccdb06",
+      "checkpoint_bytes": 1712,
+      "elapsed_seconds": 4.272114744002465,
+      "minimum_estimated_headroom_bytes": 2231209984,
+      "max_child_rss_bytes": 67338240,
+      "swap_change_bytes": 0,
+      "attempts_retained": 4,
+      "attempts_producing_training_output": 1,
+      "source_verification": "attempt-source-verification.json"
+    },
+    "workflow_environment_v4": {
+      "protocol": "research/verification/foundry_admission_20261019/v4-environment-protocol.json",
+      "result": "PASSED_ENGINEERING_ONLY",
+      "reason": "Final environment-only cache preparation after v3 preflight stop; no model-quality outcome preceded the retry.",
+      "source_data_seed_thresholds_changed": false,
+      "new_attempts": 1,
+      "further_attempts_in_this_session": 0
     }
   },
   "predecessor_canonical_state_20261019": {
@@ -480,7 +611,7 @@
   },
   "residency_ownership_20261019": {
     "study_id": "olympus-residency-ownership-dev-v1-20261019",
-    "status": "FROZEN_NOT_EXECUTED",
+    "status": "BLOCKED_NO_PRIMARY_RESULT",
     "protocol_version": 2,
     "protocol_sha256": "d937e38dc7b3d3c32f0fcafecd2f65a98ed532b7e368ee8ff17cd495c2af7a25",
     "script_sha256": "fd63cd8aacab03b1e80733e3d9b8546400307784dc5be7ae70d6c47eae6b9fee",
@@ -496,6 +627,51 @@
       "wall_seconds": 90,
       "compute_lanes": 1
     },
-    "stopping_rule": "One matrix with fixed three-shard fixture, trace, seed, and control; retain any failure or block without scientific resampling."
+    "stopping_rule": "One matrix with fixed three-shard fixture, trace, seed, and control; retain any failure or block without scientific resampling.",
+    "execution_started_utc": "2026-10-19T13:56:27.093342+00:00",
+    "execution_finished_utc": "2026-10-19T13:56:28.115897+00:00",
+    "commands_launched": 1,
+    "selected_layer_forwards": 0,
+    "primary_result": null,
+    "minimum_estimated_headroom_bytes": 2123210752,
+    "receipt": "research/olympus_audit_20261019/RESIDENCY_OUTCOME.json",
+    "receipt_sha256": "c11c69be67e64aa4daa40e8dd79e991336072a4445102c5681e70b8da7dcce4a",
+    "reruns": 0,
+    "known_future_harness_issue": "Post-child-exit deadline check is absent; review a new version before future strict-budget ownership execution. Current early memory stop is unaffected."
+  },
+  "research_pipeline_20261019": {
+    "scope": "Broader proposed learned-reconstruction/selection model, distinct from completed Foundry engineering",
+    "specification_sha256": "afd9d4f11cc233fae8811f742017ddfe39d9fc8f392a1044256d39d2e57a7fa1",
+    "attachments": [
+      "Pasted text(2).txt",
+      "Pasted text(5).txt",
+      "Pasted text(6).txt",
+      "Pasted text(8).txt"
+    ],
+    "primary_sources_audited": 20,
+    "flaw_matrix_rows": 28,
+    "minimum_model_contract": "research/olympus_audit_20261019/RELATED_WORK_AND_MODEL_CONTRACT.md",
+    "scientific_audit": "research/olympus_audit_20261019/SCIENTIFIC_AUDIT.md",
+    "checkpoint_status": {
+      "1": "NOT_MET_FOR_BROADER_NEW_MODEL",
+      "2": "NOT_MET_FOR_BROADER_NEW_MODEL",
+      "3": "NOT_MET_FOR_BROADER_NEW_MODEL",
+      "4": "NOT_MET_FOR_BROADER_NEW_MODEL",
+      "5": "NOT_MET_FOR_BROADER_NEW_MODEL",
+      "6": "NOT_MET_FOR_BROADER_NEW_MODEL",
+      "7": "NOT_MET_FOR_BROADER_NEW_MODEL",
+      "8": "NOT_MET_FOR_BROADER_NEW_MODEL",
+      "9": "NOT_MET_FOR_BROADER_NEW_MODEL",
+      "10": "NOT_MET_FOR_BROADER_NEW_MODEL"
+    },
+    "reason": "A differentiated contribution and complete learned mechanism are unresolved. No broader confirmatory protocol, new-model execution, independent scientific reproduction, or final model paper exists.",
+    "development_diagnostic": "Frozen and attempted once; resource-blocked without a primary result.",
+    "engineering_scope": "Completed bounded repairs and verified bigram lifecycle; no scientific reclassification."
+  },
+  "next_single_action": {
+    "action": "Retrieve and hash-verify the already-retained v5 and EditCLEVR evidence archives through a supported authenticated notebook-output interface.",
+    "purpose": "Reconcile full predictions/checkpoint/configuration records and the frozen matched temporal contrast before proposing another protected study.",
+    "requires_new_protected_evaluation": false,
+    "current_access_observation": "Connected-browser bootstrap timed out; no verified notebook/account/quota or retrieved archive in this session."
   }
 }

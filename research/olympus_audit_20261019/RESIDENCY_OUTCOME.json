@@ -1,0 +1,228 @@
+{
+  "artifact_sha256": {
+    "FREEZE.json": "6cc31e753cb04556d2907e43df3bf893a262af46a856d05684aef748f853f429",
+    "PROTOCOL.md": "0da59b00e4c9ff475cfbf2148cd999a5f3878bfe6cc12a13443403815322df64",
+    "RESOURCE_POLICY_ORIGIN.json": "a136222b6ffcfe52d2d60278f4ff6ca60044d24ca7c456898d5b4e57c87bc687",
+    "SOURCE_MANIFEST.json": "9385bf0f380cdd171d44c78b550b85f595616c9433b1fff23657fd44ebf29d3b",
+    "diagnose_residency.py": "fd63cd8aacab03b1e80733e3d9b8546400307784dc5be7ae70d6c47eae6b9fee",
+    "fixture.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fixture.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "protocol.json": "d937e38dc7b3d3c32f0fcafecd2f65a98ed532b7e368ee8ff17cd495c2af7a25",
+    "source/main_dc46b831e2aa88a5e669e1343463dc74ef1270a4/olympus/foundry/resources.py": "83c95b1ba70b5e3fd6ff4d29179f5b48212eadb184da122fe6a40f4c83ac26f0",
+    "source/pr29_12b7c785958b741ec48834a74e81df0c674d327b/olympus/core/schemas.py": "e89c498176fb86b52f1a49b8c9961aa8f5cb431ef6a953abfff09cbef1e597f0",
+    "source/pr29_12b7c785958b741ec48834a74e81df0c674d327b/olympus/models/spatiotemporal_lazy.py": "09c7a7aa4a1edcf19f3e4c4084e44d627dc606a43172e8853c02d3fa59fff939"
+  },
+  "commands": [
+    {
+      "abort_reason": "less than 2 GiB effective available memory or swap above 90%",
+      "child_major_page_faults": 115,
+      "child_peak_rss_bytes": 177549312,
+      "child_system_seconds": 0.114508,
+      "child_user_seconds": 0.401977,
+      "command": [
+        "/workspace/scratch/5d7183878ded/olympus/.venv/bin/python",
+        "/tmp/olympus-science-audit/diagnose_residency.py",
+        "--worker",
+        "fixture",
+        "--output",
+        "/workspace/scratch/5d7183878ded/olympus/artifacts/residency-ownership-20261019"
+      ],
+      "cwd": "/workspace/scratch/5d7183878ded/olympus/artifacts/residency-ownership-20261019",
+      "elapsed_seconds": 1.0144184550008504,
+      "exit_status": -9,
+      "memory_after": {
+        "available_bytes": 9525944320,
+        "cgroups": [
+          {
+            "cache_credit_bytes": 846405632,
+            "limit_bytes": 8589934592,
+            "path": "/sys/fs/cgroup",
+            "raw_headroom_bytes": 1444147200,
+            "swap_limit_bytes": null,
+            "swap_used_bytes": 0,
+            "used_bytes": 7145787392
+          }
+        ],
+        "effective_available_bytes": 2290552832,
+        "process_peak_rss_bytes": 21647360,
+        "swap_fraction": 0.0,
+        "swap_total_bytes": 0,
+        "swap_used_bytes": 0,
+        "total_bytes": 10451439616
+      },
+      "memory_samples": [
+        {
+          "available_bytes": 9589198848,
+          "cgroups": [
+            {
+              "cache_credit_bytes": 569040896,
+              "limit_bytes": 8589934592,
+              "path": "/sys/fs/cgroup",
+              "raw_headroom_bytes": 1723080704,
+              "swap_limit_bytes": null,
+              "swap_used_bytes": 0,
+              "used_bytes": 6866853888
+            }
+          ],
+          "effective_available_bytes": 2292121600,
+          "process_peak_rss_bytes": 21512192,
+          "swap_fraction": 0.0,
+          "swap_total_bytes": 0,
+          "swap_used_bytes": 0,
+          "total_bytes": 10451439616
+        },
+        {
+          "available_bytes": 9589198848,
+          "cgroups": [
+            {
+              "cache_credit_bytes": 569040896,
+              "limit_bytes": 8589934592,
+              "path": "/sys/fs/cgroup",
+              "raw_headroom_bytes": 1723080704,
+              "swap_limit_bytes": null,
+              "swap_used_bytes": 0,
+              "used_bytes": 6866853888
+            }
+          ],
+          "effective_available_bytes": 2292121600,
+          "process_peak_rss_bytes": 21647360,
+          "swap_fraction": 0.0,
+          "swap_total_bytes": 0,
+          "swap_used_bytes": 0,
+          "total_bytes": 10451439616
+        },
+        {
+          "available_bytes": 9567318016,
+          "cgroups": [
+            {
+              "cache_credit_bytes": 664633344,
+              "limit_bytes": 8589934592,
+              "path": "/sys/fs/cgroup",
+              "raw_headroom_bytes": 1580711936,
+              "swap_limit_bytes": null,
+              "swap_used_bytes": 0,
+              "used_bytes": 7009222656
+            }
+          ],
+          "effective_available_bytes": 2245345280,
+          "process_peak_rss_bytes": 21647360,
+          "swap_fraction": 0.0,
+          "swap_total_bytes": 0,
+          "swap_used_bytes": 0,
+          "total_bytes": 10451439616
+        },
+        {
+          "available_bytes": 9549692928,
+          "cgroups": [
+            {
+              "cache_credit_bytes": 696893440,
+              "limit_bytes": 8589934592,
+              "path": "/sys/fs/cgroup",
+              "raw_headroom_bytes": 1524899840,
+              "swap_limit_bytes": null,
+              "swap_used_bytes": 0,
+              "used_bytes": 7065034752
+            }
+          ],
+          "effective_available_bytes": 2221793280,
+          "process_peak_rss_bytes": 21647360,
+          "swap_fraction": 0.0,
+          "swap_total_bytes": 0,
+          "swap_used_bytes": 0,
+          "total_bytes": 10451439616
+        },
+        {
+          "available_bytes": 9525374976,
+          "cgroups": [
+            {
+              "cache_credit_bytes": 710598656,
+              "limit_bytes": 8589934592,
+              "path": "/sys/fs/cgroup",
+              "raw_headroom_bytes": 1473159168,
+              "swap_limit_bytes": null,
+              "swap_used_bytes": 0,
+              "used_bytes": 7116775424
+            }
+          ],
+          "effective_available_bytes": 2183757824,
+          "process_peak_rss_bytes": 21647360,
+          "swap_fraction": 0.0,
+          "swap_total_bytes": 0,
+          "swap_used_bytes": 0,
+          "total_bytes": 10451439616
+        },
+        {
+          "available_bytes": 9522507776,
+          "cgroups": [
+            {
+              "cache_credit_bytes": 776568832,
+              "limit_bytes": 8589934592,
+              "path": "/sys/fs/cgroup",
+              "raw_headroom_bytes": 1383153664,
+              "swap_limit_bytes": null,
+              "swap_used_bytes": 0,
+              "used_bytes": 7206780928
+            }
+          ],
+          "effective_available_bytes": 2159722496,
+          "process_peak_rss_bytes": 21647360,
+          "swap_fraction": 0.0,
+          "swap_total_bytes": 0,
+          "swap_used_bytes": 0,
+          "total_bytes": 10451439616
+        },
+        {
+          "available_bytes": 9493024768,
+          "cgroups": [
+            {
+              "cache_credit_bytes": 778674176,
+              "limit_bytes": 8589934592,
+              "path": "/sys/fs/cgroup",
+              "raw_headroom_bytes": 1344536576,
+              "swap_limit_bytes": null,
+              "swap_used_bytes": 0,
+              "used_bytes": 7245398016
+            }
+          ],
+          "effective_available_bytes": 2123210752,
+          "process_peak_rss_bytes": 21647360,
+          "swap_fraction": 0.0,
+          "swap_total_bytes": 0,
+          "swap_used_bytes": 0,
+          "total_bytes": 10451439616
+        }
+      ],
+      "stderr": "fixture.stderr",
+      "stdout": "fixture.stdout",
+      "thread_environment": {
+        "MKL_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1"
+      }
+    }
+  ],
+  "error": "Blocked: less than 2 GiB effective available memory or swap above 90%",
+  "finished_at": "2026-10-19T13:56:28.115897+00:00",
+  "invocation": [
+    "/workspace/scratch/5d7183878ded/olympus/.venv/bin/python",
+    "/tmp/olympus-science-audit/diagnose_residency.py",
+    "--output",
+    "artifacts/residency-ownership-20261019"
+  ],
+  "outcome": "BLOCKED",
+  "protocol_sha256": "d937e38dc7b3d3c32f0fcafecd2f65a98ed532b7e368ee8ff17cd495c2af7a25",
+  "resource_preflight": {
+    "available_bytes": 9589198848,
+    "process_peak_rss_bytes": 21381120,
+    "swap_fraction": 0.0,
+    "swap_total_bytes": 0,
+    "swap_used_bytes": 0,
+    "total_bytes": 10451439616
+  },
+  "scope": "Fresh artificial CPU systems mechanism falsification only. The explicit cache-dictionary contract and a stronger whole-module residency interpretation are separate.",
+  "script_sha256": "fd63cd8aacab03b1e80733e3d9b8546400307784dc5be7ae70d6c47eae6b9fee",
+  "source_manifest_sha256": "9385bf0f380cdd171d44c78b550b85f595616c9433b1fff23657fd44ebf29d3b",
+  "started_at": "2026-10-19T13:56:27.093342+00:00",
+  "status": "STOPPED",
+  "study_id": "olympus-residency-ownership-dev-v1-20261019"
+}

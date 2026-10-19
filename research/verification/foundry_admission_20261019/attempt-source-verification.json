@@ -1,0 +1,34 @@
+[
+  {
+    "attempt": "v1",
+    "source_commit": "2d901bc1d14e0bfc9f9bde85bef0ec287a8f4d02",
+    "source_hashes_matched": 63,
+    "script_matches": true,
+    "recorded_git_head": null,
+    "status": "FAILED"
+  },
+  {
+    "attempt": "v2",
+    "source_commit": "37cb1b678e1666d33208147964fedcdf4a1f5167",
+    "source_hashes_matched": 63,
+    "script_matches": true,
+    "recorded_git_head": "37cb1b678e1666d33208147964fedcdf4a1f5167",
+    "status": "FAILED"
+  },
+  {
+    "attempt": "v3",
+    "source_commit": "92cc121e6f1074de72eaee5a8cb670170107bbc7",
+    "source_hashes_matched": 63,
+    "script_matches": true,
+    "recorded_git_head": null,
+    "status": "FAILED"
+  },
+  {
+    "attempt": "v4",
+    "source_commit": "92cc121e6f1074de72eaee5a8cb670170107bbc7",
+    "source_hashes_matched": 63,
+    "script_matches": true,
+    "recorded_git_head": "92cc121e6f1074de72eaee5a8cb670170107bbc7",
+    "status": "PASSED_ENGINEERING_ONLY"
+  }
+]

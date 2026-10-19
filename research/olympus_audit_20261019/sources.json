@@ -1,0 +1,343 @@
+{
+  "schema_version": 1,
+  "retrieval_date": "2026-10-19",
+  "scope": "Bounded primary-source mechanism and model-contract review; no independent reproduction or exhaustive priority certification",
+  "citation_handoff": "Parent must open or search/find a primary URL itself before reusing a child retrieval reference in its final answer. The short IDs W1/R1 are local bibliography keys, not web citation IDs.",
+  "sources": [
+    {
+      "id": "W1",
+      "title": "HyperNetworks",
+      "authors": "David Ha, Andrew Dai, Quoc V. Le",
+      "publication": "arXiv 1609.09106, 2016, v4",
+      "url": "https://arxiv.org/abs/1609.09106",
+      "ref_ids": [
+        "turn1view2",
+        "turn7view4"
+      ],
+      "location": "Abstract",
+      "support_paraphrase": "A smaller network produces another network's weights; training is end-to-end, with experiments on convolutional and recurrent models.",
+      "boundary": "Establishes weight generation as prior art. Parameter-count savings do not by themselves establish lower inference RAM or faster language-model execution."
+    },
+    {
+      "id": "W2",
+      "title": "NeRN: Learning Neural Representations for Neural Networks",
+      "authors": "Maor Ashkenazi et al.",
+      "publication": "ICLR 2023; arXiv 2212.13554v2",
+      "url": "https://arxiv.org/abs/2212.13554",
+      "additional_primary_urls": [
+        "https://github.com/maorash/NeRN"
+      ],
+      "ref_ids": [
+        "turn1view1",
+        "turn8view3"
+      ],
+      "location": "Abstract; authors' implementation repository",
+      "support_paraphrase": "A coordinate-based neural predictor maps positions in a pretrained convolutional network to kernel weights. The work discusses smoothness, reconstruction sensitivity, and knowledge distillation, and evaluates CIFAR and ImageNet models.",
+      "boundary": "Direct learned-weight-reconstruction precedent; not evidence for LLM runtime or guaranteed preservation from small weight error."
+    },
+    {
+      "id": "W3",
+      "title": "Neural Weight Compression for Language Models",
+      "authors": "Jegwang Ryu, Minkyu Kim, Seungjun Shin, Hee Min Choi, Dokwan Oh, Jaeho Lee",
+      "publication": "arXiv 2510.11234, submitted 2025-10-13, v3 revised 2026-05-27",
+      "url": "https://arxiv.org/abs/2510.11234",
+      "additional_primary_urls": [
+        "https://arxiv.org/html/2510.11234v3"
+      ],
+      "ref_ids": [
+        "turn19view0",
+        "turn20view0",
+        "turn21view1"
+      ],
+      "location": "Abstract; sections 5.3 and A.9; table 3",
+      "support_paraphrase": "Learns a neural weight codec with transforms, entropy-constrained quantization, and downstream-sensitive reconstruction. Its latency analysis reconstructs a full-precision 4096 by 4096 tensor in VRAM and sums synthesis and separately benchmarked entropy decoding; inter-layer recovery fine-tuning is excluded from the tensor encoding timing.",
+      "boundary": "The paper's tensor timing is not an end-to-end local assistant benchmark. Main text and appendix use different RTX 6000/A6000 names, so avoid precise hardware claims without author clarification. Do not confuse this paper with independently named NWC repositories found by search."
+    },
+    {
+      "id": "W4",
+      "title": "PocketLLM: Ultimate Compression of Large Language Models via Meta Networks",
+      "authors": "Ye Tian, Chengcheng Wang, Jing Han, Yehui Tang, Kai Han",
+      "publication": "AAAI 2026, volume 40 issue 39, pages 33250–33258, published 2026-03-14",
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/view/40610",
+      "additional_primary_urls": [
+        "https://ojs.aaai.org/index.php/AAAI/article/view/40610/44571"
+      ],
+      "ref_ids": [
+        "turn19view3",
+        "turn20view2"
+      ],
+      "location": "Official abstract, paragraphs 1–2",
+      "support_paraphrase": "An encoder maps LLM weights into discrete latent vectors represented by a compact codebook; a lightweight decoder maps selected code vectors back to weight space. The stored representation includes decoder, codebook, and index.",
+      "boundary": "A direct precedent to a small learned weight decoder. The title's strong framing and author-reported compression result should not be repeated as an Olympus claim."
+    },
+    {
+      "id": "W5",
+      "title": "Motion-Compensated Weight Compression",
+      "authors": "Ismail Lamaakal",
+      "publication": "arXiv 2605.24754v1, 2026-05-23, preprint",
+      "url": "https://arxiv.org/abs/2605.24754",
+      "ref_ids": [
+        "turn19view2"
+      ],
+      "location": "Abstract, paragraphs 1–2",
+      "support_paraphrase": "Aligns permutation-symmetric blocks across layers, predicts layers sequentially with periodic keyframes, and entropy-codes quantized prediction residuals under a rate-distortion objective. The decoder reverses that sequence and alignment.",
+      "boundary": "Prediction plus residuals and keyframes is already directly proposed. Its empirical claims are author reports from a preprint, not independently reproduced results."
+    },
+    {
+      "id": "W6",
+      "title": "70% Size, 100% Accuracy: Lossless LLM Compression for Efficient GPU Inference via Dynamic-Length Float (DFloat11)",
+      "authors": "Tianyi Zhang, Mohsen Hariri, Shaochen Zhong, Vipin Chaudhary, Yang Sui, Xia Hu, Anshumali Shrivastava",
+      "publication": "NeurIPS 2025",
+      "url": "https://papers.nips.cc/paper_files/paper/2025/hash/8e8b4449c80879215ff2ee47b6dd01a6-Abstract-Conference.html",
+      "additional_primary_urls": [
+        "https://arxiv.org/abs/2504.11651",
+        "https://github.com/LeanModels/DFloat11"
+      ],
+      "ref_ids": [
+        "turn21view0",
+        "turn22view3",
+        "turn20search4"
+      ],
+      "location": "Conference abstract, paragraphs 2–4",
+      "support_paraphrase": "Uses entropy coding of BFloat16 weight representations with custom online GPU decompression, compact hierarchical lookup tables, and transformer-block-level reconstruction. Its stated throughput comparison concerns offloading uncompressed weights to CPU under memory constraints.",
+      "boundary": "Exact compression and online block reconstruction are prior art. The paper's offload-relative GPU results are not speedups over an eligible fully resident quantized Apple runtime."
+    },
+    {
+      "id": "W7",
+      "title": "EntroPack: Fast and Accurate Entropy-Coded Weight Compression at Arbitrary Bitrates",
+      "authors": "Hong Zhang, Zhongjie Duan, Yingda Chen",
+      "publication": "arXiv 2609.34185v1, 2026-09-28, preprint",
+      "url": "https://arxiv.org/abs/2609.34185",
+      "additional_primary_urls": [
+        "https://arxiv.org/html/2609.34185v1",
+        "https://github.com/modelscope/entropack"
+      ],
+      "ref_ids": [
+        "turn19view1",
+        "turn20view1",
+        "turn22view4"
+      ],
+      "location": "Abstract; section 4.4 table 2 and accompanying discussion; appendix A.1",
+      "support_paraphrase": "Combines lattice quantization with entropy-coded independently decodable tiles and fused GPU reconstruction. It identifies online decode overhead as a reason to favor compute-heavy workloads. Its language-model timing separates prefill and autoregressive work; the latter assumes full draft acceptance for an eight-position verification workload and is slower than its BF16 reference.",
+      "boundary": "Do not convert its device timings or prefill observations into interactive latency. Independently decodable tiles alone are not a novel Olympus mechanism."
+    },
+    {
+      "id": "W8",
+      "title": "LLM in a flash: Efficient Large Language Model Inference with Limited Memory",
+      "authors": "Keivan Alizadeh et al.",
+      "publication": "ACL 2024; arXiv 2312.11514v3",
+      "url": "https://arxiv.org/abs/2312.11514",
+      "additional_primary_urls": [
+        "https://arxiv.org/html/2312.11514v3"
+      ],
+      "ref_ids": [
+        "turn1view0",
+        "turn8view4",
+        "turn12view0",
+        "turn12view1"
+      ],
+      "location": "Sections 2–3; section 3.1; tables 2–3; appendices C.4–C.5",
+      "support_paraphrase": "Loads predicted needed FFN weights from flash, reuses recent neuron weights through a sliding cache, and bundles rows/columns for more efficient reads. It separates I/O, memory-management, and compute costs. Some evaluated models require activation changes and additional training to obtain sparsity.",
+      "boundary": "Predicts activation support, not numerical weights. Transfer volume, read granularity, cache size, model sparsity, and hardware are essential conditions. Dense GELU Olympus source does not inherit those conditions."
+    },
+    {
+      "id": "W9",
+      "title": "PowerInfer: Fast Large Language Model Serving with a Consumer-grade GPU",
+      "authors": "Yixin Song, Zeyu Mi, Haotong Xie, Haibo Chen",
+      "publication": "SOSP 2024; arXiv 2312.12456v2",
+      "url": "https://arxiv.org/abs/2312.12456",
+      "ref_ids": [
+        "turn3view0"
+      ],
+      "location": "Abstract",
+      "support_paraphrase": "Exploits uneven neuron activation, keeping frequently used neurons on GPU and handling colder neurons on CPU, using activation predictors and sparse operations.",
+      "boundary": "CPU/GPU placement and sparse activation assumptions are specific; this is not a learned weight generator or a validated unified-memory Mac implementation."
+    },
+    {
+      "id": "W10",
+      "title": "PowerInfer-2: Fast Large Language Model Inference on a Smartphone",
+      "authors": "Zhenliang Xue et al.",
+      "publication": "arXiv 2406.06282v3, 2024 work",
+      "url": "https://arxiv.org/abs/2406.06282",
+      "ref_ids": [
+        "turn3view2"
+      ],
+      "location": "Abstract",
+      "support_paraphrase": "Partitions execution into neuron clusters, uses heterogeneous compute units for different sparsity regimes, and coordinates storage I/O with computation and a segmented cache.",
+      "boundary": "The device-specific runtime integration is substantive. Merely implementing a lazy Python loader does not reproduce it."
+    },
+    {
+      "id": "W11",
+      "title": "FlexGen: High-Throughput Generative Inference of Large Language Models with a Single GPU",
+      "authors": "Ying Sheng et al.",
+      "publication": "arXiv 2303.06865v2, 2023",
+      "url": "https://arxiv.org/abs/2303.06865",
+      "ref_ids": [
+        "turn3view1"
+      ],
+      "location": "Abstract",
+      "support_paraphrase": "Targets large-batch latency-insensitive inference using GPU, CPU, and disk capacity; optimizes placement/access and applies low-bit compression.",
+      "boundary": "Throughput under large batches and single-user response latency answer different questions."
+    },
+    {
+      "id": "W12",
+      "title": "IMPACT: Importance-Aware Activation Space Reconstruction",
+      "authors": "Md Mokarram Chowdhury, Daniel Agyei Asante, Ernie Chang, Yang Li",
+      "publication": "arXiv 2507.03828, v4 dated 2026-04-20; author metadata says ACL 2026",
+      "url": "https://arxiv.org/abs/2507.03828",
+      "ref_ids": [
+        "turn18view2"
+      ],
+      "location": "Abstract",
+      "support_paraphrase": "Formulates low-rank compression with activation structure and gradient-based importance, deriving reconstruction bases from an importance-weighted activation covariance matrix. It argues that weight-space error and uniform activation error do not adequately capture downstream sensitivity.",
+      "boundary": "This supports considering functional distortion; it does not prove every weight-reconstruction objective fails or establish Olympus gains."
+    },
+    {
+      "id": "W13",
+      "title": "Enhancing Accuracy and Parameter-Efficiency of Neural Representations for Network Parameterization",
+      "authors": "Hongjun Choi, Jayaraman J. Thiagarajan, Ruben Glatt, Shusen Liu",
+      "publication": "arXiv 2407.00356v1, submitted 2024-06-29",
+      "url": "https://arxiv.org/abs/2407.00356",
+      "ref_ids": [
+        "turn8view0",
+        "turn25view0"
+      ],
+      "location": "Abstract",
+      "support_paraphrase": "Distinguishes recovering original accuracy from improving parameter efficiency; reports circumstances where weight reconstruction alone suffices for recovery and proposes separating reconstruction from auxiliary distillation objectives for constrained parameterization.",
+      "boundary": "Conditional empirical findings caution against the opposite blanket claim that distillation is always required."
+    },
+    {
+      "id": "R1",
+      "title": "Learning Mixed-Curvature Representations in Product Spaces",
+      "authors": "Albert Gu, Frederic Sala, Beliz Gunel, Christopher Re",
+      "publication": "ICLR 2019",
+      "url": "https://openreview.net/forum?id=HJxeWnCcF7",
+      "additional_primary_urls": [
+        "https://github.com/HazyResearch/hyperbolics",
+        "https://openreview.net/references/pdf?id=BJl-BLqTQ"
+      ],
+      "ref_ids": [
+        "turn1search2",
+        "turn15view0",
+        "turn16view4"
+      ],
+      "location": "Primary indexed submission abstract; authors' repository README",
+      "support_paraphrase": "Embeds data in products of Euclidean, hyperbolic, and spherical spaces, considers the product signature and curvature, and provides implementation options selecting dimensions and numbers of component spaces.",
+      "boundary": "The final OpenReview page/PDF returned a verification wall. The indexed primary submission and authors' implementation support the mechanism, but no numerical result is used here."
+    },
+    {
+      "id": "R2",
+      "title": "Neural Latent Geometry Search: Product Manifold Inference via Gromov-Hausdorff-Informed Bayesian Optimization",
+      "authors": "Haitz Sáez de Ocáriz Borde, Alvaro Arroyo, Ismael Morales, Ingmar Posner, Xiaowen Dong",
+      "publication": "NeurIPS 2023",
+      "url": "https://papers.neurips.cc/paper_files/paper/2023/hash/78efbc5386c5a7c241e7fcc482d3c3dc-Abstract-Conference.html",
+      "additional_primary_urls": [
+        "https://arxiv.org/abs/2309.04810"
+      ],
+      "ref_ids": [
+        "turn7view0",
+        "turn8view6",
+        "turn26view0"
+      ],
+      "location": "Conference abstract",
+      "support_paraphrase": "Searches products of constant-curvature latent spaces with a geometry-informed similarity notion and Bayesian optimization to limit costly candidate evaluations.",
+      "boundary": "Automatic latent-geometry search is prior art; this is not implemented by naming a geometry from input metadata."
+    },
+    {
+      "id": "R3",
+      "title": "Adaptive Computation Time for Recurrent Neural Networks",
+      "authors": "Alex Graves",
+      "publication": "arXiv 1603.08983v6, originally 2016",
+      "url": "https://arxiv.org/abs/1603.08983",
+      "ref_ids": [
+        "turn7view2",
+        "turn8view8"
+      ],
+      "location": "Abstract",
+      "support_paraphrase": "Learns the amount of recurrent computation per input using a differentiable mechanism. Its abstract reports favorable synthetic-problem behavior but no large performance gains on the studied character-language-modeling task.",
+      "boundary": "An adaptive-compute mechanism and toy success need not generalize to language-model quality."
+    },
+    {
+      "id": "R4",
+      "title": "Mixture-of-Depths: Dynamically allocating compute in transformer-based language models",
+      "authors": "David Raposo et al.",
+      "publication": "arXiv 2404.02258, 2024",
+      "url": "https://arxiv.org/abs/2404.02258",
+      "ref_ids": [
+        "turn3view4"
+      ],
+      "location": "Abstract",
+      "support_paraphrase": "Uses learned routing and a fixed cap on participating tokens per layer, giving predictable token-level computation while token identities change dynamically.",
+      "boundary": "Learned token routing is distinct from external reasoning-branch selection or weight reconstruction."
+    },
+    {
+      "id": "R5",
+      "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models",
+      "authors": "Shunyu Yao et al.",
+      "publication": "NeurIPS 2023; arXiv 2305.10601v2",
+      "url": "https://arxiv.org/abs/2305.10601",
+      "ref_ids": [
+        "turn3view5",
+        "turn7view5"
+      ],
+      "location": "Abstract",
+      "support_paraphrase": "Searches alternative intermediate reasoning steps with model evaluation, lookahead, and backtracking on selected tasks.",
+      "boundary": "Generated reasoning trajectories are not equivalent to differently prefixed prompt templates; all candidate-generation and scoring costs belong in the budget."
+    },
+    {
+      "id": "R6",
+      "title": "Selecting Computations: Theory and Applications",
+      "authors": "Nicholas Hay, Stuart Russell, David Tolpin, Solomon Eyal Shimony",
+      "publication": "UAI 2012, PMLR proceedings reissue",
+      "url": "https://proceedings.mlr.press/r10/hay12a.html",
+      "ref_ids": [
+        "turn7view1",
+        "turn8view7"
+      ],
+      "location": "Abstract",
+      "support_paraphrase": "Studies metalevel selection of computations according to expected improvement in the eventual decision, distinguishing this from cumulative reward maximization in conventional bandits.",
+      "boundary": "Provides a principled decision target. It does not make a product of hand-assigned factors an empirical value-of-information estimate. The proceedings reissue date is not the original research date."
+    },
+    {
+      "id": "R7",
+      "title": "On Calibration of Modern Neural Networks",
+      "authors": "Chuan Guo, Geoff Pleiss, Yu Sun, Kilian Q. Weinberger",
+      "publication": "ICML 2017",
+      "url": "https://proceedings.mlr.press/v70/guo17a.html",
+      "ref_ids": [
+        "turn3view6",
+        "turn7view6"
+      ],
+      "location": "Abstract",
+      "support_paraphrase": "Calibration concerns how predicted probabilities correspond to actual correctness frequency; the paper evaluates neural-network miscalibration and post-hoc correction methods.",
+      "boundary": "A single outcome checked against arbitrary confidence thresholds cannot establish population calibration. No post-hoc method automatically guarantees calibration after distribution shift."
+    }
+  ],
+  "not_used_as_evidence": [
+    {
+      "title": "BiSCo-LLM",
+      "url": "https://arxiv.org/abs/2607.08643",
+      "reason": "Search surfaced a relevant primary abstract, but canonical opening returned DisabledError. Not needed for the conclusion; do not promote derivative summaries into confirmed evidence."
+    },
+    {
+      "title": "Cross-Layer Subspace Coupling for LLM Compression: A Unifying Framework and Its Empirical Limits",
+      "url": "https://arxiv.org/abs/2605.30836",
+      "ref_ids": [
+        "turn18view1"
+      ],
+      "reason": "Primary preprint reports a useful negative reconstruction-versus-task-quality example, but only its abstract was reviewed. The core critique already follows from the explicit mathematical contract and closer sources."
+    },
+    {
+      "title": "A Middle Path for On-Premises LLM Deployment",
+      "url": "https://aclanthology.org/2025.emnlp-main.420/",
+      "reason": "Inspected and excluded because the principal mechanism concerns model confidentiality, not the requested weight-reconstruction and selection mechanisms."
+    },
+    {
+      "title": "NWC repository at parda21/NWC; Unweight; secondary paper indexes",
+      "reason": "Search leads only; not independently associated with the Ryu et al. paper or relied upon for technical claims."
+    }
+  ],
+  "handoff_review_date": "2026-10-19",
+  "linked_bibliography": "RELATED_WORK_AND_MODEL_CONTRACT.md#6-linked-primary-bibliography",
+  "scope_note": "Main-derived source contracts and the separately inspected PR29 lazy-shard implementation are distinguished in the Markdown. Literature findings do not transfer results among these implementations."
+}

@@ -1,0 +1,14 @@
+{
+  "evidence.tar.gz": {
+    "sha256": "67da9c321278702ab138561dbc78ac05f58a4fb61cc315c116d12e0762f0dae2",
+    "byte_count": 470113,
+    "member_files": 82,
+    "hashes_verified": 82
+  },
+  "residency-diagnostic-v2.tar.gz": {
+    "sha256": "ccfa74b79889f9b4edd814d3b63969f96756ba062a00d94008c0d038adc5b4af",
+    "byte_count": 23539,
+    "member_files": 13,
+    "hashes_verified": 13
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "RELATED_WORK_AND_MODEL_CONTRACT.md": {
+    "sha256": "a0401d594c4128809c1942488250d34af3324ae1aadce08e319c9c5ff959c011",
+    "bytes": 25995
+  },
+  "RESOURCE_MEASUREMENT_REVIEW.md": {
+    "sha256": "70a415dc40c69b23055dc787103dd9cbeb8920f3a877909641343ce0e9f35450",
+    "bytes": 4534
+  },
+  "source-contract.json": {
+    "sha256": "eb2e70787875523f8c2630fbf98c2f4744aa8bc87c643bcc06b1e8f8d064682f",
+    "bytes": 9171
+  },
+  "sources.json": {
+    "sha256": "e767adfdc8cd51502d55957da23b87f979be63412b147e3332db53fc7f45d995",
+    "bytes": 19913
+  }
+}

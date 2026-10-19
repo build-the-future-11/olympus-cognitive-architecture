@@ -1,0 +1,205 @@
+{
+  "scope": "All changed source, test, documentation, state, and evidence files relative to the base; this manifest excludes itself. Git binds the manifest at the published evidence commit.",
+  "files": {
+    "RESEARCH_STATE.json": {
+      "sha256": "16e8fec5634a9d6df109db9fdda7b01e7018954acdf0fb421e1849b62a5fbda3",
+      "byte_count": 39216
+    },
+    "apps/forge-web/src/App.test.tsx": {
+      "sha256": "86d087703ee6eaf8dd20cb8e890f4eec9ac85d9c07898f05d892d8e1ca5f6d42",
+      "byte_count": 6492
+    },
+    "apps/forge-web/src/App.tsx": {
+      "sha256": "65f92e27fea8a582a07be28864eb5e77649b2a30ff417e31d7b82b5064286751",
+      "byte_count": 14698
+    },
+    "apps/forge-web/src/api.ts": {
+      "sha256": "0b23d88abf174e406377ed4d14c300929f32a197e6b40b3b61179c4c8a72865d",
+      "byte_count": 8344
+    },
+    "docs/foundry-admission-20261019.md": {
+      "sha256": "14cf688f20cddf3acc8d96c40e1ffb2c7062ba1afe7b3d5c3b5e4c73be6c8031",
+      "byte_count": 13551
+    },
+    "docs/foundry.md": {
+      "sha256": "b7b7c3d31b4428ceb5a09fe9cb067c546cb6e7419bd79a429397ec620e1ee42e",
+      "byte_count": 8279
+    },
+    "olympus/api.py": {
+      "sha256": "3e07b1f743e5b5f307b203295779de4a8b772caf7e7f678ee8fa47c5c7429b0f",
+      "byte_count": 9227
+    },
+    "olympus/cli.py": {
+      "sha256": "920d8eb7aedf977de59ecdf193911475caec3ce968803a8719de20d1e639f8f7",
+      "byte_count": 16627
+    },
+    "olympus/foundry/eval_suite.py": {
+      "sha256": "1bed9d0fff20137739495e084be5b056a7f7299f184f92af5c3829328cdd94de",
+      "byte_count": 9034
+    },
+    "olympus/foundry/promotion.py": {
+      "sha256": "c50eaf3e6973db05e4fc0f8403cf84688850272ba5f495996342b4395beecccd",
+      "byte_count": 17527
+    },
+    "olympus/foundry/quantization.py": {
+      "sha256": "5ba092e25dca2159bf05f8e8e171e5fecefd5643a7e31a5cfa27f98e3209831d",
+      "byte_count": 9075
+    },
+    "olympus/foundry/service.py": {
+      "sha256": "2e481f22f222b36ac3038274284803ebab28a0979ec0b013a97e6f170f1dfa4c",
+      "byte_count": 18706
+    },
+    "olympus/foundry/sft.py": {
+      "sha256": "a962231e8078fefbb583e2a0b501975f9def6a30ef8313a80ea98478afcbd421",
+      "byte_count": 39343
+    },
+    "olympus/foundry/store.py": {
+      "sha256": "5444f92c571ca81afd02fd91500b1968b8d1e5a02042a437722dfa6cf74c6bac",
+      "byte_count": 20259
+    },
+    "research/olympus_audit_20261019/RELATED_WORK_AND_MODEL_CONTRACT.md": {
+      "sha256": "a0401d594c4128809c1942488250d34af3324ae1aadce08e319c9c5ff959c011",
+      "byte_count": 25995
+    },
+    "research/olympus_audit_20261019/RESIDENCY_OUTCOME.json": {
+      "sha256": "c11c69be67e64aa4daa40e8dd79e991336072a4445102c5681e70b8da7dcce4a",
+      "byte_count": 8557
+    },
+    "research/olympus_audit_20261019/RESIDENCY_PROTOCOL.md": {
+      "sha256": "0da59b00e4c9ff475cfbf2148cd999a5f3878bfe6cc12a13443403815322df64",
+      "byte_count": 13751
+    },
+    "research/olympus_audit_20261019/RESOURCE_MEASUREMENT_REVIEW.md": {
+      "sha256": "70a415dc40c69b23055dc787103dd9cbeb8920f3a877909641343ce0e9f35450",
+      "byte_count": 4534
+    },
+    "research/olympus_audit_20261019/SCIENTIFIC_AUDIT.md": {
+      "sha256": "17f1762fab8c1968779df41b5a7f84b29473237cffac01de4adccb03894216fb",
+      "byte_count": 47676
+    },
+    "research/olympus_audit_20261019/artifact-sha256.json": {
+      "sha256": "ed0435950484c66f418a2da6f1f718673449f5c1f16396e93bd942a886a64f6f",
+      "byte_count": 553
+    },
+    "research/olympus_audit_20261019/residency-diagnostic-v2.tar.gz": {
+      "sha256": "ccfa74b79889f9b4edd814d3b63969f96756ba062a00d94008c0d038adc5b4af",
+      "byte_count": 23539
+    },
+    "research/olympus_audit_20261019/residency_freeze.json": {
+      "sha256": "6cc31e753cb04556d2907e43df3bf893a262af46a856d05684aef748f853f429",
+      "byte_count": 1316
+    },
+    "research/olympus_audit_20261019/residency_protocol.json": {
+      "sha256": "d937e38dc7b3d3c32f0fcafecd2f65a98ed532b7e368ee8ff17cd495c2af7a25",
+      "byte_count": 5874
+    },
+    "research/olympus_audit_20261019/source-contract.json": {
+      "sha256": "eb2e70787875523f8c2630fbf98c2f4744aa8bc87c643bcc06b1e8f8d064682f",
+      "byte_count": 9171
+    },
+    "research/olympus_audit_20261019/sources.json": {
+      "sha256": "e767adfdc8cd51502d55957da23b87f979be63412b147e3332db53fc7f45d995",
+      "byte_count": 19913
+    },
+    "research/verification/foundry_admission_20261019/README.md": {
+      "sha256": "1e9193a5dc79a9791df6ec6b50019984e6bcbff201cddfc52879a4c97ac341d1",
+      "byte_count": 12184
+    },
+    "research/verification/foundry_admission_20261019/RESULTS.md": {
+      "sha256": "fd3d5891ca21a806df8197385acd0ba118df3f6788489db0145e4dfe83754004",
+      "byte_count": 1518
+    },
+    "research/verification/foundry_admission_20261019/archive-identities.json": {
+      "sha256": "a8873c6fbaf42cfb9c1c75d2521c2d88fc474af677e8fcc10efe9f748914f079",
+      "byte_count": 389
+    },
+    "research/verification/foundry_admission_20261019/attempt-source-verification.json": {
+      "sha256": "d3b19761c00d71f99886a7feab0bd9c5981132f11c3a58569fc61b8fb1648faa",
+      "byte_count": 936
+    },
+    "research/verification/foundry_admission_20261019/changed-files.json": {
+      "sha256": "72e223acd5839c6c234342dffe570b6384928b72f0d0b633b936db99f3216530",
+      "byte_count": 3043
+    },
+    "research/verification/foundry_admission_20261019/claim-evidence.json": {
+      "sha256": "eaa5769d45934163c13f31f33eeddecfe3d51dfb56049c029cbdd1f1703d5661",
+      "byte_count": 4687
+    },
+    "research/verification/foundry_admission_20261019/evidence.tar.gz": {
+      "sha256": "67da9c321278702ab138561dbc78ac05f58a4fb61cc315c116d12e0762f0dae2",
+      "byte_count": 470113
+    },
+    "research/verification/foundry_admission_20261019/regenerate_tables.py": {
+      "sha256": "f82f515777686919f41bfd7d703eeeeabf6747958bbe253e9886e47c10cc75fa",
+      "byte_count": 9824
+    },
+    "research/verification/foundry_admission_20261019/source-manifest.json": {
+      "sha256": "54c67ad07d1f4a2c4eda059ac3b13f4185e13ed2153ac7504d3ac2bd9489dc5f",
+      "byte_count": 11267
+    },
+    "research/verification/foundry_admission_20261019/v1-stopped-receipt.json": {
+      "sha256": "d93021be859d008137eb566ad79b606e6bff4468a21f7bbf2e4fc8d6bfd86d38",
+      "byte_count": 8014
+    },
+    "research/verification/foundry_admission_20261019/v2-stopped-receipt.json": {
+      "sha256": "aa7b87df819c120e82fee900cffb99d2d01dd65beb662c2caedd809f48c83c34",
+      "byte_count": 19739
+    },
+    "research/verification/foundry_admission_20261019/v3-stopped-receipt.json": {
+      "sha256": "326a7f949433621aaf2cf5b579643d9a067ac9d0a0b98bf090feb6fa1c110b5b",
+      "byte_count": 8173
+    },
+    "research/verification/foundry_admission_20261019/v4-environment-protocol.json": {
+      "sha256": "5512ce70f9e57fca7cb6eda3b92e646e6ac1914c8986ebc57a16a0b79ec41afe",
+      "byte_count": 932
+    },
+    "research/verification/foundry_admission_20261019/verification-model.json": {
+      "sha256": "0292e4d08ff43c4638b42ba5013eb897dad60ab4fbbdb609f661b0b731ccdb06",
+      "byte_count": 1712
+    },
+    "research/verification/foundry_admission_20261019/verification.json": {
+      "sha256": "741e9f2b29f135d99516f4b35f22da97eb6a6678641822d1766cec94e8c00ca7",
+      "byte_count": 3811
+    },
+    "research/verification/foundry_admission_20261019/workflow-receipt.json": {
+      "sha256": "8b85d08c8becb3f46ac232ec89031d93c8e0a69237593e93eef2be36e0dda395",
+      "byte_count": 46579
+    },
+    "scripts/verify_foundry_admission.py": {
+      "sha256": "30051b7281e4147da3d0a41d65b0169904956c10530e692d8a92aa6d67a87fe4",
+      "byte_count": 18985
+    },
+    "tests/test_checkpoint_consumer_identity.py": {
+      "sha256": "2b8162952a78d05bb6db2de95d41cc82417bfabd8c65c393f28c1f07ced5ffd1",
+      "byte_count": 8532
+    },
+    "tests/test_dataset_consumer_snapshot.py": {
+      "sha256": "782ef0dce7a56122ad38ce7a6254fe10326c0424c95e7bba7aa304461a3d62ef",
+      "byte_count": 6105
+    },
+    "tests/test_deep_foundry.py": {
+      "sha256": "f887841912591570ff8518d6355819924d6f920f7cf21bc918eef1c3590e5a98",
+      "byte_count": 16584
+    },
+    "tests/test_foundry_admission.py": {
+      "sha256": "bc6767e1a56bfb3a08db8db9f7183990f29161c77bad103319b9774d32959e23",
+      "byte_count": 14582
+    },
+    "tests/test_foundry_lightweight_imports.py": {
+      "sha256": "21302ef7a6c353b965f9a92ff8f66532d2b7bfc1b87fdd6b358f58b40885cfe2",
+      "byte_count": 1295
+    },
+    "tests/test_foundry_workflow_resources.py": {
+      "sha256": "2603aa5740e9549b99b546e3b8352753bc6eba98d572d1fcb70413a0051a1809",
+      "byte_count": 1764
+    },
+    "tests/test_promotion_evidence_integrity.py": {
+      "sha256": "4871b8ac5cfab24fc40b013c1ac448e48af276695fee7c2fc5184d196c1510d5",
+      "byte_count": 19930
+    },
+    "tests/test_quantization_dataset_binding.py": {
+      "sha256": "b8b3e2e9329a56f1537e96827817c336f3f739d124fb1025c4c2d02b28108db6",
+      "byte_count": 3285
+    }
+  }
+}

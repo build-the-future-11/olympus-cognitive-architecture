@@ -1,0 +1,107 @@
+{
+  "study_id": "olympus-residency-ownership-dev-v1-20261019",
+  "protocol_version": 2,
+  "phase": "FROZEN_NOT_EXECUTED",
+  "predecessor": "PR29 implementation and partial meta-materialization engineering tests; no previous residency ownership experiment is claimed.",
+  "subject_commit": "12b7c785958b741ec48834a74e81df0c674d327b",
+  "subject_path": "olympus/models/spatiotemporal_lazy.py",
+  "question": "Does the dictionary cache budget also bound persistent CPU weight storage owned by a module across repeated materialize_module calls?",
+  "hypothesis": "The union of live CPU storage reachable from the module and cache remains no larger than the declared one-shard serialized-byte budget at every completed request.",
+  "scope": "Fresh artificial CPU systems mechanism falsification only. The explicit cache-dictionary contract and a stronger whole-module residency interpretation are separate.",
+  "runtime": {
+    "system": "Linux",
+    "python": "3.14.8",
+    "torch": "2.14.1+cpu",
+    "pydantic": "2.14.1",
+    "device": "cpu",
+    "threads": 1
+  },
+  "fixture": {
+    "seed": 2026101901,
+    "width": 128,
+    "shards": 3,
+    "dtype": "float32",
+    "weight_rule": "W_i=(i+1)*I_128, named layer{i}.weight; no gradients or optimization",
+    "tensor_bytes_per_shard": 65536,
+    "input_rule": "x[j]=j/128 for j=0..127, shape [1,128]",
+    "expected_output": "x*(i+1)",
+    "spatial_centers": [
+      0,
+      100,
+      200
+    ],
+    "spatial_half_width": 1,
+    "velocity": [
+      0,
+      0,
+      0
+    ],
+    "lookahead_seconds": 0,
+    "resolution": 1,
+    "trace": [
+      0,
+      1,
+      2,
+      0,
+      1,
+      2
+    ],
+    "max_serialized_shard_bytes": 100000,
+    "total_fixture_bytes_ceiling": 8388608
+  },
+  "budget_rule": "B=max(actual serialized file sizes); require every shard <=100000 bytes, 65536 <= B < 131072, and 2*min(file sizes)>B. Each plan must select exactly the requested single shard.",
+  "arms": [
+    "persistent_module",
+    "recreated_module"
+  ],
+  "control": "Each arm runs in a separate fresh process with the same fixture bytes, cache budget, six plans, six selected-layer forwards, and exactly six disk loads. The control releases the preceding module and creates a fresh meta module before the next materialization; the PR29 loader remains unmodified.",
+  "primary_metric": "For each step after forward temporaries are deleted and gc.collect returns, sum unique untyped CPU storage nbytes reachable from current model parameters/buffers or store._cache tensors. Deduplicate by (data_ptr,nbytes). This is a lower bound on live process storage, not RSS.",
+  "secondary_metrics": [
+    "model-only unique storage bytes",
+    "cache-only tensor storage bytes",
+    "serialized file cache counter",
+    "weak-reference liveness of previous parameter/tensor owners",
+    "exact output equality and SHA256 of little-endian float32 values",
+    "disk loads and resident shard IDs",
+    "child maximum RSS and host/cgroup memory and swap observations"
+  ],
+  "falsifier": "Any persistent-module primary metric > B while all selected outputs are exact and all cache/plan/fixture controls pass, with the recreated-module control remaining <=B.",
+  "outcomes": [
+    "RESIDENCY_INTERPRETATION_FALSIFIED",
+    "NOT_FALSIFIED_IN_BOUND",
+    "INCONCLUSIVE",
+    "INVALID",
+    "BLOCKED"
+  ],
+  "decision_rules": {
+    "RESIDENCY_INTERPRETATION_FALSIFIED": "All 12 requests are valid, control <= B at all steps, persistent > B at one or more steps. This rejects the whole-module interpretation, not the narrower serialized dictionary-cache limit.",
+    "NOT_FALSIFIED_IN_BOUND": "Both arms valid and both remain <=B. This finite trace cannot establish a global residency or process-memory guarantee.",
+    "INCONCLUSIVE": "Execution completes but the recreated-module control also exceeds B, so the ownership contrast does not isolate the interpretation.",
+    "INVALID": "Hash, runtime, fixture, plan, output, disk-load matching, instrumentation, or execution contract fails; preserve partial evidence and do not interpret the primary hypothesis.",
+    "BLOCKED": "The shared workload lock, Linux host/cgroup >=2 GiB effective available memory, <=90% swap rule, or fixed wall budget prevents execution."
+  },
+  "fixed_budget": {
+    "fixture_processes": 1,
+    "arm_processes": 2,
+    "total_requests": 12,
+    "total_selected_layer_forwards": 12,
+    "training_updates": 0,
+    "protected_evaluations": 0,
+    "external_examples": 0,
+    "maximum_parallel_compute_processes": 1,
+    "seconds_per_child": 30,
+    "seconds_total": 90,
+    "min_effective_available_bytes": 2147483648,
+    "max_swap_fraction": 0.9
+  },
+  "stopping_rule": "Execute the single predeclared three-process matrix once; stop after both six-step arms or the first contract/resource/time failure. No seed, trace, dimension, threshold, baseline, or mechanism changes after viewing outcomes. A necessary harness repair requires a new version and retains this attempt.",
+  "exclusions": [
+    "No consumed v2/v3/v4/v5 or EditCLEVR samples/checkpoints",
+    "No Hermes benchmark, promotion, training, external data, network, GPU, paid job, remote mutation, or Worldcastr",
+    "No LLM quality, throughput, prefetch usefulness, total peak RAM, Mac/16 GB support, or novelty conclusion",
+    "No allocator-release conclusion from weakref expiration or RSS"
+  ],
+  "source_manifest": "SOURCE_MANIFEST.json",
+  "resource_policy_amendment": "Before first execution, adopt the parent-reviewed conservative file-cache-credit estimate; raw headroom remains separately recorded and the 2 GiB floor is unchanged. No hypothesis outcomes informed this amendment.",
+  "cgroup_cache_credit": "min(used, max(0, min(inactive_file,file)-shmem-file_mapped-file_dirty-file_writeback)); require all nonnegative counters, else zero credit; v1 uses corresponding total_* counters."
+}

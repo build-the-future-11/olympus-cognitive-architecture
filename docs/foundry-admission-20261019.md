@@ -74,8 +74,9 @@ The expanded complete Python suite passes 432 tests in 14.42 seconds, with 88.53
 combined statement/branch coverage against an 85% gate. This supersedes the initial
 351-test, 87.99% implementation check; both raw results are retained. All seven web
 tests and the TypeScript/Vite production build pass. Ruff and strict Mypy pass on
-the expanded source. Initial distribution construction and metadata checks passed;
-final distribution validation follows the last implementation changes.
+the expanded source. The final wheel and source distribution both build and pass
+Twine metadata validation at the executed source revision. The latest web suite
+passes seven tests in 2.20 seconds; its complete npm command takes 3.04 seconds.
 
 The dependency checks have different dispositions: npm reports zero vulnerabilities;
 the strict Python audit cannot fully audit the installed CPU Torch build because
@@ -126,6 +127,12 @@ The v2 attempt passed initial admission but stopped during eager Torch startup w
 the memory estimate crossed the same floor. No training output was produced. The
 startup import repair has a distinct frozen v3 attempt; it keeps the corpus, seed,
 quality thresholds, and resource policy unchanged.
+V3 stopped at preflight before any child. One final, separately frozen v4
+environment preparation released already-used dependency/build cache pages using
+advisory `POSIX_FADV_DONTNEED`, without changing file contents. V4 then completed
+on clean source `92cc121e6f1074de72eaee5a8cb670170107bbc7`. All stopped receipts
+and preparation records are preserved. Only v4 produced training output; there was
+no quality-driven rerun.
 It accepts only the reviewed 674-byte built-in corpus, whose SHA-256 is
 `6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab`.
 
@@ -143,6 +150,25 @@ hashes, commands and exit statuses, held-out metrics, process peak RSS, CPU time
 major page faults, host/cgroup memory observations, and swap change. Checkpoint
 provenance contains an experiment timestamp, so hashes bind one run and are not
 expected to match across reruns.
+
+### Recorded lifecycle result
+
+The completed sequence took 4.272115 seconds, with a maximum child RSS of
+67,338,240 bytes (64.21875 MiB) and no swap use. Minimum recorded estimated headroom
+was 2,231,209,984 bytes, 83,726,336 bytes above the 2 GiB floor. On 135 held-out
+target transitions, candidate NLL was 1.9001575711 versus the uniform baseline's
+3.17805383035, and perplexity was 6.68694802902 versus 24. The checkpoint, internal
+export, and portable export were the same 1,712 bytes, SHA-256
+`0292e4d08ff43c4638b42ba5013eb897dad60ab4fbbdb609f661b0b731ccdb06`.
+The admitted model ID was `foundry-verification-bigram-0292e4d0`.
+
+The actual API was exercised through ASGI transport in a fresh process; this was
+not a listening network server or live-browser deployment. Raw `memory.stat`
+components were not saved, so historical cache credit cannot be independently
+rederived from individual counters. Its recorded headroom arithmetic and all
+artifact/source hashes were checked by read-only reviewers. This is evidence
+verification, not independent experiment reproduction. Complete commands and
+regenerable tables are in the [evidence handoff](../research/verification/foundry_admission_20261019/README.md).
 
 For a manual generation after the workflow, take the actual model ID from
 `receipt.json` or `foundry list-models`:

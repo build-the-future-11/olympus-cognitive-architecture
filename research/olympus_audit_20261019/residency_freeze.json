@@ -1,0 +1,17 @@
+{
+  "study_id": "olympus-residency-ownership-dev-v1-20261019",
+  "protocol_version": 2,
+  "frozen_at_utc": "2026-10-19T13:46:21.742751+00:00",
+  "execution_status": "NOT_EXECUTED",
+  "validation": "Python 3.14 AST parse and repo-configured Ruff check only; no subject-module imports, tensor operations, training, inference, or experiment execution.",
+  "files": {
+    "diagnose_residency.py": "fd63cd8aacab03b1e80733e3d9b8546400307784dc5be7ae70d6c47eae6b9fee",
+    "protocol.json": "d937e38dc7b3d3c32f0fcafecd2f65a98ed532b7e368ee8ff17cd495c2af7a25",
+    "PROTOCOL.md": "0da59b00e4c9ff475cfbf2148cd999a5f3878bfe6cc12a13443403815322df64",
+    "SOURCE_MANIFEST.json": "9385bf0f380cdd171d44c78b550b85f595616c9433b1fff23657fd44ebf29d3b",
+    "RESOURCE_POLICY_ORIGIN.json": "a136222b6ffcfe52d2d60278f4ff6ca60044d24ca7c456898d5b4e57c87bc687",
+    "source/pr29_12b7c785958b741ec48834a74e81df0c674d327b/olympus/models/spatiotemporal_lazy.py": "09c7a7aa4a1edcf19f3e4c4084e44d627dc606a43172e8853c02d3fa59fff939",
+    "source/pr29_12b7c785958b741ec48834a74e81df0c674d327b/olympus/core/schemas.py": "e89c498176fb86b52f1a49b8c9961aa8f5cb431ef6a953abfff09cbef1e597f0",
+    "source/main_dc46b831e2aa88a5e669e1343463dc74ef1270a4/olympus/foundry/resources.py": "83c95b1ba70b5e3fd6ff4d29179f5b48212eadb184da122fe6a40f4c83ac26f0"
+  }
+}
