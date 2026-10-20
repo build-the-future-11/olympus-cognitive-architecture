@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "artifact_id": "olympus-consolidated-routing-temporal-2026",
+  "phase": "ARXIV_READY_NOT_SUBMITTED",
+  "date": "2026-10-18",
+  "base_commit": "2ea8a8701c97baaf7db471547495f87176f7277c",
+  "paper_title": "Simple Controls Remain Hard to Beat in Learned Multimodal Routing: Five Controlled Studies and a Supported Residual Dynamics Result",
+  "scientific_synthesis": {
+    "routing_studies_reported": 5,
+    "routing_primaries_supported": 0,
+    "temporal_primaries_reported": 1,
+    "temporal_primaries_supported": 1,
+    "portfolio_disposition": "ROUTING_PRIMARY_NOT_SUPPORTED_WITH_NARROW_SECONDARY_GAINS_AND_SUPPORTED_SYNTHETIC_RESIDUAL_DYNAMICS"
+  },
+  "source_studies": [
+    "research/olympus_irp_successor_v2/RESEARCH_STATE.json",
+    "research/olympus_irp_successor_v3/RESEARCH_STATE.json",
+    "research/olympus_irp_successor_v4/RESEARCH_STATE.json",
+    "research/olympus_irp_successor_v5/RESEARCH_STATE.json",
+    "research/olympus_editclevr_v1/RESEARCH_STATE.json"
+  ],
+  "artifacts": {
+    "paper_source": "research/olympus_consolidated_2026/paper/main.tex",
+    "bibliography": "research/olympus_consolidated_2026/paper/references.bib",
+    "metadata": "research/olympus_consolidated_2026/ARXIV_METADATA.md",
+    "evidence_map": "research/olympus_consolidated_2026/EVIDENCE_MAP.md",
+    "pdf": "output/pdf/olympus-routing-controls-and-residual-dynamics.pdf",
+    "arxiv_source_package": "output/pdf/olympus-routing-controls-and-residual-dynamics-arxiv.tar.gz",
+    "release_receipt": "research/olympus_consolidated_2026/RELEASE_RECEIPT_20261018.json"
+  },
+  "limitations": [
+    "Four routing studies use synthetic generators and small reference models.",
+    "The EditCLEVR study predicts edit factors rather than the benchmark's full object-centric faithfulness protocol.",
+    "The v5 and EditCLEVR final raw remote archives were hash-bound but were not recovered into the repository.",
+    "The same research program designed and verified the studies; there is no independent operator reproduction.",
+    "No target-scale, deployment, safety-efficacy, SOTA, or full six-family claim is supported."
+  ],
+  "external_actions": {
+    "submitted_to_arxiv": false,
+    "uploaded": false,
+    "model_promoted": false,
+    "scientific_training_added": false,
+    "protected_evaluations_added": false,
+    "paid_compute_used": false
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "study_id": "flagship-engineering-v2",
+  "date": "2026-10-19",
+  "status": "BOUNDED_CPU_ENGINEERING_VERIFIED",
+  "version_id": 359942456,
+  "url": "https://www.kaggle.com/code/ryangomez010/olympus-flagship-v2-cpu-qualification-r1-20261019/log?scriptVersionId=359942456",
+  "privacy": "PRIVATE",
+  "internet": "OFF",
+  "accelerator": "NONE",
+  "platform_runtime_seconds": 25.6,
+  "qualification_elapsed_seconds": 14.964506079999978,
+  "budget_seconds": 120,
+  "uploaded_notebook_sha256": "1850da6472a67a986bacb5a3d0c807d2be3857322ad7035049c322fd835a7ce3",
+  "source_archive_sha256": "827eaed50fc5aba49fa0e33a261c0fd1e71f74db96422371f725430e2f26b39a",
+  "runtime_source_sha256": "5ac48e844db38a3da5c2c5e7e5ab1c68ec81d6dd3775c1f14529444645afb58b",
+  "protocol_sha256": "4717077f5764f0ca978b95c4ab905cce7e48dc5ca6f7ac4b58a7e09ddb6e7e79",
+  "regression_source_sha256": "94971d469adab223015939e9e0645c1f56f9efe3cdefa6c20eb02d171aac5231",
+  "recovery_archive": "artifacts/flagship-v2-kaggle-verified-20261019/cpu/recovery.tar.gz",
+  "recovery_archive_sha256": "669a11525835001029e1a26ea34211ec2a9efc9e84ed3fb61840be5808fa084f",
+  "raw_receipt": "artifacts/flagship-v2-kaggle-verified-20261019/cpu/restored/flagship-v2/receipt.json",
+  "raw_receipt_sha256": "e2fba29a678e180a7be95ffc141aa2bfff28bab935572cb6c3330c38fef9b30f",
+  "verification": {
+    "downloaded_archive_hash": "PASS",
+    "archive_manifest_and_all_member_hashes": "PASS",
+    "all_runtime_source_file_hashes_match_checkout": "PASS",
+    "protocol_and_regression_source_hashes": "PASS",
+    "all_receipt_artifact_hashes": "PASS",
+    "parsed_junit": "28_CASES_ZERO_FAILURES_ZERO_ERRORS",
+    "scientific_replication": false
+  },
+  "runtime": {
+    "python": "3.13.15",
+    "torch": "2.11.0+cpu",
+    "device": "cpu"
+  },
+  "regressions": {"passed": 28, "deselected_cuda": 1, "failed": 0, "elapsed_seconds": 6.21},
+  "optimizer_smoke": {
+    "steps": 8,
+    "examples": 2,
+    "integrated_model_parameters": 6563,
+    "ffn_original_parameters": 280,
+    "ffn_expanded_parameters": 416,
+    "trainable_parameter_tensors_covered": 191,
+    "expert_optimizer_steps": [5, 5, 6],
+    "finite_gradients": true,
+    "reload": "EXACT_OUTPUT_PASS",
+    "checkpoint_sha256": "e4a705f30b828edf734cf349c56e8c790acc78e8b2c28593dfbb5c76a7a322c3"
+  },
+  "coverage": ["Hermes", "Prometheus", "Perseus", "Atlas", "Kronos", "Aion", "Olympus integration", "FFN growth", "JEPA latent growth", "CPU ghost leases and plan validation"],
+  "numerical_failures": [],
+  "retained_transport_issues": [
+    "Initial Choose file control did not open the chooser; Browse Files succeeded. No source was changed to resolve it.",
+    "The browser download event timed out, but the archive had downloaded. The exact downloaded filename was located locally and its SHA-256 and every member were verified before acceptance.",
+    "The draft was in Script editor mode from the earlier recovery attempt. Kaggle converted the imported notebook to a script; the executed source/archive/protocol hashes and output receipts were verified."
+  ],
+  "cuda": {
+    "status": "PAIRED_ALLOCATION_APPROVAL_PENDING",
+    "available_gpu_option_observed": "GPU T4 x2",
+    "single_gpu_option_observed": false,
+    "allocation_started": false,
+    "draft_url": "https://www.kaggle.com/code/ryangomez010/olympus-flagship-v2-cuda-qualification-r1-20261019/edit",
+    "notebook": "artifacts/flagship-v2-kaggle-hosted-cuda-r2-20261019/olympus_kaggle.ipynb",
+    "notebook_sha256": "ba209adce60d2f7f84e8c53f1f840ef2e36e3f90dc9a3f31bfde34653caf316a",
+    "child_environment": {"CUDA_VISIBLE_DEVICES": "0"}
+  },
+  "full_release_suite": "NOT_RUN_ON_CURRENT_V2_SOURCE",
+  "scientific_training_epochs": 0,
+  "protected_evaluations": 0,
+  "paid_jobs": 0,
+  "promotion_authorized": false,
+  "claim_boundary": "Artificial development-scale CPU engineering contracts only. Not target-scale weights, CUDA verification, efficacy, novelty, release readiness, or permission to start actual training or benchmarking."
+}

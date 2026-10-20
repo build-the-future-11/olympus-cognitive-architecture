@@ -45,6 +45,7 @@ class OlympusSystemConfig(StrictModel):
     """Bounded configuration for composing the six reference families."""
 
     hermes: HermesReferenceConfig = Field(default_factory=HermesReferenceConfig)
+    architecture_revision: Literal["reference_v1", "flagship_v2"] = "reference_v1"
     prometheus: PrometheusReferenceConfig = Field(default_factory=PrometheusReferenceConfig)
     perseus: PerseusReferenceConfig = Field(default_factory=PerseusReferenceConfig)
     atlas: AtlasReferenceConfig = Field(default_factory=AtlasReferenceConfig)
@@ -144,15 +145,22 @@ class OlympusObjectiveOutput:
 class OlympusReferenceSystem(nn.Module):
     """Fuse all six references while leaving execution authority outside the model."""
 
+    hermes_type: type[HermesReferenceModel] = HermesReferenceModel
+    prometheus_type: type[PrometheusReferenceModel] = PrometheusReferenceModel
+    perseus_type: type[PerseusReferenceModel] = PerseusReferenceModel
+    atlas_type: type[AtlasReferenceModel] = AtlasReferenceModel
+    kronos_type: type[KronosReferenceModel] = KronosReferenceModel
+    aion_type: type[AionReferenceModel] = AionReferenceModel
+
     def __init__(self, config: OlympusSystemConfig) -> None:
         super().__init__()
         self.config = config
-        self.hermes = HermesReferenceModel(config.hermes)
-        self.prometheus = PrometheusReferenceModel(config.prometheus)
-        self.perseus = PerseusReferenceModel(config.perseus)
-        self.atlas = AtlasReferenceModel(config.atlas)
-        self.kronos = KronosReferenceModel(config.kronos)
-        self.aion = AionReferenceModel(config.aion)
+        self.hermes = self.hermes_type(config.hermes)
+        self.prometheus = self.prometheus_type(config.prometheus)
+        self.perseus = self.perseus_type(config.perseus)
+        self.atlas = self.atlas_type(config.atlas)
+        self.kronos = self.kronos_type(config.kronos)
+        self.aion = self.aion_type(config.aion)
         self.family_projections = nn.ModuleDict(
             {
                 "hermes": _projection(config.hermes.backbone.model_dim, config.fusion_dim),
@@ -215,6 +223,39 @@ class OlympusReferenceSystem(nn.Module):
         atlas = self.atlas(tokens, image, attention_mask, timestamp=timestamp)
         kronos = self.kronos(states, actions, temporal_mask)
 
+        return self._compose_outputs(
+            tokens,
+            states,
+            allowed_transitions,
+            risk_score,
+            hermes,
+            prometheus,
+            perseus,
+            atlas,
+            kronos,
+            attention_mask=attention_mask,
+            temporal_mask=temporal_mask,
+            extension_features=extension_features,
+        )
+
+    def _compose_outputs(
+        self,
+        tokens: Tensor,
+        states: Tensor,
+        allowed_transitions: Tensor,
+        risk_score: Tensor,
+        hermes: HermesReferenceOutput,
+        prometheus: PrometheusReferenceOutput,
+        perseus: PerseusReferenceOutput,
+        atlas: AtlasReferenceOutput,
+        kronos: KronosReferenceOutput,
+        *,
+        attention_mask: Tensor | None,
+        temporal_mask: Tensor | None,
+        extension_features: dict[str, Tensor] | None,
+    ) -> OlympusSystemOutput:
+        batch = tokens.shape[0]
+
         text_indices = _last_active_indices(tokens, attention_mask)
         batch_indices = torch.arange(batch, device=tokens.device)
         temporal_indices = _last_active_indices(states[..., 0], temporal_mask)
@@ -274,9 +315,7 @@ class OlympusReferenceSystem(nn.Module):
             dim=-1
         ) / 2.0
         risk_disagreement = (
-            family_disagreement
-            if self.config.disagreement_risk
-            else family_disagreement * 0.0
+            family_disagreement if self.config.disagreement_risk else family_disagreement * 0.0
         )
         risk_features = torch.cat((fused, risk_disagreement.unsqueeze(-1)), dim=-1)
         intrinsic_risk = self.intrinsic_risk_head(risk_features).squeeze(-1).sigmoid()
@@ -495,3 +534,12 @@ def _validate_loss_weights(**weights: float) -> None:
     for name, value in weights.items():
         if not math.isfinite(value) or value < 0.0:
             raise ValueError(f"{name} must be finite and non-negative")
+
+
+def build_olympus_system(config: OlympusSystemConfig) -> OlympusReferenceSystem:
+    """Construct the explicitly selected architecture revision."""
+    if config.architecture_revision == "flagship_v2":
+        from olympus.models.flagship import OlympusFlagshipSystem
+
+        return OlympusFlagshipSystem(config)
+    return OlympusReferenceSystem(config)

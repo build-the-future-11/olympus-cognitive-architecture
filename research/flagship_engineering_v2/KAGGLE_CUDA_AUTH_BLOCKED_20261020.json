@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "study_id": "flagship-engineering-v2",
+  "status": "KAGGLE_CUDA_RETRY_AUTH_CONTEXT_BLOCKED",
+  "prior_draft_url": "https://www.kaggle.com/code/ryangomez010/olympus-flagship-v2-cuda-qualification-r1-20261019/edit",
+  "prior_draft_observation": "Kaggle returned page not found.",
+  "prepared_notebook": "artifacts/flagship-v2-kaggle-hosted-cuda-r3-20261020/olympus_kaggle.ipynb",
+  "prepared_source_sha256": "107b6fcb46df36f7480defd27e0a146c0fb68aa54a706c11df577ffb70428b4a",
+  "prepared_archive_sha256": "c75cbe1272e4e02a3086785481108aeb907bfad6555c2e28f4502c66e6a2f6fa",
+  "observation": "The isolated browser session had no authenticated Kaggle account. Google sign-in opened an unintended new-account registration flow, which was cancelled before account creation. The existing signed-in Kaggle tab belonged to another active task and was not modified.",
+  "uploaded": false,
+  "saved_run_created": false,
+  "cuda_session_started": false,
+  "verified_cuda_tests": 0,
+  "verified_cuda_optimizer_steps": 0,
+  "scientific_outcomes_created": false
+}

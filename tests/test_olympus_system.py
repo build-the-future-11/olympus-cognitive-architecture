@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -8,6 +9,14 @@ import pytest
 import torch
 
 from olympus.data.olympus_dataset import write_olympus_dataset_manifest
+from olympus.evaluation.decision_dossiers import (
+    OlympusDecisionDossierBundle,
+    OlympusDossierBinding,
+    build_olympus_decision_dossiers,
+    read_olympus_decision_dossier_bundle,
+    verify_olympus_decision_dossier_replay,
+    write_olympus_decision_dossiers,
+)
 from olympus.evaluation.olympus_system import evaluate_olympus_system
 from olympus.models.olympus_system import (
     FAMILY_VECTOR_NAMES,
@@ -34,6 +43,7 @@ from olympus.models.runtime import (
 from olympus.training.olympus_system import (
     OlympusSystemTrainingConfig,
     train_olympus_system,
+    verify_frozen_decision_dossiers,
 )
 
 
@@ -145,6 +155,82 @@ def test_olympus_system_composes_all_families_and_preserves_stop_authority() -> 
     final_risk_layer = model.intrinsic_risk_head[-1]
     assert isinstance(final_risk_layer, torch.nn.Linear)
     assert final_risk_layer.weight.grad is not None
+
+
+def test_decision_dossiers_bind_sources_and_preserve_stop_authority(tmp_path: Path) -> None:
+    torch.manual_seed(23)
+    model = OlympusReferenceSystem(_config())
+    batch = _dataset_batch()
+    dossiers = build_olympus_decision_dossiers(
+        model,
+        batch,
+        [],
+        ["evaluation-source-0", "evaluation-source-1"],
+    )
+
+    assert [dossier.source_id for dossier in dossiers] == [
+        "evaluation-source-0",
+        "evaluation-source-1",
+    ]
+    assert dossiers[0].decision_available is True
+    assert dossiers[0].exposed_predicted_class == dossiers[0].raw_predicted_class
+    assert dossiers[1].forced_stop is True
+    assert dossiers[1].decision_available is False
+    assert dossiers[1].exposed_predicted_class is None
+    assert dossiers[1].exposed_predicted_probability is None
+    for dossier in dossiers:
+        assert dossier.effective_risk >= dossier.host_risk
+        assert dossier.allowed_transitions[dossier.selected_transition]
+        assert set(dossier.component_gates) == set(FAMILY_VECTOR_NAMES)
+        assert sum(dossier.component_gates.values()) == pytest.approx(1.0)
+        assert set(dossier.counterfactuals) == set(FAMILY_VECTOR_NAMES)
+
+    output = tmp_path / "decision-dossiers.json"
+    bundle = write_olympus_decision_dossiers(
+        output,
+        binding=OlympusDossierBinding(
+            dataset_manifest_sha256="a" * 64,
+            checkpoint_sha256="b" * 64,
+            split="evaluation",
+        ),
+        dossiers=dossiers,
+    )
+    serialized = json.loads(output.read_text(encoding="utf-8"))
+    assert serialized["bundle_sha256"] == bundle.bundle_sha256
+    assert serialized["binding"]["split"] == "evaluation"
+    tampered = json.loads(output.read_text(encoding="utf-8"))
+    tampered["dossiers"][0]["source_id"] = "tampered-source"
+    with pytest.raises(ValueError, match="digest"):
+        OlympusDecisionDossierBundle.model_validate_json(json.dumps(tampered))
+    with pytest.raises(ValueError, match="file digest"):
+        read_olympus_decision_dossier_bundle(
+            output,
+            expected_binding=bundle.binding,
+            expected_source_ids=["evaluation-source-0", "evaluation-source-1"],
+            expected_file_sha256="0" * 64,
+        )
+    altered = bundle.model_copy(deep=True)
+    altered.dossiers[0].host_risk = min(1.0, altered.dossiers[0].host_risk + 0.01)
+    altered.bundle_sha256 = hashlib.sha256(
+        altered.canonical_bytes(include_hash=False)
+    ).hexdigest()
+    with pytest.raises(ValueError, match="replay"):
+        verify_olympus_decision_dossier_replay(
+            model,
+            batch,
+            [],
+            ["evaluation-source-0", "evaluation-source-1"],
+            binding=bundle.binding,
+            observed=altered,
+        )
+    with pytest.raises(FileExistsError, match="refusing to overwrite"):
+        write_olympus_decision_dossiers(
+            output,
+            binding=bundle.binding,
+            dossiers=dossiers,
+        )
+    with pytest.raises(ValueError, match="source identities"):
+        build_olympus_decision_dossiers(model, batch, [], ["duplicate", "duplicate"])
 
 
 def test_olympus_system_rejects_forbidden_targets_and_misaligned_batches() -> None:
@@ -333,10 +419,27 @@ def test_olympus_composed_training_evaluation_and_immutable_report(tmp_path: Pat
     assert report.final_evaluation.risk.intrinsic_brier is not None
     assert len(report.final_evaluation.risk.risk_coverage) == 4
     assert Path(report.checkpoint_path).is_file()
+    assert Path(report.decision_dossier_path).is_file()
     serialized = json.loads((output / "report.json").read_text(encoding="utf-8"))
     assert serialized["checkpoint_sha256"] == report.checkpoint_sha256
+    assert serialized["decision_dossier_sha256"] == report.decision_dossier_sha256
+    assert (
+        hashlib.sha256(Path(report.decision_dossier_path).read_bytes()).hexdigest()
+        == report.decision_dossier_sha256
+    )
+    assert (
+        serialized["decision_dossier_content_sha256"]
+        == report.decision_dossier_content_sha256
+    )
     assert serialized["training_config_sha256"] == report.training_config_sha256
     assert serialized["training_config"]["seed"] == 31
+    decision_dossiers = json.loads(Path(report.decision_dossier_path).read_text(encoding="utf-8"))
+    assert decision_dossiers["binding"]["dataset_manifest_sha256"] == manifest.manifest_sha256
+    assert decision_dossiers["binding"]["checkpoint_sha256"] == report.checkpoint_sha256
+    assert [dossier["source_id"] for dossier in decision_dossiers["dossiers"]] == [
+        "evaluation-0",
+        "evaluation-1",
+    ]
 
     reloaded, record = load_olympus_checkpoint(
         output / "checkpoint.pt", expected_sha256=report.checkpoint_sha256
@@ -357,5 +460,7 @@ def test_olympus_composed_training_evaluation_and_immutable_report(tmp_path: Pat
         + config.loss.counterfactual_weight * components["counterfactual_consistency"]
     )
     assert reconstructed == pytest.approx(evaluation.total_loss, abs=1e-6)
+    verified = verify_frozen_decision_dossiers(output, manifest_path)
+    assert verified.bundle_sha256 == report.decision_dossier_content_sha256
     with pytest.raises(FileExistsError, match="refusing to overwrite"):
         train_olympus_system(manifest_path, output, config=config)

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-18",
+  "kind": "bounded_engineering_repair",
+  "status": "LOCAL_ENGINEERING_VERIFIED_HOSTED_EXACT_SOURCE_PENDING",
+  "objective": "Make the canonical portfolio status fail closed when root, study, readiness, archive, promotion, or dated-ledger records contradict one another.",
+  "changes": [
+    "Added a repository-native research status auditor and non-promotional JSON CLI.",
+    "Bound root study summaries to their child state files and rejected path escape, symlinks, duplicate study or family identities, unsupported promotion, forged archive state, verifier failure, and readiness contradictions.",
+    "Added an append-only Reality Ledger correction for the completed V5 and EditCLEVR studies without changing any predecessor outcome.",
+    "Added the canonical research-status audit to CI and release workflows.",
+    "Made resource-status fail closed with structured output when host counters are unavailable instead of leaking a traceback."
+  ],
+  "source_sha256": {
+    ".github/workflows/ci.yml": "3e33ca7905df4cb1cee700d02a0fb86d62b8cd2ba2809e75ad3c13a9d040afe3",
+    ".github/workflows/release.yml": "ef27dd7aa8e714bfa9c2faf363b97c1791bdda1b234b0aad279b34dddd767eaa",
+    "MANIFEST.in": "bc4b91f8db7ea1e876dd0d2342ca9ee8bcbc37b16fba9b3c3d6160668a5b721e",
+    "olympus/cli.py": "1ec62ecb3514acfb8ca4c2f10226bcb0aa2898dfa1c7ed66243c3ebfe1a13325",
+    "olympus/foundry/resources.py": "2a09fa333d409dd0f60e10212214a930508e84a1ff71fb3a3f674d4dc77b73ad",
+    "olympus/research_state.py": "7eb9d054c3b8502973bfb1706b3e394d6b1250a3274b35f8e9460cafc7cb0b43",
+    "research/REALITY_LEDGER.md": "c23956fe786f9249e5a6d2c56bebcfdf57f546c974358886fa346c6fab393f77",
+    "tests/test_cli.py": "19271b16601e228328e58731a2c85e3db4e66cb7078ec973eedfadf60b5cde53",
+    "tests/test_research_state.py": "eabe3d30fcb8438d2d331440e3a0ce71968e994cc2108a4c5f1abd5f63b22beb"
+  },
+  "failed_attempts": [
+    {
+      "result": "506 passed, 2 skipped, 14 failed, and 61 errored in the sandboxed full-suite attempt.",
+      "classification": "ENVIRONMENT_BLOCKED_NOT_SOURCE_FAILURE",
+      "cause": "Sandbox policy denied macOS sysctl counters, so the resource governor refused all affected training fixtures. The same unchanged suite was rerun outside that sandbox boundary with its guard active."
+    },
+    {
+      "result": "The first deterministic package invocation stopped after build pass 1.",
+      "classification": "INVALID_INVOCATION_RETAINED",
+      "cause": "SOURCE_DATE_EPOCH was absent. The final check used the exact HEAD commit epoch, matching CI and release workflow policy."
+    }
+  ],
+  "final_verification": {
+    "python_tests_passed": 595,
+    "python_tests_skipped_expected": 2,
+    "branch_coverage_percent": 85.06,
+    "ruff": "PASS_FULL_REPOSITORY",
+    "mypy": "PASS_STRICT_156_SOURCE_FILES",
+    "readiness_baseline": "PASS_EXACT_0_OF_6",
+    "research_status_audit": "PASS",
+    "web_tests_passed": 6,
+    "web_production_build": "PASS",
+    "reproducible_wheel_sha256": "851aa5d619bce423c68ae28a3d0e2c017d4951cae67878887e3fb1ffabbf9dcf",
+    "reproducible_source_archive_sha256": "aa48c93d430a65fa6172f92eba4b8e0ff54099052978fb023aa6289a77da21bb",
+    "source_archive_research_status_audit": "PASS_FROM_CLEAN_EXTRACTION",
+    "twine": "PASS_BOTH_DISTRIBUTIONS",
+    "hosted_exact_source": "PENDING"
+  },
+  "remote_archive_recovery": {
+    "status": "NOT_RECOVERED",
+    "observation": "The recorded Kaggle notebook showed zero saved versions and an empty working directory in the current UI session.",
+    "boundary": "No rerun was launched because that would create new protected evidence outside this engineering repair authorization."
+  },
+  "research_boundary": {
+    "scientific_training": 0,
+    "protected_evaluations": 0,
+    "paid_compute": 0,
+    "model_promotions": 0,
+    "predecessor_outcomes_changed": false,
+    "scientific_outcomes_created": false
+  }
+}

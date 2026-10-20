@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "study_id": "flagship-engineering-v2",
+  "status": "LOCAL_NUMERICAL_ADMISSION_REFUSED",
+  "host": "macOS",
+  "observed": {
+    "page_size_bytes": 16384,
+    "free_pages": 3810,
+    "free_bytes": 62423040,
+    "pageouts": 1034219,
+    "swap_total_mib": 7680.0,
+    "swap_used_mib": 7247.31,
+    "swap_fraction": 0.94366015625
+  },
+  "required": {
+    "minimum_free_bytes": 536870912,
+    "maximum_swap_fraction": 0.9,
+    "pageouts_must_not_rise": true
+  },
+  "decision": "REFUSED_BEFORE_NUMERICAL_TEST_EXECUTION",
+  "reason": "Free pages were below the frozen 512 MiB floor and swap utilization exceeded the frozen 90 percent ceiling. Pageout stability was not evaluated after those independent rejection conditions.",
+  "executed_numerical_tests": 0,
+  "optimizer_steps": 0,
+  "thresholds_changed": false,
+  "scientific_outcomes_created": false
+}

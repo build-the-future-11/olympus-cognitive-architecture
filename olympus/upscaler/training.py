@@ -380,6 +380,7 @@ def load_jepa_upscaler_checkpoint(
     checkpoint_path: Path,
     *,
     expected_sha256: str | None = None,
+    expected_dataset_manifest_sha256: str | None = None,
 ) -> tuple[JEPAUpscaler, JEPAUpscalerTrainingConfig]:
     """Load an immutable development checkpoint with optional digest pinning."""
 
@@ -392,6 +393,18 @@ def load_jepa_upscaler_checkpoint(
     payload: Any = torch.load(io.BytesIO(content), map_location="cpu", weights_only=True)
     if not isinstance(payload, dict) or payload.get("schema_version") not in {2, 3}:
         raise ValueError("checkpoint has an unsupported schema")
+    dataset_manifest_sha256 = payload.get("dataset_manifest_sha256")
+    if (
+        not isinstance(dataset_manifest_sha256, str)
+        or len(dataset_manifest_sha256) != 64
+        or any(character not in "0123456789abcdef" for character in dataset_manifest_sha256)
+    ):
+        raise ValueError("checkpoint has an invalid dataset manifest identity")
+    if (
+        expected_dataset_manifest_sha256 is not None
+        and dataset_manifest_sha256 != expected_dataset_manifest_sha256
+    ):
+        raise ValueError("checkpoint dataset manifest does not match the expected SHA-256")
     raw_config = payload.get("config")
     raw_state = payload.get("model_state")
     if not isinstance(raw_config, dict) or not isinstance(raw_state, dict):

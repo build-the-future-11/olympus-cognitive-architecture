@@ -6,17 +6,23 @@ import hashlib
 import io
 import math
 from collections import OrderedDict
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path, PurePosixPath
 from typing import Any, cast
 
 import torch
-from pydantic import Field, model_validator
+from pydantic import ConfigDict, Field, model_validator
 from torch import Tensor, nn
 
 from olympus.core.schemas import StrictModel
 
 
-class SpatialBounds(StrictModel):
+class _ResidencyModel(StrictModel):
+    model_config = ConfigDict(extra="forbid", validate_assignment=True, allow_inf_nan=False)
+
+
+class SpatialBounds(_ResidencyModel):
     minimum: tuple[float, float, float]
     maximum: tuple[float, float, float]
 
@@ -27,7 +33,7 @@ class SpatialBounds(StrictModel):
         return self
 
 
-class TemporalBounds(StrictModel):
+class TemporalBounds(_ResidencyModel):
     start: float
     end: float
 
@@ -38,11 +44,12 @@ class TemporalBounds(StrictModel):
         return self
 
 
-class ParameterShard(StrictModel):
+class ParameterShard(_ResidencyModel):
     shard_id: str = Field(pattern=r"^[a-z0-9][a-z0-9._-]*$")
     path: str
     sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     byte_count: int = Field(gt=0)
+    tensor_storage_bytes: int | None = Field(default=None, gt=0)
     tensor_names: list[str] = Field(min_length=1)
     spatial: SpatialBounds | None = None
     temporal: TemporalBounds | None = None
@@ -50,6 +57,10 @@ class ParameterShard(StrictModel):
     resolution_max: float = Field(default=1.0e30, gt=0.0)
     priority: float = 0.0
     always_load: bool = False
+
+    @property
+    def residency_bytes(self) -> int:
+        return max(self.byte_count, self.tensor_storage_bytes or 0)
 
     @model_validator(mode="after")
     def valid_shard(self) -> ParameterShard:
@@ -63,12 +74,14 @@ class ParameterShard(StrictModel):
         return self
 
 
-class ParameterManifest(StrictModel):
+class ParameterManifest(_ResidencyModel):
     schema_version: int = 1
     shards: list[ParameterShard] = Field(min_length=1)
 
     @model_validator(mode="after")
     def unique_shards(self) -> ParameterManifest:
+        if self.schema_version != 1:
+            raise ValueError("unsupported parameter manifest schema")
         identifiers = [shard.shard_id for shard in self.shards]
         if len(set(identifiers)) != len(identifiers):
             raise ValueError("shard identifiers must be unique")
@@ -78,7 +91,7 @@ class ParameterManifest(StrictModel):
         return self
 
 
-class SpatiotemporalQuery(StrictModel):
+class SpatiotemporalQuery(_ResidencyModel):
     position: tuple[float, float, float]
     timestamp: float
     resolution: float = Field(gt=0.0)
@@ -96,13 +109,13 @@ class SpatiotemporalQuery(StrictModel):
         )
 
 
-class PlannedShard(StrictModel):
+class PlannedShard(_ResidencyModel):
     shard_id: str
     score: float
     byte_count: int
 
 
-class ResidencyPlan(StrictModel):
+class ResidencyPlan(_ResidencyModel):
     shards: list[PlannedShard]
     planned_bytes: int = Field(ge=0)
     budget_bytes: int = Field(gt=0)
@@ -166,6 +179,12 @@ class SpatiotemporalParameterStore:
         self._cache: OrderedDict[str, dict[str, Tensor]] = OrderedDict()
         self._cache_bytes = 0
         self.disk_loads = 0
+        self._lease_active = False
+
+    @property
+    def resident_bytes(self) -> int:
+        """Conservative accounted cache weight bytes, excluding external references."""
+        return self._cache_bytes
 
     @property
     def resident_shards(self) -> tuple[str, ...]:
@@ -180,7 +199,7 @@ class SpatiotemporalParameterStore:
             (shard for shard in self.manifest.shards if shard.always_load),
             key=lambda shard: shard.shard_id,
         )
-        mandatory_bytes = sum(shard.byte_count for shard in mandatory)
+        mandatory_bytes = sum(shard.residency_bytes for shard in mandatory)
         if mandatory_bytes > budget_bytes:
             raise ValueError("residency budget cannot fit all mandatory shards")
         optional = sorted(
@@ -195,22 +214,22 @@ class SpatiotemporalParameterStore:
             PlannedShard(
                 shard_id=shard.shard_id,
                 score=_score(shard, query),
-                byte_count=shard.byte_count,
+                byte_count=shard.residency_bytes,
             )
             for shard in mandatory
         ]
         used = mandatory_bytes
         for shard, score in optional:
-            if used + shard.byte_count > budget_bytes:
+            if used + shard.residency_bytes > budget_bytes:
                 continue
             selected.append(
                 PlannedShard(
                     shard_id=shard.shard_id,
                     score=score,
-                    byte_count=shard.byte_count,
+                    byte_count=shard.residency_bytes,
                 )
             )
-            used += shard.byte_count
+            used += shard.residency_bytes
         return ResidencyPlan(
             shards=selected,
             planned_bytes=used,
@@ -219,8 +238,11 @@ class SpatiotemporalParameterStore:
 
     def _path(self, record: ParameterShard) -> Path:
         path = self.root / record.path
-        if path.is_symlink():
-            raise ValueError(f"parameter shard {record.shard_id} must not be a symlink")
+        current = path
+        while current != self.root:
+            if current.is_symlink():
+                raise ValueError(f"parameter shard {record.shard_id} must not traverse a symlink")
+            current = current.parent
         resolved = path.resolve()
         if not resolved.is_relative_to(self.root):
             raise ValueError(f"parameter shard {record.shard_id} escapes the manifest root")
@@ -242,26 +264,37 @@ class SpatiotemporalParameterStore:
         tensors = cast(dict[str, Tensor], loaded)
         if set(tensors) != set(record.tensor_names):
             raise ValueError(f"parameter shard {record.shard_id} tensor names changed")
+        storage = _tensor_storage_bytes(tensors)
+        if storage > record.residency_bytes:
+            raise ValueError(f"parameter shard {record.shard_id} exceeds its tensor storage budget")
+        if record.tensor_storage_bytes is not None and storage != record.tensor_storage_bytes:
+            raise ValueError(f"parameter shard {record.shard_id} tensor storage changed")
         self.disk_loads += 1
         return tensors
 
     def _admit(self, record: ParameterShard, tensors: dict[str, Tensor]) -> None:
-        if record.byte_count > self.cache_budget_bytes:
+        if record.residency_bytes > self.cache_budget_bytes:
             raise ValueError(f"parameter shard {record.shard_id} exceeds the cache budget")
-        while self._cache and self._cache_bytes + record.byte_count > self.cache_budget_bytes:
+        while self._cache and self._cache_bytes + record.residency_bytes > self.cache_budget_bytes:
             evicted_id, _evicted = self._cache.popitem(last=False)
-            self._cache_bytes -= self._records[evicted_id].byte_count
+            self._cache_bytes -= self._records[evicted_id].residency_bytes
         self._cache[record.shard_id] = tensors
         self._cache.move_to_end(record.shard_id)
-        self._cache_bytes += record.byte_count
+        self._cache_bytes += record.residency_bytes
 
     def materialize(self, plan: ResidencyPlan) -> dict[str, Tensor]:
-        if plan.planned_bytes > plan.budget_bytes:
-            raise ValueError("residency plan exceeds its declared budget")
+        self._validate_plan(plan)
+        selected = {item.shard_id for item in plan.shards}
+        # Release obsolete cache references before reading new shards. This does
+        # not release tensors retained by caller-owned modules; use a lease for that.
+        for identifier in tuple(self._cache):
+            if identifier not in selected:
+                del self._cache[identifier]
+                self._cache_bytes -= self._records[identifier].residency_bytes
         tensors: dict[str, Tensor] = {}
         for planned in plan.shards:
             record = self._records.get(planned.shard_id)
-            if record is None or record.byte_count != planned.byte_count:
+            if record is None or record.residency_bytes != planned.byte_count:
                 raise ValueError("residency plan does not match the loaded manifest")
             if record.shard_id not in self._cache:
                 self._admit(record, self._load(record))
@@ -272,6 +305,51 @@ class SpatiotemporalParameterStore:
                 raise ValueError(f"residency plan contains duplicate tensors: {sorted(overlap)}")
             tensors.update(self._cache[record.shard_id])
         return tensors
+
+    def _validate_plan(self, plan: ResidencyPlan) -> None:
+        identifiers = [item.shard_id for item in plan.shards]
+        if len(set(identifiers)) != len(identifiers):
+            raise ValueError("residency plan contains duplicate shards")
+        if any(name not in self._records for name in identifiers):
+            raise ValueError("residency plan has an unknown shard")
+        if any(
+            self._records[item.shard_id].residency_bytes != item.byte_count for item in plan.shards
+        ):
+            raise ValueError("residency plan does not match the loaded manifest")
+        mandatory = {record.shard_id for record in self.manifest.shards if record.always_load}
+        if not mandatory.issubset(identifiers):
+            raise ValueError("residency plan omits mandatory shards")
+        total = sum(self._records[name].residency_bytes for name in identifiers)
+        if total != plan.planned_bytes or not total <= plan.budget_bytes <= self.cache_budget_bytes:
+            raise ValueError("residency plan exceeds or misstates its byte budget")
+
+    @contextmanager
+    def inference_lease(
+        self,
+        module: nn.Module,
+        plan: ResidencyPlan,
+    ) -> Iterator[ModuleMaterialization]:
+        """Own an inference-only meta module's residency until the context exits.
+
+        Cache eviction alone cannot unload tensors assigned into a module. This
+        lease explicitly returns every parameter/buffer to meta on success or error.
+        Callers must not retain parameter references; activation/RSS budgets belong
+        to the outer resource governor. Leases cannot be used with an optimizer.
+        """
+        if self._lease_active or module.training or torch.is_grad_enabled():
+            raise ValueError("ghost lease requires exclusive eval mode with gradients disabled")
+        if not all(value.is_meta for value in module.state_dict().values()):
+            raise ValueError("ghost lease requires a fully meta-initialized module")
+        self._validate_plan(plan)
+        self._lease_active = True
+        try:
+            yield self.materialize_module(module, plan, require_complete=True)
+        finally:
+            module.to_empty(device="meta")
+            # Inference consumers can mutate tensors; do not reuse leased storage.
+            self._cache.clear()
+            self._cache_bytes = 0
+            self._lease_active = False
 
     def materialize_module(
         self,
@@ -352,6 +430,7 @@ def parameter_shard_record(
         path=relative,
         sha256=hashlib.sha256(content).hexdigest(),
         byte_count=len(content),
+        tensor_storage_bytes=_tensor_storage_bytes(cast(dict[str, Tensor], payload)),
         tensor_names=sorted(cast(dict[str, Tensor], payload)),
         spatial=spatial,
         temporal=temporal,
@@ -360,3 +439,17 @@ def parameter_shard_record(
         priority=priority,
         always_load=always_load,
     )
+
+
+def _tensor_storage_bytes(tensors: dict[str, Tensor]) -> int:
+    storages: dict[int, int] = {}
+    for tensor in tensors.values():
+        if (
+            tensor.is_meta
+            or tensor.layout != torch.strided
+            or not bool(torch.isfinite(tensor).all())
+        ):
+            raise ValueError("parameter shards require finite, dense, materialized tensors")
+        storage = tensor.untyped_storage()
+        storages[storage.data_ptr()] = storage.nbytes()
+    return sum(storages.values())

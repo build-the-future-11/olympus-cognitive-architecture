@@ -42,11 +42,16 @@ from olympus.models.runtime import (
     OlympusSystemRuntime,
     load_olympus_checkpoint,
 )
+from olympus.models.seven_model_contract import (
+    audit_seven_model_contracts,
+    inspect_seven_model_references,
+)
 from olympus.models.spatiotemporal_lazy import (
     SpatiotemporalParameterStore,
     SpatiotemporalQuery,
 )
 from olympus.models.specifications import BU1LD_MODEL_SPECS
+from olympus.research_state import ResearchStateError, audit_research_state
 from olympus.training.encoder_quantization import (
     EncoderQuantizationTrainingConfig,
     train_encoder_quantizer,
@@ -54,6 +59,7 @@ from olympus.training.encoder_quantization import (
 from olympus.training.olympus_system import (
     OlympusSystemTrainingConfig,
     train_olympus_system,
+    verify_frozen_decision_dossiers,
 )
 from olympus.upscaler.jepa import JEPAUpscalerConfig
 from olympus.upscaler.training import JEPAUpscalerTrainingConfig, train_jepa_upscaler
@@ -70,6 +76,18 @@ app.add_typer(labos_app, name="labos")
 app.add_typer(foundry_app, name="foundry")
 app.add_typer(bu1ld_app, name="bu1ld")
 console = Console()
+
+
+@app.command("research-status")
+def research_status(root: Path = Path(".")) -> None:
+    """Fail closed on contradictory research records and print canonical status."""
+
+    try:
+        status = audit_research_state(root)
+    except ResearchStateError as error:
+        console.print(f"Research state invalid: {error}", style="bold red")
+        raise typer.Exit(code=1) from error
+    console.print_json(json.dumps(status.as_dict()))
 
 
 @bu1ld_app.command("specs")
@@ -96,6 +114,22 @@ def bu1ld_reference_models() -> None:
             }
         )
     console.print_json(json.dumps(summaries))
+
+
+@bu1ld_app.command("seven-model-status")
+def bu1ld_seven_model_status() -> None:
+    """Inspect the bounded reference inventory without running contract probes."""
+
+    statuses = inspect_seven_model_references()
+    console.print_json(json.dumps([status.model_dump(mode="json") for status in statuses]))
+
+
+@bu1ld_app.command("seven-model-contract")
+def bu1ld_seven_model_contract() -> None:
+    """Run bounded artificial forward/backward contracts for all seven references."""
+
+    statuses = audit_seven_model_contracts()
+    console.print_json(json.dumps([status.model_dump(mode="json") for status in statuses]))
 
 
 @bu1ld_app.command("train-encoder-quantizer")
@@ -207,6 +241,28 @@ def bu1ld_train_olympus_system(
         config=config,
     )
     console.print_json(report.model_dump_json())
+
+
+@bu1ld_app.command("verify-olympus-dossiers")
+def bu1ld_verify_olympus_dossiers(run_directory: Path, manifest: Path) -> None:
+    """Replay and verify a completed run's source-bound decision dossiers."""
+
+    bundle = verify_frozen_decision_dossiers(
+        run_directory.resolve(),
+        manifest.resolve(),
+    )
+    console.print_json(
+        json.dumps(
+            {
+                "status": "VERIFIED_DECISION_DOSSIER_REPLAY_NOT_PROMOTED",
+                "dataset_manifest_sha256": bundle.binding.dataset_manifest_sha256,
+                "checkpoint_sha256": bundle.binding.checkpoint_sha256,
+                "bundle_sha256": bundle.bundle_sha256,
+                "examples": len(bundle.dossiers),
+                "promotion_authorized": False,
+            }
+        )
+    )
 
 
 @bu1ld_app.command("verify-olympus-dataset")
@@ -480,7 +536,28 @@ def ollama_smoke(
 
 @foundry_app.command("resource-status")
 def foundry_resource_status() -> None:
-    console.print_json(json.dumps(memory_snapshot().as_dict()))
+    try:
+        snapshot = memory_snapshot()
+    except RuntimeError as error:
+        console.print_json(
+            json.dumps(
+                {
+                    "status": "RESOURCE_INSPECTION_UNAVAILABLE",
+                    "workload_admitted": False,
+                    "reason": str(error),
+                }
+            )
+        )
+        raise typer.Exit(code=1) from error
+    console.print_json(
+        json.dumps(
+            {
+                "status": "RESOURCE_INSPECTION_AVAILABLE",
+                "workload_admitted": None,
+                **snapshot.as_dict(),
+            }
+        )
+    )
 
 
 @foundry_app.command("prepare-dataset")

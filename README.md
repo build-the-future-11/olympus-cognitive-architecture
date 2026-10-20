@@ -21,6 +21,13 @@ Olympus is currently an alpha research system. Its tests establish executable
 engineering behavior; they do not establish broad scientific superiority or
 regulated-production fitness.
 
+The opt-in [six-flagship v2 engineering successor](docs/flagship-v2.md) adds one
+distinct mechanism per family, JEPA-style parameter growth, guarded ghost
+residency, and an offline Kaggle qualification builder. Prometheus is a 12–20B
+target; Kronos is an 8T target. Current executable configurations are development
+scale. Numerical v2 qualification and target-scale training remain pending;
+prior test receipts and scientific outcomes do not validate the new source.
+
 ## Quick Start
 
 ```bash
@@ -84,9 +91,21 @@ gates; no Hermes model is promoted. See
 [`OLYMPUS_MODEL_FOUNDRY_LEDGER.md`](OLYMPUS_MODEL_FOUNDRY_LEDGER.md) for exact
 measurements and blockers.
 
-All six model-family contracts also have bounded executable reference
-architectures. Inspect their exact local parameter counts and non-promotional
-status with:
+The complete seven-model engineering lineup now has bounded executable
+references: six family contracts plus the JEPA upscaler. Inspect exact local
+parameter counts without executing the probes with:
+
+```bash
+.venv/bin/olympus bu1ld seven-model-status
+```
+
+Run the deterministic artificial forward/backward contract explicitly with:
+
+```bash
+.venv/bin/olympus bu1ld seven-model-contract
+```
+
+The legacy six-family inventory remains available with:
 
 ```bash
 .venv/bin/olympus bu1ld reference-models
@@ -94,8 +113,12 @@ status with:
 
 These reference modules exercise Hermes tool/abstention heads, Prometheus
 domain adapters, Perseus sparse expert routing, Atlas multimodal grounding, and
-Kronos temporal planning, and Aion governed research-transition routing. They
-are not trained 12B-8T family checkpoints.
+Kronos temporal planning, Aion governed research-transition routing, and the
+JEPA upscaler's masked detail prediction and reconstruction path. They reject
+ambiguous tensor types, non-finite continuous inputs, invalid authority masks,
+and mismatched checkpoint data identities. Kronos emits zeros on padded
+trajectory steps. They are not trained 12B-8T family checkpoints, promoted
+models, or scientific efficacy evidence.
 
 `OlympusReferenceSystem` composes those references into an explicit five-way
 family gate followed by Aion control. Its joint loss trains coordination,
@@ -136,9 +159,10 @@ fits, and 120 protected evaluations. Its preregistered utility-routing primary
 failed by 6.82 percentage points against the development-selected semantic
 control. Two bounded repairs were supported: mixed-corruption training improved
 corrupted accuracy by 27.42 points, and semantic routing exceeded learned fixed
-routing by 10.21 points. The v5 distribution-shift and residual-temporal
-successor is frozen but not yet executed. The authoritative cross-iteration
-status is `RESEARCH_STATE.json`.
+routing by 10.21 points. The v5 successor later completed its frozen 20 cells,
+40 bank fits, and 80 protected evaluations: its routing primary failed, while
+its residual temporal primary passed within the synthetic task. The authoritative
+cross-iteration status is `RESEARCH_STATE.json`.
 
 The bounded Foundry SFT path now uses unique immutable attempt directories,
 strict resume compatibility, exact stochastic-state restoration, and

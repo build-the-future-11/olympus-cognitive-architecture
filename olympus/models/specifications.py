@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from olympus.core.schemas import StrictModel
 
@@ -17,10 +17,22 @@ class ModelTargetSpecification(StrictModel):
     family_id: ModelFamilyId
     display_name: str
     target_parameters: int | None = Field(default=None, gt=0)
+    target_parameters_min: int | None = Field(default=None, gt=0)
+    target_parameters_max: int | None = Field(default=None, gt=0)
     intended_role: str
     capability_gates: list[str] = Field(min_length=1)
     status: Literal["TARGET_SPECIFICATION"] = "TARGET_SPECIFICATION"
     capability_claimed: Literal[False] = False
+
+    @model_validator(mode="after")
+    def valid_target_range(self) -> ModelTargetSpecification:
+        low, high = self.target_parameters_min, self.target_parameters_max
+        if (low is None) != (high is None) or (low is not None and high is not None and low > high):
+            raise ValueError("target ranges require ordered minimum and maximum")
+        if low is not None and high is not None and self.target_parameters is not None:
+            if not low <= self.target_parameters <= high:
+                raise ValueError("point target must lie inside the target range")
+        return self
 
 
 BU1LD_MODEL_SPECS: tuple[ModelTargetSpecification, ...] = (
@@ -39,7 +51,8 @@ BU1LD_MODEL_SPECS: tuple[ModelTargetSpecification, ...] = (
     ModelTargetSpecification(
         family_id="prometheus",
         display_name="Prometheus",
-        target_parameters=128_000_000_000,
+        target_parameters_min=12_000_000_000,
+        target_parameters_max=20_000_000_000,
         intended_role=(
             "Domain specialist adapted for research, software engineering, and design without "
             "erasing general safety or calibration."

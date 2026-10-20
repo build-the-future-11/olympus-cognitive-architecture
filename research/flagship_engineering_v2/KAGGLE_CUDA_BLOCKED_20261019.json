@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "study_id": "flagship-engineering-v2",
+  "date": "2026-10-19",
+  "status": "PLATFORM_BLOCKED_NO_ACCEPTED_CUDA_RUN",
+  "authorization": "research/flagship_engineering_v2/CUDA_ALLOCATION_APPROVED_20261019.md",
+  "draft_url": "https://www.kaggle.com/code/ryangomez010/olympus-flagship-v2-cuda-qualification-r1-20261019/edit",
+  "requested_accelerator": "GPU T4 x2",
+  "permitted_computation_devices": [0],
+  "child_environment": {"CUDA_VISIBLE_DEVICES": "0"},
+  "internet": "OFF",
+  "notebook": "artifacts/flagship-v2-kaggle-hosted-cuda-r2-20261019/olympus_kaggle.ipynb",
+  "notebook_sha256": "ba209adce60d2f7f84e8c53f1f840ef2e36e3f90dc9a3f31bfde34653caf316a",
+  "source_archive_sha256": "827eaed50fc5aba49fa0e33a261c0fd1e71f74db96422371f725430e2f26b39a",
+  "protocol_sha256": "4717077f5764f0ca978b95c4ab905cce7e48dc5ca6f7ac4b58a7e09ddb6e7e79",
+  "submission_attempts": [
+    {
+      "attempt": 1,
+      "action": "Save & Run All (Commit)",
+      "version_name": "CUDA bounded GPU0 827eaed50fc5",
+      "result": "GPU_SESSION_CAP_REJECTED",
+      "message": "Maximum batch GPU session count of 2 reached. Stop one of your other GPU notebook sessions to continue editing.",
+      "screenshot": "artifacts/flagship-v2-kaggle-verified-20261019/cpu/cuda-session-cap.png"
+    },
+    {
+      "attempt": 2,
+      "action": "One reload and one same-source saved-run retry after contradictory active-events status",
+      "result": "NO_ACCEPTED_VERSION_OBSERVED",
+      "editor": "Editor Loading; Run All and Start session disabled",
+      "version_history": "Starting Fresh; Start writing your notebook then save and view your versions here.",
+      "screenshot": "artifacts/flagship-v2-kaggle-verified-20261019/cpu/cuda-no-saved-version.png"
+    }
+  ],
+  "active_events_observation": "Manage active sessions showed zero active events and only successful prior CPU and unrelated FIM jobs; this contradicted the server session-cap rejection and did not establish free capacity.",
+  "accepted_cuda_versions_observed": 0,
+  "verified_cuda_tests": 0,
+  "verified_cuda_optimizer_steps": 0,
+  "cuda_output_receipt": null,
+  "other_jobs_stopped_or_modified": false,
+  "runtime_source_or_test_changes": false,
+  "resource_guards_or_thresholds_changed": false,
+  "cpu_result_preserved": "research/flagship_engineering_v2/KAGGLE_CPU_VERIFIED_20261019.json",
+  "cpu_receipt_sha256": "1f701184ff7d9d65e753ec844054f85302e8fc8f62f3fc014466e1bc02b62a16",
+  "scientific_training_epochs": 0,
+  "protected_evaluations": 0,
+  "paid_jobs": 0,
+  "promotion_authorized": false,
+  "claim_boundary": "Platform submission/access blocker, not a CUDA test failure, pass, or numerical result. CPU qualification remains valid. No actual training or benchmarking started."
+}

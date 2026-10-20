@@ -36,6 +36,7 @@ _VALIDATION_TESTS = frozenset(
         "test_editclevr_dataset.py",
         "test_oracle_fusion_v4.py",
         "test_robust_fusion_v5.py",
+        "test_flagship_v2.py",
         "conftest.py",
         "__init__.py",
     }
@@ -150,6 +151,7 @@ def _source_allowed(relative: str) -> bool:
             "olympus_irp_successor_v4",
             "olympus_irp_successor_v5",
             "olympus_editclevr_v1",
+            "flagship_engineering_v2",
         }
         and path.suffix in {".md", ".json"}
     ):
@@ -207,6 +209,8 @@ def _source_paths(root: Path) -> list[str]:
         "research/olympus_irp_successor_v5/*.json",
         "research/olympus_editclevr_v1/*.md",
         "research/olympus_editclevr_v1/*.json",
+        "research/flagship_engineering_v2/*.md",
+        "research/flagship_engineering_v2/*.json",
     ):
         candidates.update(
             str(path.relative_to(root)) for path in root.glob(pattern) if path.is_file()
@@ -238,6 +242,7 @@ def _source_paths(root: Path) -> list[str]:
         "research/olympus_irp_successor_v4",
         "research/olympus_irp_successor_v5",
         "research/olympus_editclevr_v1",
+        "research/flagship_engineering_v2",
     ):
         base = root / selected
         if base.is_symlink():

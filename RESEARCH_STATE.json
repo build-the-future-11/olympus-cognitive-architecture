@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "Olympus Cognitive Architecture",
   "repository": "build-the-future-11/olympus-cognitive-architecture",
-  "updated_utc": "2026-10-18",
+  "updated_utc": "2026-10-20",
   "software": {
     "version": "0.2.0",
     "maturity": "ALPHA",
@@ -12,36 +12,40 @@
     "production_ready": false,
     "model_promoted": false
   },
-  "current_phase": "DEVELOPMENT_ENGINEERING_HOSTED_VERIFIED_PENDING_DRAFT_REVIEW",
+  "current_phase": "FLAGSHIP_V2_CPU_QUALIFIED_CUDA_PLATFORM_BLOCKED",
   "scientific_disposition": "NOT_REASSESSED",
-  "research_question": "Can the actual SFT trainer continue an unchanged schedule without changing its optimizer trajectory or overwriting prior attempts?",
-  "scientific_objective": "Reliable, inspectable research infrastructure; this engineering study makes no model capability claim.",
-  "hypothesis": "Restore the consumed stochastic state, admit exact configuration/optimizer policy/counters, and own a fresh immutable attempt directory.",
-  "intended_contribution": "Exact epoch continuation of the actual SFT optimizer trajectory, explicit resume admission and append-only attempt ownership.",
-  "falsifier": "Any full/LoRA/QLoRA model or optimizer tensor differs after equivalent uninterrupted versus split CPU dropout training.; A mismatched data/configuration/optimizer policy or malformed counter is admitted.; A later attempt changes an earlier checkpoint, metrics log, or failure receipt.; A nonfinite training result is marked COMPLETED.",
+  "research_question": "Can six opt-in flagship mechanisms, bounded parameter growth and ghost residency satisfy their frozen artificial engineering contracts?",
+  "scientific_objective": "Bounded engineering qualification on private offline Kaggle sessions; no target-scale capability, novelty, or promotion claim.",
+  "hypothesis": "Causal routing, host evidence and resource masks, evolving residual planning, and explicit module residency can be composed without violating the declared contracts.",
+  "intended_contribution": "Six candidate family mechanisms plus parameter-growth and residency infrastructure, with exact source-bound falsifiers and transparent capacity accounting.",
+  "falsifier": "Any violation listed in research/flagship_engineering_v2/PROTOCOL.md, nonfinite admitted optimizer gradient, missed trainable parameter across the frozen expert schedule, or checkpoint reload disagreement.",
   "scope": {
     "included": [
-      "Dataset verification and consumption",
-      "Artificial regression fixtures",
-      "Exact source-bound local tests and hosted release checks"
+      "Versioned six-family architecture changes explicitly requested by the user",
+      "Artificial engineering regressions",
+      "Function-preserving FFN growth and a bounded JEPA-style latent adapter",
+      "CPU inference ghost leases and explicit resident-set routing",
+      "Offline CPU/CUDA Kaggle engineering qualification, explicitly authorized on 2026-10-19"
     ],
     "excluded": [
-      "Scientific training",
-      "Hermes base selection",
+      "Protected capability evaluation",
+      "Scientific target-scale training before a separately frozen campaign",
+      "External dataset or base-weight downloads",
+      "Paid compute",
       "Model promotion",
-      "Held-out capability reevaluation",
-      "Parameter or architecture changes",
-      "Prior-run replacement"
+      "Predecessor outcome changes"
     ]
   },
   "development_budget": {
-    "engineering_hypotheses": 1,
+    "artificial_examples_per_fixture": 4,
+    "optimizer_steps_per_qualification": 8,
     "scientific_training_epochs": 0,
     "protected_evaluations": 0,
     "external_dataset_downloads": 0
   },
   "compute_budget": {
-    "local_device": "CPU",
+    "local_device": "CPU, subject to unchanged guards",
+    "optional_hosted_device": "Free T4 x2 allocation explicitly approved; computation restricted to GPU 0; no accepted CUDA run observed",
     "paid_jobs": 0,
     "large_model_runs": 0,
     "per_test_command_timeout_seconds": 120
@@ -54,8 +58,8 @@
     "base_tree": "b9bf5fd77e430fd1686301b7b7513850df6743e5"
   },
   "datasets": {
-    "development": "New artificial 36-record unit fixtures",
-    "protected": "No protected data accessed by this change"
+    "development": "Artificial tiny tensors only; 28 CPU regressions and eight bounded optimizer steps verified on Kaggle",
+    "protected": "No protected data accessed by this successor"
   },
   "artifacts": [
     "research/REALITY_LEDGER.md",
@@ -67,7 +71,39 @@
     "docs/foundry-window-and-dataset-20261010.md",
     "research/verification/foundry_integration_20261010/receipt.json",
     "docs/sft-continuation-20261010.md",
-    "research/ENGINEERING_SFT_CONTINUATION_20261010.json"
+    "research/ENGINEERING_SFT_CONTINUATION_20261010.json",
+    "research/ENGINEERING_RESEARCH_STATUS_HARDENING_20261018.json",
+    "research/olympus_consolidated_2026/RESEARCH_STATE.json",
+    "research/olympus_consolidated_2026/EVIDENCE_MAP.md",
+    "research/olympus_consolidated_2026/ARXIV_METADATA.md",
+    "research/olympus_consolidated_2026/RELEASE_RECEIPT_20261018.json",
+    "output/pdf/olympus-routing-controls-and-residual-dynamics.pdf",
+    "output/pdf/olympus-routing-controls-and-residual-dynamics-arxiv.tar.gz",
+    "docs/seven-model-engineering.md",
+    "research/seven_model_engineering_v1/PROTOCOL.md",
+    "research/seven_model_engineering_v1/RESEARCH_STATE.json",
+    "research/seven_model_engineering_v1/RECEIPT.json",
+    "docs/flagship-v2.md",
+    "research/flagship_engineering_v2/PROTOCOL.md",
+    "research/flagship_engineering_v2/RESEARCH_STATE.json",
+    "research/flagship_engineering_v2/RECEIPT.json",
+    "research/flagship_engineering_v2/RESOURCE_BLOCKED_20261019.json",
+    "research/flagship_engineering_v2/RECEIPT_APPROVED_LOCAL_20261019.json",
+    "research/flagship_engineering_v2/RESOURCE_BLOCKED_APPROVED_LOCAL_20261019.json",
+    "research/flagship_engineering_v2/HOSTED_QUALIFICATION_20261019.md",
+    "research/flagship_engineering_v2/KAGGLE_EDITOR_BLOCKED_20261019.json",
+    "research/flagship_engineering_v2/RECEIPT_KAGGLE_PREPARATION_20261019.json",
+    "research/flagship_engineering_v2/KAGGLE_CPU_VERIFIED_20261019.json",
+    "research/flagship_engineering_v2/RECEIPT_KAGGLE_CPU_20261019.json",
+    "research/flagship_engineering_v2/CUDA_ALLOCATION_APPROVED_20261019.md",
+    "research/flagship_engineering_v2/KAGGLE_CUDA_BLOCKED_20261019.json",
+    "research/flagship_engineering_v2/RECEIPT_KAGGLE_CUDA_BLOCKED_20261019.json",
+    "research/flagship_engineering_v2/RESOURCE_BLOCKED_20261020.json",
+    "research/flagship_engineering_v2/KAGGLE_CUDA_AUTH_BLOCKED_20261020.json",
+    "research/DECISION_DOSSIER_REPLAY_HARDENING_20261020.json",
+    "research/decision_dossier_replay_v1/RESEARCH_STATE.json",
+    "RESEARCH_FEATURE_MEGA_CHECKLIST.md",
+    "FINAL_RESEARCH_EXECUTION_REPORT.md"
   ],
   "claims": [
     {
@@ -251,6 +287,178 @@
       "kind": "local_verification_resource_rejection",
       "event": "A later full-suite repeat after an optional Base64 textual-normalization edit was rejected by the existing resource governor because swap utilization reached 94 percent, above the frozen 90 percent ceiling. The optional edit was reverted, restoring the exact source that had already passed the 576-test full gate and reproducible build. The failed repeat and its resource cause are retained; no safety ceiling was weakened and no scientific outcome changed.",
       "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-18",
+      "kind": "research_status_hardening_failed_attempts",
+      "event": "Retained two non-claim-bearing failures from the canonical-status repair. A sandboxed full-suite attempt produced 506 passes, 2 expected skips, 14 failures, and 61 errors because macOS sysctl inspection was denied and the resource governor failed closed. The unchanged guarded suite later passed outside that sandbox boundary. A first reproducible-package invocation stopped after pass 1 because SOURCE_DATE_EPOCH was absent; the final invocation used the exact HEAD commit epoch required by CI policy.",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-18",
+      "kind": "canonical_research_status_hardening",
+      "event": "Added a fail-closed canonical research-status auditor and CLI, append-only V5/EditCLEVR ledger correction, adversarial drift regressions, CI/release enforcement, and structured fail-closed resource-status output. The final exact local source passed 595 tests with 2 expected skips and 85.06 percent branch coverage; full Ruff; strict MyPy on 156 source files; exact 0/6 readiness regeneration; 6 web tests and production build; byte-identical wheel/source builds and Twine checks. Kaggle UI inspection found no saved notebook version or recoverable working files, so no archive was claimed and no rerun was launched. Hosted exact-source verification remains pending.",
+      "record": "research/ENGINEERING_RESEARCH_STATUS_HARDENING_20261018.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-18",
+      "kind": "consolidated_arxiv_package",
+      "event": "Created a new evidence-bound synthesis manuscript covering all five preserved learned-routing primaries and the separately registered v5 residual temporal primary. The paper reports every routing primary as unsupported, retains the narrow v4 secondary gains, reports the synthetic temporal primary as supported, and states the unretrieved v5/EditCLEVR archive and independent-reproduction limitations. A seven-page PDF and self-contained arXiv source package passed repository compilation, clean-extraction compilation, embedded-font and unresolved-reference scans, and full-page visual inspection. The exact final repository state passed 595 tests with 2 expected skips outside the sandbox boundary. A preceding sandboxed attempt retained 520 passes, 2 skips, 14 failures and 61 errors because macOS sysctl inspection was denied and the resource governor failed closed. No scientific run, protected evaluation, model promotion, paid compute, external upload, or arXiv submission occurred.",
+      "record": "research/olympus_consolidated_2026/RELEASE_RECEIPT_20261018.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19",
+      "kind": "seven_model_engineering_contract_completion",
+      "event": "Registered the seven bounded reference implementations in the canonical state graph. The successor separates a fast inventory from an explicit deterministic artificial contract, requires finite gradients for every non-frozen trainable parameter tensor, binds its source hashes in a local receipt, and packages the full referenced JSON graph. No scientific training, protected evaluation, external download, paid compute, promotion, or predecessor-outcome change occurred. Hosted exact-source verification remains pending.",
+      "record": "research/seven_model_engineering_v1/RECEIPT.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19",
+      "kind": "seven_model_full_suite_environment_rejection",
+      "event": "The exact successor full suite was attempted in the current sandbox. It produced 528 passes, 2 expected skips, 15 failures, and 61 errors because the sandbox denied macOS sysctl resource counters; guarded Foundry/SFT tests refused to run and coverage consequently fell below the frozen 85 percent gate. The separately isolated Python-3.11 source-grammar failure in seven_model_contract.py was repaired. The environment-rejected suite is retained and is not accepted as source verification; focused seven-model, state, CLI, and pathway regressions passed.",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19",
+      "kind": "seven_model_full_suite_verification",
+      "event": "After the source-grammar repair and an added non-finite-probe regression, the exact local successor passed the complete suite outside the sandbox boundary required by the existing macOS resource governor: 605 passed, 2 expected skips, and 85.00 percent branch coverage. This is bounded engineering evidence only; hosted exact-source verification remains pending and no scientific outcome changed.",
+      "record": "research/seven_model_engineering_v1/RECEIPT.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19",
+      "kind": "flagship_engineering_v2_successor",
+      "event": "Implemented opt-in six-family features, JEPA-style parameter growth and conservative ghost residency after freezing the v2 protocol. Corrected Prometheus target from 128B to the user-specified 12-20B range; Kronos retains 8T. The prior seven-model receipt is unchanged and explicitly historical. A local guarded numerical attempt was resource-blocked before Torch import (free bytes 65863680 to 56442880; pageouts 403263 to 403280). No numerical v2 result, Kaggle execution, scientific training, protected evaluation, or promotion is claimed. Tensor-free metadata/archive regressions and exact 0/6 baseline verification passed; exact final static verification is in the new receipt.",
+      "previous_root_context": {
+        "current_phase": "DEVELOPMENT_ENGINEERING_LOCAL_VERIFIED_HOSTED_EXACT_SOURCE_PENDING_DRAFT_REVIEW",
+        "research_question": "Can the actual SFT trainer continue an unchanged schedule without changing its optimizer trajectory or overwriting prior attempts?",
+        "scientific_objective": "Reliable, inspectable research infrastructure; this engineering study makes no model capability claim.",
+        "hypothesis": "Restore the consumed stochastic state, admit exact configuration/optimizer policy/counters, and own a fresh immutable attempt directory.",
+        "intended_contribution": "Exact epoch continuation of the actual SFT optimizer trajectory, explicit resume admission and append-only attempt ownership.",
+        "falsifier": "Any full/LoRA/QLoRA model or optimizer tensor differs after equivalent uninterrupted versus split CPU dropout training.; A mismatched data/configuration/optimizer policy or malformed counter is admitted.; A later attempt changes an earlier checkpoint, metrics log, or failure receipt.; A nonfinite training result is marked COMPLETED.",
+        "scope": {
+          "included": [
+            "Dataset verification and consumption",
+            "Artificial regression fixtures",
+            "Exact source-bound local tests and hosted release checks"
+          ],
+          "excluded": [
+            "Scientific training",
+            "Hermes base selection",
+            "Model promotion",
+            "Held-out capability reevaluation",
+            "Parameter or architecture changes",
+            "Prior-run replacement"
+          ]
+        },
+        "development_budget": {
+          "engineering_hypotheses": 1,
+          "scientific_training_epochs": 0,
+          "protected_evaluations": 0,
+          "external_dataset_downloads": 0
+        },
+        "compute_budget": {
+          "local_device": "CPU",
+          "paid_jobs": 0,
+          "large_model_runs": 0,
+          "per_test_command_timeout_seconds": 120
+        },
+        "datasets": {
+          "development": "New artificial 36-record unit fixtures",
+          "protected": "No protected data accessed by this change"
+        },
+        "active_study_key": "active_development_study"
+      },
+      "record": "research/flagship_engineering_v2/RECEIPT.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19",
+      "kind": "approved_guarded_local_qualification",
+      "event": "The user explicitly approved guarded local tests outside the sandbox. Host memory inspection executed successfully. The existing qualification then passed its 512 MiB/stable-pageout check (free bytes 864763904 and 940621824, pageouts 414505 unchanged), but ResourceGovernor refused swap utilization 94.0 percent above the unchanged 90.0 percent ceiling. It stopped before Torch import, regression collection or optimizer execution. No thresholds, implementation, frozen protocol, predecessor results, or Kaggle artifacts were changed.",
+      "receipt": "research/flagship_engineering_v2/RESOURCE_BLOCKED_APPROVED_LOCAL_20261019.json",
+      "executed_numerical_tests": 0,
+      "optimizer_steps": 0,
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19",
+      "kind": "authorized_kaggle_qualification_editor_blocked",
+      "event": "The user redirected bounded engineering qualification to Kaggle. Added embedded-source CPU/CUDA notebook packaging and source/device-specific work directories; retained and repaired a notebook-builder TypeError. Created a private, offline CPU draft, but Kaggle remained on Editor Loading with Import Notebook, Run All and Start session disabled. Reloading and directly inspecting the official editor resource did not recover the editor. No source file was uploaded and no Kaggle session or numerical test started. Existing local refusals and frozen budgets remain unchanged.",
+      "receipt": "research/flagship_engineering_v2/KAGGLE_EDITOR_BLOCKED_20261019.json",
+      "executed_numerical_tests": 0,
+      "optimizer_steps": 0,
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19",
+      "kind": "kaggle_cpu_qualification_verified",
+      "event": "After the user restored editor access, private offline Kaggle version 359942456 passed all 28 CPU regressions and eight optimizer steps with finite gradients across 191 trainable parameter tensors and exact output reload. Downloaded recovery archive, every member, runtime source, protocol, regression source and output hashes were independently verified. CUDA has not run: the only offered GPU option was T4 x2 and the user was asked to approve paired allocation with computation restricted to GPU zero. No numerical failure, scientific training, protected evaluation, paid compute or promotion occurred.",
+      "receipt": "research/flagship_engineering_v2/KAGGLE_CPU_VERIFIED_20261019.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19",
+      "kind": "approved_cuda_allocation_platform_blocked",
+      "event": "The user explicitly approved free T4 x2 allocation with computation restricted to GPU 0. The offline unchanged r2 CUDA draft was submitted but Kaggle rejected it at the two batch-GPU session cap despite an active-events panel showing zero active jobs. One reload and same-source retry produced no accepted version; version history remained Starting Fresh and the editor was stuck Loading. No other job was stopped or modified. CPU evidence remains unchanged; no CUDA result, scientific training, protected benchmark, paid compute or promotion is claimed.",
+      "receipt": "research/flagship_engineering_v2/KAGGLE_CUDA_BLOCKED_20261019.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-20",
+      "kind": "research_system_planning",
+      "event": "Created RESEARCH_FEATURE_MEGA_CHECKLIST.md after reconciling the canonical state, dated ledgers, current architecture, flagship protocol, and consolidated manuscript. It records 64 evidence-bound engineering and separately gated scientific deliverables. No implementation, training, protected evaluation, capability claim, promotion, compute spend, or predecessor-outcome change occurred.",
+      "artifact": "RESEARCH_FEATURE_MEGA_CHECKLIST.md",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-20",
+      "kind": "composed_system_decision_dossier_engineering",
+      "event": "Implemented hash-bound per-example evaluation dossiers for the composed reference system. A successful development run now emits source-ID-aligned host transition masks, raw versus exposed decisions, STOP state, risk, uncertainty, gates, and leave-one-family-out diagnostics, bound to the selected checkpoint and dataset manifest. Ruff and strict MyPy passed on the implementation and affected tests. Numerical pytest and training were not launched because free memory fell from approximately 272 MiB to 60 MiB while pageouts rose, below the unchanged 512 MiB admission guard. No numerical result, protected evaluation, capability claim, promotion, or predecessor-outcome change occurred.",
+      "artifacts": [
+        "olympus/evaluation/decision_dossiers.py",
+        "olympus/training/olympus_system.py",
+        "tests/test_olympus_system.py",
+        "tests/test_cli.py"
+      ],
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-20",
+      "kind": "gpu_job_preparation_and_execution_report",
+      "event": "Built a new embedded-source offline CUDA flagship qualification notebook from the current working source. The notebook is hash-pinned, Internet-disabled, and restricts children to CUDA device zero, but was not uploaded or executed. FINAL_RESEARCH_EXECUTION_REPORT.md records the static implementation evidence, resource-guard refusal, ready job identity, and explicit NO-GO publication decision. No GPU result, scientific training, protected evaluation, capability claim, promotion, or predecessor-outcome change occurred.",
+      "artifacts": [
+        "artifacts/flagship-v2-kaggle-hosted-cuda-r3-20261020/olympus_kaggle.ipynb",
+        "artifacts/flagship-v2-kaggle-hosted-cuda-r3-20261020/source-receipt.json",
+        "FINAL_RESEARCH_EXECUTION_REPORT.md"
+      ],
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-20",
+      "kind": "resource_and_hosted_retry_rejected",
+      "event": "A fresh local numerical preflight was refused at 62423040 free bytes and 94.366 percent swap utilization under the unchanged 512 MiB and 90 percent guards. The prior private Kaggle CUDA draft returned page not found; the isolated session was unauthenticated and an unintended account-registration flow was cancelled before creation. Another active task's signed-in Kaggle tab was not modified. No numerical test, upload, saved CUDA run, account creation, threshold change, or scientific outcome occurred.",
+      "artifacts": [
+        "research/flagship_engineering_v2/RESOURCE_BLOCKED_20261020.json",
+        "research/flagship_engineering_v2/KAGGLE_CUDA_AUTH_BLOCKED_20261020.json"
+      ],
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-20",
+      "kind": "manuscript_reverification",
+      "event": "The consolidated manuscript compiled successfully with Tectonic to seven US-Letter pages with resolved bibliography and no unresolved-reference or overfull-box warning. The checked-in PDF and arXiv archive still matched the recorded release hashes. The desktop preview compiler was separately refused because its system-volume temporary directory had insufficient free space. No manuscript content, metric, claim, or release disposition changed; the requested personal arxiv.sty was not present in the repository, attachments, or searched user workspace locations.",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-20",
+      "kind": "decision_dossier_replay_integrity_repair",
+      "event": "Corrected the composed-system attribution artifact so report schema 4 separates the serialized-file SHA-256 from the internal content digest and partial-export recovery cannot trust a merely self-consistent rewritten bundle. A guarded replay verifier now reloads the declared checkpoint and source-bound evaluation split on the declared device and requires every dossier value to match. Full Ruff, strict MyPy on 167 source files, byte-compilation, whitespace checks, 56 tensor-free/state tests, the exact 0/6 readiness baseline, and the 110-package offline lock check passed. Numerical pytest was refused before Torch import because free memory was 297926656 then 292700160 bytes, below the unchanged 512 MiB floor; pageouts were stable. No protected data, scientific training, promotion, paid compute, or predecessor outcome changed.",
+      "record": "research/DECISION_DOSSIER_REPLAY_HARDENING_20261020.json",
+      "scientific_outcomes_created": false
     }
   ],
   "verification": {
@@ -348,7 +556,7 @@
     "hosted_tests_passed": 276,
     "hosted_branch_enabled_coverage_percent": 87.27
   },
-  "active_study_key": "active_development_study",
+  "active_study_key": "active_flagship_engineering_study",
   "portfolio_integration": {
     "date": "2026-10-17",
     "merged_prs": [
@@ -362,9 +570,19 @@
     "verification": "Alphabet integration release run39041484835 passed all Python/web steps; fresh sampling integration checks pending.",
     "scientific_disposition": "Historical NOT_PROMOTED and frozen outcomes preserved."
   },
-  "portfolio_scientific_disposition": "PRIMARY_NOT_SUPPORTED_WITH_SECONDARY_SYNTHETIC_GAINS",
-  "external_benchmark_status": "NOT_EVALUATED",
+  "portfolio_scientific_disposition": "ROUTING_PRIMARY_NOT_SUPPORTED_WITH_SECONDARY_SYNTHETIC_GAINS_AND_SUPPORTED_SYNTHETIC_RESIDUAL_DYNAMICS",
+  "external_benchmark_status": "EDITCLEVR_BOUNDED_ROUTING_EVALUATED_PRIMARY_NOT_SUPPORTED",
   "independent_reproduction": false,
+  "publication": {
+    "phase": "ARXIV_READY_NOT_SUBMITTED",
+    "paper": "output/pdf/olympus-routing-controls-and-residual-dynamics.pdf",
+    "source_package": "output/pdf/olympus-routing-controls-and-residual-dynamics-arxiv.tar.gz",
+    "metadata": "research/olympus_consolidated_2026/ARXIV_METADATA.md",
+    "evidence_map": "research/olympus_consolidated_2026/EVIDENCE_MAP.md",
+    "release_receipt": "research/olympus_consolidated_2026/RELEASE_RECEIPT_20261018.json",
+    "submitted_to_arxiv": false,
+    "claim_boundary": "Submission-ready synthesis; external submission and scientific promotion are not implied."
+  },
   "studies": [
     {
       "id": "olympus-controlled-fusion-v2",
@@ -403,12 +621,41 @@
       "path": "research/olympus_editclevr_v1/RESEARCH_STATE.json"
     }
   ],
+  "engineering_studies": [
+    {
+      "id": "seven-model-engineering-v1",
+      "phase": "LOCAL_ENGINEERING_VERIFIED_HOSTED_EXACT_SOURCE_PENDING",
+      "path": "research/seven_model_engineering_v1/RESEARCH_STATE.json",
+      "receipt": "research/seven_model_engineering_v1/RECEIPT.json",
+      "source_verification": "historical_receipt",
+      "receipt_sha256": "9a7124def0917f1df169aff100ea42d2eb50c60e4a056cea1e514eb6b01fd014"
+    },
+    {
+      "id": "flagship-engineering-v2",
+      "phase": "BOUNDED_CPU_ENGINEERING_VERIFIED_CUDA_PLATFORM_BLOCKED",
+      "path": "research/flagship_engineering_v2/RESEARCH_STATE.json",
+      "receipt": "research/flagship_engineering_v2/RECEIPT_KAGGLE_CUDA_BLOCKED_20261019.json",
+      "source_verification": "historical_receipt",
+      "receipt_sha256": "e0223b7812bc4de84fcd1bb8eb4ad4d5c629290f579b4dcb1642e7a2e727cccf"
+    },
+    {
+      "id": "decision-dossier-replay-v1",
+      "phase": "STATIC_VERIFIED_NUMERICAL_RESOURCE_BLOCKED",
+      "path": "research/decision_dossier_replay_v1/RESEARCH_STATE.json",
+      "receipt": "research/DECISION_DOSSIER_REPLAY_HARDENING_20261020.json",
+      "source_verification": "current_files"
+    }
+  ],
   "blocking_gates": [
     "v5 and EditCLEVR remote archives are hash-bound but not yet retrieved into the repository",
     "EditCLEVR learned routing failed its predeclared improvement threshold",
     "no rights-reviewed aligned corpus covers the full six-family contract",
     "no independent scientific reproduction exists",
-    "exact current source has not passed the complete release workflow"
+    "exact current source has not passed the complete release workflow",
+    "flagship v2 CPU qualification passed; approved single-device CUDA execution remains blocked, and the prior draft now returns page not found while this task lacks the authenticated Kaggle context needed to create a replacement saved version",
+    "local numerical execution is currently refused by the frozen memory and swap admission guards",
+    "the requested personal arxiv.sty is absent, so the verified manuscript cannot yet be restyled with that exact file",
+    "no revision-pinned licensed base, aligned data, or admitted budget is selected for a target-scale six-family LLM campaign"
   ],
   "claims_forbidden": [
     "state of the art",
@@ -416,5 +663,15 @@
     "promoted Olympus family model",
     "production safe",
     "scientifically confirmed"
-  ]
+  ],
+  "active_flagship_engineering_study": {
+    "id": "flagship-engineering-v2",
+    "protocol": "research/flagship_engineering_v2/PROTOCOL.md",
+    "state": "research/flagship_engineering_v2/RESEARCH_STATE.json",
+    "receipt": "research/flagship_engineering_v2/RECEIPT_KAGGLE_CUDA_BLOCKED_20261019.json",
+    "status": "BOUNDED_CPU_ENGINEERING_VERIFIED_CUDA_PLATFORM_BLOCKED",
+    "numerical_attempt": "research/flagship_engineering_v2/RESOURCE_BLOCKED_20261020.json",
+    "hosted_attempt": "research/flagship_engineering_v2/KAGGLE_CUDA_AUTH_BLOCKED_20261020.json",
+    "scientific_outcomes_created": false
+  }
 }

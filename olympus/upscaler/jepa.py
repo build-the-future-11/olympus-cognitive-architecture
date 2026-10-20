@@ -121,7 +121,11 @@ def _coordinate_features(inputs: Tensor, timestamp: Tensor | None) -> Tensor:
     else:
         if timestamp.shape != (batch,):
             raise ValueError("timestamp must have shape [batch]")
-        time_values = timestamp.to(device=device, dtype=dtype)
+        if not timestamp.is_floating_point():
+            raise ValueError("timestamp must use a floating-point dtype")
+        if timestamp.device != device:
+            raise ValueError("timestamp must share the image device")
+        time_values = timestamp.to(dtype=dtype)
         if not bool(torch.isfinite(time_values).all()):
             raise ValueError("timestamp values must be finite")
         time = time_values.tanh().reshape(batch, 1, 1)
@@ -170,6 +174,11 @@ class JEPAUpscaler(nn.Module):
             raise ValueError(f"expected NCHW input with {self.config.input_channels} channels")
         if not low_resolution.is_floating_point():
             raise ValueError("low-resolution input must use a floating-point dtype")
+        parameter = cast(nn.Conv2d, self.context_encoder.layers[0]).weight
+        if low_resolution.device != parameter.device or low_resolution.dtype != parameter.dtype:
+            raise ValueError(
+                "low-resolution input must match the upscaler parameter device and dtype"
+            )
         if not bool(torch.isfinite(low_resolution).all()) or bool(
             ((low_resolution < 0.0) | (low_resolution > 1.0)).any()
         ):
@@ -199,7 +208,11 @@ class JEPAUpscaler(nn.Module):
                 low_resolution.shape[3],
             ):
                 raise ValueError("context mask must have shape [batch, height, width]")
-            mask = context_mask.to(device=low_resolution.device, dtype=torch.bool)
+            if context_mask.dtype != torch.bool:
+                raise ValueError("context mask must use Boolean dtype")
+            if context_mask.device != low_resolution.device:
+                raise ValueError("context mask must share the image device")
+            mask = context_mask
             if bool(mask.flatten(1).all(dim=1).any()):
                 raise ValueError("context mask must leave at least one visible position")
         context = torch.where(mask.unsqueeze(1), self.mask_token.to(dtype=context.dtype), context)
@@ -221,6 +234,11 @@ class JEPAUpscaler(nn.Module):
                 torch.isfinite(target_high_resolution).all()
             ):
                 raise ValueError("target image must contain finite floating-point values")
+            if (
+                target_high_resolution.device != low_resolution.device
+                or target_high_resolution.dtype != low_resolution.dtype
+            ):
+                raise ValueError("target image must share the low-resolution device and dtype")
             if bool(((target_high_resolution < 0.0) | (target_high_resolution > 1.0)).any()):
                 raise ValueError("target image values must fall in [0, 1]")
             with torch.no_grad():
@@ -272,6 +290,12 @@ def jepa_upscaler_loss(
         raise ValueError("a target image is required to compute JEPA loss")
     if output.upscaled.shape != target.shape:
         raise ValueError("prediction and target image shapes must match")
+    if not target.is_floating_point() or not bool(torch.isfinite(target).all()):
+        raise ValueError("target image must contain finite floating-point values")
+    if target.device != output.upscaled.device or target.dtype != output.upscaled.dtype:
+        raise ValueError("target image must share the prediction device and dtype")
+    if bool(((target < 0.0) | (target > 1.0)).any()):
+        raise ValueError("target image values must fall in [0, 1]")
     difference = output.upscaled - target
     reconstruction = torch.sqrt(difference.square() + 1e-6).mean()
     pred_x, pred_y = _spatial_gradients(output.upscaled)

@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-18",
+  "status": "ARXIV_PACKAGE_READY_NOT_SUBMITTED",
+  "disposition": "FIVE_ROUTING_PRIMARIES_NOT_SUPPORTED_ONE_SYNTHETIC_TEMPORAL_PRIMARY_SUPPORTED",
+  "paper": {
+    "path": "output/pdf/olympus-routing-controls-and-residual-dynamics.pdf",
+    "sha256": "b2d2d5f8de99eaf1117721a446a424c6f6878d9da978198c586e6d18740f18ae",
+    "pages": 7,
+    "page_size": "US Letter",
+    "fonts_embedded": true,
+    "citations_resolved": true,
+    "overfull_boxes": 0,
+    "visual_inspection": "PASS_ALL_7_PAGES"
+  },
+  "source": {
+    "paper": {
+      "path": "research/olympus_consolidated_2026/paper/main.tex",
+      "sha256": "3a9597ab3b8d55b08f292ba7565c74c447f537ba9663b5e5e7ace7a900ff6244"
+    },
+    "bibliography": {
+      "path": "research/olympus_consolidated_2026/paper/references.bib",
+      "sha256": "bd226c00019ee720c8d949f0950d0759e9089a4d784baca066cc61fcc48e9d44"
+    },
+    "metadata": {
+      "path": "research/olympus_consolidated_2026/ARXIV_METADATA.md",
+      "sha256": "d39f8dbc8723ab816b626b369ffcbfee6a027c22ec4cf573903d730ca6710ef2"
+    },
+    "evidence_map": {
+      "path": "research/olympus_consolidated_2026/EVIDENCE_MAP.md",
+      "sha256": "f6db2761875cd3e5642428ca6ec32272d334c2feaf282aa511b5e9f562be71c7"
+    }
+  },
+  "arxiv_package": {
+    "path": "output/pdf/olympus-routing-controls-and-residual-dynamics-arxiv.tar.gz",
+    "sha256": "2c6c8f4fb8a6beb7ae1bad741236d9a0f8874e7e14041e02ca7b72e87b939070",
+    "members": [
+      "main.tex",
+      "references.bib",
+      "ARXIV_README.md"
+    ],
+    "clean_extraction_compile": "PASS_TECTONIC",
+    "external_assets_required": false
+  },
+  "verification": {
+    "desktop_latex_compile": "PASS",
+    "tectonic_repository_compile": "PASS",
+    "tectonic_clean_extract_compile": "PASS",
+    "pdf_text_scan": "PASS_NO_UNRESOLVED_REFERENCES",
+    "pdf_font_scan": "PASS_ALL_EMBEDDED",
+    "full_page_render_review": "PASS",
+    "focused_research_state_tests": "28 PASSED",
+    "full_repository_tests": "595 PASSED, 2 EXPECTED SKIPS",
+    "full_repository_test_environment": "OUTSIDE_SANDBOX_FOR_MACOS_SYSCTL_RESOURCE_INSPECTION"
+  },
+  "retained_failed_verification": {
+    "attempt": "SANDBOXED_FULL_REPOSITORY_TEST_RUN",
+    "result": "520 PASSED, 2 SKIPPED, 14 FAILED, 61 ERRORS",
+    "cause": "The sandbox denied macOS sysctl memory inspection and the resource governor failed closed.",
+    "interpretation": "Environment rejection, not an accepted code failure; the unchanged suite passed outside that sandbox boundary."
+  },
+  "external_actions": {
+    "submitted_to_arxiv": false,
+    "uploaded": false,
+    "commit_created": false,
+    "pushed": false
+  },
+  "claim_boundary": "Submission-grade synthesis of preserved evidence. It reports controlled mixed and negative results and one supported synthetic temporal result; it does not establish general routing efficacy, natural-data robustness, safety, deployment, SOTA, independent reproduction, or a full cognitive architecture."
+}

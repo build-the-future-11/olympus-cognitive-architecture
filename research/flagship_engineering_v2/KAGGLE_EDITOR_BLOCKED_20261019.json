@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "study_id": "flagship-engineering-v2",
+  "date": "2026-10-19",
+  "status": "EDITOR_BLOCKED_BEFORE_UPLOAD_OR_SESSION",
+  "authorization": "research/flagship_engineering_v2/HOSTED_QUALIFICATION_20261019.md",
+  "draft_url": "https://www.kaggle.com/code/ryangomez010/olympus-flagship-v2-cpu-qualification-r1-20261019/edit",
+  "privacy_observed": "PRIVATE",
+  "internet_observed": "OFF",
+  "accelerator_observed": "NONE",
+  "editor_observed": "Editor Loading",
+  "disabled_controls": ["Import Notebook", "Run All", "Start session"],
+  "recovery_attempts": [
+    "Reloaded the saved draft",
+    "Inspected File and editor-type options; editor remained unavailable",
+    "Opened the official embedded editor resource for diagnosis and reloaded the draft; editor remained unavailable",
+    "Checked for existing local Kaggle CLI credential files or environment configuration without reading credential values; none found"
+  ],
+  "prepared_candidate_at_attempt": {
+    "notebook": "artifacts/flagship-v2-kaggle-hosted-cpu-r2-20261019/olympus_kaggle.ipynb",
+    "notebook_sha256": "00f5e43d90ceafae41bde8360586c712083517ce8132980e002615ff3e580f66",
+    "source_archive_sha256": "838ae57f99b780a8b3fc3cdc39346e08545df5e0ba951c3515da30de9424bf57",
+    "uploaded": false,
+    "current_source_claimed": false
+  },
+  "local_build_failure": {
+    "record": "artifacts/flagship-v2-kaggle-hosted-cpu-r1-20261019/BUILD_FAILURE.json",
+    "cause": "Missing string-concatenation operator in conditional notebook introduction",
+    "repair": "Added explicit concatenation; expanded CPU/CUDA notebook tests to embedded and attached source modes",
+    "remote_execution": false
+  },
+  "screenshot": {
+    "path": "artifacts/flagship-v2-kaggle-hosted-cpu-r2-20261019/KAGGLE_EDITOR_BLOCKED.png",
+    "sha256": "381cb09b6b0b65b52f3fbfcadd651de89adeb42ee93b368bc26547348d36935b"
+  },
+  "executed_numerical_tests": 0,
+  "optimizer_steps": 0,
+  "kaggle_sessions_started": 0,
+  "source_uploaded": false,
+  "paid_jobs": 0,
+  "scientific_training_epochs": 0,
+  "protected_evaluations": 0,
+  "scientific_outcomes_created": false,
+  "next_action": "Recover the Kaggle editor or have the user configure CLI access locally; import a freshly packaged source-bound candidate, then run and independently verify CPU and optional single-device CUDA qualification outputs."
+}

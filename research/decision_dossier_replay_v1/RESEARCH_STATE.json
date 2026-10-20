@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "study_id": "decision-dossier-replay-v1",
+  "date": "2026-10-20",
+  "phase": "STATIC_VERIFIED_NUMERICAL_RESOURCE_BLOCKED",
+  "question": "Can every stored composed-system attribution be independently reproduced from its declared checkpoint and source-bound evaluation split?",
+  "hypothesis": "Separating file integrity from semantic content integrity and requiring exact replay prevents a self-consistent rewritten dossier from being accepted as recovery or reproduction evidence.",
+  "falsifier": "A changed file, binding, source order, content digest, or recomputed attribution is accepted by the verifier.",
+  "scope": "Artificial engineering integrity only; no protected evaluation, causal attribution claim, model capability claim, or promotion.",
+  "receipt": "research/DECISION_DOSSIER_REPLAY_HARDENING_20261020.json",
+  "numerical_status": "RESOURCE_REFUSED_BEFORE_TEST_TORCH_IMPORT",
+  "scientific_training_epochs": 0,
+  "protected_evaluations": 0,
+  "external_downloads": 0,
+  "paid_jobs": 0,
+  "promotion_authorized": false,
+  "scientific_outcomes_created": false
+}

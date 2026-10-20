@@ -94,7 +94,11 @@ class CausalReferenceBackbone(nn.Module):
         else:
             if attention_mask.shape != tokens.shape:
                 raise ValueError("attention mask must match token shape")
-            mask = attention_mask.to(device=tokens.device, dtype=torch.bool)
+            if attention_mask.dtype != torch.bool:
+                raise ValueError("attention mask must use Boolean dtype")
+            if attention_mask.device != tokens.device:
+                raise ValueError("attention mask must share the token device")
+            mask = attention_mask
             if not bool(mask.any(dim=1).all()):
                 raise ValueError("every sequence must contain at least one active token")
             if bool(((~mask).cummax(dim=1).values & mask).any()):
@@ -195,6 +199,10 @@ class PrometheusReferenceModel(nn.Module):
         else:
             if domain_ids.shape != (tokens.shape[0],):
                 raise ValueError("domain identifiers must have shape [batch]")
+            if domain_ids.dtype not in {torch.int32, torch.int64}:
+                raise ValueError("domain identifiers must use an integer dtype")
+            if domain_ids.device != hidden.device:
+                raise ValueError("domain identifiers must share the token device")
             if domain_ids.min() < 0 or domain_ids.max() >= self.config.domains:
                 raise ValueError("domain identifier is outside the configured domain set")
             domain_weights = nn.functional.one_hot(
@@ -344,6 +352,16 @@ class AtlasReferenceModel(nn.Module):
             raise ValueError("image channels do not match the Atlas configuration")
         if image.shape[-2] < self.config.patch_size or image.shape[-1] < self.config.patch_size:
             raise ValueError("image is smaller than one configured patch")
+        if not image.is_floating_point():
+            raise ValueError("image must use a floating-point dtype")
+        if image.device != tokens.device:
+            raise ValueError("image must share the token device")
+        if image.dtype != self.patch_embedding.weight.dtype:
+            raise ValueError("image dtype must match the Atlas parameter dtype")
+        if not bool(torch.isfinite(image).all()):
+            raise ValueError("image must contain only finite values")
+        if bool(((image < 0.0) | (image > 1.0)).any()):
+            raise ValueError("image values must fall in [0, 1]")
         text = self.text_backbone(tokens, attention_mask)
         patches_2d = self.patch_embedding(image)
         patch_height, patch_width = patches_2d.shape[-2:]
@@ -425,6 +443,12 @@ class KronosReferenceModel(nn.Module):
             raise ValueError("states must have shape [batch, time, state_dim]")
         if actions.shape != (*states.shape[:2], self.config.action_dim):
             raise ValueError("actions must align with states and the configured action dimension")
+        if not states.is_floating_point() or not actions.is_floating_point():
+            raise ValueError("states and actions must use floating-point dtypes")
+        if states.device != actions.device or states.device != self.transition.weight_ih_l0.device:
+            raise ValueError("states, actions, and Kronos parameters must share one device")
+        if states.dtype != actions.dtype or states.dtype != self.transition.weight_ih_l0.dtype:
+            raise ValueError("states, actions, and Kronos parameters must share one dtype")
         if not bool(torch.isfinite(states).all()) or not bool(torch.isfinite(actions).all()):
             raise ValueError("states and actions must contain only finite values")
         if valid_mask is None:
@@ -432,7 +456,11 @@ class KronosReferenceModel(nn.Module):
         else:
             if valid_mask.shape != states.shape[:2]:
                 raise ValueError("valid mask must have shape [batch, time]")
-            mask = valid_mask.to(device=states.device, dtype=torch.bool)
+            if valid_mask.dtype != torch.bool:
+                raise ValueError("valid mask must use Boolean dtype")
+            if valid_mask.device != states.device:
+                raise ValueError("valid mask must share the trajectory device")
+            mask = valid_mask
             if not bool(mask.any(dim=1).all()):
                 raise ValueError("every trajectory must contain at least one valid transition")
             if bool(((~mask).cummax(dim=1).values & mask).any()):
@@ -450,11 +478,17 @@ class KronosReferenceModel(nn.Module):
             plan_steps.append(logits)
             soft_action = logits.softmax(dim=-1) @ self.action_dictionary
             cursor = self.plan_cell(torch.cat((final_state, soft_action), dim=-1), cursor)
+        next_state = self.next_state_head(sequence).masked_fill(~mask.unsqueeze(-1), 0.0)
+        reward = self.reward_head(sequence).squeeze(-1).masked_fill(~mask, 0.0)
+        value = self.value_head(sequence).squeeze(-1).masked_fill(~mask, 0.0)
+        uncertainty = (nn.functional.softplus(self.uncertainty_head(sequence)) + 1e-6).masked_fill(
+            ~mask.unsqueeze(-1), 0.0
+        )
         return KronosReferenceOutput(
-            next_state=self.next_state_head(sequence),
-            reward=self.reward_head(sequence).squeeze(-1),
-            value=self.value_head(sequence).squeeze(-1),
-            uncertainty=nn.functional.softplus(self.uncertainty_head(sequence)) + 1e-6,
+            next_state=next_state,
+            reward=reward,
+            value=value,
+            uncertainty=uncertainty,
             plan_logits=torch.stack(plan_steps, dim=1),
             hidden_states=sequence,
         )
@@ -504,17 +538,33 @@ class AionReferenceModel(nn.Module):
     ) -> AionReferenceOutput:
         if state_features.ndim != 2 or state_features.shape[-1] != self.config.state_dim:
             raise ValueError("state features must have shape [batch, state_dim]")
+        if not state_features.is_floating_point():
+            raise ValueError("state features must use a floating-point dtype")
+        first_parameter = cast(nn.Linear, self.router[1]).weight
+        if (
+            state_features.device != first_parameter.device
+            or state_features.dtype != first_parameter.dtype
+        ):
+            raise ValueError("state features must match the Aion parameter device and dtype")
         expected = (state_features.shape[0], self.config.research_stages)
         if allowed_transitions.shape != expected:
             raise ValueError("allowed-transition mask does not match batch and stage counts")
+        if allowed_transitions.dtype != torch.bool:
+            raise ValueError("allowed-transition mask must use Boolean dtype")
+        if allowed_transitions.device != state_features.device:
+            raise ValueError("allowed-transition mask must share the state device")
         if risk_score.shape != (state_features.shape[0],):
             raise ValueError("risk score must have shape [batch]")
-        risk = risk_score.to(device=state_features.device, dtype=state_features.dtype)
+        if not risk_score.is_floating_point():
+            raise ValueError("risk score must use a floating-point dtype")
+        if risk_score.device != state_features.device or risk_score.dtype != state_features.dtype:
+            raise ValueError("risk score must share the state device and dtype")
+        risk = risk_score
         if not bool(torch.isfinite(state_features).all()) or not bool(torch.isfinite(risk).all()):
             raise ValueError("state features and risk scores must be finite")
         if bool(((risk < 0.0) | (risk > 1.0)).any()):
             raise ValueError("risk scores must fall in [0, 1]")
-        allowed = allowed_transitions.to(device=state_features.device, dtype=torch.bool)
+        allowed = allowed_transitions
         if not bool(allowed.any(dim=1).all()):
             raise ValueError("every state must permit at least one transition")
         forced_stop = risk >= self.config.kill_threshold
@@ -578,7 +628,7 @@ def default_reference_configs() -> tuple[ReferenceFamilyConfig, ...]:
 def _attention_mask(tokens: Tensor, attention_mask: Tensor | None) -> Tensor:
     if attention_mask is None:
         return torch.ones_like(tokens, dtype=torch.bool)
-    return attention_mask.to(device=tokens.device, dtype=torch.bool)
+    return attention_mask
 
 
 def _last_active(hidden: Tensor, attention_mask: Tensor | None) -> Tensor:
@@ -607,6 +657,12 @@ def _patch_coordinates(
     else:
         if timestamp.shape != (batch,):
             raise ValueError("timestamp must have shape [batch]")
-        time = timestamp.to(device=device, dtype=dtype).tanh()[:, None, None]
+        if not timestamp.is_floating_point():
+            raise ValueError("timestamp must use a floating-point dtype")
+        if timestamp.device != device or timestamp.dtype != dtype:
+            raise ValueError("timestamp must match the image feature device and dtype")
+        if not bool(torch.isfinite(timestamp).all()):
+            raise ValueError("timestamp values must be finite")
+        time = timestamp.tanh()[:, None, None]
         time = time.expand(-1, height * width, -1)
     return torch.cat((spatial.expand(batch, -1, -1), time), dim=-1)

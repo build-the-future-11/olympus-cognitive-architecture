@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "study_id": "flagship-engineering-v2",
+  "date": "2026-10-19",
+  "phase": "BOUNDED_CPU_ENGINEERING_VERIFIED_CUDA_PLATFORM_BLOCKED",
+  "protocol": "research/flagship_engineering_v2/PROTOCOL.md",
+  "scientific_training_epochs": 0,
+  "protected_evaluations": 0,
+  "external_downloads": 0,
+  "paid_jobs": 0,
+  "promotion_authorized": false,
+  "scientific_outcomes_created": false,
+  "numerical_verification": "CPU_QUALIFIED_CUDA_NOT_RUN",
+  "resource_attempt": "research/flagship_engineering_v2/RESOURCE_BLOCKED_APPROVED_LOCAL_20261019.json",
+  "novelty": "CANDIDATE_COMBINATIONS_NOT_ESTABLISHED",
+  "kaggle_execution": "CPU_VERSION_359942456_VERIFIED_CUDA_APPROVED_PLATFORM_BLOCKED",
+  "hosted_authorization": "research/flagship_engineering_v2/HOSTED_QUALIFICATION_20261019.md",
+  "hosted_attempt": "research/flagship_engineering_v2/KAGGLE_CUDA_BLOCKED_20261019.json",
+  "cuda_allocation_authorization": "research/flagship_engineering_v2/CUDA_ALLOCATION_APPROVED_20261019.md",
+  "resource_attempt_history": [
+    "research/flagship_engineering_v2/RESOURCE_BLOCKED_20261019.json",
+    "research/flagship_engineering_v2/RESOURCE_BLOCKED_APPROVED_LOCAL_20261019.json",
+    "research/flagship_engineering_v2/RESOURCE_BLOCKED_20261020.json"
+  ],
+  "history": [
+    {
+      "date": "2026-10-19",
+      "kind": "approved_guarded_local_qualification",
+      "event": "The user explicitly approved guarded local tests outside the sandbox. Host memory inspection executed successfully. The existing qualification then passed its 512 MiB/stable-pageout check (free bytes 864763904 and 940621824, pageouts 414505 unchanged), but ResourceGovernor refused swap utilization 94.0 percent above the unchanged 90.0 percent ceiling. It stopped before Torch import, regression collection or optimizer execution. No thresholds, implementation, frozen protocol, predecessor results, or Kaggle artifacts were changed.",
+      "receipt": "research/flagship_engineering_v2/RESOURCE_BLOCKED_APPROVED_LOCAL_20261019.json",
+      "executed_numerical_tests": 0,
+      "optimizer_steps": 0,
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19",
+      "kind": "authorized_kaggle_qualification_editor_blocked",
+      "event": "Private offline CPU draft created; Kaggle editor never initialized after bounded recovery attempts. Import and execution remained disabled. Embedded-source notebook packaging was repaired and passed 35 tensor-free metadata/archive/runner checks. No numerical work occurred; no test threshold or resource guard changed.",
+      "receipt": "research/flagship_engineering_v2/KAGGLE_EDITOR_BLOCKED_20261019.json",
+      "executed_numerical_tests": 0,
+      "optimizer_steps": 0,
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19",
+      "kind": "kaggle_cpu_qualification_verified",
+      "event": "Private offline version 359942456 passed 28 CPU regressions and eight optimizer steps; all 191 trainable parameter tensors received finite admitted gradients and output reload was exact. Downloaded outputs and source hashes verified. No numerical defects found. CUDA is prepared with CUDA_VISIBLE_DEVICES=0 but has not run; paired runtime allocation approval is pending.",
+      "receipt": "research/flagship_engineering_v2/KAGGLE_CPU_VERIFIED_20261019.json",
+      "executed_numerical_tests": 28,
+      "optimizer_steps": 8,
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-19",
+      "kind": "approved_cuda_allocation_platform_blocked",
+      "event": "Approved T4 x2 allocation with GPU-zero-only computation was selected, but Kaggle rejected the saved run at the two batch-GPU session cap. One refresh and retry created no accepted version; editor Loading disabled interactive execution. No other job was stopped. CPU receipts, runtime/test source and budgets remain unchanged.",
+      "receipt": "research/flagship_engineering_v2/KAGGLE_CUDA_BLOCKED_20261019.json",
+      "verified_cuda_tests": 0,
+      "verified_cuda_optimizer_steps": 0,
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-20",
+      "kind": "local_resource_rejection",
+      "event": "A fresh local preflight observed 62423040 free bytes and 94.366 percent swap utilization, independently violating the unchanged 512 MiB free-memory floor and 90 percent swap ceiling. No numerical test or optimizer step was launched and no threshold changed.",
+      "receipt": "research/flagship_engineering_v2/RESOURCE_BLOCKED_20261020.json",
+      "executed_numerical_tests": 0,
+      "optimizer_steps": 0,
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-20",
+      "kind": "kaggle_cuda_retry_auth_context_blocked",
+      "event": "The prior private CUDA draft returned page not found. A fresh isolated Kaggle editor was unauthenticated; Google sign-in opened an unintended account-registration flow, which was cancelled before account creation. The existing signed-in Kaggle tab belonged to another active task and was not modified. No file was uploaded, no saved run was created, and no CUDA session started.",
+      "receipt": "research/flagship_engineering_v2/KAGGLE_CUDA_AUTH_BLOCKED_20261020.json",
+      "verified_cuda_tests": 0,
+      "verified_cuda_optimizer_steps": 0,
+      "scientific_outcomes_created": false
+    }
+  ]
+}

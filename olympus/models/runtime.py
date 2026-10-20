@@ -26,6 +26,7 @@ from olympus.models.olympus_system import (
     OlympusSystemLoss,
     OlympusSystemLossConfig,
     OlympusSystemOutput,
+    build_olympus_system,
     olympus_system_loss,
 )
 
@@ -309,7 +310,7 @@ def load_olympus_checkpoint(
     ):
         raise ValueError("checkpoint metadata must map strings to strings")
     model_config = OlympusSystemConfig.model_validate(raw_config)
-    model = OlympusReferenceSystem(model_config)
+    model = build_olympus_system(model_config)
     model.load_state_dict(cast(dict[str, Tensor], raw_state), strict=True)
     model.eval()
     record = OlympusCheckpointRecord(

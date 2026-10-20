@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "study_id": "seven-model-engineering-v1",
+  "date": "2026-10-18",
+  "phase": "LOCAL_ENGINEERING_VERIFIED_HOSTED_EXACT_SOURCE_PENDING",
+  "protocol": "research/seven_model_engineering_v1/PROTOCOL.md",
+  "model_ids": [
+    "hermes",
+    "prometheus",
+    "perseus",
+    "atlas",
+    "kronos",
+    "aion",
+    "jepa_upscaler"
+  ],
+  "scientific_training_epochs": 0,
+  "protected_evaluations": 0,
+  "external_downloads": 0,
+  "paid_jobs": 0,
+  "promotion_authorized": false,
+  "scientific_outcomes_created": false
+}

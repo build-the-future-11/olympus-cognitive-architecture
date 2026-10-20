@@ -66,7 +66,9 @@ def test_bu1ld_target_specifications_are_not_capability_claims() -> None:
         "aion",
     ]
     assert model_spec("hermes").target_parameters == 12_000_000_000
-    assert model_spec("prometheus").target_parameters == 128_000_000_000
+    assert model_spec("prometheus").target_parameters is None
+    assert model_spec("prometheus").target_parameters_min == 12_000_000_000
+    assert model_spec("prometheus").target_parameters_max == 20_000_000_000
     assert model_spec("perseus").target_parameters == 1_024_000_000_000
     assert model_spec("atlas").target_parameters is None
     assert model_spec("kronos").target_parameters == 8_000_000_000_000
@@ -138,7 +140,9 @@ def test_all_family_reference_architectures_are_executable_and_differentiable() 
     )
     assert kronos_output.next_state.shape == (2, 4, 5)
     assert kronos_output.plan_logits.shape == (2, 3, 4)
-    assert bool((kronos_output.uncertainty > 0.0).all())
+    assert bool((kronos_output.uncertainty[0] > 0.0).all())
+    assert bool((kronos_output.uncertainty[1, :2] > 0.0).all())
+    assert torch.equal(kronos_output.uncertainty[1, 2:], torch.zeros(2, 5))
 
     aion = AionReferenceModel(
         AionReferenceConfig(
@@ -538,7 +542,9 @@ def test_hash_bound_jepa_upscaler_training_and_negative_result_retention(
     assert Path(report.checkpoint_path).is_file()
     assert (output / "report.json").is_file()
     loaded_model, loaded_config = load_jepa_upscaler_checkpoint(
-        Path(report.checkpoint_path), expected_sha256=report.checkpoint_sha256
+        Path(report.checkpoint_path),
+        expected_sha256=report.checkpoint_sha256,
+        expected_dataset_manifest_sha256=report.dataset_manifest_sha256,
     )
     assert loaded_config == JEPAUpscalerTrainingConfig(
         seed=17,
@@ -554,6 +560,10 @@ def test_hash_bound_jepa_upscaler_training_and_negative_result_retention(
     assert loaded_model(evaluation_low).upscaled.shape == evaluation_high.shape
     with pytest.raises(ValueError, match="digest"):
         load_jepa_upscaler_checkpoint(Path(report.checkpoint_path), expected_sha256="0" * 64)
+    with pytest.raises(ValueError, match="dataset manifest"):
+        load_jepa_upscaler_checkpoint(
+            Path(report.checkpoint_path), expected_dataset_manifest_sha256="0" * 64
+        )
     with pytest.raises(FileExistsError, match="refusing to overwrite"):
         train_jepa_upscaler(
             manifest_path,

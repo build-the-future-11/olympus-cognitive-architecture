@@ -35,7 +35,10 @@ class MemorySnapshot:
 
 
 def _run(command: list[str]) -> str:
-    result = subprocess.run(command, check=True, capture_output=True, text=True, timeout=5)
+    try:
+        result = subprocess.run(command, check=True, capture_output=True, text=True, timeout=5)
+    except (OSError, subprocess.SubprocessError) as error:
+        raise RuntimeError(f"resource inspection command failed: {command[0]}") from error
     return result.stdout
 
 

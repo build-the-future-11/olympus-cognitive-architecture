@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "study_id": "seven-model-engineering-v1",
+  "phase": "LOCAL_ENGINEERING_VERIFIED_HOSTED_EXACT_SOURCE_PENDING",
+  "date": "2026-10-19",
+  "scope": "Bounded CPU-only artificial forward, finite-output, and full-trainable-gradient engineering contracts for seven non-promoted references.",
+  "source_sha256": {
+    "MANIFEST.in": "f58d0048a0ea7caad0a52544b15782bd4c76e8eb5ada56f24154c13c8600ea20",
+    "README.md": "5eb60e4ffb07c3af225120a16b769932b6b18521a9ae4533575884cdfc9c878c",
+    "RESEARCH_STATE.json": "cc80df6a3e14668cb2092876c1e79b85515a076cf235fdfa4966a7026605249d",
+    "docs/seven-model-engineering.md": "2ca5bda0480fff3cddfa89e56d8d6fb39a649e5733daea868878e0eadef739ed",
+    "olympus/cli.py": "69ed7acad824d52dbe1f6d4b923dc94be5fdc76eb465fc0ca35dc2cf774444ef",
+    "olympus/models/__init__.py": "7290424ce01f4ff34d53778b1596788a0c6da8aeaa9ae91c237806935eab1707",
+    "olympus/models/reference_families.py": "b0def64a3c2258cd8b19f2e5bf45f148061f6bcc0e232f14306841209ebc69e4",
+    "olympus/models/seven_model_contract.py": "f8dd9a244fe1797d6b5389c39ab9783e063a80275b3ae48d4d4e4f5da2738154",
+    "olympus/research_state.py": "79150b46ce295d5d64e1c47ec6894fc7157f7d5c4858843085b05e929f611336",
+    "olympus/upscaler/jepa.py": "50676264f84cb2e7d40eb3642645ffe482f4f25f444b079f2eb53cdfa02b5a5c",
+    "olympus/upscaler/training.py": "2dc6d917cf4df68caa2601aadeda523946c2d00dddc1c81730e9c018a356227e",
+    "tests/test_bu1ld_model_pathways.py": "95e86b86d516f69d010753437d2c69e6adeaa72d98996502a37d0eebbaf27ddc",
+    "tests/test_cli.py": "f81df7eeb287d7e03a5a3f4295702cb49a87ac699a29c15bb32c722636f7920b",
+    "tests/test_research_state.py": "91e8e0b27b2dfd9a7c6ab77b175cd5e69ddaeef224fed8a8d0c35548d2a8ef9c",
+    "tests/test_seven_model_contract.py": "614d22ba84fe0764dfc161230c0327c6100aec0ccf66ba77ca1e4b769e377c7e"
+  },
+  "verification": {
+    "commands": [
+      ".venv/bin/python -m olympus.cli bu1ld seven-model-contract",
+      ".venv/bin/python -m pytest tests/test_seven_model_contract.py tests/test_bu1ld_model_pathways.py tests/test_cli.py -q",
+      ".venv/bin/ruff check .",
+      ".venv/bin/mypy olympus tests"
+    ],
+    "focused_regressions": "49 passed: Python-3.11 source grammar, research state, seven-model contract, CLI, and BU1LD pathway tests.",
+    "full_suite_sandbox_attempt": "528 passed, 2 expected skips, 15 failures, and 61 errors; resource-governed tests correctly refused because macOS sysctl counters were unavailable. This is retained but not accepted as source verification.",
+    "full_suite_outside_sandbox": "605 passed, 2 expected skips, and 85.00 percent branch coverage on the exact local successor after the Python-3.11 source-grammar repair and non-finite-probe regression.",
+    "contract_claim": "Every non-frozen trainable parameter tensor receives a finite gradient in the deterministic artificial contract; JEPA target-encoder parameters are frozen by design.",
+    "hosted_exact_source": "PENDING"
+  },
+  "research_boundary": {
+    "scientific_training_epochs": 0,
+    "protected_evaluations": 0,
+    "external_downloads": 0,
+    "paid_jobs": 0,
+    "promotion_authorized": false,
+    "scientific_outcomes_created": false
+  }
+}

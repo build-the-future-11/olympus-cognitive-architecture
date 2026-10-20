@@ -26,6 +26,14 @@ from torch import Tensor
 
 from olympus.core.schemas import StrictModel
 from olympus.data.olympus_dataset import LoadedOlympusDataset, load_olympus_dataset
+from olympus.evaluation.decision_dossiers import (
+    OlympusDecisionDossierBundle,
+    OlympusDossierBinding,
+    build_olympus_decision_dossiers,
+    read_olympus_decision_dossier_bundle,
+    verify_olympus_decision_dossier_replay,
+    write_olympus_decision_dossiers,
+)
 from olympus.evaluation.olympus_system import (
     OlympusSystemEvaluation,
     evaluate_olympus_system,
@@ -33,9 +41,9 @@ from olympus.evaluation.olympus_system import (
 )
 from olympus.foundry.resources import ResourceGovernor
 from olympus.models.olympus_system import (
-    OlympusReferenceSystem,
     OlympusSystemConfig,
     OlympusSystemLossConfig,
+    build_olympus_system,
 )
 from olympus.models.runtime import (
     RuntimeDevice,
@@ -92,7 +100,7 @@ class OlympusTrainingTrace(StrictModel):
 
 
 class OlympusSystemTrainingReport(StrictModel):
-    schema_version: Literal[2] = 2
+    schema_version: Literal[4] = 4
     status: Literal["COMPLETED_DEVELOPMENT_NOT_PROMOTED"]
     dataset_id: str
     dataset_version: str
@@ -108,6 +116,9 @@ class OlympusSystemTrainingReport(StrictModel):
     final_evaluation: OlympusSystemEvaluation
     checkpoint_path: str
     checkpoint_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    decision_dossier_path: str
+    decision_dossier_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    decision_dossier_content_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     source_identity: dict[str, Any]
     best_step: int = Field(ge=0)
     best_validation_loss: float
@@ -466,7 +477,7 @@ def _train_admitted(
             np.random.seed(config.seed)
             torch.manual_seed(config.seed)
             generator = torch.Generator(device="cpu").manual_seed(config.seed)
-            model = OlympusReferenceSystem(config.model).to(device=device, dtype=torch.float32)
+            model = build_olympus_system(config.model).to(device=device, dtype=torch.float32)
             optimizer = torch.optim.AdamW(
                 model.parameters(),
                 lr=config.learning_rate,
@@ -691,6 +702,40 @@ def _train_admitted(
                         "status": "COMPLETED_DEVELOPMENT_NOT_PROMOTED",
                     },
                 )
+            dossier_path = directory / "decision-dossiers.json"
+            dossier_binding = OlympusDossierBinding(
+                dataset_manifest_sha256=str(dataset.manifest.manifest_sha256),
+                checkpoint_sha256=checkpoint.sha256,
+                split="evaluation",
+            )
+            if dossier_path.exists():
+                dossier_bundle = read_olympus_decision_dossier_bundle(
+                    dossier_path,
+                    expected_binding=dossier_binding,
+                    expected_source_ids=dataset.manifest.evaluation.source_ids,
+                )
+                verify_olympus_decision_dossier_replay(
+                    model,
+                    dataset.evaluation,
+                    dataset.manifest.extensions,
+                    dataset.manifest.evaluation.source_ids,
+                    binding=dossier_binding,
+                    observed=dossier_bundle,
+                )
+            else:
+                dossiers = build_olympus_decision_dossiers(
+                    model,
+                    dataset.evaluation,
+                    dataset.manifest.extensions,
+                    dataset.manifest.evaluation.source_ids,
+                )
+                dossier_bundle = write_olympus_decision_dossiers(
+                    dossier_path,
+                    binding=dossier_binding,
+                    dossiers=dossiers,
+                )
+            if dossier_bundle.bundle_sha256 is None:
+                raise ValueError("decision-dossier bundle is missing its content digest")
             report = OlympusSystemTrainingReport(
                 status="COMPLETED_DEVELOPMENT_NOT_PROMOTED",
                 dataset_id=dataset.manifest.dataset_id,
@@ -714,6 +759,9 @@ def _train_admitted(
                 final_evaluation=final,
                 checkpoint_path=checkpoint.path,
                 checkpoint_sha256=checkpoint.sha256,
+                decision_dossier_path=str(dossier_path),
+                decision_dossier_sha256=_sha256(dossier_path.read_bytes()),
+                decision_dossier_content_sha256=dossier_bundle.bundle_sha256,
                 source_identity=identity,
                 best_step=counters["best_step"],
                 best_validation_loss=counters["best_validation_loss"],
@@ -746,7 +794,7 @@ def evaluate_frozen_run(
     contract = json.loads((run_directory / "run.json").read_text())
     config = OlympusSystemTrainingConfig.model_validate(contract["training_config"])
     with ResourceGovernor(
-        config.workload_lock,
+        run_directory / ".decision-dossier-verification.lock",
         min_available_bytes=config.min_available_bytes,
         max_swap_fraction=config.max_swap_fraction,
     ):
@@ -762,7 +810,7 @@ def evaluate_frozen_run(
         payload = load_training_checkpoint(
             run_directory / "checkpoints", kind=checkpoint, binding=binding
         )
-        model = OlympusReferenceSystem(config.model).to(device=device, dtype=torch.float32)
+        model = build_olympus_system(config.model).to(device=device, dtype=torch.float32)
         model.load_state_dict(payload["model_state"], strict=True)
         previous_threads = torch.get_num_threads()
         try:
@@ -777,3 +825,69 @@ def evaluate_frozen_run(
                 )
         finally:
             torch.set_num_threads(previous_threads)
+
+
+def verify_frozen_decision_dossiers(
+    run_directory: Path,
+    manifest_path: Path,
+) -> OlympusDecisionDossierBundle:
+    """Replay a completed run's per-example dossier on its declared device."""
+
+    report_path = run_directory / "report.json"
+    if report_path.is_symlink() or not report_path.is_file():
+        raise ValueError("completed run must contain a regular report.json")
+    report = OlympusSystemTrainingReport.model_validate_json(report_path.read_bytes())
+    dataset = load_olympus_dataset(manifest_path)
+    if dataset.manifest.manifest_sha256 != report.dataset_manifest_sha256:
+        raise ValueError("dataset manifest does not match the completed report")
+    config = report.training_config
+    if training_config_digest(config) != report.training_config_sha256:
+        raise ValueError("training configuration does not match the completed report")
+    if source_identity()["sha256"] != report.source_identity.get("sha256"):
+        raise ValueError("current source does not match the completed report")
+    dossier_path = run_directory / "decision-dossiers.json"
+    checkpoint_path = run_directory / "checkpoint.pt"
+    dossier_binding = OlympusDossierBinding(
+        dataset_manifest_sha256=report.dataset_manifest_sha256,
+        checkpoint_sha256=report.checkpoint_sha256,
+        split="evaluation",
+    )
+    with ResourceGovernor(
+        config.workload_lock,
+        min_available_bytes=config.min_available_bytes,
+        max_swap_fraction=config.max_swap_fraction,
+    ):
+        _configure_deterministic_cuda(config.deterministic and config.device in {"cuda", "auto"})
+        device = resolve_olympus_device(config.device)
+        if str(device) != report.device:
+            raise ValueError("available device does not match the completed report")
+        from olympus.models.runtime import load_olympus_checkpoint
+
+        model, _ = load_olympus_checkpoint(
+            checkpoint_path,
+            expected_sha256=report.checkpoint_sha256,
+        )
+        model.to(device=device, dtype=torch.float32)
+        observed = read_olympus_decision_dossier_bundle(
+            dossier_path,
+            expected_binding=dossier_binding,
+            expected_source_ids=dataset.manifest.evaluation.source_ids,
+            expected_file_sha256=report.decision_dossier_sha256,
+        )
+        if observed.bundle_sha256 != report.decision_dossier_content_sha256:
+            raise ValueError("decision-dossier content digest does not match the report")
+        previous_threads = torch.get_num_threads()
+        try:
+            torch.set_num_threads(config.cpu_threads)
+            with _deterministic_training(config.deterministic):
+                verify_olympus_decision_dossier_replay(
+                    model,
+                    dataset.evaluation,
+                    dataset.manifest.extensions,
+                    dataset.manifest.evaluation.source_ids,
+                    binding=dossier_binding,
+                    observed=observed,
+                )
+        finally:
+            torch.set_num_threads(previous_threads)
+    return observed

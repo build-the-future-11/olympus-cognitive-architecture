@@ -1,55 +1,151 @@
-"""Reference model-family implementations."""
+"""Lazily exported model implementations; metadata imports never load Torch."""
 
-from olympus.models.editclevr import (
-    EDIT_FACTORS,
-    FUSION_MODES,
-    EditCLEVROutput,
-    OlympusEditCLEVRModel,
-    editclevr_loss,
-)
-from olympus.models.olympus_system import (
-    FAMILY_VECTOR_NAMES,
-    OlympusReferenceSystem,
-    OlympusSystemConfig,
-    OlympusSystemLoss,
-    OlympusSystemOutput,
-    olympus_system_loss,
-)
-from olympus.models.reference_families import (
-    AionReferenceConfig,
-    AionReferenceModel,
-    AtlasReferenceConfig,
-    AtlasReferenceModel,
-    HermesReferenceConfig,
-    HermesReferenceModel,
-    KronosReferenceConfig,
-    KronosReferenceModel,
-    PerseusReferenceConfig,
-    PerseusReferenceModel,
-    PrometheusReferenceConfig,
-    PrometheusReferenceModel,
-    ReferenceTransformerConfig,
-    build_reference_model,
-    default_reference_configs,
-)
-from olympus.models.reliability_fusion import (
-    ReliabilityAwareOlympusSystem,
-    ReliabilityFusionConfig,
-    ReliabilityFusionLoss,
-    ReliabilityFusionOutput,
-    ReliabilityLossConfig,
-    reliability_fusion_loss,
-)
-from olympus.models.runtime import (
-    OlympusCheckpointRecord,
-    OlympusInferenceResult,
-    OlympusRuntimeConfig,
-    OlympusSystemRuntime,
-    OlympusTrainStepResult,
-    load_olympus_checkpoint,
-    save_olympus_checkpoint,
-    train_olympus_step,
-)
+from __future__ import annotations
+
+from importlib import import_module
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from olympus.models.capacity import CapacityEstimate, estimate_capacity
+    from olympus.models.editclevr import (
+        EDIT_FACTORS,
+        FUSION_MODES,
+        EditCLEVROutput,
+        OlympusEditCLEVRModel,
+        editclevr_loss,
+    )
+    from olympus.models.flagship import (
+        AionFlagshipModel,
+        AtlasFlagshipModel,
+        HermesFlagshipModel,
+        KronosFlagshipModel,
+        OlympusFlagshipSystem,
+        PerseusFlagshipModel,
+        PrometheusFlagshipModel,
+        default_flagship_config,
+    )
+    from olympus.models.olympus_system import (
+        FAMILY_VECTOR_NAMES,
+        OlympusReferenceSystem,
+        OlympusSystemConfig,
+        OlympusSystemLoss,
+        OlympusSystemOutput,
+        build_olympus_system,
+        olympus_system_loss,
+    )
+    from olympus.models.parameter_growth import (
+        GrowthReceipt,
+        JEPAParameterGrowth,
+        widen_feedforward,
+    )
+    from olympus.models.reference_families import (
+        AionReferenceConfig,
+        AionReferenceModel,
+        AtlasReferenceConfig,
+        AtlasReferenceModel,
+        HermesReferenceConfig,
+        HermesReferenceModel,
+        KronosReferenceConfig,
+        KronosReferenceModel,
+        PerseusReferenceConfig,
+        PerseusReferenceModel,
+        PrometheusReferenceConfig,
+        PrometheusReferenceModel,
+        ReferenceTransformerConfig,
+        build_reference_model,
+        default_reference_configs,
+    )
+    from olympus.models.reliability_fusion import (
+        ReliabilityAwareOlympusSystem,
+        ReliabilityFusionConfig,
+        ReliabilityFusionLoss,
+        ReliabilityFusionOutput,
+        ReliabilityLossConfig,
+        reliability_fusion_loss,
+    )
+    from olympus.models.runtime import (
+        OlympusCheckpointRecord,
+        OlympusInferenceResult,
+        OlympusRuntimeConfig,
+        OlympusSystemRuntime,
+        OlympusTrainStepResult,
+        load_olympus_checkpoint,
+        save_olympus_checkpoint,
+        train_olympus_step,
+    )
+    from olympus.models.seven_model_contract import (
+        SEVEN_MODEL_IDS,
+        SevenModelEngineeringStatus,
+        SevenModelInventoryStatus,
+        audit_seven_model_contracts,
+        build_seven_model_reference,
+        default_seven_model_configs,
+        inspect_seven_model_references,
+    )
+
+_EXPORT_MODULES = {
+    "EDIT_FACTORS": "olympus.models.editclevr",
+    "FUSION_MODES": "olympus.models.editclevr",
+    "EditCLEVROutput": "olympus.models.editclevr",
+    "OlympusEditCLEVRModel": "olympus.models.editclevr",
+    "editclevr_loss": "olympus.models.editclevr",
+    "FAMILY_VECTOR_NAMES": "olympus.models.olympus_system",
+    "OlympusReferenceSystem": "olympus.models.olympus_system",
+    "OlympusSystemConfig": "olympus.models.olympus_system",
+    "OlympusSystemLoss": "olympus.models.olympus_system",
+    "OlympusSystemOutput": "olympus.models.olympus_system",
+    "olympus_system_loss": "olympus.models.olympus_system",
+    "AionReferenceConfig": "olympus.models.reference_families",
+    "AionReferenceModel": "olympus.models.reference_families",
+    "AtlasReferenceConfig": "olympus.models.reference_families",
+    "AtlasReferenceModel": "olympus.models.reference_families",
+    "HermesReferenceConfig": "olympus.models.reference_families",
+    "HermesReferenceModel": "olympus.models.reference_families",
+    "KronosReferenceConfig": "olympus.models.reference_families",
+    "KronosReferenceModel": "olympus.models.reference_families",
+    "PerseusReferenceConfig": "olympus.models.reference_families",
+    "PerseusReferenceModel": "olympus.models.reference_families",
+    "PrometheusReferenceConfig": "olympus.models.reference_families",
+    "PrometheusReferenceModel": "olympus.models.reference_families",
+    "ReferenceTransformerConfig": "olympus.models.reference_families",
+    "build_reference_model": "olympus.models.reference_families",
+    "default_reference_configs": "olympus.models.reference_families",
+    "ReliabilityAwareOlympusSystem": "olympus.models.reliability_fusion",
+    "ReliabilityFusionConfig": "olympus.models.reliability_fusion",
+    "ReliabilityFusionLoss": "olympus.models.reliability_fusion",
+    "ReliabilityFusionOutput": "olympus.models.reliability_fusion",
+    "ReliabilityLossConfig": "olympus.models.reliability_fusion",
+    "reliability_fusion_loss": "olympus.models.reliability_fusion",
+    "OlympusCheckpointRecord": "olympus.models.runtime",
+    "OlympusInferenceResult": "olympus.models.runtime",
+    "OlympusRuntimeConfig": "olympus.models.runtime",
+    "OlympusSystemRuntime": "olympus.models.runtime",
+    "OlympusTrainStepResult": "olympus.models.runtime",
+    "load_olympus_checkpoint": "olympus.models.runtime",
+    "save_olympus_checkpoint": "olympus.models.runtime",
+    "train_olympus_step": "olympus.models.runtime",
+    "SEVEN_MODEL_IDS": "olympus.models.seven_model_contract",
+    "SevenModelEngineeringStatus": "olympus.models.seven_model_contract",
+    "SevenModelInventoryStatus": "olympus.models.seven_model_contract",
+    "audit_seven_model_contracts": "olympus.models.seven_model_contract",
+    "build_seven_model_reference": "olympus.models.seven_model_contract",
+    "default_seven_model_configs": "olympus.models.seven_model_contract",
+    "inspect_seven_model_references": "olympus.models.seven_model_contract",
+    "CapacityEstimate": "olympus.models.capacity",
+    "estimate_capacity": "olympus.models.capacity",
+    "AionFlagshipModel": "olympus.models.flagship",
+    "AtlasFlagshipModel": "olympus.models.flagship",
+    "HermesFlagshipModel": "olympus.models.flagship",
+    "KronosFlagshipModel": "olympus.models.flagship",
+    "OlympusFlagshipSystem": "olympus.models.flagship",
+    "PerseusFlagshipModel": "olympus.models.flagship",
+    "PrometheusFlagshipModel": "olympus.models.flagship",
+    "default_flagship_config": "olympus.models.flagship",
+    "JEPAParameterGrowth": "olympus.models.parameter_growth",
+    "GrowthReceipt": "olympus.models.parameter_growth",
+    "widen_feedforward": "olympus.models.parameter_growth",
+    "build_olympus_system": "olympus.models.olympus_system",
+}
 
 __all__ = [
     "EDIT_FACTORS",
@@ -71,6 +167,9 @@ __all__ = [
     "ReliabilityFusionLoss",
     "ReliabilityFusionOutput",
     "ReliabilityLossConfig",
+    "SEVEN_MODEL_IDS",
+    "SevenModelEngineeringStatus",
+    "SevenModelInventoryStatus",
     "AionReferenceConfig",
     "AionReferenceModel",
     "AtlasReferenceConfig",
@@ -85,11 +184,42 @@ __all__ = [
     "PrometheusReferenceModel",
     "ReferenceTransformerConfig",
     "build_reference_model",
+    "build_seven_model_reference",
+    "audit_seven_model_contracts",
     "default_reference_configs",
+    "default_seven_model_configs",
+    "inspect_seven_model_references",
     "editclevr_loss",
     "load_olympus_checkpoint",
     "olympus_system_loss",
     "reliability_fusion_loss",
     "save_olympus_checkpoint",
     "train_olympus_step",
+    "CapacityEstimate",
+    "estimate_capacity",
+    "AionFlagshipModel",
+    "AtlasFlagshipModel",
+    "HermesFlagshipModel",
+    "KronosFlagshipModel",
+    "OlympusFlagshipSystem",
+    "PerseusFlagshipModel",
+    "PrometheusFlagshipModel",
+    "default_flagship_config",
+    "JEPAParameterGrowth",
+    "GrowthReceipt",
+    "widen_feedforward",
+    "build_olympus_system",
 ]
+
+
+def __getattr__(name: str) -> Any:
+    module = _EXPORT_MODULES.get(name)
+    if module is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    value = getattr(import_module(module), name)
+    globals()[name] = value
+    return value
+
+
+def __dir__() -> list[str]:
+    return sorted(set(globals()) | set(__all__))

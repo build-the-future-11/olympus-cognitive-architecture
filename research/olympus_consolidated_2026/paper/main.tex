@@ -1,0 +1,437 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.78in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,array,float,microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\softmax}{\operatorname{softmax}}
+\newcommand{\stopgrad}{\operatorname{stopgrad}}
+\newcommand{\good}{\textcolor{green!45!black}{supported}}
+\newcommand{\bad}{\textcolor{red!65!black}{not supported}}
+
+\title{Simple Controls Remain Hard to Beat in Learned Multimodal Routing:\\
+\large Five Controlled Studies and a Supported Residual Dynamics Result}
+\author{Ryan\\Independent Researcher}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Adaptive fusion is often motivated by the intuition that a learned router should
+down-weight unreliable inputs better than a fixed mixture. We tested this intuition in a
+sequence of prospectively specified studies built around Olympus, an auditable reference
+architecture for heterogeneous prediction. Four synthetic studies progressively added
+explicit reliability supervision, independently trained experts, cross-fitted routing,
+broader corruption coverage, and development-only route selection. A fifth study used the
+licensed EditCLEVR paired-image benchmark. Across all five studies, the registered learned
+routing candidate did not beat its strongest matched simple control on the primary
+endpoint. The successive primary effects were $-0.0469$ selective-accuracy points versus
+uniform fusion, $-0.0125$ versus semantic routing, $-0.0682$ accuracy points versus
+semantic routing, $-0.00068$ versus semantic routing on novel shift, and $-0.00005$
+versus a development-selected EditCLEVR control. In contrast, a separately registered
+residual temporal predictor reduced clean mean-squared error from $0.07133$ for the prior
+predictor to $0.01457$, beat persistence by $0.01540$ with a paired descriptive 95\%
+interval of $[-0.01583,-0.01492]$, and retained corrupted-input recovery. The evidence
+supports mixed-corruption training, sample-dependent semantic routing in one observed
+corruption regime, and residual prediction for the synthetic dynamics task. It does not
+support learned routing as a general improvement, natural-data robustness, deployment,
+safety efficacy, or a full cognitive architecture. The contribution is a preserved
+sequence of falsifiable iterations showing where increasingly elaborate routing repairs
+failed, where one simpler architectural prior succeeded, and how negative outcomes can be
+reported without retroactive endpoint selection.
+\end{abstract}
+
+\section{Introduction}
+Multimodal prediction systems must operate when some inputs are missing, corrupted, or
+less useful for the current example. Deep fusion can obscure which input drove a decision,
+while mixture-of-experts systems add their own gate-collapse and optimization failure
+modes \cite{fedus2021switch,zhou2022expertchoice,wang2024lossfree}. Missing-modality
+studies also show that robustness is sensitive to the dataset, missingness pattern, and
+fusion design \cite{ma2022missing,maheshwari2023m3l}. Recent work has therefore explored
+explicit routing, reliability estimation, reconstruction, and sequential evidence
+selection \cite{hooman2026routing,kumar2026prime,wang2026metamodal}.
+
+The motivating hypothesis is attractive: if a router can infer input reliability for each
+example, it should outperform a uniform or fixed mixture under shift. The hypothesis is
+also easy to make unfalsifiable. A router can be changed after inspecting test outcomes;
+an oracle can be mistaken for a deployable method; a weak baseline can make any adaptive
+mechanism look useful; or an overall score can hide a clean-versus-shift tradeoff. This
+paper instead reports a sequence in which every failed primary outcome remained terminal
+for its registered protocol and every repair became a separately versioned successor.
+
+Our main findings are:
+\begin{enumerate}
+  \item Five learned-routing candidates failed their primary comparison, including a test
+  on the public, CC-BY-4.0 EditCLEVR benchmark \cite{karnam2026editclevr}.
+  \item The failures persisted after the experiments added direct reliability labels,
+  independently supervised expert banks, cross-fitting, corruption-diverse development
+  data, and development-only selection among candidate routers.
+  \item Mixed-corruption training and semantic routing nevertheless produced large matched
+  improvements in one synthetic corruption regime. These are narrower findings than a
+  general routing claim and did not transfer uniformly to held-out shifts.
+  \item A residual temporal predictor passed every registered primary criterion, including
+  a paired comparison with persistence. This positive result concerns synthetic dynamics,
+  not the routing hypothesis or the full Olympus system.
+\end{enumerate}
+
+The study is deliberately not presented as state of the art. The models are small, four
+studies are synthetic, the external study uses one benchmark, and the final two remote
+evidence archives were verified in their executing notebook but were not recovered into
+the repository. Those constraints are part of the result, not footnotes to be removed.
+
+\section{Architecture and claim boundary}
+Olympus is a reference architecture in which $m$ component families emit states $h_i$.
+Each state is projected and normalized,
+\begin{align}
+z_i &= \operatorname{LayerNorm}(W_i h_i+b_i), \\
+g &= \softmax(r([z_1;\ldots;z_m])/\tau), \\
+z &= \operatorname{LayerNorm}\left(\sum_i g_i z_i\right),
+\end{align}
+and a shared decision head acts on $z$. The system also exposes leave-one-component-out
+states
+\begin{equation}
+z_{-i}=\operatorname{LayerNorm}\left(
+\frac{\sum_j g_jz_j-g_iz_i}{\max(1-g_i,\epsilon)}\right),
+\end{equation}
+so that component-removal behavior remains observable. A counterfactual regularizer can
+penalize divergence between the full and removal predictions, with the full prediction
+stop-gradient treated as the target.
+
+The architecture distinguishes learned intrinsic risk $q$ from a host-provided risk floor
+$r_h$. Their effective value is
+\begin{equation}
+r_{\mathrm{eff}}=1-(1-r_h)(1-q).
+\end{equation}
+For $q,r_h\in[0,1]$, $r_{\mathrm{eff}}-r_h=q(1-r_h)\geq0$. Learned evidence therefore
+cannot reduce the host risk floor. Host-provided legal-transition masks are applied after
+the learned scores, and a fixed threshold can force STOP. These are algebraic and software
+invariants. They are not evidence that the learned risk is calibrated, that the host risk
+is correct, or that deployment is safe. Selective prediction and conformal risk control
+provide important neighboring frameworks, but the invariant alone supplies neither
+coverage nor distribution-free risk control \cite{geifman2019selectivenet,
+angelopoulos2022crc}.
+
+The repository names six component families, but the studies below isolate routing and
+temporal mechanisms at reference scale. They do not validate six-family joint capability,
+the separately specified joint-embedding upscaler, production behavior, or any cognitive
+claim.
+
+\section{Sequential research design}
+Each iteration was opened only after the predecessor result had been recorded. Protocols
+fixed the question, controls, source-disjoint splits, budgets, endpoint, effect threshold,
+and protected-outcome chronology before confirmation. A failed study could motivate a new
+hypothesis, but its endpoint, data, and disposition were not rewritten.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4.2pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.10\linewidth}
+>{\raggedright\arraybackslash}p{0.27\linewidth}
+>{\raggedright\arraybackslash}p{0.25\linewidth}
+>{\raggedright\arraybackslash}p{0.26\linewidth}}
+\toprule
+Study & Registered repair & Strongest primary control & Primary disposition \\
+\midrule
+v2 & Counterfactual fusion and disagreement-conditioned risk & Exact uniform projected fusion & \bad \\
+v3 & Supervised reliability heads and shrinkage toward uniform & Semantic routing & \bad \\
+v4 & Cross-fitted expert banks and utility routing & Semantic routing & \bad \\
+v5 & Broader shift coverage and development-only candidate selection & Core-training semantic routing & \bad \\
+EditCLEVR & Four routed paired-image experts & Best validation-selected simple control & \bad \\
+v5 temporal & Residual state prediction & Prior v4 predictor and persistence & \good \\
+\bottomrule
+\end{tabular}
+\caption{The iteration sequence. A new row is a new frozen hypothesis, not a
+reinterpretation of an earlier protected result.}
+\label{tab:sequence}
+\end{table}
+
+All paired intervals reported below are fixed-seed percentile bootstrap intervals over
+five training seeds or five independently generated dataset clusters, depending on the
+protocol. With only five units, they are descriptive rather than asymptotically precise.
+Secondary outcomes cannot rescue a failed primary endpoint. Oracle routes are diagnostics
+that use privileged ground truth and are never counted as deployable candidates.
+
+\subsection{v2: controlled reliability shift}
+The first confirmatory study generated 1,408 source-disjoint units: 512 training, 128
+development, and three protected sets of 256 for clean, corrupted, and out-of-distribution
+conditions. Five matched variants were trained for five seeds, giving 25 fits and 75
+protected evaluations. The primary claim required the full mechanism to exceed uniform
+fusion by at least 0.02 clean accuracy and 0.03 corrupted selective accuracy, with positive
+paired interval lower bounds.
+
+\subsection{v3: direct reliability supervision}
+The successor asked whether reliability identification could repair routing. It added one
+reliability head per component, supervised those heads using known interventions, combined
+semantic and reliability evidence in log space, and shrank the result toward uniform.
+Reliability targets were labels during training and were not supplied at inference. Five
+matched variants, five seeds, 25 fits, and 75 protected evaluations were frozen. The
+primary endpoint was corrupted selective accuracy at 50\% coverage against semantic
+routing, with a required effect of at least 0.02 and a positive interval lower bound.
+
+\subsection{v4: expert-bank diagnostic}
+The third iteration removed label-recoverable metadata shortcuts and introduced five
+independently supervised expert heads. Two-fold cross-fitting ensured that routing features
+for an example came from a bank not trained on that example. Missing-only and mixed
+missing-plus-perturbed training were paired on identical latent examples and budgets.
+Utility, semantic, fixed, uniform, corruption-proxy, best-single, and privileged oracle
+routes shared the same banks. The design contained 40 cells, 80 expert-bank fits, and 120
+protected regime evaluations. The utility router had to beat the development-selected
+control by at least 0.02 on corrupted accuracy with a positive cluster interval lower
+bound.
+
+\subsection{v5: broader shifts and residual dynamics}
+The fourth synthetic iteration used fresh units and reserved a genuinely novel synthetic
+shift family for protected evaluation. Core training used the v4 corruption set. Broad
+training added token reversal, image inversion, and positive state bias during development;
+novel protected shifts used token relocation, checkerboard image occlusion, and negative
+time-varying state drift. Five dataset seeds and two training seeds yielded 20 cells, 40
+bank fits, and 80 protected evaluations.
+
+Candidate routing was selected using development clean, corrupted, and known-shift data by
+maximizing worst-regime and then mean accuracy under a fixed tie order. The registered
+routing comparison was broad selected routing minus core semantic routing on novel shift,
+with a required effect of 0.02 and corrupted non-regression.
+
+The same protocol separately compared a prior temporal predictor, persistence, a direct
+MLP, and a residual MLP. The two new MLPs had the same $88\mathord{\to}64\mathord{\to}5$
+architecture, initialization, 500-update budget, and inputs. The residual model alone
+added the observed state to the predicted change. It had to reduce clean MSE by at least
+10\% relative to both the prior predictor and persistence, have a residual-minus-
+persistence interval upper bound below zero, and remain within 0.02 MSE of the prior model
+under corruption.
+
+\subsection{EditCLEVR paired-image study}
+EditCLEVR provides before-and-after CLEVR-style scenes with known object-factor
+interventions and controlled distribution shifts \cite{karnam2026editclevr}. We pinned
+dataset revision \texttt{734efa9b0164ba742cd2c39b9c2945c494497c23}, whose local receipt
+accounts for 20,000 unique pair identifiers and 120,000 referenced files with no missing
+paths. The dataset is CC-BY-4.0.
+
+The bounded study predicts the edit factor rather than claiming the benchmark's full
+scene-graph intervention metric. Shared convolutional encoders feed before-image,
+after-image, absolute-change, and paired-image experts. Learned, uniform, pair-only, and
+delta-only predictions come from the same checkpoint. The strongest simple control is
+selected on validation accuracy. Five optimizer seeds ran 15 epochs each; four protected
+splits produced 20 protected reports. The primary effect averages hard and CoGenT-shifted
+accuracy. It required a learned-minus-control mean of at least 0.02 with a positive
+interval lower bound, plus in-distribution non-regression.
+
+\section{Results}
+\subsection{Learned routing did not win a primary comparison}
+Table~\ref{tab:primary} reports every routing primary outcome. None reached its registered
+effect threshold, and four point estimates favored the matched control. The EditCLEVR
+effect was effectively a tie: four seeds tied exactly and one was slightly worse.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{llllr}
+\toprule
+Study & Endpoint & Candidate minus control & Descriptive 95\% interval & Required \\
+\midrule
+v2 & Corrupt selective accuracy & $-0.046875$ & $[-0.0953, 0.0016]$ & $+0.030$ \\
+v3 & Corrupt selective accuracy & $-0.012500$ & $[-0.0281, 0.0031]$ & $+0.020$ \\
+v4 & Corrupt accuracy & $-0.068164$ & $[-0.0771,-0.0589]$ & $+0.020$ \\
+v5 & Novel-shift accuracy & $-0.000684$ & $[-0.00244,0.00107]$ & $+0.020$ \\
+EditCLEVR & Shifted accuracy & $-0.000050$ & $[-0.00015,0]$ & $+0.020$ \\
+\bottomrule
+\end{tabular}
+\caption{Registered routing primary outcomes. The control is exact uniform fusion in v2,
+semantic routing in v3 and v4, core semantic routing in v5, and the validation-selected
+simple control for EditCLEVR.}
+\label{tab:primary}
+\end{table}
+
+The v2 full mechanism tied uniform fusion on clean accuracy exactly, but its corrupted
+selective point estimate was worse. Its gates had normalized entropy 0.922 and an effective
+component count of 4.42, so hard gate collapse was not the main explanation. Intrinsic risk
+was weakly aligned with the constructed corruption target, yielding a high risk Brier score
+of 0.741.
+
+In v3, reliability supervision produced positive mean separation between intact and
+damaged positions under corruption, but that signal did not improve the task endpoint.
+This distinguishes failure to identify corruption from failure to convert a coarse
+reliability signal into useful task routing. A source can be damaged yet remain
+discriminative, or remain clean while being redundant.
+
+In v4, the utility router lost to semantic routing in all five dataset clusters. Privileged
+diagnostics showed that useful expert signal still existed: on corrupted inputs, a task
+oracle exceeded uniform fusion by 0.1895 and a corruption oracle exceeded it by 0.1482.
+Those oracles use unavailable ground truth, so they identify headroom without constituting
+a deployable result.
+
+In v5, broader coverage plus development-only candidate selection did not improve novel
+shift performance over the core semantic control, and it materially regressed on the
+original corruption regime by $-0.05869$ with interval $[-0.06387,-0.05068]$. This rejects
+the idea that the registered selection rule converted broader observed shifts into robust
+router choice.
+
+On EditCLEVR, the learned router tied its selected control in four of five seeds and was
+worse by 0.00025 in one. Its mean in-distribution difference was $-0.000067$ with interval
+$[-0.00020,0]$, which passed the registered non-regression condition but supplied no
+evidence of improvement.
+
+\subsection{Narrow secondary improvements}
+The failed primary routing claim does not imply that every intervention was useless. In
+v4, mixed missing-plus-perturbed training improved semantic-router corrupted accuracy from
+68.32\% to 95.74\%, a matched increase of 27.42 percentage points with interval
+$[25.30,29.28]$. On the same mixed-training banks, semantic routing exceeded learned fixed
+routing by 10.21 points, interval $[9.62,10.76]$, and its own mean training gates by 11.54
+points, interval $[10.27,13.18]$. These outcomes show that input-dependent routing can help
+within the observed corruption regime.
+
+The gain did not generalize uniformly. Semantic routing scored 91.99\% on the v4 OOD split,
+below uniform at 97.88\%, learned fixed at 98.64\%, and the utility router at 99.55\%.
+Selecting a post hoc hybrid after observing these protected outcomes would create a new
+hypothesis rather than repair the v4 result.
+
+\subsection{Residual temporal prediction passed its primary endpoint}
+The v5 residual temporal model was the only registered candidate in this sequence to pass
+all of its primary criteria. Table~\ref{tab:temporal} reports the comparison.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lrr}
+\toprule
+Quantity & Result & Criterion \\
+\midrule
+Residual clean MSE & 0.014566 & lower is better \\
+Prior v4 predictor clean MSE & 0.071332 & residual $\leq 90\%$ \\
+Persistence clean MSE & 0.029964 & residual $\leq 90\%$ \\
+Reduction versus prior v4 predictor & 79.58\% & at least 10\% \\
+Residual minus persistence & $-0.015398$ & interval upper $<0$ \\
+Paired descriptive 95\% interval & $[-0.015830,-0.014920]$ & passed \\
+Residual corrupted MSE & 0.087415 & no more than prior $+0.02$ \\
+Prior v4 predictor corrupted MSE & 0.138464 & passed \\
+\bottomrule
+\end{tabular}
+\caption{v5 residual temporal primary result. The persistence MSE is derived from the
+reported paired difference and residual MSE. The result is specific to the frozen synthetic
+dynamics generator.}
+\label{tab:temporal}
+\end{table}
+
+The skip connection is consistent with the target being easier to model as a change from
+the observed state. However, comparison with the prior v4 predictor also changes the head
+architecture and training budget. Only the direct-versus-residual comparison isolates the
+skip connection within the new head family, and no natural trajectory benchmark was tested.
+
+\subsection{Invariant and denominator checks}
+The v2 and v3 studies each completed 25 fits and 75 protected evaluations. v4 completed 40
+cells, 80 bank fits, and 120 protected evaluations. v5 completed 20 cells, 40 bank fits,
+and 80 protected evaluations. EditCLEVR completed five training seeds and 20 protected
+reports. No failed or unfavorable study was deleted from the sequence. The v2 and v3
+protected receipts reported zero host-risk-monotonicity and transition-legality violations.
+These counts establish completeness for the stated study plans, not external replication.
+
+\section{Why increasingly elaborate routing repairs failed}
+The sequence narrows several plausible explanations.
+
+\paragraph{Reliability is not utility.}
+v3 learned a corruption-related signal without improving task routing. Reliability labels
+describe an intervention, while the desired gate depends on class-conditional information,
+redundancy, calibration, and interactions among experts.
+
+\paragraph{Useful experts do not imply a learnable router.}
+The v4 task oracle revealed substantial headroom. Its access to true-class likelihood is
+exactly what a deployed router lacks. Cross-fitting removed direct in-sample leakage but did
+not make the utility target identify the correct expert under shift.
+
+\paragraph{Coverage can trade one shift for another.}
+Mixed-corruption training strongly repaired the observed corruption regime, yet semantic
+routing regressed on v4 OOD inputs. Broader v5 development coverage still did not improve
+the reserved novel shifts and harmed the original corruption comparison.
+
+\paragraph{Selection adds another generalization problem.}
+Choosing among routers on development data does not guarantee that the selected rule will
+transfer to a new intervention family. v5 froze selection before protected access, making
+that failure visible instead of silently selecting the protected winner.
+
+\paragraph{Simple inductive bias can outperform learned arbitration.}
+The residual temporal model embeds a direct assumption: predict change around the observed
+state. On the frozen dynamics task, this bias was more effective than adding another learned
+selection mechanism. This does not make residual prediction universally superior; it shows
+that a matched simple baseline should be treated as a first-class candidate.
+
+\section{Evidence integrity and reproducibility}
+The repository at
+\url{https://github.com/build-the-future-11/olympus-cognitive-architecture}
+contains the implementation, protocols, frozen configuration identities, historical
+states, tests, and manuscript source. Earlier v2, v3, and v4 evidence was recovered locally
+with source and prediction hashes. The v5 and EditCLEVR executing notebooks produced
+complete verifier reports: 80 and 20 prediction hashes respectively, recomputed aggregate
+means and paired deltas, checkpoint/source chronology checks, and zero cross-fit overlap
+where applicable. These verifiers establish provenance and arithmetic consistency, not an
+independent retraining.
+
+The final v5 evidence archive had remote SHA-256:
+\begin{center}
+\footnotesize\texttt{7dd4b614d2895331e2000a68d2ae988cf8badd54d2776be26857471a5ac391d6}
+\end{center}
+The EditCLEVR archive had SHA-256:
+\begin{center}
+\footnotesize\texttt{a947b3f86afe71ff712e7f203fdfc421cb7c66d3a45e5e61d2d95f6ffeed13c1}
+\end{center}
+Neither archive was recovered from the ephemeral notebook working directory. The local
+repository therefore preserves their protocols, exact source, canonical result states,
+remote archive digests, and verifier summaries, but not the final raw remote predictions
+or checkpoints. This limitation prevents a claim that the public artifact alone can
+recompute every v5 and EditCLEVR number.
+
+The publication package is generated without proprietary smoke records, checkpoints, or
+dataset payloads. EditCLEVR is referenced by pinned revision rather than redistributed.
+Software tests, type checks, package builds, and PDF compilation establish engineering
+integrity only. They do not add scientific samples or strengthen an effect estimate.
+
+\section{Limitations}
+Four routing studies use synthetic generators and small reference models. Synthetic
+interventions provide exact labels and controlled pairing but cannot represent the full
+dependence structure of natural multimodal data. EditCLEVR is public and licensed, but our
+study predicts edit factors and does not execute the benchmark's complete object-centric
+faithfulness protocol. Five seeds or five dataset clusters offer limited precision, and the
+intervals are descriptive. The same research program designed and verified the studies;
+there is no independent operator reproduction. The final remote archives are not locally
+available. No target-scale model, human evaluation, energy study, calibrated deployment,
+rights-reviewed six-family corpus, or safety intervention is evaluated. The clean synthetic
+classification tasks often saturate, which limits their ability to distinguish methods.
+
+The result also does not establish that all learned routing must fail. It rejects five
+specific, frozen mechanisms under their stated data and budgets. Other targets, causal
+signals, architectures, or substantially larger datasets may behave differently. Testing
+them would require fresh hypotheses and protected examples rather than reuse of these
+outcomes for tuning.
+
+\section{Conclusion}
+Across five controlled studies, adding reliability supervision, expert-bank separation,
+cross-fitting, corruption coverage, and development-only route selection did not make the
+registered learned router outperform its strongest simple matched control. The sequence
+does support two narrower conclusions: corruption-diverse training can matter greatly for
+the corruption families it covers, and input-dependent semantic routing can outperform a
+fixed mixture within one such regime. Neither finding generalized into a successful
+reserved-shift routing primary.
+
+The residual temporal predictor provides a contrasting positive result. It passed a
+predeclared comparison with both the prior predictor and persistence while preserving
+corrupted-input performance. The practical lesson is not that complexity never helps. It
+is that adaptive routing, reliability estimation, and model selection each create a new
+generalization problem, whereas a strong simple control can encode the right structure
+directly. Preserving every failed iteration made that conclusion possible.
+
+\section*{Artifact and ethics statement}
+No human subjects or personal data were used. The external dataset is EditCLEVR under
+CC-BY-4.0, pinned by revision; its images are not redistributed in the paper package. The
+remaining studies use generated data. No model is promoted for deployment. The repository
+retains negative outcomes and protocol chronology. External submission, endorsement, and
+independent reproduction are not claimed by the artifact itself.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

@@ -4,7 +4,9 @@ For the maintained bounded training, interruption/resume, and Kaggle commands,
 see [the 2026-10-16 campaign handoff](kaggle-campaign.md). CUDA smoke/resume and
 the six-cell development matrix completed successfully; these are engineering
 receipts, not scientific promotion. V4 later completed with a failed primary and
-useful secondary synthetic effects. V5 remains prepared but unexecuted.
+useful secondary synthetic effects. V5 later completed with an unsupported
+routing primary and a supported residual-temporal primary within its frozen
+synthetic task.
 
 `OlympusReferenceSystem` is the bounded composition layer for the six family
 reference implementations. It is executable and differentiable, but it is not
@@ -106,6 +108,31 @@ next-state MSE, STOP counts, mean uncertainty, intrinsic-risk Brier score and
 ECE when labels exist, a risk-coverage curve, mean gates, normalized routing
 entropy, effective component count, and per-component leave-one-out KL and
 class-flip rates. The report always sets `promotion_authorized` to false.
+
+Every successful composed-system training run also writes
+`decision-dossiers.json`.  This hash-bound evaluation-split artifact records
+the exact source ID, host transition mask, selected transition, raw versus
+exposed decision, forced STOP, risk values, uncertainty, family gates, and
+leave-one-family-out decision deltas for each evaluated example.  It excludes
+raw tensors and hidden states.  Gate values and counterfactual changes are
+diagnostics, not causal explanations; the bundle is bound to the dataset
+manifest and selected checkpoint hashes and is rejected if either identity or
+its own content digest is inconsistent.
+
+The completed report records both the SHA-256 of the serialized dossier file
+and the bundle's domain-specific content digest.  A self-consistent rewritten
+bundle is not accepted as reproduction evidence: replay every value from the
+declared checkpoint and source-bound evaluation tensors on the run's declared
+device with:
+
+```bash
+.venv/bin/olympus bu1ld verify-olympus-dossiers \
+  artifacts/olympus-system/run-001 path/to/aligned/manifest.json
+```
+
+The command fails on a changed file hash, binding, source order, content digest,
+runtime source identity, device, or recomputed attribution value.  A pass is an
+engineering-integrity result, not a causal explanation or promotion decision.
 
 The repository does not currently contain a rights-reviewed aligned Olympus
 multimodal/temporal/risk corpus. The existing 36-record instruction smoke

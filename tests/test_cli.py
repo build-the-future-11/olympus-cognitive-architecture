@@ -13,6 +13,7 @@ from olympus.foundry.resources import MemorySnapshot
 from olympus.models.olympus_system import OlympusSystemConfig
 
 runner = CliRunner()
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def _workspace(tmp_path: Path) -> tuple[Path, Path]:
@@ -49,6 +50,51 @@ def _invoke(*arguments: str) -> str:
     result = runner.invoke(app, list(arguments))
     assert result.exit_code == 0, result.output
     return result.output
+
+
+def test_research_status_command_reports_evidence_bound_portfolio() -> None:
+    status = json.loads(_invoke("research-status", "--root", str(ROOT)))
+    assert status["families_ready"] == 0
+    assert status["families_total"] == 6
+    assert status["model_promoted"] is False
+    assert status["pending_archive_studies"] == [
+        "olympus-robust-fusion-v5",
+        "olympus-editclevr-v1",
+    ]
+
+
+def test_resource_status_fails_closed_without_traceback(monkeypatch: object) -> None:
+    def unavailable() -> MemorySnapshot:
+        raise RuntimeError("resource inspection command failed: sysctl")
+
+    monkeypatch.setattr("olympus.cli.memory_snapshot", unavailable)  # type: ignore[attr-defined]
+    result = runner.invoke(app, ["foundry", "resource-status"])
+    assert result.exit_code == 1
+    payload = json.loads(result.output)
+    assert payload == {
+        "status": "RESOURCE_INSPECTION_UNAVAILABLE",
+        "workload_admitted": False,
+        "reason": "resource inspection command failed: sysctl",
+    }
+    assert "Traceback" not in result.output
+
+
+def test_resource_status_reports_snapshot_without_admitting_workload(monkeypatch: object) -> None:
+    snapshot = MemorySnapshot(
+        total_bytes=16 * 1024**3,
+        available_bytes=4 * 1024**3,
+        swap_total_bytes=8 * 1024**3,
+        swap_used_bytes=4 * 1024**3,
+        process_peak_rss_bytes=256 * 1024**2,
+    )
+    monkeypatch.setattr(  # type: ignore[attr-defined]
+        "olympus.cli.memory_snapshot",
+        lambda: snapshot,
+    )
+    status = json.loads(_invoke("foundry", "resource-status"))
+    assert status["status"] == "RESOURCE_INSPECTION_AVAILABLE"
+    assert status["workload_admitted"] is None
+    assert status["swap_fraction"] == 0.5
 
 
 def test_readiness_check_can_enforce_unready_exit_status(tmp_path: Path) -> None:
@@ -192,6 +238,28 @@ def test_bu1ld_specifications_command_is_explicitly_non_promotional() -> None:
     assert all(item["status"] == "REFERENCE_IMPLEMENTATION_NOT_PROMOTED" for item in references)
     assert all(item["target_capability_claimed"] is False for item in references)
 
+    seven_models = json.loads(_invoke("bu1ld", "seven-model-status"))
+    assert [item["model_id"] for item in seven_models] == [
+        "hermes",
+        "prometheus",
+        "perseus",
+        "atlas",
+        "kronos",
+        "aion",
+        "jepa_upscaler",
+    ]
+    assert all(
+        item["status"] == "ENGINEERING_REFERENCE_LOCAL_VERIFIED_NOT_PROMOTED"
+        for item in seven_models
+    )
+    assert all(item["contract_execution_required"] is True for item in seven_models)
+    assert all(item["promotion_authorized"] is False for item in seven_models)
+
+    contracts = json.loads(_invoke("bu1ld", "seven-model-contract"))
+    assert all(item["forward_contract"] == "PASS" for item in contracts)
+    assert all(item["backward_contract"] == "PASS" for item in contracts)
+    assert all(item["gradient_coverage"] == "PASS" for item in contracts)
+
 
 def test_bu1ld_composed_training_command_runs_end_to_end(
     tmp_path: Path, monkeypatch: object
@@ -262,7 +330,19 @@ def test_bu1ld_composed_training_command_runs_end_to_end(
     assert result["status"] == "COMPLETED_DEVELOPMENT_NOT_PROMOTED"
     assert result["promotion_authorized"] is False
     assert (output / "checkpoint.pt").is_file()
+    assert (output / "decision-dossiers.json").is_file()
     assert (output / "report.json").is_file()
+    verified = json.loads(
+        _invoke(
+            "bu1ld",
+            "verify-olympus-dossiers",
+            str(output),
+            str(manifest),
+        )
+    )
+    assert verified["status"] == "VERIFIED_DECISION_DOSSIER_REPLAY_NOT_PROMOTED"
+    assert verified["examples"] == 2
+    assert verified["promotion_authorized"] is False
 
 
 def test_labos_read_run_and_report_commands(tmp_path: Path) -> None:

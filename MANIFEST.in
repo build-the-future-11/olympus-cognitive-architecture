@@ -6,10 +6,38 @@ include RESEARCH_STATE.json
 include RELEASE.md
 include SECURITY.md
 include uv.lock
+include requirements-kaggle.txt
+recursive-include configs *.json *.yaml
 recursive-include behaviors *.yaml
 recursive-include datasets/hermes-smoke *.jsonl
 prune datasets/external
 recursive-include docs *.md
 recursive-include examples *.py
 recursive-include research *.md
+include research/llm_readiness_v1/CURRENT_REPORT.json
+include research/olympus_editclevr_v1/RESEARCH_STATE.json
+include research/olympus_irp_successor_v2/RESEARCH_STATE.json
+include research/olympus_irp_successor_v3/RESEARCH_STATE.json
+include research/olympus_irp_successor_v4/RESEARCH_STATE.json
+include research/olympus_irp_successor_v5/RESEARCH_STATE.json
+include research/ENGINEERING_RESEARCH_STATUS_HARDENING_20261018.json
+include research/olympus_consolidated_2026/RESEARCH_STATE.json
+include research/olympus_consolidated_2026/RELEASE_RECEIPT_20261018.json
+include research/seven_model_engineering_v1/RESEARCH_STATE.json
+include research/seven_model_engineering_v1/RECEIPT.json
+include research/flagship_engineering_v2/RESEARCH_STATE.json
+include research/flagship_engineering_v2/RECEIPT.json
+include research/decision_dossier_replay_v1/RESEARCH_STATE.json
+include research/DECISION_DOSSIER_REPLAY_HARDENING_20261020.json
+include research/flagship_engineering_v2/RESOURCE_BLOCKED_20261019.json
+include research/flagship_engineering_v2/RESOURCE_BLOCKED_APPROVED_LOCAL_20261019.json
+include research/flagship_engineering_v2/RECEIPT_APPROVED_LOCAL_20261019.json
+include research/flagship_engineering_v2/KAGGLE_EDITOR_BLOCKED_20261019.json
+include research/flagship_engineering_v2/RECEIPT_KAGGLE_PREPARATION_20261019.json
+include research/flagship_engineering_v2/KAGGLE_CPU_VERIFIED_20261019.json
+include research/flagship_engineering_v2/RECEIPT_KAGGLE_CPU_20261019.json
+include research/flagship_engineering_v2/KAGGLE_CUDA_BLOCKED_20261019.json
+include research/flagship_engineering_v2/RECEIPT_KAGGLE_CUDA_BLOCKED_20261019.json
+recursive-include notebooks *.py
+recursive-include tests *.py
 recursive-include scripts *.py

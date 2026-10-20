@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "study_id": "decision-dossier-replay-v1",
+  "date": "2026-10-20",
+  "kind": "bounded_engineering_integrity_repair",
+  "phase": "STATIC_VERIFIED_NUMERICAL_RESOURCE_BLOCKED",
+  "status": "STATIC_VERIFIED_NUMERICAL_RESOURCE_BLOCKED",
+  "flaw": "The first decision-dossier report stored an internal content digest in a field named as a file SHA-256, and interrupted-export recovery accepted a self-consistent rehashed bundle without recomputing it from the selected checkpoint and evaluation tensors.",
+  "cause": "Artifact serialization integrity and numerical provenance replay were implemented as one internal bundle check rather than separate external-file and checkpoint/data replay checks.",
+  "severity": "HIGH_FOR_ATTRIBUTION_INTEGRITY_NO_SCIENTIFIC_OUTCOME_CHANGED",
+  "repair": [
+    "Report schema 4 stores the serialized-file SHA-256 and internal content digest separately.",
+    "The reader rejects symlinks, non-files, changed file hashes, wrong bindings, and changed source order.",
+    "Recovery and the CLI verifier recompute every dossier from the declared checkpoint and source-bound evaluation split on the declared device and require exact canonical equality.",
+    "Adversarial tests cover a wrong file digest and a rehashed changed contribution."
+  ],
+  "source_sha256": {
+    "olympus/evaluation/decision_dossiers.py": "a5ee4f8dee52d610e9cdc5d76867f3dc2c290a28f7082b75bb4d3933f120a932",
+    "olympus/training/olympus_system.py": "e32e529862878662617b43ba4533ce81a2a35077a5469fa029ddd97f4e19f10c",
+    "olympus/cli.py": "77ea945f430885185f671dd5b70f63d22d1e5d2d0b3f99463f0271630f585838",
+    "tests/test_olympus_system.py": "befe6db46a7faedcf5264d16e8209cf7069ae8ff89e64c820ca7c1a92f30a57d",
+    "tests/test_cli.py": "bd9f919aceb0b3ff8556d29ac447b638bfaabceea2db231a3ef66ecb80ed7747"
+  },
+  "verification": {
+    "ruff": "PASS_FULL_REPOSITORY",
+    "mypy": "PASS_167_SOURCE_FILES",
+    "python_byte_compile": "PASS_5_SOURCE_OR_TEST_FILES",
+    "git_diff_check": "PASS",
+    "tensor_free_and_state_tests": "PASS_56",
+    "packaging_metadata_tests": "PASS_4",
+    "source_and_wheel_build": "PASS_REQUIRED_REPLAY_FILES_PRESENT",
+    "readiness_baseline": "PASS_EXACT_0_OF_6",
+    "offline_lock_check": "PASS_110_PACKAGES",
+    "numerical_pytest": "NOT_RUN_RESOURCE_ADMISSION_REFUSED"
+  },
+  "resource_refusal": {
+    "guard": "512 MiB free-memory floor and no rising pageouts before Torch import",
+    "free_bytes": [
+      297926656,
+      292700160
+    ],
+    "pageouts": [
+      1053427,
+      1053427
+    ],
+    "torch_imported_by_test_command": false
+  },
+  "scientific_training_epochs": 0,
+  "protected_evaluations": 0,
+  "external_downloads": 0,
+  "paid_jobs": 0,
+  "promotion_authorized": false,
+  "scientific_outcomes_created": false
+}
