@@ -41,3 +41,5 @@ include research/flagship_engineering_v2/RECEIPT_KAGGLE_CUDA_BLOCKED_20261019.js
 recursive-include notebooks *.py
 recursive-include tests *.py
 recursive-include scripts *.py
+
+recursive-include research/olympus_routing_v6 *.json *.tex *.bib *.sty

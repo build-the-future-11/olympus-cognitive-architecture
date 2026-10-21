@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "Olympus Cognitive Architecture",
   "repository": "build-the-future-11/olympus-cognitive-architecture",
-  "updated_utc": "2026-10-20",
+  "updated_utc": "2026-10-21",
   "software": {
     "version": "0.2.0",
     "maturity": "ALPHA",
@@ -459,6 +459,38 @@
       "event": "Corrected the composed-system attribution artifact so report schema 4 separates the serialized-file SHA-256 from the internal content digest and partial-export recovery cannot trust a merely self-consistent rewritten bundle. A guarded replay verifier now reloads the declared checkpoint and source-bound evaluation split on the declared device and requires every dossier value to match. Full Ruff, strict MyPy on 167 source files, byte-compilation, whitespace checks, 56 tensor-free/state tests, the exact 0/6 readiness baseline, and the 110-package offline lock check passed. Numerical pytest was refused before Torch import because free memory was 297926656 then 292700160 bytes, below the unchanged 512 MiB floor; pageouts were stable. No protected data, scientific training, promotion, paid compute, or predecessor outcome changed.",
       "record": "research/DECISION_DOSSIER_REPLAY_HARDENING_20261020.json",
       "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "status_and_completion_audit",
+      "event": "Reconciled current canonical status, dated ledgers, execution report and roadmap for the requested completion assessment. The research-status command passed with 0/6 families ready. All five decision-dossier source hashes and all six consolidated publication receipt file hashes matched current files. The roadmap contains 64 unchecked deliverables with partial B02/F01 progress. Earlier CPU and release results remain snapshot-specific; current numerical tests, CUDA qualification, archive retrieval, independent reproduction and target-scale scientific admission remain incomplete. No local resource or remote Kaggle availability recheck was performed; those blockers retain their 2026-10-20 observation dates. No experiment, protected evaluation, external action, claim change or predecessor-outcome change occurred.",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "iteration_results_comparison",
+      "event": "Compared preserved v2-v5 and EditCLEVR primary endpoints with the consolidated evidence map and manuscript for the user. All five routing primaries remain unsupported; v4 corruption-coverage and semantic-routing gains remain secondary; v5 residual temporal improvement remains supported only within the frozen synthetic task. Different endpoints and controls prevent interpreting the routing deltas as a common learning curve. No experiment or predecessor outcome changed.",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "routing_diagnosis_and_successor_recommendation",
+      "event": "Reviewed v2-v5 and EditCLEVR diagnostics and routing source. Confirmed utility BCE correctness targets followed by normalized sigmoid mixing, semantic mixture-NLL training, regime-dependent routing performance, negligible v4 CF-removal gain, and structurally overlapping EditCLEVR experts. Objective-to-action mismatch and limited expert complementarity are candidate explanations, not experimentally isolated causes. Recommended a separately scoped successor: development-only expert-error/route-regret diagnostics, a frozen-reference routing correction with example-dependent intervention, and a matched average-versus-group-robust training ablation. Fresh sources, explicit budgets, controls, falsifiers and a frozen protocol are required before scientific execution. This recommendation is not an admitted or frozen campaign; no numerical or protected evaluation occurred.",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "authorized_routing_v6_successor",
+      "event": "User requested full scientific pipeline, Kaggle execution, manuscript in supplied style and publication to linked GitHub. Opened a bounded separately versioned synthetic conservative-stacking successor after independent design review. One campaign, fixed protocol/budget, no paid compute, no predecessor changes. Recovered exact user-supplied arxiv.sty with original provenance. Local preflight refused before Torch import at 66994176/71024640 free bytes and pageouts 38616/38620. GitHub authentication verified outside sandbox.",
+      "record": "research/olympus_routing_v6/RESEARCH_STATE.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "routing_v6_implementation_and_review",
+      "event": "Implemented disjoint-stacked conservative routing and seven correction variants with single-expert/direct/constant controls. Corrected frozen-gradient inheritance and incomplete checkpoint/result replay after independent source review. Full Ruff and focused strict MyPy passed; numerical qualification refused before Torch import. Exact supplied arxiv.sty recovered with provenance, resolving that historical blocker. No new scientific result exists.",
+      "record": "research/olympus_routing_v6/RESEARCH_STATE.json",
+      "scientific_outcomes_created": false
     }
   ],
   "verification": {
@@ -654,7 +686,6 @@
     "exact current source has not passed the complete release workflow",
     "flagship v2 CPU qualification passed; approved single-device CUDA execution remains blocked, and the prior draft now returns page not found while this task lacks the authenticated Kaggle context needed to create a replacement saved version",
     "local numerical execution is currently refused by the frozen memory and swap admission guards",
-    "the requested personal arxiv.sty is absent, so the verified manuscript cannot yet be restyled with that exact file",
     "no revision-pinned licensed base, aligned data, or admitted budget is selected for a target-scale six-family LLM campaign"
   ],
   "claims_forbidden": [
@@ -673,5 +704,11 @@
     "numerical_attempt": "research/flagship_engineering_v2/RESOURCE_BLOCKED_20261020.json",
     "hosted_attempt": "research/flagship_engineering_v2/KAGGLE_CUDA_AUTH_BLOCKED_20261020.json",
     "scientific_outcomes_created": false
+  },
+  "active_routing_successor": {
+    "id": "olympus-routing-v6.0.2",
+    "state": "research/olympus_routing_v6/RESEARCH_STATE.json",
+    "protocol": "research/olympus_routing_v6/protocol.json",
+    "status": "IMPLEMENTED_STATIC_VERIFIED_NUMERICAL_PENDING"
   }
 }

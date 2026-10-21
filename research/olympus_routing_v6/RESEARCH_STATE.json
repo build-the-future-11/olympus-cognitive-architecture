@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "study_id": "olympus-routing-v6.0.2",
+  "phase": "IMPLEMENTED_STATIC_VERIFIED_NUMERICAL_PENDING",
+  "scientific_result": "NOT_EVALUATED",
+  "authorization": "User attachment 2026-10-21 requests bounded scientific execution, Kaggle, complete code/paper and GitHub publication; no paid compute.",
+  "protocol": "research/olympus_routing_v6/protocol.json",
+  "predecessors": [
+    "olympus-robust-fusion-v5",
+    "olympus-editclevr-v1"
+  ],
+  "promotion_authorized": false,
+  "protected_evaluations": 0,
+  "history": [
+    {
+      "date": "2026-10-21",
+      "event": "Protocol recorded before successor implementation or any new data generation. Independent design critique incorporated."
+    },
+    {
+      "date": "2026-10-21",
+      "event": "Complete model, guarded runner, disjoint splits, paired analysis and checkpoint replay implemented; independent source-review defects repaired before any scientific execution. Full Ruff and focused strict MyPy passed. Local qualification refused before Torch import. Hosted qualification prepared."
+    }
+  ]
+}
