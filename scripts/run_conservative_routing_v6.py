@@ -430,8 +430,10 @@ def development_manifest(output: Path) -> dict[str, str]:
 
 def freeze(output: Path) -> None:
     files = development_manifest(output)
-    if sources() != v4.read(output / "CONTRACT.json")["sources"]:
-        raise RuntimeError("source changed during development")
+    contract = v4.read(output / "CONTRACT.json")
+    if sources() != contract["sources"] or PROTOCOL != contract["protocol"]:
+        raise RuntimeError("source/protocol changed during development")
+    files["CONTRACT.json"] = v4.sha(output / "CONTRACT.json")
     v4.write(
         output / "SCIENTIFIC_FREEZE.json",
         {
@@ -448,8 +450,12 @@ def validate_freeze(output: Path) -> dict[str, Any]:
     if f["protocol"] != PROTOCOL or f["sources"] != sources():
         raise RuntimeError("frozen source/protocol differs")
     actual = development_manifest(output)
+    actual["CONTRACT.json"] = v4.sha(output / "CONTRACT.json")
     if actual != f["files"]:
         raise RuntimeError("changed frozen file or manifest membership")
+    contract = v4.read(output / "CONTRACT.json")
+    if contract["protocol"] != PROTOCOL or contract["sources"] != sources():
+        raise RuntimeError("frozen contract source/protocol differs")
     return dict(f)
 
 

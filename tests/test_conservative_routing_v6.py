@@ -150,7 +150,8 @@ def test_artificial_lifecycle_and_tamper_refusal(
     # The host was admitted by the outer qualification command; no resource
     # thresholds are disabled, and the same guard is called inside the fixture.
     v4.write(
-        tmp_path / "CONTRACT.json", {"sources": runner.sources(), "scope": "artificial_fixture"}
+        tmp_path / "CONTRACT.json",
+        {"sources": runner.sources(), "protocol": protocol, "scope": "artificial_fixture"},
     )
     import time
 
@@ -195,6 +196,14 @@ def test_artificial_lifecycle_and_tamper_refusal(
     with pytest.raises(RuntimeError, match="manifest membership"):
         runner.validate_freeze(tmp_path)
     freeze.write_bytes(original_freeze)
+    contract = tmp_path / "CONTRACT.json"
+    original_contract = contract.read_bytes()
+    changed_contract = v4.read(contract)
+    changed_contract["python"] = "tampered environment"
+    contract.write_text(json.dumps(changed_contract))
+    with pytest.raises(RuntimeError, match="changed frozen file"):
+        runner.validate_freeze(tmp_path)
+    contract.write_bytes(original_contract)
     checkpoint = next((tmp_path / "development").glob("*/checkpoint.pt"))
     with checkpoint.open("ab") as stream:
         stream.write(b"tamper")

@@ -13,8 +13,8 @@ def generate(seed: int, count: int, regime: str) -> dict[str, Tensor]:
         return previous_generate(seed, count, regime)
     batch = previous_generate(seed, count, "corrupted")
     clean = previous_generate(seed, count, "clean")
-    # New combination declared before execution. No target-dependent transform.
-    # This is a synthetic held-out family, not a claim of natural-data OOD.
+    # Reserved configuration declared before execution; no target-dependent transform.
+    # Known perturbation types, not a novel family or natural-data OOD claim.
     for index, key in enumerate(("tokens", "image", "states")):
         mask = batch["corruption_status"][:, index] == 2
         x = clean[key].clone()

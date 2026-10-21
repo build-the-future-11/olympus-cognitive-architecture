@@ -1,0 +1,291 @@
+\section{Introduction}
+Learned routing can degrade an already strong ensemble when the gate learns a
+relation between confidence, representation, and correctness that does not
+survive a change in observations. In the preserved Olympus sequence, five
+routing primary endpoints failed their declared improvement criteria. Some
+secondary interventions helped, including expanded corruption coverage and a
+residual temporal predictor. These observations motivate a narrower question:
+can a learned correction retain a strong reference while making useful,
+example-dependent changes under a reserved synthetic perturbation?
+
+Our testable statement is: existing Olympus gates struggle to outperform strong
+controls under changed corruption configurations; a penalized, example-dependent
+blend around a frozen reference may improve the rescue-to-harm balance because
+it can reduce intervention where the alternative is unreliable. This is a
+hypothesis, not a guarantee. We compare anchoring, input dependence, and
+worst-group training in a fixed study with fresh source identities. The
+contribution is an empirical decomposition and reproducible negative-result
+continuity, not a new universal mixture architecture.
+
+\section{Related work and novelty boundary}
+Input-dependent expert mixtures are established by Jacobs et al.\ \cite{jacobs1991}.
+Learning a combiner from held-out predictions is the premise of stacked
+generalization\ \cite{wolpert1992}. Our two frozen banks and disjoint meta-fitting
+partitions implement that principle conservatively; they are not nested
+cross-fitting. The proposed convex blend is also ordinary probability mixing.
+
+Sagawa et al.\ \cite{sagawa2020} show that small worst-group training loss does
+not ensure worst-group generalization and emphasize regularization. Our maximum
+of three minibatch losses is distinct from their adaptive-weight group-DRO
+algorithm. Ovadia et al.\ \cite{ovadia2019} motivate checking calibration under
+shift rather than trusting confidence alone. Neither paper proves improvement
+for this generator or this gate.
+
+Learning to defer\ \cite{mozannar2020} studies a classifier's decision to use
+an expert with a consistent surrogate. We instead train a soft probability
+mixture and do not inherit its consistency theorem. Recent multi-expert
+deferral work identifies expert-selection ambiguity and underfitting
+\cite{liu2026}; it is a related concern, not an established explanation of our
+results. A direct comparison would require a separately specified deferral
+setting. We do not claim superiority over those algorithms or state of the art.
+
+\section{Problem formulation and scope}
+Each observation comprises eight integer tokens, a $3\times8\times8$ image,
+four five-dimensional observed states, and four three-dimensional actions.
+The target $y\in\{0,1,2,3\}$ is a synthetic latent class. Domain metadata is
+sampled independently of the target; all four transitions are allowed and the
+supplied risk score is zero. No corruption identity or target is supplied to
+the gate. Three development groups describe clean, familiar-corruption, and
+known-shift observations. Group labels enter the objective only.
+
+Five components produce class probabilities $p_j\in\Delta^3$ and states
+$z_j\in\mathbb R^{16}$. For two separately initialized banks trained on parity
+halves of a bank-fitting partition, we average corresponding probabilities
+and states. Thus $p_j=(p_j^{(0)}+p_j^{(1)})/2$ and similarly for $z_j$.
+The router receives
+\begin{equation}
+ x=\operatorname{concat}(z_1,\ldots,z_5,p_1,\ldots,p_5,H(p_1),\ldots,H(p_5))
+ \in\mathbb R^{105},\qquad H(p)=-\sum_c p_c\log\max(p_c,10^{-8}).
+\end{equation}
+These features are detached. Identical bank averaging is used during fitting,
+selection, and protected inference. No additional labels, groups, or corruption
+metadata are available at inference.
+
+The study concerns four-class classification under this generator. It does not
+test language quality, tool use, autonomous research, natural-image reasoning,
+deployment safety, or six-family model promotion. The full system contains
+auxiliary heads that this objective does not supervise; their existence is not
+evidence that they acquired useful capabilities.
+
+\section{Model and chronological training specification}
+\subsection{Inherited component banks}
+Each bank uses the repository's unchanged reference system. The text backbone
+has vocabulary 32, width 16, one pre-normalized causal attention block, four
+attention heads, a GELU feedforward layer of width 32, maximum length eight,
+and zero dropout. Token and positional embeddings are added; attention and
+feedforward sublayers have residual connections and a final layer normalization.
+Hermes uses this text representation. Prometheus adds domain-specific residual
+adapters of bottleneck width eight across three domains, with supplied domain
+IDs determining adapter selection. Perseus has four width-32 SiLU experts and
+top-two routing. Atlas combines text with $2\times2$ image patches through
+four-head cross-attention and maps its pooled representation to a normalized
+12-dimensional retrieval vector. Kronos uses a width-12 GRU on concatenated
+five-dimensional states and three-dimensional actions. Its linear next-state
+head predicts all four next states. Aion is present in the inherited system
+but is not one of the five class experts.
+
+Last-token Hermes, Prometheus, and Perseus states, the Atlas retrieval vector,
+and the last Kronos hidden state each pass through a linear projection and
+LayerNorm to width 16. Five separate $16\to4$ heads produce logits. For each
+bank, 250 updates optimize
+\begin{equation}
+ L_{\rm bank}=\frac1{5B}\sum_{i,j}\operatorname{CE}(\ell_{ij},y_i)
+ +0.25\,\operatorname{mean}_{i,t,k}(\hat s_{i,t+1,k}-s^*_{i,t+1,k})^2.
+\end{equation}
+There is no counterfactual-consistency penalty. Each update samples 64 examples
+with replacement from that bank's 512-example parity half. The two banks are
+then frozen. The exact inherited operators and configuration are distributed
+with the source; no external model weights are used.
+
+\subsection{Reference fitting and selection}
+The semantic gate is $w(x)=\operatorname{softmax}(W_2\operatorname{GELU}
+(W_1\operatorname{LN}(x)+b_1)+b_2)$, with widths $105\to32\to5$.
+Its prediction is $p_{\rm sem}=\sum_jw_jp_j$. A fixed gate learns five logits,
+initialized at zero. On a separate reference-fitting partition, both receive
+300 updates minimizing the sum of their mixture NLLs. Neither loss trains the
+frozen banks. Uniform averaging and each single expert are additional choices.
+An independent reference-selection partition chooses the highest minimum
+group accuracy, then the highest mean group accuracy, then earliest declared
+candidate order. The eight candidates are uniform, fixed, semantic, and experts
+0 through 4. The resulting $p_0$ is frozen before correction fitting.
+
+\subsection{Alternative, intervention, and loss}
+Each alternative starts from a copy of the semantic reference network with
+gradients explicitly enabled. Let $q_\theta$ denote its mixture. The final
+prediction is
+\begin{equation}\label{eq:blend}
+ p_\theta(x)=(1-\alpha_\theta(x))p_0(x)+\alpha_\theta(x)q_\theta(x).
+\end{equation}
+Direct controls fix $\alpha=1$. Constant controls learn a scalar logit.
+Adaptive controls use $\alpha=\sigma(a^Tx+b)$ with $a=0$ and
+$b=\log(0.1/0.9)$ initially. Constant controls also initialize at $0.1$.
+The alternative network has 3,767 parameters, with zero, one, or 106 additional
+intervention parameters. This is a transparent capacity difference, not a
+perfectly parameter-matched comparison.
+
+For group $g$, $L_g$ is mean $-\log\max(p_{\theta,y},10^{-8})$ over 32 sampled
+examples. The ERM objective averages $L_1,L_2,L_3$; the robust objective takes
+their maximum. Constant and adaptive penalized variants add
+$0.01\operatorname{mean}(\alpha)$. The seven variants are direct ERM, direct
+robust, adaptive ERM, adaptive robust, constant ERM, constant robust, and
+adaptive robust without penalty. All receive 300 updates using the same
+per-group sample sequence on the correction-fitting partition. Adaptive robust
+is the prospectively fixed primary candidate.
+
+All optimization uses AdamW, learning rate $0.001$, weight decay $0.01$, default
+Adam moments $(0.9,0.999)$ and $\epsilon=10^{-8}$, and global gradient norm
+clipping at one. Nonfinite losses, admitted gradients, or parameters terminate
+the run. Shared random seeds fix initialization and sampling. Inference is
+argmax over four class probabilities, with the framework's first-index tie
+rule. Probabilities must be finite, nonnegative, and sum to one within absolute
+tolerance $10^{-5}$; intervention must lie in $[0,1]$.
+
+\subsection{What anchoring does and does not prove}
+For any fixed example, equation~\eqref{eq:blend} gives
+\begin{equation}
+ \operatorname{TV}(p_\theta,p_0)=\alpha\operatorname{TV}(q_\theta,p_0)\leq\alpha.
+\end{equation}
+This follows by factoring the nonnegative scalar out of the $\ell_1$ norm.
+It bounds distribution movement, not error: a small change can flip a narrow
+classification margin. A penalized mean intervention is not a hard per-example
+constraint. If $R$ counts wrong-reference/correct-candidate cases and $H$ counts
+correct-reference/wrong-candidate cases, then exactly
+\begin{equation}\label{eq:rescue}
+ \operatorname{Acc}(p_\theta)-\operatorname{Acc}(p_0)=(R-H)/N.
+\end{equation}
+Useful intervention requires $R>H$. There is no theorem that training NLL,
+worst-group loss, or the penalty produces that inequality under shift.
+
+\subsection{Inference cost}
+All arms use the same two banks. A routing network costs
+$O(105\cdot32+32\cdot5+5\cdot4)$ operations per example, plus normalization
+and activations. Adaptive intervention adds one 105-dimensional dot product.
+Bank inference dominates these small heads. The experiment retains all variants
+for comparison; a deployed single arm would not require all seven. We report
+observed runtime without claiming a general scaling law or measured FLOPs.
+
+\section{Data generation, splits, and perturbations}
+Labels are uniform across four classes. Initial clean state is independent
+Gaussian noise of standard deviation $0.15$ with $1.5$ added at the label
+coordinate. Actions are uniform on $[-1,1]^3$. Clean dynamics are
+\begin{equation}
+ s^*_{t+1}=0.82s^*_t+0.18\tanh(\operatorname{roll}(s^*_t,1))
+ +0.12\operatorname{pad}(a_t,2).
+\end{equation}
+Observed states add Gaussian noise with standard deviation $0.12$. Tokens start
+uniformly in $\{8,\ldots,30\}$, with the first three replaced by
+$y+1$, $5+(y\bmod2)$, and $7+\lfloor y/2\rfloor$. Images have uniform background
+noise below $0.15$, with $0.75$ added to a label-dependent quadrant and channel.
+These deliberately redundant class signals make this a mechanism diagnostic.
+
+Broad bank training uniformly samples four branches: clean, one missing
+modality, one damaged modality, or one missing plus a different damaged
+modality. Missing means zero. Familiar damage randomizes the first three
+tokens, replaces the image by uniform noise, or replaces states by Gaussian
+noise. For half the broad examples selected independently, damaged observations
+instead use reversed first-three tokens, image inversion, or a $1.5$ state bias.
+The clean development group has no imposed missingness. Corrupted and known-shift
+groups each have one missing and one distinct damaged modality; known shift
+uses reversal, inversion, or bias.
+
+The protected composite-shift configuration uses the same missing/damaged
+assignment, but damaged text is rolled by two tokens, damaged images have
+alternating rows replaced by $0.5$, and damaged states become
+$0.5s+\operatorname{linspace}(-0.75,0.75,4)$. Only the designated damaged
+modality gets its transform. These perturbation types were explored historically;
+their reserved configuration is not a previously unknown mechanism or natural
+data OOD. Targets and source IDs are unchanged by observation transformations.
+
+Five dataset seeds are 20267100, 20267200, 20267300, 20267400, and 20267500.
+Each is repeated with training seeds 20267601 and 20267602. Bank initialization
+uses training seed plus $100b$ for bank $b$; bank sampling adds 10000.
+Reference sampling adds one; alternative initialization adds two and correction
+sampling adds three. The second optimizer seed shares each dataset's examples
+and is not a sixth independent dataset.
+
+\begin{table}[ht]
+\centering
+\caption{Disjoint stages per dataset. Three-regime stages use consecutive offsets.}
+\begin{tabular}{lrr}
+\toprule Stage & Seed offset & Examples \\\midrule
+Bank fit (split into two parity halves) & 1 & 1,024 \\
+Reference fit & 10--12 & $3\times256$ \\
+Reference selection & 20--22 & $3\times256$ \\
+Correction fit & 30--32 & $3\times256$ \\
+Final control selection & 40--42 & $3\times256$ \\
+Protected four regimes & 60--63 & $4\times1,024$ \\\bottomrule
+\end{tabular}
+\end{table}
+Source ID equals generator seed times 100000 plus example index. All 85
+dataset-stage seed ranges are disjoint; each stage records IDs and tensor
+hashes. The same protected tensors are used by all arms. Generated data have no
+human subjects or external dataset licenses; the repository's code license
+applies to its generator. Synthetic evidence cannot establish real-world rights,
+privacy, safety, or capability properties.
+
+\section{Frozen experimental methodology}
+\subsection{Controls and selection}
+After correction fitting, the separate final-selection partition chooses among
+uniform, fixed, semantic, direct ERM, direct robust, constant robust, constant
+ERM, and experts 0--4, in that order. Selection maximizes worst-group accuracy,
+then mean accuracy, then declared order. This selected control is fixed before
+protected evaluation. It is not the best control chosen after seeing test
+results. Every direct control receives the extra 300 updates, making additional
+training an explicit competing explanation. Adaptive ERM separates robust
+training from anchoring; constant controls separate input dependence from
+shrinkage; the no-penalty arm tests the regularizer.
+
+\subsection{Primary rule and uncertainty}
+The primary contrast is adaptive robust minus selected control accuracy on
+composite shift. Support requires mean gain at least $0.02$ and descriptive
+95\% interval lower bound strictly above zero. For each clean, corrupted, and
+known-shift regime, nonregression against both selected control and reference
+requires mean delta at least $-0.01$ and interval lower bound at least $-0.02$.
+All seven criteria must hold. A primary failure is retained regardless of any
+favorable secondary metric or arm.
+
+For each dataset, the two optimizer-seed paired deltas are averaged. The five
+dataset deltas are then resampled with replacement 10,000 times using NumPy's
+default generator seeded 20267999. The mean of five sampled deltas gives each
+bootstrap replicate; percentile 2.5 and 97.5 bounds are descriptive pilot
+intervals. Five clusters are too few for strong general population claims.
+All per-dataset deltas are reported. Secondary comparisons are exploratory,
+without multiplicity-adjusted significance declarations.
+
+Metrics include accuracy, NLL, summed-class Brier score, ten-bin expected
+calibration error, top-half confidence selective accuracy, intervention amount,
+prediction changes, rescues, and harms. We retain individual expert predictions.
+The rescue identity is checked arithmetically. Primary and nonregression rules
+are fixed before execution; no protected result may select a new primary.
+
+\subsection{Execution, freeze, and failure policy}
+One campaign contains ten development cells, twenty bank fits, seven correction
+fits per cell, and forty protected reports. There are zero scientific
+development revisions, zero paid jobs, and no external data or weight downloads.
+The environment is a locked CPU installation with one Torch thread and
+deterministic algorithms. A 120-second artificial qualification must pass on
+the exact scientific source. The campaign's hard subprocess deadline is
+3,600 seconds. Resource checks require at least 2 GiB available memory and at
+most 90\% swap use; macOS additionally requires 512 MiB raw free memory and
+stable pageouts. Failures stop and retain partial artifacts.
+
+Before generating protected data, the freeze binds the protocol, source hashes,
+Python/Torch/platform contract, all development file identities, reference and
+control selections, checkpoints, and split hashes. Qualification tests include
+convex endpoints, gradients after freezing a reference, hand-calculated group
+losses, disjointness, tie-breaking, complete tiny lifecycle, and deliberate
+tampering. Verification regenerates every dataset, reloads both banks and all
+routers, exactly replays probabilities and intervention, and recomputes metrics
+and summaries. This is computational replay, not independent retraining.
+
+\subsection{Prospective limitations and falsifiers}
+A positive result would support only this bounded synthetic configuration.
+Correlated experts may leave little corrective opportunity; the selected
+reference may already be strong; the intervention penalty may suppress useful
+changes; and worst-group optimization can fit the wrong training surrogate.
+Our ablations distinguish some of these alternatives but cannot establish a
+complete causal explanation. No model/data-scale sweep, broad hyperparameter
+sensitivity study, or external benchmark is admitted. Such work requires a
+successor protocol rather than post-hoc expansion of this test. Invalid
+provenance or numerical behavior invalidates the test; absence of execution
+means not evaluated, not negative performance.
