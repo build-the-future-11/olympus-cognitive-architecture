@@ -69,7 +69,8 @@ evidence that they acquired useful capabilities.
 
 \section{Model and chronological training specification}
 \subsection{Inherited component banks}
-Each bank uses the repository's unchanged reference system. The text backbone
+Each bank uses the repository's unchanged reference system. Text branches have
+separate weights but share the following architecture. Each text backbone
 has vocabulary 32, width 16, one pre-normalized causal attention block, four
 attention heads, a GELU feedforward layer of width 32, maximum length eight,
 and zero dropout. Token and positional embeddings are added; attention and
@@ -159,8 +160,10 @@ worst-group loss, or the penalty produces that inequality under shift.
 \subsection{Inference cost}
 All arms use the same two banks. A routing network costs
 $O(105\cdot32+32\cdot5+5\cdot4)$ operations per example, plus normalization
-and activations. Adaptive intervention adds one 105-dimensional dot product.
-Bank inference dominates these small heads. The experiment retains all variants
+and activations, per routing network. An anchored arm with a semantic reference
+evaluates both reference and alternative routing networks. Adaptive intervention
+adds one 105-dimensional dot product. The banks are expected to dominate, but
+no component-level timing was measured. The experiment retains all variants
 for comparison; a deployed single arm would not require all seven. We report
 observed runtime without claiming a general scaling law or measured FLOPs.
 
@@ -199,8 +202,10 @@ data OOD. Targets and source IDs are unchanged by observation transformations.
 Five dataset seeds are 20267100, 20267200, 20267300, 20267400, and 20267500.
 Each is repeated with training seeds 20267601 and 20267602. Bank initialization
 uses training seed plus $100b$ for bank $b$; bank sampling adds 10000.
-Reference sampling adds one; alternative initialization adds two and correction
-sampling adds three. The second optimizer seed shares each dataset's examples
+Reference sampling adds one. Correction construction resets the RNG to the
+training seed plus two, but alternative weights are copied from the trained
+semantic reference and intervention parameters are set to the stated constants.
+Correction sampling adds three. The second optimizer seed shares each dataset's examples
 and is not a sixth independent dataset.
 
 \begin{table}[ht]
@@ -274,9 +279,12 @@ Python/Torch/platform contract, all development file identities, reference and
 control selections, checkpoints, and split hashes. Qualification tests include
 convex endpoints, gradients after freezing a reference, hand-calculated group
 losses, disjointness, tie-breaking, complete tiny lifecycle, and deliberate
-tampering. Verification regenerates every dataset, reloads both banks and all
+tampering. Verification regenerates every protected split, reloads both banks and all
 routers, exactly replays probabilities and intervention, and recomputes metrics
-and summaries. This is computational replay, not independent retraining.
+and summaries. During development, checkpoint reload separately regenerates
+final-selection features and compares predictions exactly. Other development
+partitions retain IDs and tensor hashes; verification does not replay their
+training trajectories. This is computational replay, not independent retraining.
 
 \subsection{Prospective limitations and falsifiers}
 A positive result would support only this bounded synthetic configuration.
