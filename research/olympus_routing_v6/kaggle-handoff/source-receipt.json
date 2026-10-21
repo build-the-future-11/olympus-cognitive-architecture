@@ -107,6 +107,6 @@
     "tests/__init__.py": "34c86913f2bcd1b314d95de2d2a76e04f609e6fcedaf61c3a3f477d341e49a7b",
     "tests/test_conservative_routing_v6.py": "51c189b56e362ba7321a3c182a1e358a9c0f52e04d55abc8074fa32d85bfb927"
   },
-  "notebook_sha256": "2783bc6c4f87013009f92d1dfeda5b29985801f83334b0c84d8dbd57fab3aac7",
+  "notebook_sha256": "21369cdd21b5cec44c95bcd35c1217e93d55da3df0f17022ccef113e6db1c6e0",
   "execution": "NOT_EXECUTED_ON_KAGGLE"
 }

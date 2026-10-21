@@ -22,11 +22,27 @@ def build(output: Path) -> Path:
     payload = {name: base64.b64encode((ROOT / name).read_bytes()).decode() for name in paths}
     hashes = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in paths}
     digest = hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest()
-    setup = f'''from pathlib import Path
-import base64, hashlib, json, os, subprocess, sys, tarfile, time
 
-PAYLOAD = {payload!r}
-HASHES = {hashes!r}
+    def literal(values: dict[str, str]) -> str:
+        lines = ["{"]
+        for name, value in values.items():
+            lines.append(f"    {name!r}: (")
+            lines.extend(f"        {value[i:i + 76]!r}" for i in range(0, len(value), 76))
+            lines.append("    ),")
+        return "\n".join([*lines, "}"])
+
+    setup = f'''import base64
+import hashlib
+import json
+import os
+import subprocess
+import sys
+import tarfile
+import time
+from pathlib import Path
+
+PAYLOAD = {literal(payload)}
+HASHES = {literal(hashes)}
 EXPECTED = {digest!r}
 assert hashlib.sha256(json.dumps(HASHES, sort_keys=True).encode()).hexdigest() == EXPECTED
 BASE = Path('/kaggle/working') / ('olympus-v6-' + EXPECTED[:12])
