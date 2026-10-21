@@ -1,0 +1,46 @@
+{
+  "current_phase": "FLAGSHIP_V2_CPU_QUALIFIED_CUDA_PLATFORM_BLOCKED",
+  "scientific_disposition": "NOT_REASSESSED",
+  "research_question": "Can six opt-in flagship mechanisms, bounded parameter growth and ghost residency satisfy their frozen artificial engineering contracts?",
+  "scientific_objective": "Bounded engineering qualification on private offline Kaggle sessions; no target-scale capability, novelty, or promotion claim.",
+  "hypothesis": "Causal routing, host evidence and resource masks, evolving residual planning, and explicit module residency can be composed without violating the declared contracts.",
+  "intended_contribution": "Six candidate family mechanisms plus parameter-growth and residency infrastructure, with exact source-bound falsifiers and transparent capacity accounting.",
+  "falsifier": "Any violation listed in research/flagship_engineering_v2/PROTOCOL.md, nonfinite admitted optimizer gradient, missed trainable parameter across the frozen expert schedule, or checkpoint reload disagreement.",
+  "scope": {
+    "included": [
+      "Versioned six-family architecture changes explicitly requested by the user",
+      "Artificial engineering regressions",
+      "Function-preserving FFN growth and a bounded JEPA-style latent adapter",
+      "CPU inference ghost leases and explicit resident-set routing",
+      "Offline CPU/CUDA Kaggle engineering qualification, explicitly authorized on 2026-10-19"
+    ],
+    "excluded": [
+      "Protected capability evaluation",
+      "Scientific target-scale training before a separately frozen campaign",
+      "External dataset or base-weight downloads",
+      "Paid compute",
+      "Model promotion",
+      "Predecessor outcome changes"
+    ]
+  },
+  "development_budget": {
+    "artificial_examples_per_fixture": 4,
+    "optimizer_steps_per_qualification": 8,
+    "scientific_training_epochs": 0,
+    "protected_evaluations": 0,
+    "external_dataset_downloads": 0
+  },
+  "compute_budget": {
+    "local_device": "CPU, subject to unchanged guards",
+    "optional_hosted_device": "Free T4 x2 allocation explicitly approved; computation restricted to GPU 0; no accepted CUDA run observed",
+    "paid_jobs": 0,
+    "large_model_runs": 0,
+    "per_test_command_timeout_seconds": 120
+  },
+  "protected_evaluation_boundary": "The dated prior model ledgers and retained experiments remain unchanged. Artificial unit tests do not authorize capability evaluation or promotion.",
+  "datasets": {
+    "development": "Artificial tiny tensors only; 28 CPU regressions and eight bounded optimizer steps verified on Kaggle",
+    "protected": "No protected data accessed by this successor"
+  },
+  "active_study_key": "active_flagship_engineering_study"
+}

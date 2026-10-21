@@ -1,0 +1,22 @@
+\begin{table}[ht]\centering\small
+\caption{Protected accuracy (percent), averaged across ten cells. Selection aliases vary by development cell; all arms share bank predictions.}
+\begin{tabular}{lrrrr}\toprule
+Arm & Clean & Corrupted & Known shift & Composite \\\midrule
+adaptive erm & 100.00 & 93.56 & 99.99 & 99.67 \\
+adaptive robust & 100.00 & 93.54 & 99.99 & 99.62 \\
+adaptive robust no penalty & 100.00 & 93.57 & 99.98 & 99.58 \\
+constant erm & 100.00 & 93.19 & 99.99 & 99.76 \\
+constant robust & 100.00 & 93.19 & 99.99 & 99.77 \\
+direct erm & 100.00 & 93.52 & 99.99 & 99.53 \\
+direct robust & 100.00 & 93.51 & 99.98 & 99.54 \\
+expert 0 & 99.98 & 50.21 & 75.25 & 63.89 \\
+expert 1 & 99.99 & 49.71 & 75.21 & 62.64 \\
+expert 2 & 100.00 & 49.82 & 75.36 & 67.90 \\
+expert 3 & 100.00 & 69.87 & 84.07 & 94.69 \\
+expert 4 & 99.99 & 49.70 & 74.67 & 74.98 \\
+fixed & 100.00 & 82.35 & 99.87 & 99.83 \\
+reference & 100.00 & 92.94 & 99.99 & 99.75 \\
+selected control & 100.00 & 93.55 & 99.98 & 99.70 \\
+semantic & 100.00 & 92.94 & 99.99 & 99.75 \\
+uniform & 100.00 & 78.28 & 99.50 & 99.38 \\
+\bottomrule\end{tabular}\end{table}

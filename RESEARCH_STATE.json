@@ -7,50 +7,45 @@
     "version": "0.2.0",
     "maturity": "ALPHA",
     "base_commit": "348c2da03cee9d75b2d594ae56bd3464120421ff",
-    "working_tree": "AUTHORIZED_SUCCESSOR_WORK_IN_PROGRESS",
+    "working_tree": "V6_RESEARCH_ARTIFACT_COMPLETE",
     "release_ready": false,
     "production_ready": false,
     "model_promoted": false
   },
-  "current_phase": "FLAGSHIP_V2_CPU_QUALIFIED_CUDA_PLATFORM_BLOCKED",
-  "scientific_disposition": "NOT_REASSESSED",
-  "research_question": "Can six opt-in flagship mechanisms, bounded parameter growth and ghost residency satisfy their frozen artificial engineering contracts?",
-  "scientific_objective": "Bounded engineering qualification on private offline Kaggle sessions; no target-scale capability, novelty, or promotion claim.",
-  "hypothesis": "Causal routing, host evidence and resource masks, evolving residual planning, and explicit module residency can be composed without violating the declared contracts.",
-  "intended_contribution": "Six candidate family mechanisms plus parameter-growth and residency infrastructure, with exact source-bound falsifiers and transparent capacity accounting.",
-  "falsifier": "Any violation listed in research/flagship_engineering_v2/PROTOCOL.md, nonfinite admitted optimizer gradient, missed trainable parameter across the frozen expert schedule, or checkpoint reload disagreement.",
+  "current_phase": "ROUTING_V6_COMPLETED_NEGATIVE_ARTIFACT_COMPLETE",
+  "scientific_disposition": "NEGATIVE_WITHIN_FROZEN_V6_SCOPE",
+  "research_question": "Can example-dependent conservative correction beat strong development-selected routing controls under a reserved synthetic shift?",
+  "scientific_objective": "Bounded synthetic conservative stacking study; no target-scale or full-family capability claim",
+  "hypothesis": "Example-dependent anchored correction with worst-group training improves fresh composite-shift accuracy by at least 2 pp over the development-selected strongest control without declared regime regressions.",
+  "intended_contribution": "Controlled empirical decomposition of anchoring and worst-group training; complete negative result and reproducible evidence.",
+  "falsifier": "Primary practical effect or interval criterion fails, or any clean/corrupted/known-shift nonregression gate fails. Invalid provenance/numerics yields INVALID, absent execution yields NOT_EVALUATED.",
   "scope": {
     "included": [
-      "Versioned six-family architecture changes explicitly requested by the user",
-      "Artificial engineering regressions",
-      "Function-preserving FFN growth and a bounded JEPA-style latent adapter",
-      "CPU inference ghost leases and explicit resident-set routing",
-      "Offline CPU/CUDA Kaggle engineering qualification, explicitly authorized on 2026-10-19"
+      "One separately authorized v6 synthetic campaign",
+      "Full implemented model and experiment pipeline",
+      "Manuscript and GitHub research artifact"
     ],
     "excluded": [
-      "Protected capability evaluation",
-      "Scientific target-scale training before a separately frozen campaign",
-      "External dataset or base-weight downloads",
       "Paid compute",
+      "Target-scale six-family training",
       "Model promotion",
-      "Predecessor outcome changes"
+      "Predecessor-outcome changes",
+      "Post-hoc favorable reruns"
     ]
   },
   "development_budget": {
-    "artificial_examples_per_fixture": 4,
-    "optimizer_steps_per_qualification": 8,
-    "scientific_training_epochs": 0,
-    "protected_evaluations": 0,
-    "external_dataset_downloads": 0
+    "scientific_campaigns": 1,
+    "scientific_revisions": 0,
+    "datasets": 5,
+    "optimizer_seeds_per_dataset": 2
   },
   "compute_budget": {
-    "local_device": "CPU, subject to unchanged guards",
-    "optional_hosted_device": "Free T4 x2 allocation explicitly approved; computation restricted to GPU 0; no accepted CUDA run observed",
-    "paid_jobs": 0,
-    "large_model_runs": 0,
-    "per_test_command_timeout_seconds": 120
+    "platform": "Free GitHub CPU fallback after Kaggle editor failure",
+    "max_campaign_seconds": 3600,
+    "elapsed_seconds": 248.57103692099997,
+    "paid_jobs": 0
   },
-  "protected_evaluation_boundary": "The dated prior model ledgers and retained experiments remain unchanged. Artificial unit tests do not authorize capability evaluation or promotion.",
+  "protected_evaluation_boundary": "v6 protected data generated only after exact scientific freeze. One completed evaluation; no retuning after outcomes.",
   "source_basis": {
     "base_pr": 23,
     "base_branch": "codex/olympus-dataset-contract-20261010-b805",
@@ -58,8 +53,8 @@
     "base_tree": "b9bf5fd77e430fd1686301b7b7513850df6743e5"
   },
   "datasets": {
-    "development": "Artificial tiny tensors only; 28 CPU regressions and eight bounded optimizer steps verified on Kaggle",
-    "protected": "No protected data accessed by this successor"
+    "development": "Fresh deterministic synthetic partitions; source-disjoint bank/reference/correction/selection",
+    "protected": "Four fresh regimes per dataset;40 paired reports; source-bound raw archive retained"
   },
   "artifacts": [
     "research/REALITY_LEDGER.md",
@@ -103,7 +98,14 @@
     "research/DECISION_DOSSIER_REPLAY_HARDENING_20261020.json",
     "research/decision_dossier_replay_v1/RESEARCH_STATE.json",
     "RESEARCH_FEATURE_MEGA_CHECKLIST.md",
-    "FINAL_RESEARCH_EXECUTION_REPORT.md"
+    "FINAL_RESEARCH_EXECUTION_REPORT.md",
+    "research/olympus_routing_v6/EVIDENCE_RECEIPT.json",
+    "research/olympus_routing_v6/INDEPENDENT_REVIEW.json",
+    "research/olympus_routing_v6/campaign-evidence.zip",
+    "output/pdf/olympus-conservative-routing-v6.pdf",
+    "output/pdf/olympus-conservative-routing-v6-arxiv.tar.gz",
+    "research/olympus_routing_v6/README.md",
+    "research/olympus_routing_v6/RELEASE_RECEIPT_20261021.json"
   ],
   "claims": [
     {
@@ -491,6 +493,20 @@
       "event": "Implemented disjoint-stacked conservative routing and seven correction variants with single-expert/direct/constant controls. Corrected frozen-gradient inheritance and incomplete checkpoint/result replay after independent source review. Full Ruff and focused strict MyPy passed; numerical qualification refused before Torch import. Exact supplied arxiv.sty recovered with provenance, resolving that historical blocker. No new scientific result exists.",
       "record": "research/olympus_routing_v6/RESEARCH_STATE.json",
       "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "routing_v6_terminal_result",
+      "event": "v6 completed one frozen GitHub CPU campaign after Kaggle editor failure. Primary gain-.078125pp with95% descriptive CI[-.41015625,.1171875]pp; all nonregression criteria passed. Independent arithmetic and source audit passed, no independent retraining. Raw archive retained. Full release gate passed on d0cae48 after targeted dependency repair. Prior top-level contract preserved in PREVIOUS_ROOT_CONTRACT.json; all predecessor study hashes unchanged. Model promotion remains0/6.",
+      "record": "research/olympus_routing_v6/RESEARCH_STATE.json",
+      "scientific_outcomes_created": true
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "routing_v6_artifact_completion",
+      "event": "Completed paper in supplied style, verified source package and retained raw archive; final independent wording corrections applied. V6 reaches a terminal negative conclusion. Broader Olympus readiness remains0/6; no independent retraining, arXiv submission or model promotion.",
+      "record": "research/olympus_routing_v6/RELEASE_RECEIPT_20261021.json",
+      "scientific_outcomes_created": false
     }
   ],
   "verification": {
@@ -588,7 +604,7 @@
     "hosted_tests_passed": 276,
     "hosted_branch_enabled_coverage_percent": 87.27
   },
-  "active_study_key": "active_flagship_engineering_study",
+  "active_study_key": "active_routing_successor",
   "portfolio_integration": {
     "date": "2026-10-17",
     "merged_prs": [
@@ -651,6 +667,12 @@
       "phase": "COMPLETED_REMOTE_VERIFIED_ARCHIVE_PENDING_RETRIEVAL",
       "primary_supported": false,
       "path": "research/olympus_editclevr_v1/RESEARCH_STATE.json"
+    },
+    {
+      "id": "olympus-routing-v6.0.2",
+      "phase": "COMPLETED_NEGATIVE",
+      "primary_supported": false,
+      "path": "research/olympus_routing_v6/RESEARCH_STATE.json"
     }
   ],
   "engineering_studies": [
@@ -683,7 +705,6 @@
     "EditCLEVR learned routing failed its predeclared improvement threshold",
     "no rights-reviewed aligned corpus covers the full six-family contract",
     "no independent scientific reproduction exists",
-    "exact current source has not passed the complete release workflow",
     "flagship v2 CPU qualification passed; approved single-device CUDA execution remains blocked, and the prior draft now returns page not found while this task lacks the authenticated Kaggle context needed to create a replacement saved version",
     "local numerical execution is currently refused by the frozen memory and swap admission guards",
     "no revision-pinned licensed base, aligned data, or admitted budget is selected for a target-scale six-family LLM campaign"
@@ -709,6 +730,15 @@
     "id": "olympus-routing-v6.0.2",
     "state": "research/olympus_routing_v6/RESEARCH_STATE.json",
     "protocol": "research/olympus_routing_v6/protocol.json",
-    "status": "IMPLEMENTED_STATIC_VERIFIED_NUMERICAL_PENDING"
+    "status": "COMPLETED_NEGATIVE",
+    "receipt": "research/olympus_routing_v6/EVIDENCE_RECEIPT.json"
+  },
+  "routing_v6_publication": {
+    "phase": "COMPLETE_RESEARCH_ARTIFACT_NOT_SUBMITTED",
+    "paper": "output/pdf/olympus-conservative-routing-v6.pdf",
+    "source_package": "output/pdf/olympus-conservative-routing-v6-arxiv.tar.gz",
+    "release_receipt": "research/olympus_routing_v6/RELEASE_RECEIPT_20261021.json",
+    "style_preserved": true,
+    "submitted": false
   }
 }

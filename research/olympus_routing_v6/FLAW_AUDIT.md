@@ -53,3 +53,17 @@ The user-requested independent read-only review identified the frozen-gradient,
 partial-checkpoint-replay and self-consistent-result-tampering defects above
 before any scientific execution. Repairs are included in the successor. The
 reviewer did not execute numerical tests or independently retrain the model.
+
+## Terminal evidence update (2026-10-21)
+
+The rows above preserve the pre-execution assessment. Current acceptance:
+
+- Full frozen campaign completed:10 development cells,20 bank fits,40 protected reports; exact prediction replay PASS.
+- All14 artificial regressions passed at the scientific commit; the full release gate later passed665 Python tests (3 skips) and6 web tests, audits and builds.
+- Independent read-only reviewer verified31 frozen artifacts,102 source hashes,40 prediction hashes and recomputed all8 bootstrap comparisons exactly.
+- Primary routing claim:NEGATIVE, -.078125pp versus selected control,95% descriptive CI[-.41015625,.1171875]pp. All6 nonregression comparisons pass.
+- Familiar corruption:+.605469pp versus reference, but -.009766pp versus stronger selected control. Continued training remains a sufficient competing explanation.
+- Composite shift:mean alpha.675778,9 rescues,22 harms,31 decision changes. Alpha is a mixture weight, not a change rate.
+- New observed limitation:99.697266% selected-control accuracy leaves only.302734pp possible gain; registered+2pp cannot be attained on this realized sample. Preserve the negative result; future difficulty calibration must use development data and a separate protected set.
+- Correctness, provenance and packaging repairs are implemented. Empirical superiority, external validity, scaling, independent retraining, full-family readiness and Kaggle execution remain unestablished.
+- Requested Kaggle editor remained unavailable; actual platform was free GitHub CPU. The platform deviation and failed local admission are retained.
