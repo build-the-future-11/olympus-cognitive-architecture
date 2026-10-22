@@ -1,0 +1,74 @@
+{
+  "checkpoint_manifest_sha256": "c2f48a59efe9ffe011d9be79d0bd7f8c704287aae53af10cb17911887fcbcfb0",
+  "identities": {
+    "protocol_object_sha256": "a0a8483d3461b04ff6c3e0a2e70ef5bd46674e692d6dc6f3d2cfe4bf57679204",
+    "protocol_sha256": "6b8723fd4d3b9219cb7c951be0cb8a87024efd64e98f8df3c2c3275b2c560adc",
+    "source_sha256": "45a0375eb5297e8d3071487b61ee44df194f765e4254e9cd1cacc2be6844b636"
+  },
+  "network_preflight": {
+    "internet_disabled": true,
+    "probe": "1.1.1.1:443",
+    "refusal": "TimeoutError"
+  },
+  "protected_generated": false,
+  "protocol": {
+    "action_dim": 2,
+    "batch_size": 64,
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 20268999,
+    "candidate": "uncertainty_residual",
+    "controls": [
+      "direct",
+      "residual",
+      "persistence"
+    ],
+    "dataset_seeds": [
+      20268100,
+      20268200,
+      20268300
+    ],
+    "date": "2026-10-21",
+    "development_examples": 128,
+    "hidden_dim": 32,
+    "history": 6,
+    "horizon": 8,
+    "id": "multi-horizon-dynamics-v2",
+    "learning_rate": 0.002,
+    "max_wall_seconds": 3600,
+    "models": [
+      "direct",
+      "residual",
+      "uncertainty_residual"
+    ],
+    "optimizer_seeds": [
+      20268601,
+      20268602
+    ],
+    "paid_compute": false,
+    "primary": {
+      "clean_h8_regression_max": 0.02,
+      "coverage90_error_max": 0.1,
+      "paired_delta_ci_upper_max": 0.0,
+      "worst_regime_h8_ratio_max": 0.9
+    },
+    "prior_protected_evidence_reused": false,
+    "promotion_authorized": false,
+    "protected_examples": 256,
+    "protected_offsets": {
+      "clean": 11,
+      "corrupted": 12,
+      "shifted": 13
+    },
+    "state_dim": 4,
+    "train_examples": 512,
+    "updates": 200
+  },
+  "resource_preflight": {
+    "available_bytes": 32485650432,
+    "swap_percent": 0.0,
+    "swap_total_bytes": 0,
+    "swap_used_bytes": 0,
+    "total_bytes": 33658314752
+  },
+  "status": "FROZEN_BEFORE_PROTECTED_GENERATION"
+}

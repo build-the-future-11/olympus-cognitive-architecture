@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "multi-horizon-dynamics-v3-heavy",
+  "date": "2026-10-21",
+  "phase": "RUNNING_PRIVATE_KAGGLE_CPU",
+  "scientific_outcomes_created": false,
+  "primary_supported": null,
+  "question": "Does the unchanged uncertainty-aware residual candidate beat fixed controls under an independently seeded 8x-data, 15x-update confirmatory budget?",
+  "falsifiers": [
+    "Worst-regime horizon-8 MSE is not at least 10 percent below the best learned control.",
+    "The paired dataset-cluster bootstrap interval is not entirely below zero.",
+    "Clean horizon-8 MSE regresses by more than 0.02 versus the residual control.",
+    "Empirical 90 percent coverage differs from nominal by more than 0.10.",
+    "Any source mismatch, seed overlap, enabled Internet, non-finite value, missing denominator, resource refusal, timeout, or post-freeze change occurs."
+  ],
+  "budget": {
+    "platform": "Kaggle free CPU queue",
+    "paid_compute": false,
+    "internet": false,
+    "accelerator": "none",
+    "max_wall_seconds": 21600,
+    "learned_fits": 18,
+    "protected_learned_evaluations": 54,
+    "persistence_evaluations": 18,
+    "optimizer_updates_per_fit": 3000,
+    "train_examples_per_dataset": 4096,
+    "development_examples_per_dataset": 1024,
+    "protected_examples_per_regime_dataset": 2048,
+    "bootstrap_samples": 10000
+  },
+  "protected_boundary": "Fresh v3 protected tensors are generated only after source, protocol, base-runner, resource, and network freeze and after all learned checkpoints are written.",
+  "source_identity": {
+    "runner_sha256": "313fbdf8322e13099f63ecf343b5e5e445ba358688c8fce29c6b12e085c33c41",
+    "base_runner_sha256": "45a0375eb5297e8d3071487b61ee44df194f765e4254e9cd1cacc2be6844b636",
+    "protocol_sha256": "f61530a14b2fc63c312c1c80648ca12412410f50eea8c959ecdbffab1f00089c",
+    "notebook_sha256": "8ea46ea101222506351461a397becb51cc1be70eb596d97995461fdd3ffdfdca"
+  },
+  "artifacts": {
+    "protocol": "research/multi_horizon_dynamics_v3_heavy/PROTOCOL.md",
+    "state": "research/multi_horizon_dynamics_v3_heavy/RESEARCH_STATE.json",
+    "notebook": "research/multi_horizon_dynamics_v3_heavy/multi_horizon_dynamics_v3_heavy.ipynb",
+    "runner": "scripts/run_multi_horizon_dynamics_v3_heavy.py",
+    "base_runner": "scripts/run_multi_horizon_dynamics_v2.py",
+    "builder": "scripts/build_multi_horizon_dynamics_v3_heavy_notebook.py",
+    "tests": "tests/test_multi_horizon_dynamics_v1.py"
+  },
+  "verification_before_queue": {
+    "ruff": "PASS",
+    "strict_mypy_sources": "PASS",
+    "focused_tests": "5_PASS",
+    "notebook_json": "PASS",
+    "diff_check": "PASS"
+  },
+  "hosted_submission": {
+    "platform": "Kaggle",
+    "notebook_url": "https://www.kaggle.com/code/ryangomez010/multi-horizon-dynamics-v3-heavy",
+    "import_run_id": 360793869,
+    "submitted_run_id": 360794856,
+    "submitted_version": 2,
+    "version_name": "heavy frozen v3 confirmatory",
+    "visibility": "private",
+    "accelerator": "none",
+    "internet": false,
+    "status_observed": "RUNNING",
+    "observed_utc_date": "2026-10-21",
+    "receipt": "Kaggle Version History displayed heavy frozen v3 confirmatory, Version #2, Save & Run All, Running after 6 minutes; its Edit URL exposed run ID 360794856."
+  },
+  "predecessor_policy": "V2's negative result is retained and not used for tuning. V3 uses fresh dataset, optimizer, protected, and bootstrap seeds while preserving the hypothesis, models, regimes, thresholds, and analysis.",
+  "claim_boundary": "Heavy bounded synthetic confirmation only; no family identity, target-scale capability, SOTA, deployment, safety, or promotion claim."
+}

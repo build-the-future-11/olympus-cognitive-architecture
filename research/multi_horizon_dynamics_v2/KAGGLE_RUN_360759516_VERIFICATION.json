@@ -1,0 +1,22 @@
+{
+  "checkpoints": 18,
+  "claim_boundary": "fresh bounded synthetic dynamics only",
+  "criteria": {
+    "clean_h8_regression": 0.002716761907019342,
+    "coverage90": 0.8582763671875,
+    "paired_delta_ci95": [
+      0.002436927519738674,
+      0.004645083099603653
+    ],
+    "worst_regime_ratio": 1.635224033477085
+  },
+  "fits": 18,
+  "manifest_entries": 23,
+  "primary_supported": false,
+  "protected_rows": 72,
+  "protocol_sha256": "6b8723fd4d3b9219cb7c951be0cb8a87024efd64e98f8df3c2c3275b2c560adc",
+  "run_id": 360759516,
+  "scientific_status": "COMPLETED_NEGATIVE",
+  "source_sha256": "45a0375eb5297e8d3071487b61ee44df194f765e4254e9cd1cacc2be6844b636",
+  "status": "VERIFIED"
+}

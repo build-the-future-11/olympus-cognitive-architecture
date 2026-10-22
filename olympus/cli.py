@@ -13,6 +13,13 @@ from rich.table import Table
 from olympus.api import demos
 from olympus.core.workspace import LatentWorkspace
 from olympus.data.olympus_dataset import load_olympus_dataset
+from olympus.evaluation.aion_executor import (
+    AionExecutionDecision,
+    AionExecutionPlan,
+    HostActionRegistry,
+    execute_aion_decision,
+    verify_aion_trace,
+)
 from olympus.forge.compiler import NaturalLanguageBehaviorCompiler
 from olympus.forge.runtime import ForgeRuntime
 from olympus.foundry.data_pipeline import prepare_instruction_dataset
@@ -130,6 +137,41 @@ def bu1ld_seven_model_contract() -> None:
 
     statuses = audit_seven_model_contracts()
     console.print_json(json.dumps([status.model_dump(mode="json") for status in statuses]))
+
+
+@bu1ld_app.command("aion-executor-demo")
+def bu1ld_aion_executor_demo(
+    selected_stage: int = 0,
+    forced_stop: bool = False,
+) -> None:
+    """Exercise host-governed Aion execution on a deterministic artificial fixture."""
+
+    plan = AionExecutionPlan(
+        policy_id="aion-executor-demo-v1",
+        transitions=["inspect_evidence", "publish", "STOP"],
+        legal_transitions=[True, False, True],
+        transition_costs=[1.0, 3.0, 0.0],
+        remaining_budget=2.0,
+        stop_stage=2,
+    )
+    decision = AionExecutionDecision(selected_stage=selected_stage, forced_stop=forced_stop)
+    trace = execute_aion_decision(
+        plan,
+        decision,
+        HostActionRegistry({"inspect_evidence": lambda: {"fixture": "inspected"}}),
+    )
+    verify_aion_trace(plan, decision, trace, registered_actions={"inspect_evidence"})
+    console.print_json(
+        json.dumps(
+            {
+                "status": "AION_HOST_GOVERNED_EXECUTION_FIXTURE_NOT_PROMOTED",
+                "trace": trace.model_dump(mode="json"),
+                "trace_sha256": trace.digest(),
+                "tool_authority_granted": False,
+                "promotion_authorized": False,
+            }
+        )
+    )
 
 
 @bu1ld_app.command("train-encoder-quantizer")

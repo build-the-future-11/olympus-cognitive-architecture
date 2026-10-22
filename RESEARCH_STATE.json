@@ -7,12 +7,13 @@
     "version": "0.2.0",
     "maturity": "ALPHA",
     "base_commit": "348c2da03cee9d75b2d594ae56bd3464120421ff",
-    "working_tree": "V6_RESEARCH_ARTIFACT_COMPLETE",
+    "working_tree": "MULTI_HORIZON_DYNAMICS_V3_HEAVY_RUNNING_PRIVATE_KAGGLE_CPU",
     "release_ready": false,
     "production_ready": false,
     "model_promoted": false
   },
-  "current_phase": "ROUTING_V6_COMPLETED_NEGATIVE_ARTIFACT_COMPLETE",
+  "current_phase": "MULTI_HORIZON_DYNAMICS_V3_HEAVY_RUNNING_PRIVATE_KAGGLE_CPU",
+  "active_scientific_disposition": "V3_HEAVY_CONFIRMATORY_RUNNING_NOT_EVALUATED",
   "scientific_disposition": "NEGATIVE_WITHIN_FROZEN_V6_SCOPE",
   "research_question": "Can example-dependent conservative correction beat strong development-selected routing controls under a reserved synthetic shift?",
   "scientific_objective": "Bounded synthetic conservative stacking study; no target-scale or full-family capability claim",
@@ -97,6 +98,10 @@
     "research/flagship_engineering_v2/KAGGLE_CUDA_AUTH_BLOCKED_20261020.json",
     "research/DECISION_DOSSIER_REPLAY_HARDENING_20261020.json",
     "research/decision_dossier_replay_v1/RESEARCH_STATE.json",
+    "research/AION_EXECUTOR_ENGINEERING_20261021.json",
+    "research/SCIENTIFIC_RUN_ADMISSION_BLOCKED_20261021.json",
+    "research/aion_executor_v1/RESEARCH_STATE.json",
+    "docs/aion-executor.md",
     "RESEARCH_FEATURE_MEGA_CHECKLIST.md",
     "FINAL_RESEARCH_EXECUTION_REPORT.md",
     "research/olympus_routing_v6/EVIDENCE_RECEIPT.json",
@@ -105,7 +110,30 @@
     "output/pdf/olympus-conservative-routing-v6.pdf",
     "output/pdf/olympus-conservative-routing-v6-arxiv.tar.gz",
     "research/olympus_routing_v6/README.md",
-    "research/olympus_routing_v6/RELEASE_RECEIPT_20261021.json"
+    "research/olympus_routing_v6/RELEASE_RECEIPT_20261021.json",
+    "research/multi_horizon_dynamics_v1/PROTOCOL.md",
+    "research/multi_horizon_dynamics_v1/RESEARCH_STATE.json",
+    "research/multi_horizon_dynamics_v1/multi_horizon_dynamics_v1.ipynb",
+    "research/multi_horizon_dynamics_v1/KAGGLE_RUN_360757510_VERIFICATION.json",
+    "research/multi_horizon_dynamics_v1/kaggle-run-360757510-results.zip",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510",
+    "scripts/run_multi_horizon_dynamics_v1.py",
+    "scripts/build_multi_horizon_dynamics_notebook.py",
+    "scripts/verify_multi_horizon_dynamics_v1.py",
+    "research/multi_horizon_dynamics_v2/PROTOCOL.md",
+    "research/multi_horizon_dynamics_v2/RESEARCH_STATE.json",
+    "research/multi_horizon_dynamics_v2/multi_horizon_dynamics_v2.ipynb",
+    "research/multi_horizon_dynamics_v2/KAGGLE_RUN_360759516_VERIFICATION.json",
+    "research/multi_horizon_dynamics_v2/kaggle-run-360759516-results.zip",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516",
+    "scripts/run_multi_horizon_dynamics_v2.py",
+    "scripts/build_multi_horizon_dynamics_v2_notebook.py",
+    "research/multi_horizon_dynamics_v3_heavy/PROTOCOL.md",
+    "research/multi_horizon_dynamics_v3_heavy/RESEARCH_STATE.json",
+    "research/multi_horizon_dynamics_v3_heavy/multi_horizon_dynamics_v3_heavy.ipynb",
+    "scripts/run_multi_horizon_dynamics_v3_heavy.py",
+    "scripts/build_multi_horizon_dynamics_v3_heavy_notebook.py",
+    "tests/test_multi_horizon_dynamics_v1.py"
   ],
   "claims": [
     {
@@ -507,6 +535,71 @@
       "event": "Completed paper in supplied style, verified source package and retained raw archive; final independent wording corrections applied. V6 reaches a terminal negative conclusion. Broader Olympus readiness remains0/6; no independent retraining, arXiv submission or model promotion.",
       "record": "research/olympus_routing_v6/RELEASE_RECEIPT_20261021.json",
       "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "aion_host_governed_execution_engineering",
+      "event": "Implemented a Torch-independent Aion host executor that treats a model transition as an untrusted request and rechecks host legality, cost, budget, registration and zero-cost STOP before any callback. Forced, explicit, illegal, unaffordable and unregistered decisions produce terminal replayable STOP receipts without callback invocation. Added a CLI fixture, a simulated no-side-effect API dry run, and a web-console forbidden-transition fixture. Nine focused executor tests, Ruff and strict MyPy passed. API/CLI/web and TypeScript tests remain unrun because free memory was 61816832 bytes, below the unchanged 512 MiB/no-rising-pageout guard before the existing Torch-importing surface tests. The prior decision-dossier receipt is now explicitly historical because this distinct change modifies its CLI source; no earlier outcome was altered. No model, real tool authority, protected evaluation, scientific training, promotion, paid compute or external action occurred.",
+      "record": "research/AION_EXECUTOR_ENGINEERING_20261021.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "aion_host_executor_adversarial_correction",
+      "event": "Extended the unpromoted Aion host executor with immutable tuple-backed plans, decisions and traces; finite-only costs and budgets; plan, full-decision and registered-action-set digests; immutable callback-registry snapshots; strict result/error and budget invariants; and callback-free offline verification. Twelve focused executor tests, Ruff and strict MyPy passed. A fresh admission attempt retained a refusal at 61210624 and 114589696 free bytes with pageouts stable at 210822, below the unchanged 512 MiB floor, so API/CLI and TypeScript surface tests remain unrun. No real tool authority, protected evaluation, scientific training, promotion, paid compute, predecessor-outcome change or external action occurred.",
+      "record": "research/AION_EXECUTOR_ENGINEERING_20261021.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "aion_multi_step_execution_ledger",
+      "event": "Added an immutable multi-step Aion execution ledger that binds all requested decisions, including post-STOP requests that are not consumed; carries remaining budget continuously; and rejects discontinuous, omitted, or nonterminal STOP trace chains without invoking callbacks during verification. Fifteen focused Torch-free tests, Ruff and strict MyPy passed. Surface tests remain resource-blocked.",
+      "record": "research/AION_EXECUTOR_ENGINEERING_20261021.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "scientific_run_admission_refusal",
+      "event": "After explicit user authorization for scientific runs, local admission failed before Torch import at 62930944 and 62914560 free bytes against the unchanged 512 MiB floor, with pageouts stable at 289266. No eligible unconsumed frozen protocol exists: all registered routing/temporal studies are terminal, large-scale readiness remains 0/6, and checklist science items require versioned successor freezes. No scientific, protected, paid, external, or promotion job was launched.",
+      "record": "research/SCIENTIFIC_RUN_ADMISSION_BLOCKED_20261021.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "prospective_scientific_successor_freeze",
+      "event": "After explicit user authorization for full scientific execution, froze the new multi-horizon-dynamics-v1 synthetic successor before protected generation. The protocol fixes the question, four conjunctive falsifiers, three disjoint dataset clusters, two optimizer seeds, 18 learned fits, 54 protected learned-model evaluations, a 10000-sample paired cluster bootstrap, a 3600-second wall budget, free Kaggle CPU, and Internet off. The exact runner, protocol, and self-contained notebook identities are recorded in the successor state. Three packaging/protocol tests, Ruff, and strict MyPy passed. No protected outcomes existed at freeze time; all predecessor outcomes remain unchanged.",
+      "record": "research/multi_horizon_dynamics_v1/RESEARCH_STATE.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "invalid_hosted_scientific_attempt_retained",
+      "event": "Private Kaggle CPU run 360757510 executed all 18 fits and 72 protected rows and observed a negative result, but the imported notebook had Internet enabled contrary to the frozen protocol. The raw archive, checkpoints, metrics, exact frozen source, and structural verification are retained. The observed negative is classified invalid configuration, primary_supported remains null, and none of its protected outcomes were reused or accepted as scientific evidence.",
+      "record": "research/multi_horizon_dynamics_v1/RESEARCH_STATE.json",
+      "scientific_outcomes_created": true,
+      "accepted_as_scientific_evidence": false
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "fresh_hosted_scientific_successor_completed_negative",
+      "event": "Froze multi-horizon-dynamics-v2 with fresh dataset, optimizer, protected, and bootstrap seeds while leaving the v1 hypothesis, models, thresholds, and analysis unchanged. Private Kaggle CPU run 360759516 completed with Internet off, including a pre-protected outbound TCP refusal receipt, 18 learned fits, 54 learned protected evaluations, 18 persistence controls, and all 72 protected rows. Independent local verification matched every retained manifest entry, 18 checkpoint hashes, fit and row denominators, aggregate means, the 10000-sample bootstrap interval, and the final decision. The primary was falsified: in the shifted worst regime the candidate horizon-8 MSE ratio was 1.635224 versus the residual control and the paired delta CI95 was [0.00243693, 0.00464508]; the clean nonregression and coverage gates passed. No promotion or broader capability claim is authorized.",
+      "record": "research/multi_horizon_dynamics_v2/RESEARCH_STATE.json",
+      "scientific_outcomes_created": true,
+      "accepted_as_scientific_evidence": true
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "heavy_confirmatory_successor_freeze",
+      "event": "After explicit user authorization to queue a heavy run, froze multi-horizon-dynamics-v3-heavy before protected generation. V3 retains the v2 question, models, regimes, hidden width, thresholds, and analysis while using entirely fresh dataset, optimizer, protected, and bootstrap seeds. It increases training, development, and protected partitions by 8x, updates by 15x, and batch size by 4x under a 21600-second private free-Kaggle-CPU ceiling with Internet off. The exact wrapper, hash-pinned v2 base runner, protocol, and self-contained notebook identities are recorded. Five focused tests, Ruff, strict MyPy on the sources, notebook JSON validation, and diff checking passed. No v3 protected outcome existed at freeze; the v2 negative remains unchanged and was not used for tuning.",
+      "record": "research/multi_horizon_dynamics_v3_heavy/RESEARCH_STATE.json",
+      "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-21",
+      "kind": "heavy_confirmatory_hosted_execution_started",
+      "event": "Submitted the exact frozen multi-horizon-dynamics-v3-heavy self-contained notebook to a private free Kaggle CPU session with no accelerator and Internet disabled. Kaggle Version History visibly reported heavy frozen v3 confirmatory Version #2 as Running after six minutes, and its Edit URL exposed hosted run ID 360794856. The imported render-only Version #1 is separately retained as run 360793869. No protected outcome or completion claim exists yet.",
+      "record": "research/multi_horizon_dynamics_v3_heavy/RESEARCH_STATE.json",
+      "scientific_outcomes_created": false
     }
   ],
   "verification": {
@@ -604,7 +697,7 @@
     "hosted_tests_passed": 276,
     "hosted_branch_enabled_coverage_percent": 87.27
   },
-  "active_study_key": "active_routing_successor",
+  "active_study_key": "active_scientific_successor",
   "portfolio_integration": {
     "date": "2026-10-17",
     "merged_prs": [
@@ -673,6 +766,24 @@
       "phase": "COMPLETED_NEGATIVE",
       "primary_supported": false,
       "path": "research/olympus_routing_v6/RESEARCH_STATE.json"
+    },
+    {
+      "id": "multi-horizon-dynamics-v1",
+      "phase": "INVALID_CONFIGURATION_RETAINED",
+      "primary_supported": null,
+      "path": "research/multi_horizon_dynamics_v1/RESEARCH_STATE.json"
+    },
+    {
+      "id": "multi-horizon-dynamics-v2",
+      "phase": "COMPLETED_NEGATIVE_VERIFIED",
+      "primary_supported": false,
+      "path": "research/multi_horizon_dynamics_v2/RESEARCH_STATE.json"
+    },
+    {
+      "id": "multi-horizon-dynamics-v3-heavy",
+      "phase": "RUNNING_PRIVATE_KAGGLE_CPU",
+      "primary_supported": null,
+      "path": "research/multi_horizon_dynamics_v3_heavy/RESEARCH_STATE.json"
     }
   ],
   "engineering_studies": [
@@ -697,6 +808,14 @@
       "phase": "STATIC_VERIFIED_NUMERICAL_RESOURCE_BLOCKED",
       "path": "research/decision_dossier_replay_v1/RESEARCH_STATE.json",
       "receipt": "research/DECISION_DOSSIER_REPLAY_HARDENING_20261020.json",
+      "source_verification": "historical_receipt",
+      "receipt_sha256": "56b4fa1353a6e03d0ad78318f81e35b1e10acc0a1f981573ee8706ea036f7e9a"
+    },
+    {
+      "id": "aion-executor-v1",
+      "phase": "CORE_TORCH_FREE_TESTED_SURFACE_INTEGRATION_RESOURCE_BLOCKED",
+      "path": "research/aion_executor_v1/RESEARCH_STATE.json",
+      "receipt": "research/AION_EXECUTOR_ENGINEERING_20261021.json",
       "source_verification": "current_files"
     }
   ],
@@ -732,6 +851,32 @@
     "protocol": "research/olympus_routing_v6/protocol.json",
     "status": "COMPLETED_NEGATIVE",
     "receipt": "research/olympus_routing_v6/EVIDENCE_RECEIPT.json"
+  },
+  "active_scientific_successor": {
+    "id": "multi-horizon-dynamics-v3-heavy",
+    "state": "research/multi_horizon_dynamics_v3_heavy/RESEARCH_STATE.json",
+    "protocol": "research/multi_horizon_dynamics_v3_heavy/PROTOCOL.md",
+    "notebook": "research/multi_horizon_dynamics_v3_heavy/multi_horizon_dynamics_v3_heavy.ipynb",
+    "status": "RUNNING_PRIVATE_KAGGLE_CPU",
+    "primary_supported": null,
+    "scientific_outcomes_created": false,
+    "hosted_submission": {
+      "notebook_url": "https://www.kaggle.com/code/ryangomez010/multi-horizon-dynamics-v3-heavy",
+      "import_run_id": 360793869,
+      "submitted_run_id": 360794856,
+      "submitted_version": 2,
+      "version_name": "heavy frozen v3 confirmatory",
+      "visibility": "private",
+      "accelerator": "none",
+      "internet": false,
+      "status_observed": "RUNNING"
+    },
+    "predecessor": {
+      "id": "multi-horizon-dynamics-v2",
+      "status": "COMPLETED_NEGATIVE_VERIFIED",
+      "hosted_run_id": 360759516,
+      "verification": "research/multi_horizon_dynamics_v2/KAGGLE_RUN_360759516_VERIFICATION.json"
+    }
   },
   "routing_v6_publication": {
     "phase": "COMPLETE_RESEARCH_ARTIFACT_NOT_SUBMITTED",
