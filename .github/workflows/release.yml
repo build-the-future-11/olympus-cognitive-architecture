@@ -59,6 +59,7 @@ jobs:
         run: npm ci
       - name: Verify Python release gate
         run: |
+          sha256sum --check research/verification/ci_20261022/frozen-artifacts.sha256
           uv run --locked python -m ruff check .
           uv run --locked python -m mypy olympus scripts tests
           uv run --locked python scripts/verify_readiness_baseline.py

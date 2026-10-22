@@ -148,9 +148,9 @@ def bu1ld_aion_executor_demo(
 
     plan = AionExecutionPlan(
         policy_id="aion-executor-demo-v1",
-        transitions=["inspect_evidence", "publish", "STOP"],
-        legal_transitions=[True, False, True],
-        transition_costs=[1.0, 3.0, 0.0],
+        transitions=("inspect_evidence", "publish", "STOP"),
+        legal_transitions=(True, False, True),
+        transition_costs=(1.0, 3.0, 0.0),
         remaining_budget=2.0,
         stop_stage=2,
     )

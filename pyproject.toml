@@ -104,6 +104,14 @@ extend-exclude = [
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
 
+[tool.ruff.lint.per-file-ignores]
+# Immutable submitted notebooks embed exact frozen source/protocol strings.
+# Keep their original bytes; CI verifies the independent SHA-256 manifest.
+# All other rules still apply, and the standalone scientific sources are linted.
+"research/multi_horizon_dynamics_v1/multi_horizon_dynamics_v1.ipynb" = ["E501", "I001"]
+"research/multi_horizon_dynamics_v2/multi_horizon_dynamics_v2.ipynb" = ["E501", "I001"]
+"research/multi_horizon_dynamics_v3_heavy/multi_horizon_dynamics_v3_heavy.ipynb" = ["E501", "I001"]
+
 [tool.mypy]
 python_version = "3.14"
 strict = true
