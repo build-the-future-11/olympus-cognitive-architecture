@@ -1,0 +1,270 @@
+{
+  "checkpoint_sha256": "a2ce6b851b79e8677bdd1e1d27bf1f32fc99ffae85a4b6ccda8edbc5ebb5eb0b",
+  "dataset": 20267400,
+  "freeze_sha256": "5778e9f1413200830e9a6c4009189dbef2f1883678319a4fa6c55d3a70457351",
+  "metrics": {
+    "anchored_erm": {
+      "accuracy": 1.0,
+      "brier": 0.0114505710080266,
+      "ece": 0.0751693188212812,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.4979866147041321,
+      "nll": 0.07953041791915894,
+      "selective_accuracy_50": 1.0
+    },
+    "anchored_robust": {
+      "accuracy": 1.0,
+      "brier": 0.012681733816862106,
+      "ece": 0.07889079325832427,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.5524987578392029,
+      "nll": 0.0836973562836647,
+      "selective_accuracy_50": 1.0
+    },
+    "anchored_robust_no_penalty": {
+      "accuracy": 1.0,
+      "brier": 0.012236331589519978,
+      "ece": 0.07752504455856979,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.6694932579994202,
+      "nll": 0.08215910941362381,
+      "selective_accuracy_50": 1.0
+    },
+    "constant_erm": {
+      "accuracy": 1.0,
+      "brier": 0.013994419947266579,
+      "ece": 0.08196197100915015,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.11485101282596588,
+      "nll": 0.08731085062026978,
+      "selective_accuracy_50": 1.0
+    },
+    "constant_robust": {
+      "accuracy": 1.0,
+      "brier": 0.014546631835401058,
+      "ece": 0.08314854581840336,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.11704157292842865,
+      "nll": 0.08869470655918121,
+      "selective_accuracy_50": 1.0
+    },
+    "direct_erm": {
+      "accuracy": 1.0,
+      "brier": 0.009468055330216885,
+      "ece": 0.06934982631355524,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 1.0,
+      "nll": 0.07300460338592529,
+      "selective_accuracy_50": 1.0
+    },
+    "direct_robust": {
+      "accuracy": 1.0,
+      "brier": 0.011311204172670841,
+      "ece": 0.0760001796297729,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 1.0,
+      "nll": 0.08031006902456284,
+      "selective_accuracy_50": 1.0
+    },
+    "expert_0": {
+      "accuracy": 0.74609375,
+      "brier": 0.3057253360748291,
+      "ece": 0.1406190162524581,
+      "intervention": {
+        "accuracy_delta": -0.25390625,
+        "examples": 1024,
+        "harms": 260,
+        "prediction_changes": 260,
+        "rescues": 0
+      },
+      "nll": 0.6140656471252441,
+      "selective_accuracy_50": 0.998046875
+    },
+    "expert_1": {
+      "accuracy": 0.7626953125,
+      "brier": 0.27565643191337585,
+      "ece": 0.11570502305403352,
+      "intervention": {
+        "accuracy_delta": -0.2373046875,
+        "examples": 1024,
+        "harms": 243,
+        "prediction_changes": 243,
+        "rescues": 0
+      },
+      "nll": 0.5677614808082581,
+      "selective_accuracy_50": 1.0
+    },
+    "expert_2": {
+      "accuracy": 0.7626953125,
+      "brier": 0.26618847250938416,
+      "ece": 0.07617147476412356,
+      "intervention": {
+        "accuracy_delta": -0.2373046875,
+        "examples": 1024,
+        "harms": 243,
+        "prediction_changes": 243,
+        "rescues": 0
+      },
+      "nll": 0.5363888144493103,
+      "selective_accuracy_50": 1.0
+    },
+    "expert_3": {
+      "accuracy": 0.8232421875,
+      "brier": 0.19805631041526794,
+      "ece": 0.14225835271645337,
+      "intervention": {
+        "accuracy_delta": -0.1767578125,
+        "examples": 1024,
+        "harms": 181,
+        "prediction_changes": 181,
+        "rescues": 0
+      },
+      "nll": 0.4425395727157593,
+      "selective_accuracy_50": 1.0
+    },
+    "expert_4": {
+      "accuracy": 0.75390625,
+      "brier": 0.2574385404586792,
+      "ece": 0.0728322688373737,
+      "intervention": {
+        "accuracy_delta": -0.24609375,
+        "examples": 1024,
+        "harms": 252,
+        "prediction_changes": 252,
+        "rescues": 0
+      },
+      "nll": 0.5146499872207642,
+      "selective_accuracy_50": 1.0
+    },
+    "fixed": {
+      "accuracy": 1.0,
+      "brier": 0.15990546345710754,
+      "ece": 0.29927548579871655,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.39018481969833374,
+      "selective_accuracy_50": 1.0
+    },
+    "reference": {
+      "accuracy": 1.0,
+      "brier": 0.01487334631383419,
+      "ece": 0.08353408612310886,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.08921727538108826,
+      "selective_accuracy_50": 1.0
+    },
+    "selected_control": {
+      "accuracy": 1.0,
+      "brier": 0.009468055330216885,
+      "ece": 0.06934982631355524,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.07300460338592529,
+      "selective_accuracy_50": 1.0
+    },
+    "semantic": {
+      "accuracy": 1.0,
+      "brier": 0.01487334631383419,
+      "ece": 0.08353408612310886,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.08921727538108826,
+      "selective_accuracy_50": 1.0
+    },
+    "uniform": {
+      "accuracy": 1.0,
+      "brier": 0.17982295155525208,
+      "ece": 0.3112736139446497,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.41961848735809326,
+      "selective_accuracy_50": 1.0
+    }
+  },
+  "prediction_sha256": "bda2a06010112f486487c6ecab246a94f129eba546e63ab19136b040eee8f850",
+  "regime": "known_shift",
+  "tensor_hashes": {
+    "actions": "cbd4fba35112a1d9da6a2f24302ab4cfc223939dce9a8ad6bf2a37166b05c279",
+    "allowed_transitions": "3431383721510cf1c211de027cf958c183e16db5fabb6b230eb284c85e196aa9",
+    "component_quality": "93526fd38898f98e87322d83e8d9951ec9298c87c7f68c050c2f41481e2346f8",
+    "corruption_status": "741af97c8c2f94fabc53d3f2e680aee1acc366925679db466379e5111b5686a2",
+    "decision_targets": "7b7119b18ccc23042d6f713215120a58b6ff696c7cc6079914a42ac0040154c3",
+    "domain_ids": "0e2d366b99f6099ea1e3a1729395ef02c3eaf637763f9384f7ecf83609792d93",
+    "image": "f96f0979c84fdc6425f6d23cc7db15577cc566f16324f85035871565155834a2",
+    "next_state_targets": "81236d3bff64c789ccf8de74d31cbd518edc496715e5276c2a28899c0eac2ba2",
+    "risk_score": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+    "source_ids": "8c83f4f91f740ddc038cd760689b68ed7879d23a6cdf98a25a6de52f81655c36",
+    "states": "655d0be876cebd8c3cd591fe3e4ae8678f5cf166f73ca1fd0312bd7c06b521c8",
+    "tokens": "dc06876deef9117bd04f0afab0a108d09468831b5383515fd9922e4be8a6a9c1",
+    "transition_targets": "de313a8696343e90eca6701e2a5ff3c2c8bb5a86722d3096fb31874f94a4541d"
+  },
+  "training_seed": 20267601
+}

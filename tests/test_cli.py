@@ -261,6 +261,19 @@ def test_bu1ld_specifications_command_is_explicitly_non_promotional() -> None:
     assert all(item["gradient_coverage"] == "PASS" for item in contracts)
 
 
+def test_aion_executor_demo_enforces_host_policy() -> None:
+    executed = json.loads(_invoke("bu1ld", "aion-executor-demo"))
+    assert executed["status"] == "AION_HOST_GOVERNED_EXECUTION_FIXTURE_NOT_PROMOTED"
+    assert executed["trace"]["status"] == "completed"
+    assert executed["tool_authority_granted"] is False
+
+    stopped = json.loads(
+        _invoke("bu1ld", "aion-executor-demo", "--selected-stage", "1")
+    )
+    assert stopped["trace"]["status"] == "stopped"
+    assert stopped["trace"]["stop_reason"] == "selected_transition_illegal"
+
+
 def test_bu1ld_composed_training_command_runs_end_to_end(
     tmp_path: Path, monkeypatch: object
 ) -> None:

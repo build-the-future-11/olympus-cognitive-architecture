@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-21",
+  "kind": "scientific_run_admission_refusal",
+  "status": "NO_SCIENTIFIC_RUN_LAUNCHED",
+  "authorization": "The user explicitly requested full scientific runs on 2026-10-21.",
+  "local_resource_admission": {
+    "status": "REFUSED_BEFORE_TORCH_IMPORT",
+    "required_free_bytes": 536870912,
+    "observed_free_bytes": [62930944, 62914560],
+    "observed_pageouts": [289266, 289266],
+    "pageouts_stable": true
+  },
+  "protocol_admission": {
+    "status": "NO_ELIGIBLE_UNCONSUMED_FROZEN_PROTOCOL",
+    "completed_terminal_protocols": [
+      "olympus-controlled-fusion-v2",
+      "olympus-reliability-fusion-v3",
+      "olympus-oracle-fusion-v4",
+      "olympus-robust-fusion-v5",
+      "olympus-editclevr-v1",
+      "olympus-routing-v6.0.2"
+    ],
+    "large_scale_readiness": "0_OF_6_FAMILIES_READY",
+    "gated_science_items": "Require a new versioned protocol, admitted data, controls, budget, falsifier, implementation qualification and untouched protected split before execution."
+  },
+  "forbidden_shortcuts": [
+    "rerun a terminal protocol to seek a favorable outcome",
+    "observe or construct protected evidence before a successor freeze",
+    "weaken the 512 MiB and stable-pageout guard",
+    "treat engineering fixtures as scientific evidence",
+    "use paid compute or promote a model without separate authorization"
+  ],
+  "next_legitimate_execution": "Create and qualify a versioned successor such as Kronos multi-horizon dynamics, freeze its source/data/control/budget/falsifier identities, then execute once on an admitted local or explicitly authorized hosted source snapshot.",
+  "protected_evaluations_started": 0,
+  "scientific_training_runs_started": 0,
+  "paid_jobs_started": 0,
+  "external_jobs_started": 0,
+  "predecessor_outcomes_changed": false
+}

@@ -260,3 +260,138 @@ downloaded CPU evidence and all predecessor receipts remain unchanged. No runtim
 or test source, budget, resource guard, scientific outcome, or promotion status
 changed. Actual training and benchmarking have not started. See
 `research/flagship_engineering_v2/KAGGLE_CUDA_BLOCKED_20261019.json`.
+
+## 2026-10-21 Aion host-executor engineering successor
+
+A Torch-independent host executor now treats an Aion transition as an
+untrusted request. Immutable plans bind legal stages, finite costs, remaining
+budget, and a zero-cost authorized STOP; an immutable registry snapshot is the
+only source of callbacks. Forced, explicit, illegal, unaffordable, and
+unregistered requests terminate as STOP without invoking a callback. Receipts
+bind the plan, complete decision, and registered action names, and the offline
+verifier performs no callback invocation.
+
+Twelve focused artificial executor regressions, Ruff, and strict MyPy passed.
+The CLI fixture, simulated API dry run, and Forge web fixture are implemented,
+but their integration tests remain unexecuted: a fresh macOS admission check
+observed 61,210,624 and 114,589,696 raw free bytes with pageouts stable at
+210,822, below the unchanged 512 MiB floor. This is bounded engineering
+evidence only. It grants no real tool authority, model identity, capability,
+safety, scientific, promotion, deployment, paid-compute, or external-action
+claim.
+
+An append-only follow-up adds a multi-step execution ledger. It binds the full
+requested decision sequence, carries budget continuously, records requested
+versus consumed decisions, and makes STOP terminal across the trace chain.
+Fifteen focused Torch-free regressions now pass. This additional mechanism does
+not change the resource-blocked surface-integration status or any scientific
+claim.
+
+## 2026-10-21 multi-horizon dynamics v1 prospective freeze
+
+After explicit user authorization for full scientific execution, a new bounded
+synthetic successor was frozen before any protected data existed. The study asks
+whether uncertainty-aware recurrent residual dynamics improves horizon-8 error
+across clean, corrupted-observation, and shifted-dynamics regimes relative to
+direct, residual, and persistence controls. Support requires all four fixed
+criteria: a 10% worst-regime advantage over the best learned control, a paired
+dataset-cluster bootstrap interval entirely below zero, at most 0.02 clean
+horizon-8 regression, and empirical 90% coverage within 0.10 of nominal.
+
+The exact source fixes three dataset clusters, two optimizer seeds, 18 learned
+fits, 54 protected learned-model evaluations, 10,000 bootstrap samples, a
+3,600-second wall cap, free Kaggle CPU, and Internet off. Source, protocol, and
+self-contained notebook hashes are recorded in
+`research/multi_horizon_dynamics_v1/RESEARCH_STATE.json`. Three
+protocol/packaging tests, Ruff, and strict MyPy passed before submission. The
+neutral study identity respects the rule that no artifact may claim a Kronos
+model identity before an immutable checkpoint passes its family gates. All
+predecessor outcomes remain unchanged; no protected result existed at freeze.
+
+## 2026-10-21 hosted execution correction and v2 terminal result
+
+Private Kaggle CPU run 360757510 completed the frozen v1 workload and observed
+a negative outcome, but the imported notebook had Internet enabled. That
+violated the prospective Internet-off requirement. The raw archive, 18
+checkpoints, 72 protected rows, exact source and protocol, and structural
+verification are retained under `research/multi_horizon_dynamics_v1/`; the run
+is `INVALID_CONFIGURATION_RETAINED`, its `primary_supported` value remains
+null, and its outcome is not accepted as scientific evidence.
+
+A fresh `multi-horizon-dynamics-v2` successor was therefore frozen before any
+new protected generation. It uses disjoint dataset, optimizer, protected, and
+bootstrap seeds. Its question, candidate and controls, architecture, four
+decision criteria, denominators, and analysis are unchanged from v1. The source
+also performs an outbound TCP probe before importing Torch and refuses to run
+unless Internet access is disabled.
+
+Private Kaggle CPU run 360759516 completed successfully with Internet off. The
+pre-protected receipt records the failed outbound probe, 32,485,650,432 bytes
+available, the exact frozen source and protocol identities, and no protected
+generation at freeze. The run produced all 18 fits, 18 checkpoint files, 54
+learned protected evaluations, 18 matched persistence rows, and all 72 expected
+protected rows in 33.453 runner seconds (51.1 platform seconds).
+
+The primary hypothesis is **not supported**. The worst candidate regime was
+shifted dynamics. Its horizon-8 MSE was 1.635224 times the residual control,
+well above the predeclared 0.90 ceiling, and the paired dataset-cluster delta
+CI95 was [0.00243693, 0.00464508], entirely above rather than below zero. The
+clean-regression gate passed at 0.00271676 and the 90% coverage gate passed at
+0.858276. Because every criterion was conjunctive, these secondary passes do
+not rescue the primary.
+
+The downloaded archive SHA-256 is
+`e41fd8c6180f911f710254205761071b15d7e0a581ab9471fa452195a788ff56`.
+An independent verifier matched every manifest entry, checkpoint hash, fit and
+row denominator, aggregate mean, bootstrap interval, and decision; its receipt
+SHA-256 is
+`d9476320e7807dfb55337cd7996372e35cc9cd1213145d2a76797c990c4993e6`.
+This result is bounded to the fresh synthetic dynamics protocol. It authorizes
+no target-scale capability, SOTA, deployment, safety, model identity, or
+promotion claim, and it changes no predecessor result.
+
+## 2026-10-21 multi-horizon dynamics v3 heavy prospective freeze
+
+After explicit authorization to queue a heavy run, a fresh confirmatory
+successor was frozen before protected generation. V3 does not retune against
+the verified negative v2 result: it preserves the question, model definitions,
+hidden width, regimes, four conjunctive decision gates, and analysis. It uses
+fresh dataset bases 20269100/20269200/20269300, fresh optimizer seeds
+20269601/20269602, fresh protected offsets +21/+22/+23, and fresh bootstrap seed
+20269999; no predecessor checkpoint or example is reused.
+
+The heavy budget fixes 4,096 training and 1,024 development trajectories per
+dataset, 2,048 protected trajectories per regime/dataset, 3,000 updates per
+fit, batch size 256, 18 learned fits, 54 learned protected evaluations, 18
+matched persistence rows, 10,000 bootstrap samples, and a 21,600-second wall
+ceiling. It is restricted to a private free Kaggle CPU queue with Internet off.
+Paid compute, accelerators, promotion, and a favorable post-outcome rerun are
+not authorized.
+
+The exact heavy wrapper SHA-256 is
+`313fbdf8322e13099f63ecf343b5e5e445ba358688c8fce29c6b12e085c33c41`;
+the immutable v2 base runner SHA-256 is
+`45a0375eb5297e8d3071487b61ee44df194f765e4254e9cd1cacc2be6844b636`;
+the protocol SHA-256 is
+`f61530a14b2fc63c312c1c80648ca12412410f50eea8c959ecdbffab1f00089c`;
+and the self-contained notebook SHA-256 is
+`8ea46ea101222506351461a397becb51cc1be70eb596d97995461fdd3ffdfdca`.
+Five focused tests, Ruff, strict MyPy on the sources, notebook JSON validation,
+and whitespace validation passed. No v3 outcome existed at freeze.
+
+## 2026-10-21 multi-horizon dynamics v3 heavy hosted start
+
+The exact frozen self-contained notebook was submitted as private Kaggle
+Version #2 under the name `heavy frozen v3 confirmatory`. Kaggle Active Events
+visibly reported `multi_horizon_dynamics_v3_heavy`, `Version #2`, and
+`Running: just now`; Show Versions displayed 2. The run uses no accelerator and
+the editor session showed Internet off. The public notebook path is
+`https://www.kaggle.com/code/ryangomez010/multi-horizon-dynamics-v3-heavy`.
+Version History subsequently exposed the running Version #2 edit identity as
+run 360794856 after six minutes. The imported render-only Version #1 is
+separately retained as run 360793869.
+
+This is a queue/start receipt only. It creates no scientific outcome, changes
+no frozen threshold or predecessor result, and authorizes no capability,
+promotion, safety, deployment, or publication claim. Completion artifacts and
+the final decision remain pending.

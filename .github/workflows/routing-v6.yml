@@ -1,0 +1,56 @@
+name: routing-v6-bounded
+
+on:
+  push:
+    branches: ['codex/olympus-routing-v6-*']
+    paths:
+      - 'olympus/models/conservative_routing_v6.py'
+      - 'olympus/data/conservative_routing_v6.py'
+      - 'scripts/run_conservative_routing_v6.py'
+      - 'tests/test_conservative_routing_v6.py'
+      - 'research/olympus_routing_v6/protocol.json'
+      - '.github/workflows/routing-v6.yml'
+  workflow_dispatch:
+    inputs:
+      scientific_run:
+        description: 'Run the single frozen scientific campaign after qualification'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  qualification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.14'
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78
+        with:
+          version: '0.12.5'
+          enable-cache: true
+      - name: Locked environment
+        run: uv sync --locked --all-extras
+      - name: Static verification
+        run: |
+          uv run --locked ruff check olympus/models/conservative_routing_v6.py olympus/data/conservative_routing_v6.py scripts/run_conservative_routing_v6.py tests/test_conservative_routing_v6.py
+          uv run --locked mypy olympus/models/conservative_routing_v6.py olympus/data/conservative_routing_v6.py scripts/run_conservative_routing_v6.py tests/test_conservative_routing_v6.py
+      - name: Artificial qualification with hard time and resource guards
+        run: uv run --locked python -m scripts.run_conservative_routing_v6 qualify --output artifacts/routing-v6-qualification
+      - name: Single frozen scientific campaign
+        if: github.event_name == 'workflow_dispatch' && inputs.scientific_run
+        run: uv run --locked python -m scripts.run_conservative_routing_v6 run --output artifacts/routing-v6-campaign --qualification artifacts/routing-v6-qualification
+      - name: Preserve all receipts including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: routing-v6-${{ github.run_id }}
+          path: artifacts/routing-v6-*
+          if-no-files-found: warn
+          retention-days: 30

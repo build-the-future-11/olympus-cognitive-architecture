@@ -1,0 +1,33 @@
+{
+  "reviewer": "Independent read-only research agent",
+  "scope": "Source, mathematical derivations, provenance and independent report arithmetic; no Torch or independent retraining",
+  "frozen_files_verified": 31,
+  "source_hashes_verified": 102,
+  "raw_prediction_hashes_verified": 40,
+  "all_summary_means_and_dataset_deltas_recomputed": true,
+  "bootstrap_comparisons_recomputed_exactly": 8,
+  "bootstrap_samples": 10000,
+  "bootstrap_seed": 20267999,
+  "numpy_version": "2.5.4",
+  "torch_imported": false,
+  "decision": "NEGATIVE",
+  "nonregression_comparisons_passed": 6,
+  "review_findings_repaired_before_execution": [
+    "Copied frozen gradients",
+    "Full bank checkpoint replay",
+    "Self-consistent rehashed raw results",
+    "Environment contract binding"
+  ],
+  "manuscript_corrections": [
+    "Protected-only regeneration claim",
+    "Copied alternative initialization",
+    "Two routing networks when semantic reference",
+    "Separate backbone weights",
+    "Continued-training controls match gains without unique causal identification",
+    "V6 does not isolate proxy mismatch",
+    "Alpha magnitude is distinct from changed decisions",
+    "Explicit virtual-environment interpreter in reproduction commands"
+  ],
+  "independent_retraining": false,
+  "status": "PASS_WITH_STATED_SCOPE"
+}

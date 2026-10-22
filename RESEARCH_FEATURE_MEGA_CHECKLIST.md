@@ -115,12 +115,35 @@ revision, configuration, and the listed acceptance artifact.
   predeclared horizons and corruption regimes.  **Done when:** a frozen
   protocol reports horizon-wise MSE, calibration, recovery error, compute, and
   paired seed/trajectory intervals without reusing v5 protected outcomes.
+  **2026-10-21 evidence:** neutral successor `multi-horizon-dynamics-v2`
+  completed the full frozen comparison on private free Kaggle CPU with Internet
+  off after retaining an Internet-enabled v1 attempt as invalid. All 18 fits,
+  72 protected rows, checkpoint/prediction identities, horizon metrics,
+  calibration, recovery error, compute, and paired cluster bootstrap interval
+  were retained and independently verified. The primary was negative: the
+  candidate's shifted-regime horizon-8 MSE ratio was 1.635224 versus the best
+  learned control with CI95 [0.00243693, 0.00464508]. The checkbox remains open
+  because this bounded neutral study does not establish or authorize a Kronos
+  family checkpoint identity.
 
 - [ ] **A12 — Aion constrained decision executor [ENG].** Add a deterministic
   executor that consumes Aion’s legal transitions, affordability ledger, STOP
   cause, and host policy without granting tool authority itself.  **Done when:**
   replayed traces prove every chosen action was legal and affordable and that
   STOP is non-bypassable across API, CLI, and web surfaces.
+  **2026-10-21 progress:** implemented the Torch-independent host executor,
+  canonical plan/trace digests, offline trace verifier, CLI fixture,
+  no-side-effect API dry run, and web-console policy fixture. A follow-up
+  adversarial pass added immutable plan/decision/trace state, finite-only
+  economics, decision and registry digests, callback-registry snapshots, and
+  callback-free offline verification. A second hardening pass added a
+  hash-bound multi-step execution ledger with continuous budget accounting,
+  complete request-sequence binding, and terminal STOP enforcement. Fifteen
+  focused executor tests plus Ruff and strict MyPy passed. API/CLI/web
+  integration and TypeScript tests are
+  retained but not run because the host is below the 512 MiB/no-rising-pageout
+  admission floor; A12 remains open until those surface tests pass under
+  admitted resources.
 
 ## B. Composed-system mechanisms and architectural extensions
 

@@ -1,0 +1,620 @@
+qualification	Set up job	﻿2026-10-21T05:53:05.1339123Z Current runner version: '2.338.0'
+qualification	Set up job	2026-10-21T05:53:05.1367840Z ##[group]Runner Image Provisioner
+qualification	Set up job	2026-10-21T05:53:05.1369360Z Hosted Compute Agent
+qualification	Set up job	2026-10-21T05:53:05.1370459Z Version: 20261012.601
+qualification	Set up job	2026-10-21T05:53:05.1371650Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+qualification	Set up job	2026-10-21T05:53:05.1372406Z Build Date: 2026-10-12T17:48:21Z
+qualification	Set up job	2026-10-21T05:53:05.1373203Z Worker ID: {07ddfa8d-9985-4e2e-a116-7f2f49df9d72}
+qualification	Set up job	2026-10-21T05:53:05.1373944Z Region: centralus
+qualification	Set up job	2026-10-21T05:53:05.1374564Z Cloud: Azure
+qualification	Set up job	2026-10-21T05:53:05.1375457Z ##[endgroup]
+qualification	Set up job	2026-10-21T05:53:05.1377263Z ##[group]Operating System
+qualification	Set up job	2026-10-21T05:53:05.1378032Z Ubuntu
+qualification	Set up job	2026-10-21T05:53:05.1378593Z 24.04.5
+qualification	Set up job	2026-10-21T05:53:05.1379179Z LTS
+qualification	Set up job	2026-10-21T05:53:05.1379719Z ##[endgroup]
+qualification	Set up job	2026-10-21T05:53:05.1380267Z ##[group]Runner Image
+qualification	Set up job	2026-10-21T05:53:05.1380923Z Image: ubuntu-24.04
+qualification	Set up job	2026-10-21T05:53:05.1381877Z Version: 20261012.334.1
+qualification	Set up job	2026-10-21T05:53:05.1383002Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+qualification	Set up job	2026-10-21T05:53:05.1384876Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+qualification	Set up job	2026-10-21T05:53:05.1387186Z ##[endgroup]
+qualification	Set up job	2026-10-21T05:53:05.1388342Z ##[group]GITHUB_TOKEN Permissions
+qualification	Set up job	2026-10-21T05:53:05.1390652Z Contents: read
+qualification	Set up job	2026-10-21T05:53:05.1391627Z Metadata: read
+qualification	Set up job	2026-10-21T05:53:05.1392311Z ##[endgroup]
+qualification	Set up job	2026-10-21T05:53:05.1394513Z Secret source: Actions
+qualification	Set up job	2026-10-21T05:53:05.1395601Z Cache mode: write
+qualification	Set up job	2026-10-21T05:53:05.1396611Z Prepare workflow directory
+qualification	Set up job	2026-10-21T05:53:05.1739988Z Prepare all required actions
+qualification	Set up job	2026-10-21T05:53:05.1789490Z Getting action download info
+qualification	Set up job	2026-10-21T05:53:05.4754574Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+qualification	Set up job	2026-10-21T05:53:05.5858462Z Download action repository 'actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97' (SHA:5fda3b95a4ea91299a34e894583c3862153e4b97)
+qualification	Set up job	2026-10-21T05:53:05.6662145Z Download action repository 'astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78' (SHA:37802adc94f370d6bfd71619e3f0bf239e1f3b78)
+qualification	Set up job	2026-10-21T05:53:06.2457140Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+qualification	Set up job	2026-10-21T05:53:06.4701645Z Complete job name: qualification
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-10-21T05:53:06.5547460Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5548711Z with:
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5549211Z   persist-credentials: false
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5549949Z   repository: build-the-future-11/olympus-cognitive-architecture
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5554542Z   token: ***
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5555034Z   ssh-strict: true
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5555509Z   ssh-user: git
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5555984Z   clean: true
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5556463Z   sparse-checkout-cone-mode: true
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5557038Z   fetch-depth: 1
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5557506Z   fetch-tags: false
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5557988Z   show-progress: true
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5558512Z   lfs: false
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5558976Z   submodules: false
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5559791Z   set-safe-directory: true
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5560405Z   allow-unsafe-pr-checkout: false
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.5561458Z ##[endgroup]
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6572930Z Syncing repository: build-the-future-11/olympus-cognitive-architecture
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6576333Z ##[group]Getting Git version info
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6578151Z Working directory is '/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture'
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6580563Z [command]/usr/bin/git version
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6646420Z git version 2.55.0
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6669463Z ##[endgroup]
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6682990Z Temporarily overriding HOME='/home/runner/work/_temp/ccaa6237-9ee4-477f-b550-e93b2ae596e9' before making global git config changes
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6685784Z Adding repository directory to the temporary git global config as a safe directory
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6690582Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6761281Z Deleting the contents of '/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture'
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6764529Z ##[group]Determining repository object format
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6766034Z ##[endgroup]
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6766900Z ##[group]Initializing the repository
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6768251Z [command]/usr/bin/git init /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6874076Z hint: Using 'master' as the name for the initial branch. This default branch name
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6875983Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6877722Z hint: to use in all of your new repositories, which will suppress this warning,
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6878610Z hint: call:
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6879064Z hint:
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6879659Z hint: 	git config --global init.defaultBranch <name>
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6880403Z hint:
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6881241Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6882324Z hint: 'development'. The just-created branch can be renamed via this command:
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6883163Z hint:
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6883626Z hint: 	git branch -m <name>
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6884173Z hint:
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6884873Z hint: Disable this message with "git config set advice.defaultBranchName false"
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6890192Z Initialized empty Git repository in /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6903755Z [command]/usr/bin/git remote add origin https://github.com/build-the-future-11/olympus-cognitive-architecture
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6952846Z ##[endgroup]
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6954131Z ##[group]Disabling automatic garbage collection
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6956320Z [command]/usr/bin/git config --local gc.auto 0
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6998166Z ##[endgroup]
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.6999998Z ##[group]Setting up auth
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.7005353Z Removing SSH command configuration
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.7012987Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.7059715Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.7453121Z Removing HTTP extra header
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.7459155Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.7498720Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.7723824Z Removing includeIf entries pointing to credentials config files
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.7728445Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.7799210Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.8036807Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-396fa61f-7a92-423f-a301-63405b56018d.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.8081570Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path /home/runner/work/_temp/git-credentials-396fa61f-7a92-423f-a301-63405b56018d.config
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.8118700Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-396fa61f-7a92-423f-a301-63405b56018d.config
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.8162670Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-396fa61f-7a92-423f-a301-63405b56018d.config
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.8200890Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-396fa61f-7a92-423f-a301-63405b56018d.config
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.8234453Z ##[endgroup]
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.8236076Z ##[group]Fetching the repository
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:06.8244359Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +18a70523d2039803b9aeb2b8dcad2c8e27026589:refs/remotes/origin/codex/olympus-routing-v6-20261021
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:07.7615618Z From https://github.com/build-the-future-11/olympus-cognitive-architecture
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:07.7618389Z  * [new ref]         18a70523d2039803b9aeb2b8dcad2c8e27026589 -> origin/codex/olympus-routing-v6-20261021
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:07.7624923Z [command]/usr/bin/git branch --list --remote origin/codex/olympus-routing-v6-20261021
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:07.7655318Z   origin/codex/olympus-routing-v6-20261021
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:07.7663431Z [command]/usr/bin/git rev-parse refs/remotes/origin/codex/olympus-routing-v6-20261021
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:07.7689845Z 18a70523d2039803b9aeb2b8dcad2c8e27026589
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:07.7695484Z ##[endgroup]
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:07.7696839Z ##[group]Determining the checkout info
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:07.7771580Z ##[endgroup]
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:07.7773460Z [command]/usr/bin/git sparse-checkout disable
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:07.7777735Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:07.7797337Z ##[group]Checking out the ref
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:07.7802634Z [command]/usr/bin/git checkout --progress --force -B codex/olympus-routing-v6-20261021 refs/remotes/origin/codex/olympus-routing-v6-20261021
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.3242350Z Switched to a new branch 'codex/olympus-routing-v6-20261021'
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.3251421Z branch 'codex/olympus-routing-v6-20261021' set up to track 'origin/codex/olympus-routing-v6-20261021'.
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.3621874Z ##[endgroup]
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.3665518Z [command]/usr/bin/git log -1 --format=%H
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.3695538Z 18a70523d2039803b9aeb2b8dcad2c8e27026589
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.3706191Z ##[group]Removing auth
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.3707555Z Removing SSH command configuration
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.3709960Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.3746321Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.3974779Z Removing HTTP extra header
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.3978342Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4016099Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4246004Z Removing includeIf entries pointing to credentials config files
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4250011Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4282584Z includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4288717Z includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4293410Z includeif.gitdir:/github/workspace/.git.path
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4296006Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4303362Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4322526Z /home/runner/work/_temp/git-credentials-396fa61f-7a92-423f-a301-63405b56018d.config
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4334911Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-396fa61f\-7a92\-423f\-a301\-63405b56018d\.config
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4377419Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4404150Z /home/runner/work/_temp/git-credentials-396fa61f-7a92-423f-a301-63405b56018d.config
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4417982Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-396fa61f\-7a92\-423f\-a301\-63405b56018d\.config
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4464201Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4493761Z /github/runner_temp/git-credentials-396fa61f-7a92-423f-a301-63405b56018d.config
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4505600Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-396fa61f\-7a92\-423f\-a301\-63405b56018d\.config
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4544967Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4572614Z /github/runner_temp/git-credentials-396fa61f-7a92-423f-a301-63405b56018d.config
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4591310Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-396fa61f\-7a92\-423f\-a301\-63405b56018d\.config
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4620728Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4847100Z Removing credentials config '/home/runner/work/_temp/git-credentials-396fa61f-7a92-423f-a301-63405b56018d.config'
+qualification	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:53:08.4855834Z ##[endgroup]
+qualification	Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97	﻿2026-10-21T05:53:08.5214445Z ##[group]Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+qualification	Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97	2026-10-21T05:53:08.5216133Z with:
+qualification	Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97	2026-10-21T05:53:08.5216985Z   python-version: 3.14
+qualification	Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97	2026-10-21T05:53:08.5217962Z   check-latest: false
+qualification	Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97	2026-10-21T05:53:08.5227710Z   token: ***
+qualification	Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97	2026-10-21T05:53:08.5228654Z   update-environment: true
+qualification	Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97	2026-10-21T05:53:08.5229715Z   allow-prereleases: false
+qualification	Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97	2026-10-21T05:53:08.5230762Z   freethreaded: false
+qualification	Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97	2026-10-21T05:53:08.5231832Z ##[endgroup]
+qualification	Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97	2026-10-21T05:53:08.6438013Z ##[group]Installed versions
+qualification	Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97	2026-10-21T05:53:08.6525479Z Successfully set up CPython (3.14.8)
+qualification	Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97	2026-10-21T05:53:08.6527970Z ##[endgroup]
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	﻿2026-10-21T05:53:08.6916981Z ##[group]Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6918536Z with:
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6919341Z   version: 0.12.5
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6920214Z   enable-cache: true
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6921346Z   activate-environment: false
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6923194Z   working-directory: /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6933257Z   github-token: ***
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6935446Z   cache-dependency-glob: **/*requirements*.txt
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	**/*requirements*.in
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	**/*constraints*.txt
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	**/*constraints*.in
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	**/pyproject.toml
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	**/uv.lock
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	**/*.py.lock
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6937837Z   restore-cache: true
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6938753Z   save-cache: true
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6939644Z   prune-cache: true
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6940560Z   cache-python: false
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6941674Z   ignore-nothing-to-cache: false
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6942763Z   ignore-empty-workdir: false
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6943814Z   add-problem-matchers: true
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6944898Z   resolution-strategy: highest
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6945885Z env:
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6946894Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6948570Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6950250Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6952117Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6953636Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6955172Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.6956485Z ##[endgroup]
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:08.8836972Z Fetching version data from https://raw.githubusercontent.com/astral-sh/versions/main/v1/uv.ndjson ...
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:09.0040624Z Downloading uv from "https://releases.astral.sh/github/uv/releases/download/0.12.5/uv-x86_64-unknown-linux-gnu.tar.gz" ...
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:09.2955068Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/7d355aa5-53cd-421d-b00d-53d4d2ef2d16 -f /home/runner/work/_temp/512c3095-e44a-481b-9201-b208c49284c6
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:09.7419936Z Added /home/runner/.local/bin to the path
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:09.7424357Z Added /opt/hostedtoolcache/uv/0.12.5/x86_64 to the path
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:09.7425962Z Set UV_PYTHON_INSTALL_DIR to /home/runner/work/_temp/uv-python-dir
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:09.7426742Z Added /home/runner/work/_temp/uv-python-dir to the path
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:09.7439719Z Set UV_CACHE_DIR to /home/runner/work/_temp/setup-uv-cache
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:09.7440141Z Successfully installed uv version 0.12.5
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:09.8981268Z Searching files using cache dependency glob: /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/**/*requirements*.txt,/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/**/*requirements*.in,/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/**/*constraints*.txt,/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/**/*constraints*.in,/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/**/pyproject.toml,/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/**/uv.lock,/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/**/*.py.lock
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:09.9513239Z /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/pyproject.toml
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:09.9532247Z /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/requirements-kaggle.txt
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:09.9940068Z /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/uv.lock
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:09.9953595Z Found 3 files to hash.
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:10.0031880Z Trying to restore cache from GitHub Actions cache with key: setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.14.8-pruned-78bd5b05c1a6a4e8a9ead4e9a8a7d0a4ed0c2809af8b3e4d347e392d58d683b3
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:10.1389702Z Cache hit for: setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.14.8-pruned-78bd5b05c1a6a4e8a9ead4e9a8a7d0a4ed0c2809af8b3e4d347e392d58d683b3
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:10.5335873Z Received 186116 of 186116 (100.0%), 0.8 MBs/sec
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:10.5336677Z Cache Size: ~0 MB (186116 B)
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:10.5367571Z [command]/usr/bin/tar -xf /home/runner/work/_temp/c296e024-76e5-4c31-bbff-519dcec00504/cache.tzst -P -C /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture --use-compress-program unzstd
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:10.5466535Z Cache restored successfully
+qualification	Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:53:10.5471566Z cache restored from GitHub Actions cache with key: setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.14.8-pruned-78bd5b05c1a6a4e8a9ead4e9a8a7d0a4ed0c2809af8b3e4d347e392d58d683b3
+qualification	Locked environment	﻿2026-10-21T05:53:10.6127277Z ##[group]Run uv sync --locked --all-extras
+qualification	Locked environment	2026-10-21T05:53:10.6127748Z ^[[36;1muv sync --locked --all-extras^[[0m
+qualification	Locked environment	2026-10-21T05:53:10.6437718Z shell: /usr/bin/bash -e {0}
+qualification	Locked environment	2026-10-21T05:53:10.6438153Z env:
+qualification	Locked environment	2026-10-21T05:53:10.6438540Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Locked environment	2026-10-21T05:53:10.6439211Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+qualification	Locked environment	2026-10-21T05:53:10.6439836Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Locked environment	2026-10-21T05:53:10.6440394Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Locked environment	2026-10-21T05:53:10.6441438Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Locked environment	2026-10-21T05:53:10.6442028Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+qualification	Locked environment	2026-10-21T05:53:10.6442656Z   UV_PYTHON_INSTALL_DIR: /home/runner/work/_temp/uv-python-dir
+qualification	Locked environment	2026-10-21T05:53:10.6443213Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+qualification	Locked environment	2026-10-21T05:53:10.6443650Z ##[endgroup]
+qualification	Locked environment	2026-10-21T05:53:10.6629031Z Using CPython 3.14.8 interpreter at: /opt/hostedtoolcache/Python/3.14.8/x64/bin/python3
+qualification	Locked environment	2026-10-21T05:53:10.6629659Z Creating virtual environment at: .venv
+qualification	Locked environment	2026-10-21T05:53:10.6659285Z Resolved 110 packages in 0.71ms
+qualification	Locked environment	2026-10-21T05:53:10.6783636Z    Building olympus-cognitive-architecture @ file:///home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+qualification	Locked environment	2026-10-21T05:53:10.7786652Z Downloading nvidia-curand (56.8MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7787268Z Downloading pillow (6.6MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7788733Z Downloading cryptography (4.5MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7790211Z Downloading pygments (1.2MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7792095Z Downloading ruff (9.9MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7793980Z Downloading nvidia-cudnn-cu13 (527.5MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7796995Z Downloading nvidia-cufile (1.2MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7799096Z Downloading nvidia-cuda-nvrtc (86.0MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7802505Z Downloading nvidia-cusparselt-cu13 (162.3MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7804273Z Downloading pip (1.7MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7806301Z Downloading sympy (6.0MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7808179Z Downloading ast-serialize (1.3MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7810186Z Downloading nvidia-nccl-cu13 (206.0MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7812337Z Downloading pydantic-core (2.1MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7814348Z Downloading mypy (14.7MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7816318Z Downloading numpy (15.9MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7822512Z Downloading nvidia-cusolver (191.6MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7824742Z Downloading nvidia-cuda-runtime (2.1MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7826970Z Downloading nvidia-cublas (403.5MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7829208Z Downloading torch (528.9MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7831540Z Downloading nvidia-cusparse (139.2MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7833859Z Downloading nvidia-nvshmem-cu13 (57.6MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7837952Z Downloading nvidia-cuda-cupti (10.2MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7840455Z Downloading nvidia-nvjitlink (40.5MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7842794Z Downloading networkx (2.0MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7851066Z Downloading nvidia-cufft (204.2MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7853975Z Downloading cuda-bindings (6.7MiB)
+qualification	Locked environment	2026-10-21T05:53:10.7856561Z Downloading triton (236.5MiB)
+qualification	Locked environment	2026-10-21T05:53:11.4882651Z  Downloaded nvidia-cufile
+qualification	Locked environment	2026-10-21T05:53:11.5337849Z  Downloaded ast-serialize
+qualification	Locked environment	2026-10-21T05:53:11.7359818Z  Downloaded nvidia-cuda-runtime
+qualification	Locked environment	2026-10-21T05:53:11.7387695Z  Downloaded pydantic-core
+qualification	Locked environment	2026-10-21T05:53:11.8995124Z  Downloaded pygments
+qualification	Locked environment	2026-10-21T05:53:12.0153078Z  Downloaded pip
+qualification	Locked environment	2026-10-21T05:53:12.2565602Z  Downloaded networkx
+qualification	Locked environment	2026-10-21T05:53:12.3697181Z  Downloaded cryptography
+qualification	Locked environment	2026-10-21T05:53:12.9173211Z  Downloaded pillow
+qualification	Locked environment	2026-10-21T05:53:12.9494592Z  Downloaded cuda-bindings
+qualification	Locked environment	2026-10-21T05:53:13.6794706Z  Downloaded ruff
+qualification	Locked environment	2026-10-21T05:53:13.6803561Z  Downloaded nvidia-cuda-cupti
+qualification	Locked environment	2026-10-21T05:53:14.0088244Z  Downloaded sympy
+qualification	Locked environment	2026-10-21T05:53:14.3855347Z  Downloaded numpy
+qualification	Locked environment	2026-10-21T05:53:14.5713308Z       Built olympus-cognitive-architecture @ file:///home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+qualification	Locked environment	2026-10-21T05:53:16.1966845Z  Downloaded mypy
+qualification	Locked environment	2026-10-21T05:53:16.2183914Z  Downloaded nvidia-nvjitlink
+qualification	Locked environment	2026-10-21T05:53:17.1999193Z  Downloaded nvidia-curand
+qualification	Locked environment	2026-10-21T05:53:17.2292090Z  Downloaded nvidia-nvshmem-cu13
+qualification	Locked environment	2026-10-21T05:53:18.5785062Z  Downloaded nvidia-cuda-nvrtc
+qualification	Locked environment	2026-10-21T05:53:20.7687813Z  Downloaded nvidia-cusparse
+qualification	Locked environment	2026-10-21T05:53:21.6323363Z  Downloaded nvidia-cusparselt-cu13
+qualification	Locked environment	2026-10-21T05:53:22.4581616Z  Downloaded nvidia-cusolver
+qualification	Locked environment	2026-10-21T05:53:22.8665774Z  Downloaded nvidia-cufft
+qualification	Locked environment	2026-10-21T05:53:22.9562442Z  Downloaded nvidia-nccl-cu13
+qualification	Locked environment	2026-10-21T05:53:23.4316625Z  Downloaded triton
+qualification	Locked environment	2026-10-21T05:53:25.2790768Z  Downloaded nvidia-cublas
+qualification	Locked environment	2026-10-21T05:53:26.3336614Z  Downloaded nvidia-cudnn-cu13
+qualification	Locked environment	2026-10-21T05:53:30.4641697Z  Downloaded torch
+qualification	Locked environment	2026-10-21T05:53:30.4646112Z Prepared 108 packages in 19.79s
+qualification	Locked environment	2026-10-21T05:53:30.7776910Z Installed 108 packages in 312ms
+qualification	Locked environment	2026-10-21T05:53:30.7777874Z  + annotated-doc==0.0.5
+qualification	Locked environment	2026-10-21T05:53:30.7778485Z  + annotated-types==0.8.0
+qualification	Locked environment	2026-10-21T05:53:30.7779053Z  + anyio==4.15.1
+qualification	Locked environment	2026-10-21T05:53:30.7779608Z  + ast-serialize==0.12.1
+qualification	Locked environment	2026-10-21T05:53:30.7780189Z  + boolean-py==5.0
+qualification	Locked environment	2026-10-21T05:53:30.7780688Z  + build==1.6.1
+qualification	Locked environment	2026-10-21T05:53:30.7781455Z  + cachecontrol==0.14.4
+qualification	Locked environment	2026-10-21T05:53:30.7782019Z  + certifi==2026.7.22
+qualification	Locked environment	2026-10-21T05:53:30.7782747Z  + cffi==2.1.1
+qualification	Locked environment	2026-10-21T05:53:30.7784306Z  + charset-normalizer==3.5.2
+qualification	Locked environment	2026-10-21T05:53:30.7784917Z  + click==8.5.0
+qualification	Locked environment	2026-10-21T05:53:30.7785394Z  + coverage==7.16.2
+qualification	Locked environment	2026-10-21T05:53:30.7785895Z  + cryptography==50.0.2
+qualification	Locked environment	2026-10-21T05:53:30.7805278Z  + cuda-bindings==13.4.3
+qualification	Locked environment	2026-10-21T05:53:30.7805827Z  + cuda-pathfinder==1.8.3
+qualification	Locked environment	2026-10-21T05:53:30.7806229Z  + cuda-toolkit==13.0.3.0
+qualification	Locked environment	2026-10-21T05:53:30.7806559Z  + cyclonedx-python-lib==11.12.0
+qualification	Locked environment	2026-10-21T05:53:30.7806982Z  + defusedxml==0.7.1
+qualification	Locked environment	2026-10-21T05:53:30.7807322Z  + docutils==0.23
+qualification	Locked environment	2026-10-21T05:53:30.7807665Z  + fastapi==0.143.0
+qualification	Locked environment	2026-10-21T05:53:30.7807996Z  + filelock==4.1.1
+qualification	Locked environment	2026-10-21T05:53:30.7808312Z  + fsspec==2026.9.0
+qualification	Locked environment	2026-10-21T05:53:30.7808621Z  + h11==0.16.0
+qualification	Locked environment	2026-10-21T05:53:30.7808928Z  + httpcore==1.0.9
+qualification	Locked environment	2026-10-21T05:53:30.7809272Z  + httpx==0.28.1
+qualification	Locked environment	2026-10-21T05:53:30.7809574Z  + id==1.6.1
+qualification	Locked environment	2026-10-21T05:53:30.7809870Z  + idna==3.20
+qualification	Locked environment	2026-10-21T05:53:30.7810077Z  + iniconfig==2.3.1
+qualification	Locked environment	2026-10-21T05:53:30.7810301Z  + jaraco-classes==3.4.0
+qualification	Locked environment	2026-10-21T05:53:30.7810550Z  + jaraco-context==6.1.2
+qualification	Locked environment	2026-10-21T05:53:30.7810779Z  + jaraco-functools==4.6.0
+qualification	Locked environment	2026-10-21T05:53:30.7811280Z  + jeepney==0.9.0
+qualification	Locked environment	2026-10-21T05:53:30.7811500Z  + jinja2==3.1.6
+qualification	Locked environment	2026-10-21T05:53:30.7811706Z  + keyring==25.7.0
+qualification	Locked environment	2026-10-21T05:53:30.7811913Z  + librt==0.16.0
+qualification	Locked environment	2026-10-21T05:53:30.7812126Z  + license-expression==30.4.4
+qualification	Locked environment	2026-10-21T05:53:30.7812378Z  + markdown-it-py==4.2.0
+qualification	Locked environment	2026-10-21T05:53:30.7812622Z  + markupsafe==3.0.4
+qualification	Locked environment	2026-10-21T05:53:30.7812833Z  + mdurl==0.1.2
+qualification	Locked environment	2026-10-21T05:53:30.7813045Z  + more-itertools==11.1.0
+qualification	Locked environment	2026-10-21T05:53:30.7813278Z  + mpmath==1.3.0
+qualification	Locked environment	2026-10-21T05:53:30.7813474Z  + msgpack==1.2.3
+qualification	Locked environment	2026-10-21T05:53:30.7813674Z  + mypy==2.4.0
+qualification	Locked environment	2026-10-21T05:53:30.7813876Z  + mypy-extensions==1.1.0
+qualification	Locked environment	2026-10-21T05:53:30.7814106Z  + networkx==3.7
+qualification	Locked environment	2026-10-21T05:53:30.7814295Z  + nh3==0.3.7
+qualification	Locked environment	2026-10-21T05:53:30.7814487Z  + numpy==2.5.4
+qualification	Locked environment	2026-10-21T05:53:30.7814693Z  + nvidia-cublas==13.1.1.3
+qualification	Locked environment	2026-10-21T05:53:30.7814970Z  + nvidia-cuda-cupti==13.0.85
+qualification	Locked environment	2026-10-21T05:53:30.7815214Z  + nvidia-cuda-nvrtc==13.0.88
+qualification	Locked environment	2026-10-21T05:53:30.7815466Z  + nvidia-cuda-runtime==13.0.96
+qualification	Locked environment	2026-10-21T05:53:30.7815714Z  + nvidia-cudnn-cu13==9.24.0.43
+qualification	Locked environment	2026-10-21T05:53:30.7815953Z  + nvidia-cufft==12.0.0.61
+qualification	Locked environment	2026-10-21T05:53:30.7816180Z  + nvidia-cufile==1.15.1.6
+qualification	Locked environment	2026-10-21T05:53:30.7816422Z  + nvidia-curand==10.4.0.35
+qualification	Locked environment	2026-10-21T05:53:30.7816656Z  + nvidia-cusolver==12.0.4.66
+qualification	Locked environment	2026-10-21T05:53:30.7816895Z  + nvidia-cusparse==12.6.3.3
+qualification	Locked environment	2026-10-21T05:53:30.7817145Z  + nvidia-cusparselt-cu13==0.8.1
+qualification	Locked environment	2026-10-21T05:53:30.7817404Z  + nvidia-nccl-cu13==2.30.7
+qualification	Locked environment	2026-10-21T05:53:30.7817639Z  + nvidia-nvjitlink==13.4.92
+qualification	Locked environment	2026-10-21T05:53:30.7817880Z  + nvidia-nvshmem-cu13==3.4.5
+qualification	Locked environment	2026-10-21T05:53:30.7818115Z  + nvidia-nvtx==13.0.85
+qualification	Locked environment	2026-10-21T05:53:30.7818711Z  + olympus-cognitive-architecture==0.2.0 (from file:///home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture)
+qualification	Locked environment	2026-10-21T05:53:30.7819607Z  + opentelemetry-api==1.45.1
+qualification	Locked environment	2026-10-21T05:53:30.7819927Z  + packageurl-python==0.17.6
+qualification	Locked environment	2026-10-21T05:53:30.7820195Z  + packaging==26.3
+qualification	Locked environment	2026-10-21T05:53:30.7820400Z  + pathspec==1.1.1
+qualification	Locked environment	2026-10-21T05:53:30.7820600Z  + pillow==12.3.0
+qualification	Locked environment	2026-10-21T05:53:30.7820800Z  + pip==26.2.1
+qualification	Locked environment	2026-10-21T05:53:30.7821241Z  + pip-api==0.0.35
+qualification	Locked environment	2026-10-21T05:53:30.7821458Z  + pip-audit==2.10.1
+qualification	Locked environment	2026-10-21T05:53:30.7821874Z  + pip-requirements-parser==32.0.1
+qualification	Locked environment	2026-10-21T05:53:30.7822142Z  + platformdirs==4.13.0
+qualification	Locked environment	2026-10-21T05:53:30.7822358Z  + pluggy==1.6.0
+qualification	Locked environment	2026-10-21T05:53:30.7822577Z  + py-serializable==2.1.0
+qualification	Locked environment	2026-10-21T05:53:30.7822804Z  + pycparser==3.11
+qualification	Locked environment	2026-10-21T05:53:30.7823006Z  + pydantic==2.14.0
+qualification	Locked environment	2026-10-21T05:53:30.7823221Z  + pydantic-core==2.50.0
+qualification	Locked environment	2026-10-21T05:53:30.7823448Z  + pygments==2.21.0
+qualification	Locked environment	2026-10-21T05:53:30.7823980Z  + pyparsing==3.3.3
+qualification	Locked environment	2026-10-21T05:53:30.7824348Z  + pyproject-hooks==1.3.3
+qualification	Locked environment	2026-10-21T05:53:30.7824764Z  + pytest==9.1.1
+qualification	Locked environment	2026-10-21T05:53:30.7825130Z  + pytest-cov==7.1.0
+qualification	Locked environment	2026-10-21T05:53:30.7825496Z  + pyyaml==6.0.3
+qualification	Locked environment	2026-10-21T05:53:30.7825861Z  + readme-renderer==46.0
+qualification	Locked environment	2026-10-21T05:53:30.7826255Z  + requests==2.34.2
+qualification	Locked environment	2026-10-21T05:53:30.7826482Z  + requests-toolbelt==1.0.0
+qualification	Locked environment	2026-10-21T05:53:30.7826719Z  + rfc3986==2.0.0
+qualification	Locked environment	2026-10-21T05:53:30.7826915Z  + rich==15.0.0
+qualification	Locked environment	2026-10-21T05:53:30.7827102Z  + ruff==0.17.0
+qualification	Locked environment	2026-10-21T05:53:30.7827298Z  + secretstorage==3.5.0
+qualification	Locked environment	2026-10-21T05:53:30.7827535Z  + setuptools==84.0.0
+qualification	Locked environment	2026-10-21T05:53:30.7827750Z  + shellingham==1.5.4
+qualification	Locked environment	2026-10-21T05:53:30.7827971Z  + sortedcontainers==2.4.0
+qualification	Locked environment	2026-10-21T05:53:30.7828199Z  + starlette==1.7.0
+qualification	Locked environment	2026-10-21T05:53:30.7828405Z  + sympy==1.14.0
+qualification	Locked environment	2026-10-21T05:53:30.7828597Z  + tomli==2.5.0
+qualification	Locked environment	2026-10-21T05:53:30.7828786Z  + tomli-w==1.2.0
+qualification	Locked environment	2026-10-21T05:53:30.7828995Z  + torch==2.14.1
+qualification	Locked environment	2026-10-21T05:53:30.7829187Z  + triton==3.8.0
+qualification	Locked environment	2026-10-21T05:53:30.7829386Z  + twine==6.2.0
+qualification	Locked environment	2026-10-21T05:53:30.7829573Z  + typer==0.27.3
+qualification	Locked environment	2026-10-21T05:53:30.7829786Z  + types-pyyaml==6.0.12.20260906
+qualification	Locked environment	2026-10-21T05:53:30.7830043Z  + typing-extensions==4.16.0
+qualification	Locked environment	2026-10-21T05:53:30.7830296Z  + typing-inspection==0.4.4
+qualification	Locked environment	2026-10-21T05:53:30.7830524Z  + urllib3==2.8.0
+qualification	Locked environment	2026-10-21T05:53:30.7830721Z  + uvicorn==0.54.0
+qualification	Locked environment	2026-10-21T05:53:30.7830925Z  + wheel==0.48.0
+qualification	Static verification	﻿2026-10-21T05:53:30.8092331Z ##[group]Run uv run --locked ruff check olympus/models/conservative_routing_v6.py olympus/data/conservative_routing_v6.py scripts/run_conservative_routing_v6.py tests/test_conservative_routing_v6.py
+qualification	Static verification	2026-10-21T05:53:30.8093812Z ^[[36;1muv run --locked ruff check olympus/models/conservative_routing_v6.py olympus/data/conservative_routing_v6.py scripts/run_conservative_routing_v6.py tests/test_conservative_routing_v6.py^[[0m
+qualification	Static verification	2026-10-21T05:53:30.8095127Z ^[[36;1muv run --locked mypy olympus/models/conservative_routing_v6.py olympus/data/conservative_routing_v6.py scripts/run_conservative_routing_v6.py tests/test_conservative_routing_v6.py^[[0m
+qualification	Static verification	2026-10-21T05:53:30.8159051Z shell: /usr/bin/bash -e {0}
+qualification	Static verification	2026-10-21T05:53:30.8159323Z env:
+qualification	Static verification	2026-10-21T05:53:30.8159602Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Static verification	2026-10-21T05:53:30.8160112Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+qualification	Static verification	2026-10-21T05:53:30.8160564Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Static verification	2026-10-21T05:53:30.8161141Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Static verification	2026-10-21T05:53:30.8161556Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Static verification	2026-10-21T05:53:30.8161963Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+qualification	Static verification	2026-10-21T05:53:30.8162372Z   UV_PYTHON_INSTALL_DIR: /home/runner/work/_temp/uv-python-dir
+qualification	Static verification	2026-10-21T05:53:30.8162757Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+qualification	Static verification	2026-10-21T05:53:30.8163073Z ##[endgroup]
+qualification	Static verification	2026-10-21T05:53:30.9094054Z All checks passed!
+qualification	Static verification	2026-10-21T05:53:49.3144283Z Success: no issues found in 4 source files
+qualification	Artificial qualification with hard time and resource guards	﻿2026-10-21T05:53:49.3815515Z ##[group]Run uv run --locked python -m scripts.run_conservative_routing_v6 qualify --output artifacts/routing-v6-qualification
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:53:49.3816437Z ^[[36;1muv run --locked python -m scripts.run_conservative_routing_v6 qualify --output artifacts/routing-v6-qualification^[[0m
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:53:49.3879975Z shell: /usr/bin/bash -e {0}
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:53:49.3880239Z env:
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:53:49.3880523Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:53:49.3881225Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:53:49.3881954Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:53:49.3882349Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:53:49.3882735Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:53:49.3883129Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:53:49.3883543Z   UV_PYTHON_INSTALL_DIR: /home/runner/work/_temp/uv-python-dir
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:53:49.3883961Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:53:49.3884264Z ##[endgroup]
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:53:49.9637858Z {"time": 1792562029.9633458, "phase": "admitted", "local": {"platform": "Linux", "extra_macos_guard": "NOT_APPLICABLE"}, "memory": {"total_bytes": 16766410752, "available_bytes": 15433039872, "swap_total_bytes": 3221221376, "swap_used_bytes": 0, "swap_fraction": 0.0, "process_peak_rss_bytes": 40177664}}
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:54:02.6399598Z ..............                                                           [100%]
+qualification	Artificial qualification with hard time and resource guards	2026-10-21T05:54:02.6400307Z 14 passed in 1.54s
+qualification	Single frozen scientific campaign	﻿2026-10-21T05:54:03.3524502Z ##[group]Run uv run --locked python -m scripts.run_conservative_routing_v6 run --output artifacts/routing-v6-campaign --qualification artifacts/routing-v6-qualification
+qualification	Single frozen scientific campaign	2026-10-21T05:54:03.3525742Z ^[[36;1muv run --locked python -m scripts.run_conservative_routing_v6 run --output artifacts/routing-v6-campaign --qualification artifacts/routing-v6-qualification^[[0m
+qualification	Single frozen scientific campaign	2026-10-21T05:54:03.3590187Z shell: /usr/bin/bash -e {0}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:03.3590450Z env:
+qualification	Single frozen scientific campaign	2026-10-21T05:54:03.3590739Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Single frozen scientific campaign	2026-10-21T05:54:03.3591458Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+qualification	Single frozen scientific campaign	2026-10-21T05:54:03.3591905Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Single frozen scientific campaign	2026-10-21T05:54:03.3592296Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Single frozen scientific campaign	2026-10-21T05:54:03.3592695Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Single frozen scientific campaign	2026-10-21T05:54:03.3593086Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+qualification	Single frozen scientific campaign	2026-10-21T05:54:03.3593551Z   UV_PYTHON_INSTALL_DIR: /home/runner/work/_temp/uv-python-dir
+qualification	Single frozen scientific campaign	2026-10-21T05:54:03.3593933Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+qualification	Single frozen scientific campaign	2026-10-21T05:54:03.3594255Z ##[endgroup]
+qualification	Single frozen scientific campaign	2026-10-21T05:54:03.6320367Z {"time": 1792562043.6310894, "phase": "admitted", "local": {"platform": "Linux", "extra_macos_guard": "NOT_APPLICABLE"}, "memory": {"total_bytes": 16766410752, "available_bytes": 15521341440, "swap_total_bytes": 3221221376, "swap_used_bytes": 0, "swap_fraction": 0.0, "process_peak_rss_bytes": 35299328}}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:06.1044615Z {"time": 1792562046.1041381, "phase": "bank_step", "step": 0, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:07.7020478Z {"time": 1792562047.7017455, "phase": "bank_step", "step": 50, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:09.3075089Z {"time": 1792562049.3071527, "phase": "bank_step", "step": 100, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:10.8793180Z {"time": 1792562050.8789837, "phase": "bank_step", "step": 150, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:12.4460037Z {"time": 1792562052.445705, "phase": "bank_step", "step": 200, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:14.0154582Z {"time": 1792562054.0151348, "phase": "bank_step", "step": 0, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:15.5785049Z {"time": 1792562055.5781717, "phase": "bank_step", "step": 50, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:17.1411585Z {"time": 1792562057.140785, "phase": "bank_step", "step": 100, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:18.6941567Z {"time": 1792562058.6937525, "phase": "bank_step", "step": 150, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:20.2697834Z {"time": 1792562060.2694387, "phase": "bank_step", "step": 200, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:28.4860392Z {"time": 1792562068.4856856, "phase": "development_cell_complete", "dataset": 20267100, "seed": 20267601, "control": "direct_erm"}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:28.5725685Z {"time": 1792562068.5722091, "phase": "bank_step", "step": 0, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:30.1505636Z {"time": 1792562070.1502545, "phase": "bank_step", "step": 50, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:31.7099525Z {"time": 1792562071.7096565, "phase": "bank_step", "step": 100, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:33.2664368Z {"time": 1792562073.2660835, "phase": "bank_step", "step": 150, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:34.8324686Z {"time": 1792562074.8322308, "phase": "bank_step", "step": 200, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:36.3985535Z {"time": 1792562076.398287, "phase": "bank_step", "step": 0, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:37.9521416Z {"time": 1792562077.9517858, "phase": "bank_step", "step": 50, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:39.5065527Z {"time": 1792562079.5062175, "phase": "bank_step", "step": 100, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:41.0558109Z {"time": 1792562081.055467, "phase": "bank_step", "step": 150, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:42.6189717Z {"time": 1792562082.6186361, "phase": "bank_step", "step": 200, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:50.7460342Z {"time": 1792562090.7457242, "phase": "development_cell_complete", "dataset": 20267100, "seed": 20267602, "control": "direct_robust"}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:50.8325210Z {"time": 1792562090.8321822, "phase": "bank_step", "step": 0, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:52.4479122Z {"time": 1792562092.4475865, "phase": "bank_step", "step": 50, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:54.0200258Z {"time": 1792562094.0196884, "phase": "bank_step", "step": 100, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:55.5867660Z {"time": 1792562095.5864875, "phase": "bank_step", "step": 150, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:57.1481759Z {"time": 1792562097.14783, "phase": "bank_step", "step": 200, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:54:58.7207271Z {"time": 1792562098.7203817, "phase": "bank_step", "step": 0, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:00.2856111Z {"time": 1792562100.2852774, "phase": "bank_step", "step": 50, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:01.8527921Z {"time": 1792562101.852496, "phase": "bank_step", "step": 100, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:03.4598356Z {"time": 1792562103.4595187, "phase": "bank_step", "step": 150, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:05.0266202Z {"time": 1792562105.0262973, "phase": "bank_step", "step": 200, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:13.1337416Z {"time": 1792562113.1334376, "phase": "development_cell_complete", "dataset": 20267200, "seed": 20267601, "control": "direct_robust"}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:13.2178603Z {"time": 1792562113.2175345, "phase": "bank_step", "step": 0, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:14.7759047Z {"time": 1792562114.7755759, "phase": "bank_step", "step": 50, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:16.3358419Z {"time": 1792562116.335523, "phase": "bank_step", "step": 100, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:17.8991944Z {"time": 1792562117.8988185, "phase": "bank_step", "step": 150, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:19.4553345Z {"time": 1792562119.4550688, "phase": "bank_step", "step": 200, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:21.0340555Z {"time": 1792562121.0337343, "phase": "bank_step", "step": 0, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:22.6037362Z {"time": 1792562122.603435, "phase": "bank_step", "step": 50, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:24.1675908Z {"time": 1792562124.1672413, "phase": "bank_step", "step": 100, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:25.7277043Z {"time": 1792562125.7273777, "phase": "bank_step", "step": 150, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:27.3511508Z {"time": 1792562127.3507717, "phase": "bank_step", "step": 200, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:35.5264369Z {"time": 1792562135.5260804, "phase": "development_cell_complete", "dataset": 20267200, "seed": 20267602, "control": "direct_erm"}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:35.6114963Z {"time": 1792562135.6111403, "phase": "bank_step", "step": 0, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:37.2334904Z {"time": 1792562137.2331643, "phase": "bank_step", "step": 50, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:38.8541454Z {"time": 1792562138.853791, "phase": "bank_step", "step": 100, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:40.4767006Z {"time": 1792562140.476426, "phase": "bank_step", "step": 150, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:42.0938707Z {"time": 1792562142.0935867, "phase": "bank_step", "step": 200, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:43.7055710Z {"time": 1792562143.7052257, "phase": "bank_step", "step": 0, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:45.3314207Z {"time": 1792562145.3311298, "phase": "bank_step", "step": 50, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:46.9774979Z {"time": 1792562146.9772196, "phase": "bank_step", "step": 100, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:48.6529018Z {"time": 1792562148.6525571, "phase": "bank_step", "step": 150, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:50.2774496Z {"time": 1792562150.2771163, "phase": "bank_step", "step": 200, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:58.4541505Z {"time": 1792562158.4537797, "phase": "development_cell_complete", "dataset": 20267300, "seed": 20267601, "control": "direct_erm"}
+qualification	Single frozen scientific campaign	2026-10-21T05:55:58.5403032Z {"time": 1792562158.5399313, "phase": "bank_step", "step": 0, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:00.1395845Z {"time": 1792562160.1392963, "phase": "bank_step", "step": 50, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:01.7245561Z {"time": 1792562161.7242064, "phase": "bank_step", "step": 100, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:03.3743135Z {"time": 1792562163.373948, "phase": "bank_step", "step": 150, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:05.0206083Z {"time": 1792562165.0203097, "phase": "bank_step", "step": 200, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:06.5989254Z {"time": 1792562166.598656, "phase": "bank_step", "step": 0, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:08.1595520Z {"time": 1792562168.1592424, "phase": "bank_step", "step": 50, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:09.7280175Z {"time": 1792562169.727698, "phase": "bank_step", "step": 100, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:11.2836438Z {"time": 1792562171.2833138, "phase": "bank_step", "step": 150, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:12.8604334Z {"time": 1792562172.860058, "phase": "bank_step", "step": 200, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:21.0359250Z {"time": 1792562181.0355628, "phase": "development_cell_complete", "dataset": 20267300, "seed": 20267602, "control": "direct_erm"}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:21.1202793Z {"time": 1792562181.1199698, "phase": "bank_step", "step": 0, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:22.6850840Z {"time": 1792562182.6847615, "phase": "bank_step", "step": 50, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:24.2512246Z {"time": 1792562184.2508981, "phase": "bank_step", "step": 100, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:25.8094443Z {"time": 1792562185.8091218, "phase": "bank_step", "step": 150, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:27.3707753Z {"time": 1792562187.370472, "phase": "bank_step", "step": 200, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:28.9440074Z {"time": 1792562188.9437299, "phase": "bank_step", "step": 0, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:30.5095172Z {"time": 1792562190.5091932, "phase": "bank_step", "step": 50, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:32.0937373Z {"time": 1792562192.0933785, "phase": "bank_step", "step": 100, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:33.6779714Z {"time": 1792562193.6776865, "phase": "bank_step", "step": 150, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:35.2752293Z {"time": 1792562195.2748902, "phase": "bank_step", "step": 200, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:43.3578018Z {"time": 1792562203.357499, "phase": "development_cell_complete", "dataset": 20267400, "seed": 20267601, "control": "direct_erm"}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:43.4425587Z {"time": 1792562203.4422386, "phase": "bank_step", "step": 0, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:45.0034381Z {"time": 1792562205.003115, "phase": "bank_step", "step": 50, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:46.5670358Z {"time": 1792562206.5667312, "phase": "bank_step", "step": 100, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:48.1379628Z {"time": 1792562208.137611, "phase": "bank_step", "step": 150, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:49.7680253Z {"time": 1792562209.7677102, "phase": "bank_step", "step": 200, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:51.3814995Z {"time": 1792562211.3812103, "phase": "bank_step", "step": 0, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:52.9427927Z {"time": 1792562212.942475, "phase": "bank_step", "step": 50, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:54.5064564Z {"time": 1792562214.506137, "phase": "bank_step", "step": 100, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:56.0667164Z {"time": 1792562216.066374, "phase": "bank_step", "step": 150, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:56:57.6249638Z {"time": 1792562217.6246674, "phase": "bank_step", "step": 200, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:05.7103715Z {"time": 1792562225.7100246, "phase": "development_cell_complete", "dataset": 20267400, "seed": 20267602, "control": "direct_robust"}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:05.7936519Z {"time": 1792562225.7933793, "phase": "bank_step", "step": 0, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:07.3477326Z {"time": 1792562227.3474066, "phase": "bank_step", "step": 50, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:08.8965199Z {"time": 1792562228.8961892, "phase": "bank_step", "step": 100, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:10.4552278Z {"time": 1792562230.4548502, "phase": "bank_step", "step": 150, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:12.0159615Z {"time": 1792562232.0156138, "phase": "bank_step", "step": 200, "seed": 20267601}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:13.5805641Z {"time": 1792562233.5802596, "phase": "bank_step", "step": 0, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:15.1613528Z {"time": 1792562235.1610067, "phase": "bank_step", "step": 50, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:16.7396098Z {"time": 1792562236.7392538, "phase": "bank_step", "step": 100, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:18.3044803Z {"time": 1792562238.3041584, "phase": "bank_step", "step": 150, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:19.9657220Z {"time": 1792562239.9653647, "phase": "bank_step", "step": 200, "seed": 20267701}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:28.2166820Z {"time": 1792562248.2163365, "phase": "development_cell_complete", "dataset": 20267500, "seed": 20267601, "control": "direct_robust"}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:28.3036837Z {"time": 1792562248.3033504, "phase": "bank_step", "step": 0, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:29.9436459Z {"time": 1792562249.9433134, "phase": "bank_step", "step": 50, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:31.5779986Z {"time": 1792562251.5776896, "phase": "bank_step", "step": 100, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:33.1762306Z {"time": 1792562253.1758842, "phase": "bank_step", "step": 150, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:34.7638542Z {"time": 1792562254.7635345, "phase": "bank_step", "step": 200, "seed": 20267602}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:36.3288789Z {"time": 1792562256.32855, "phase": "bank_step", "step": 0, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:37.8737783Z {"time": 1792562257.8734775, "phase": "bank_step", "step": 50, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:39.4222501Z {"time": 1792562259.4218137, "phase": "bank_step", "step": 100, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:41.0417094Z {"time": 1792562261.041346, "phase": "bank_step", "step": 150, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:42.6122402Z {"time": 1792562262.611937, "phase": "bank_step", "step": 200, "seed": 20267702}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:50.6833638Z {"time": 1792562270.6830466, "phase": "development_cell_complete", "dataset": 20267500, "seed": 20267602, "control": "constant_robust"}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:51.8235970Z {"time": 1792562271.8232946, "phase": "protected_cell_complete", "cell": "d20267100-s20267601"}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:52.8789156Z {"time": 1792562272.8786156, "phase": "protected_cell_complete", "cell": "d20267100-s20267602"}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:53.9405576Z {"time": 1792562273.94021, "phase": "protected_cell_complete", "cell": "d20267200-s20267601"}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:54.9920052Z {"time": 1792562274.9917204, "phase": "protected_cell_complete", "cell": "d20267200-s20267602"}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:56.0468019Z {"time": 1792562276.0464742, "phase": "protected_cell_complete", "cell": "d20267300-s20267601"}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:57.1080449Z {"time": 1792562277.10776, "phase": "protected_cell_complete", "cell": "d20267300-s20267602"}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:58.1644428Z {"time": 1792562278.164178, "phase": "protected_cell_complete", "cell": "d20267400-s20267601"}
+qualification	Single frozen scientific campaign	2026-10-21T05:57:59.2188476Z {"time": 1792562279.2185757, "phase": "protected_cell_complete", "cell": "d20267400-s20267602"}
+qualification	Single frozen scientific campaign	2026-10-21T05:58:00.2718668Z {"time": 1792562280.2715278, "phase": "protected_cell_complete", "cell": "d20267500-s20267601"}
+qualification	Single frozen scientific campaign	2026-10-21T05:58:01.3244253Z {"time": 1792562281.3241231, "phase": "protected_cell_complete", "cell": "d20267500-s20267602"}
+qualification	Single frozen scientific campaign	2026-10-21T05:58:12.0755286Z {"time": 1792562292.075226, "phase": "completed", "elapsed_seconds": 248.57103692099997}
+qualification	Preserve all receipts including failures	﻿2026-10-21T05:58:12.6657757Z ##[group]Run actions/upload-artifact@v4
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6658088Z with:
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6658297Z   name: routing-v6-39552083459
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6658566Z   path: artifacts/routing-v6-*
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6658825Z   if-no-files-found: warn
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6659057Z   retention-days: 30
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6659277Z   compression-level: 6
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6659498Z   overwrite: false
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6659724Z   include-hidden-files: false
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6659957Z env:
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6660210Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6660645Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib/pkgconfig
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6661300Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6661700Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6662074Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.8/x64
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6662448Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.8/x64/lib
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6662886Z   UV_PYTHON_INSTALL_DIR: /home/runner/work/_temp/uv-python-dir
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6663258Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.6663561Z ##[endgroup]
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.8345383Z (node:2767) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.8346873Z (Use `node --trace-deprecation ...` to show where the warning was created)
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.8960184Z With the provided path, there will be 118 files uploaded
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.8961638Z Artifact name is valid!
+qualification	Preserve all receipts including failures	2026-10-21T05:58:12.8962202Z Root directory input is valid!
+qualification	Preserve all receipts including failures	2026-10-21T05:58:13.1744116Z Beginning upload of artifact content to blob storage
+qualification	Preserve all receipts including failures	2026-10-21T05:58:13.6500061Z (node:2767) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+qualification	Preserve all receipts including failures	2026-10-21T05:58:14.2688746Z Uploaded bytes 8388608
+qualification	Preserve all receipts including failures	2026-10-21T05:58:14.4101907Z Uploaded bytes 13000239
+qualification	Preserve all receipts including failures	2026-10-21T05:58:14.4559519Z Finished uploading artifact content to blob storage!
+qualification	Preserve all receipts including failures	2026-10-21T05:58:14.4560841Z SHA256 digest of uploaded artifact zip is 77919e4f02d226ce804984f12c9e81359a27b33d441536a1610a91d305ebb6e5
+qualification	Preserve all receipts including failures	2026-10-21T05:58:14.4562569Z Finalizing artifact upload
+qualification	Preserve all receipts including failures	2026-10-21T05:58:14.6980735Z Artifact routing-v6-39552083459.zip successfully finalized. Artifact ID 12323613129
+qualification	Preserve all receipts including failures	2026-10-21T05:58:14.6982470Z Artifact routing-v6-39552083459 has been successfully uploaded! Final size is 13000239 bytes. Artifact ID is 12323613129
+qualification	Preserve all receipts including failures	2026-10-21T05:58:14.6987539Z Artifact download URL: https://github.com/build-the-future-11/olympus-cognitive-architecture/actions/runs/39552083459/artifacts/12323613129
+qualification	Post Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	﻿2026-10-21T05:58:14.7204207Z Post job cleanup.
+qualification	Post Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:58:14.8291608Z UV_CACHE_DIR is already set to /home/runner/work/_temp/setup-uv-cache
+qualification	Post Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:58:14.8298078Z UV_PYTHON_INSTALL_DIR is already set to /home/runner/work/_temp/uv-python-dir
+qualification	Post Run astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78	2026-10-21T05:58:14.8300889Z Cache hit occurred on key setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.14.8-pruned-78bd5b05c1a6a4e8a9ead4e9a8a7d0a4ed0c2809af8b3e4d347e392d58d683b3, not saving cache.
+qualification	Post Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97	﻿2026-10-21T05:58:14.8891338Z Post job cleanup.
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-10-21T05:58:15.0313968Z Post job cleanup.
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:58:15.1212082Z [command]/usr/bin/git version
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:58:15.1297190Z git version 2.55.0
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:58:15.1346258Z Temporarily overriding HOME='/home/runner/work/_temp/b4e4c58d-d385-4371-bde2-a78f389f0182' before making global git config changes
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:58:15.1347753Z Adding repository directory to the temporary git global config as a safe directory
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:58:15.1355162Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:58:15.1406378Z Removing SSH command configuration
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:58:15.1416856Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:58:15.1475147Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:58:15.1853832Z Removing HTTP extra header
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:58:15.1854922Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:58:15.1905943Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:58:15.2243816Z Removing includeIf entries pointing to credentials config files
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:58:15.2251622Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+qualification	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-21T05:58:15.2300104Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+qualification	Complete job	﻿2026-10-21T05:58:15.2687148Z Cleaning up orphan processes
+qualification	Complete job	2026-10-21T05:58:15.2988676Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

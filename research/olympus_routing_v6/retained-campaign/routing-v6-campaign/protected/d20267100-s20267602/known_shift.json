@@ -1,0 +1,270 @@
+{
+  "checkpoint_sha256": "0b4a7d08b8e818bcffb6ef4fa1b378c9d7d6c0e048e0fd80f9bc069b05ad8446",
+  "dataset": 20267100,
+  "freeze_sha256": "5778e9f1413200830e9a6c4009189dbef2f1883678319a4fa6c55d3a70457351",
+  "metrics": {
+    "anchored_erm": {
+      "accuracy": 1.0,
+      "brier": 0.015141790732741356,
+      "ece": 0.0870646822731942,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.3094846308231354,
+      "nll": 0.09300420433282852,
+      "selective_accuracy_50": 1.0
+    },
+    "anchored_robust": {
+      "accuracy": 1.0,
+      "brier": 0.015346413478255272,
+      "ece": 0.08744777220999822,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.6108570694923401,
+      "nll": 0.09348189830780029,
+      "selective_accuracy_50": 1.0
+    },
+    "anchored_robust_no_penalty": {
+      "accuracy": 1.0,
+      "brier": 0.015286738984286785,
+      "ece": 0.08724635117687285,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.6991837024688721,
+      "nll": 0.09325695782899857,
+      "selective_accuracy_50": 1.0
+    },
+    "constant_erm": {
+      "accuracy": 1.0,
+      "brier": 0.01590612903237343,
+      "ece": 0.08857758075464517,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.11421547830104828,
+      "nll": 0.09481051564216614,
+      "selective_accuracy_50": 1.0
+    },
+    "constant_robust": {
+      "accuracy": 1.0,
+      "brier": 0.016039162874221802,
+      "ece": 0.08898509928258136,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.12011266499757767,
+      "nll": 0.09527180343866348,
+      "selective_accuracy_50": 1.0
+    },
+    "direct_erm": {
+      "accuracy": 1.0,
+      "brier": 0.01439194567501545,
+      "ece": 0.08435644442215562,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 1.0,
+      "nll": 0.08999992161989212,
+      "selective_accuracy_50": 1.0
+    },
+    "direct_robust": {
+      "accuracy": 1.0,
+      "brier": 0.015859443694353104,
+      "ece": 0.08804396045161411,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 1.0,
+      "nll": 0.09425590187311172,
+      "selective_accuracy_50": 1.0
+    },
+    "expert_0": {
+      "accuracy": 0.7626953125,
+      "brier": 0.2658539414405823,
+      "ece": 0.09291627211496234,
+      "intervention": {
+        "accuracy_delta": -0.2373046875,
+        "examples": 1024,
+        "harms": 243,
+        "prediction_changes": 243,
+        "rescues": 0
+      },
+      "nll": 0.5475386381149292,
+      "selective_accuracy_50": 1.0
+    },
+    "expert_1": {
+      "accuracy": 0.75,
+      "brier": 0.28893256187438965,
+      "ece": 0.11819297354668379,
+      "intervention": {
+        "accuracy_delta": -0.25,
+        "examples": 1024,
+        "harms": 256,
+        "prediction_changes": 256,
+        "rescues": 0
+      },
+      "nll": 0.5779443979263306,
+      "selective_accuracy_50": 1.0
+    },
+    "expert_2": {
+      "accuracy": 0.7626953125,
+      "brier": 0.25954312086105347,
+      "ece": 0.08876202371902764,
+      "intervention": {
+        "accuracy_delta": -0.2373046875,
+        "examples": 1024,
+        "harms": 243,
+        "prediction_changes": 243,
+        "rescues": 0
+      },
+      "nll": 0.5269100666046143,
+      "selective_accuracy_50": 1.0
+    },
+    "expert_3": {
+      "accuracy": 0.8623046875,
+      "brier": 0.20539778470993042,
+      "ece": 0.12057485105469823,
+      "intervention": {
+        "accuracy_delta": -0.1376953125,
+        "examples": 1024,
+        "harms": 141,
+        "prediction_changes": 141,
+        "rescues": 0
+      },
+      "nll": 0.47335386276245117,
+      "selective_accuracy_50": 1.0
+    },
+    "expert_4": {
+      "accuracy": 0.7509765625,
+      "brier": 0.26505327224731445,
+      "ece": 0.10088827682193369,
+      "intervention": {
+        "accuracy_delta": -0.2490234375,
+        "examples": 1024,
+        "harms": 255,
+        "prediction_changes": 255,
+        "rescues": 0
+      },
+      "nll": 0.5368264317512512,
+      "selective_accuracy_50": 1.0
+    },
+    "fixed": {
+      "accuracy": 1.0,
+      "brier": 0.1650080382823944,
+      "ece": 0.2978107426315546,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.39336201548576355,
+      "selective_accuracy_50": 1.0
+    },
+    "reference": {
+      "accuracy": 1.0,
+      "brier": 0.016161484643816948,
+      "ece": 0.08907094900496304,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.09540212154388428,
+      "selective_accuracy_50": 1.0
+    },
+    "selected_control": {
+      "accuracy": 1.0,
+      "brier": 0.015859443694353104,
+      "ece": 0.08804396045161411,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.09425590187311172,
+      "selective_accuracy_50": 1.0
+    },
+    "semantic": {
+      "accuracy": 1.0,
+      "brier": 0.016161484643816948,
+      "ece": 0.08907094900496304,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.09540212154388428,
+      "selective_accuracy_50": 1.0
+    },
+    "uniform": {
+      "accuracy": 1.0,
+      "brier": 0.18154975771903992,
+      "ece": 0.3053534209029749,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.4167015552520752,
+      "selective_accuracy_50": 1.0
+    }
+  },
+  "prediction_sha256": "5cd298c50bc1756dfbb83aa85ab0a7c2eab179c12b267924da2637f69e0a34dc",
+  "regime": "known_shift",
+  "tensor_hashes": {
+    "actions": "7fb499e9de38b765e450d9d3acac8a07833a3c870f0852d9c52d09b82942d519",
+    "allowed_transitions": "3431383721510cf1c211de027cf958c183e16db5fabb6b230eb284c85e196aa9",
+    "component_quality": "47ac0b1e8185b5d9baa6b0cddc32070b00647e1bc1ee75caac7d8795f19c2e47",
+    "corruption_status": "7ad4b5ed03585968b52c5d210947e6b212ebc67cdef1866a1211ee89c2225301",
+    "decision_targets": "2926c6ef443824fd01c610812779583552260598575922dbc7728b20d9fbee80",
+    "domain_ids": "339147b7930677e23c36232182ed1b97bc77a1068fe1340d5aa76e4915226f96",
+    "image": "13558fb4ba1c03a800e89a69c541c76c49230a0bb993688431af2dab3ac15e09",
+    "next_state_targets": "995597ec47ea121ceb9445437b386c970adc23742f53423afb4e23b7cb2d5d4d",
+    "risk_score": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+    "source_ids": "120badaf34590a03738bc175141527e455d7727f1c07a73e2d946e77b45471b1",
+    "states": "6c64b31e1ea5b8f109705947619ae342ebe07d47b5d750791c0570df6c518909",
+    "tokens": "c1e4b4454c1c380088b2804534396c16d6bdd870df174e563294786e8c7153cf",
+    "transition_targets": "c2ae7a400bf99deec6849f4b9eecc023e1bee4dd4cced18df6682d3935e1c506"
+  },
+  "training_seed": 20267602
+}

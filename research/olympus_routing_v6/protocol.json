@@ -1,0 +1,110 @@
+{
+  "id": "olympus-routing-v6.0.2",
+  "scope": "Bounded synthetic conservative stacking study; no target-scale or full-family capability claim",
+  "hypothesis": "Example-dependent anchored correction with worst-group training improves fresh composite-shift accuracy by at least 2 pp over the development-selected strongest control without declared regime regressions.",
+  "dataset_seeds": [
+    20267100,
+    20267200,
+    20267300,
+    20267400,
+    20267500
+  ],
+  "training_seeds": [
+    20267601,
+    20267602
+  ],
+  "bank_examples": 1024,
+  "meta_examples_per_regime": 256,
+  "test_examples_per_regime": 1024,
+  "bank_steps": 250,
+  "reference_steps": 300,
+  "correction_steps": 300,
+  "batch_per_group": 32,
+  "lr": 0.001,
+  "weight_decay": 0.01,
+  "gradient_clip": 1.0,
+  "anchor_penalty": 0.01,
+  "alpha_initial": 0.1,
+  "group_objective": "maximum of three equally sized group mean NLLs per update; deterministic torch.max subgradient; not adaptive-weight group DRO",
+  "development_regimes": [
+    "clean",
+    "corrupted",
+    "known_shift"
+  ],
+  "protected_regimes": [
+    "clean",
+    "corrupted",
+    "known_shift",
+    "composite_shift"
+  ],
+  "split_offsets": {
+    "bank": 1,
+    "reference_fit": 10,
+    "reference_select": 20,
+    "correction_fit": 30,
+    "selection": 40,
+    "protected": 60
+  },
+  "variants": [
+    "direct_erm",
+    "direct_robust",
+    "anchored_erm",
+    "anchored_robust",
+    "constant_erm",
+    "constant_robust",
+    "anchored_robust_no_penalty"
+  ],
+  "primary_candidate": "anchored_robust",
+  "control_candidates": [
+    "uniform",
+    "fixed",
+    "semantic",
+    "direct_erm",
+    "direct_robust",
+    "constant_robust",
+    "constant_erm",
+    "expert_0",
+    "expert_1",
+    "expert_2",
+    "expert_3",
+    "expert_4"
+  ],
+  "selection": "maximize minimum regime accuracy, then mean accuracy, then declared list order",
+  "primary_regime": "composite_shift",
+  "minimum_effect": 0.02,
+  "nonregression_mean": -0.01,
+  "nonregression_interval_lower": -0.02,
+  "bootstrap_samples": 10000,
+  "bootstrap_seed": 20267999,
+  "interval": "paired dataset-cluster percentile 95%; five independent datasets, two initializations averaged; descriptive pilot only",
+  "max_development_revisions": 0,
+  "max_campaign_seconds": 3600,
+  "max_qualification_seconds": 120,
+  "minimum_available_bytes": 2147483648,
+  "maximum_swap_fraction": 0.9,
+  "local_free_bytes_floor": 536870912,
+  "paid_jobs": 0,
+  "external_downloads": 0,
+  "device": "CPU",
+  "threads": 1,
+  "stopping": "One frozen campaign; resource/time/nonfinite/provenance failures stop and preserve partial artifacts. No repeated confirmatory search for a positive result.",
+  "claim_falsifier": "Primary practical effect or interval criterion fails, or any clean/corrupted/known-shift nonregression gate fails. Invalid provenance/numerics yields INVALID, absent execution yields NOT_EVALUATED.",
+  "nonregression_comparators": [
+    "reference",
+    "selected_control"
+  ],
+  "amendment": "Pre-execution source review added expert-only controls, explicit bank training hyperparameters and corrected held-out-shift terminology. No scientific outcomes observed; earlier protocol versions retained.",
+  "bank_batch_size": 64,
+  "bank_temporal_weight": 0.25,
+  "reference_candidates": [
+    "uniform",
+    "fixed",
+    "semantic",
+    "expert_0",
+    "expert_1",
+    "expert_2",
+    "expert_3",
+    "expert_4"
+  ],
+  "shift_boundary": "composite_shift is a reserved configuration of previously observed relocation, occlusion and affine-state perturbation types; one damaged modality per example, not a novel mechanism or natural-data OOD."
+}
