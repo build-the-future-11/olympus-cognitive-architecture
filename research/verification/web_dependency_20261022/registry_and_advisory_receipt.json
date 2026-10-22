@@ -1,0 +1,684 @@
+{
+  "repository": "build-the-future-11/olympus-cognitive-architecture",
+  "expected_head": "2a1050a4c854237616ac0f912569ce46a7dd78c6",
+  "observed_failure": {
+    "run": 39773984513,
+    "job": 119808202579,
+    "test_result": "Existing web checks passed; npm audit --audit-level=moderate failed with two moderate and one high vulnerability entries."
+  },
+  "source_blobs": {
+    "RESEARCH_STATE.json": "1738d0ca29358b0107df40c65ae37f7fa939ceff",
+    "apps/forge-web/package.json": "a6afa987945ca5da0776bc4e89a27ed2d7e741bc",
+    "apps/forge-web/package-lock.json": "ee06243f97684b4be861530b9b218caae4ec9ab0"
+  },
+  "change": {
+    "changed": [
+      {
+        "path": "",
+        "old_version": "0.2.0",
+        "new_version": "0.2.0"
+      },
+      {
+        "path": "node_modules/@vitest/mocker",
+        "old_version": "5.0.0",
+        "new_version": "5.0.3"
+      },
+      {
+        "path": "node_modules/@vitest/spy",
+        "old_version": "5.0.0",
+        "new_version": "5.0.3"
+      },
+      {
+        "path": "node_modules/vite",
+        "old_version": "7.3.6",
+        "new_version": "7.3.7"
+      },
+      {
+        "path": "node_modules/vitest",
+        "old_version": "5.0.0",
+        "new_version": "5.0.3"
+      },
+      {
+        "path": "node_modules/why-is-node-running",
+        "old_version": "2.3.0",
+        "new_version": "3.2.1"
+      }
+    ],
+    "removed": [
+      "node_modules/siginfo",
+      "node_modules/stackback"
+    ]
+  },
+  "registry_metadata": [
+    {
+      "url": "https://registry.npmjs.org/vite/7.3.7",
+      "package": "vite",
+      "metadata": {
+        "name": "vite",
+        "version": "7.3.7",
+        "dist": {
+          "shasum": "017a80fdce051003a4aa290dddd0b159aa769282",
+          "tarball": "https://registry.npmjs.org/vite/-/vite-7.3.7.tgz",
+          "fileCount": 39,
+          "integrity": "sha512-AHEzTORMbi7/7aXp7w7KZ5+DCUdSeLsJz0grY8xHpc9DHdYb0vQu6DqJfm2tOw3gDExNgPgnJTXxM6syYFHaCA==",
+          "signatures": [
+            {
+              "sig": "MEUCIE7zq1k7RksYq5+WNotYAMAzXHuTUpNTOfagoX21zLsCAiEAipiLz1Jr0Pw0alELJgtnMK8hIUabyDK6dDwr2MP4kyk=",
+              "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+            },
+            {
+              "sig": "MEQCIAlbWM0p47ihel9W4BGvqJPllTi0cz+dCl0sep5ogYRJAiBmariJbeYJ8lso7O2VocXQQ2EFoDMiORhl6Fl9AzvuPg==",
+              "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+            }
+          ],
+          "attestations": {
+            "url": "https://registry.npmjs.org/-/npm/v1/attestations/vite@7.3.7",
+            "provenance": {
+              "predicateType": "https://slsa.dev/provenance/v1"
+            }
+          },
+          "unpackedSize": 2244268
+        },
+        "dependencies": {
+          "fdir": "^6.5.0",
+          "rollup": "^4.43.0",
+          "esbuild": "^0.27.0 || ^0.28.0",
+          "postcss": "^8.5.6",
+          "picomatch": "^4.0.3",
+          "tinyglobby": "^0.2.15"
+        },
+        "optionalDependencies": {
+          "fsevents": "~2.3.3"
+        },
+        "peerDependencies": {
+          "tsx": "^4.8.1",
+          "jiti": ">=1.21.0",
+          "less": "^4.0.0",
+          "sass": "^1.70.0",
+          "yaml": "^2.4.2",
+          "stylus": ">=0.54.8",
+          "terser": "^5.16.0",
+          "sugarss": "^5.0.0",
+          "@types/node": "^20.19.0 || >=22.12.0",
+          "lightningcss": "^1.21.0",
+          "sass-embedded": "^1.70.0"
+        },
+        "peerDependenciesMeta": {
+          "tsx": {
+            "optional": true
+          },
+          "jiti": {
+            "optional": true
+          },
+          "less": {
+            "optional": true
+          },
+          "sass": {
+            "optional": true
+          },
+          "yaml": {
+            "optional": true
+          },
+          "stylus": {
+            "optional": true
+          },
+          "terser": {
+            "optional": true
+          },
+          "sugarss": {
+            "optional": true
+          },
+          "@types/node": {
+            "optional": true
+          },
+          "lightningcss": {
+            "optional": true
+          },
+          "sass-embedded": {
+            "optional": true
+          }
+        },
+        "engines": {
+          "node": "^20.19.0 || >=22.12.0"
+        },
+        "license": "MIT",
+        "bin": {
+          "vite": "bin/vite.js"
+        },
+        "funding": "https://github.com/vitejs/vite?sponsor=1",
+        "scripts": {
+          "dev": "premove dist && pnpm build-bundle -w",
+          "lint": "eslint --cache --ext .ts src/**",
+          "build": "premove dist && pnpm build-bundle && pnpm build-types",
+          "format": "prettier --write --cache --parser typescript \"src/**/*.ts\"",
+          "typecheck": "tsc && tsc -p src/node && tsc -p src/module-runner && tsc -p src/shared && tsc -p src/node/__tests_dts__",
+          "build-types": "pnpm build-types-roll && pnpm build-types-check",
+          "build-bundle": "rolldown --config rolldown.config.ts",
+          "generate-target": "tsx scripts/generateTarget.ts",
+          "build-types-roll": "rolldown --config rolldown.dts.config.ts",
+          "build-types-check": "tsc --project tsconfig.check.json"
+        }
+      }
+    },
+    {
+      "url": "https://registry.npmjs.org/vitest/5.0.3",
+      "package": "vitest",
+      "metadata": {
+        "name": "vitest",
+        "version": "5.0.3",
+        "dist": {
+          "shasum": "0d07cdc353bb0da4ff936e4471c1aa55f34c42ed",
+          "tarball": "https://registry.npmjs.org/vitest/-/vitest-5.0.3.tgz",
+          "fileCount": 103,
+          "integrity": "sha512-xMw97S3rjdtj5dkVat7jCsqWBpvchs3RlpQctUqwJD0KkERk40vz2fJ77lDwW/Vzh/pk18eItYAzkodhSes3jQ==",
+          "signatures": [
+            {
+              "sig": "MEUCIEKg6A4v1/3T/dV60WT589wBM/REifuLf/GjsguvoI6kAiEAwoblCSNq2cKMTTHwVyYQi4I38jpfeAw8tSKbBYZLp3c=",
+              "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+            }
+          ],
+          "attestations": {
+            "url": "https://registry.npmjs.org/-/npm/v1/attestations/vitest@5.0.3",
+            "provenance": {
+              "predicateType": "https://slsa.dev/provenance/v1"
+            }
+          },
+          "unpackedSize": 2759444
+        },
+        "dependencies": {
+          "chai": "^6.2.2",
+          "obug": "^2.1.4",
+          "std-env": "^4.2.0",
+          "tinyexec": "^1.3.0",
+          "picomatch": "^4.0.7",
+          "tinybench": "^6.1.4",
+          "tinyglobby": "^0.2.17",
+          "@types/chai": "^5.2.2",
+          "expect-type": "^1.4.0",
+          "magic-string": "^1.2.3",
+          "@vitest/mocker": "5.0.3",
+          "es-module-lexer": "^2.3.2",
+          "why-is-node-running": "3.2.1"
+        },
+        "peerDependencies": {
+          "vite": "^6.4.0 || ^7.0.0 || ^8.0.0",
+          "jsdom": "*",
+          "happy-dom": "*",
+          "@vitest/ui": "5.0.3",
+          "@types/node": "^22.0.0 || >=24.0.0",
+          "@edge-runtime/vm": "*",
+          "@opentelemetry/api": "^1.9.0",
+          "@vitest/coverage-v8": "5.0.3",
+          "@vitest/browser-preview": "5.0.3",
+          "@vitest/coverage-istanbul": "5.0.3",
+          "@vitest/browser-playwright": "5.0.3",
+          "@vitest/browser-webdriverio": "^5.0.0-beta.5 || >=5.0.0"
+        },
+        "peerDependenciesMeta": {
+          "vite": {
+            "optional": false
+          },
+          "jsdom": {
+            "optional": true
+          },
+          "happy-dom": {
+            "optional": true
+          },
+          "@vitest/ui": {
+            "optional": true
+          },
+          "@types/node": {
+            "optional": true
+          },
+          "@edge-runtime/vm": {
+            "optional": true
+          },
+          "@opentelemetry/api": {
+            "optional": true
+          },
+          "@vitest/coverage-v8": {
+            "optional": true
+          },
+          "@vitest/browser-preview": {
+            "optional": true
+          },
+          "@vitest/coverage-istanbul": {
+            "optional": true
+          },
+          "@vitest/browser-playwright": {
+            "optional": true
+          },
+          "@vitest/browser-webdriverio": {
+            "optional": true
+          }
+        },
+        "engines": {
+          "node": "^22.12.0 || ^24.0.0 || >=26.0.0"
+        },
+        "license": "MIT",
+        "bin": {
+          "vitest": "./vitest.mjs"
+        },
+        "funding": "https://opencollective.com/vitest",
+        "scripts": {
+          "dev": "NODE_OPTIONS=\"--max-old-space-size=8192\" rollup -c --watch -m inline",
+          "build": "premove dist && rollup -c"
+        }
+      }
+    },
+    {
+      "url": "https://registry.npmjs.org/%40vitest%2Fmocker/5.0.3",
+      "package": "@vitest/mocker",
+      "metadata": {
+        "name": "@vitest/mocker",
+        "version": "5.0.3",
+        "dist": {
+          "shasum": "58666c76660c445c215dd6301fd8704f4550cb58",
+          "tarball": "https://registry.npmjs.org/@vitest/mocker/-/mocker-5.0.3.tgz",
+          "fileCount": 31,
+          "integrity": "sha512-T8sWAIbkSyAjkwTcaEc3Iu0o9A27X1/kdXrizhZkGuSKScRQtRzclfAMpOTcGdXCsqxeWlpGy3XjqaW8CpLORg==",
+          "signatures": [
+            {
+              "sig": "MEQCH37+rqJDXiNY2yhjZDrulYeazrTejec8PcKp/LJ8kocCIQCinI4HpuS5UFsSZTpH676K1clSRPlXUENtz6FTlldpdA==",
+              "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+            }
+          ],
+          "attestations": {
+            "url": "https://registry.npmjs.org/-/npm/v1/attestations/@vitest%2fmocker@5.0.3",
+            "provenance": {
+              "predicateType": "https://slsa.dev/provenance/v1"
+            }
+          },
+          "unpackedSize": 196289
+        },
+        "dependencies": {
+          "@vitest/spy": "5.0.3",
+          "magic-string": "^1.2.3",
+          "estree-walker": "^3.0.3",
+          "@jridgewell/trace-mapping": "0.3.31"
+        },
+        "peerDependencies": {
+          "msw": "^2.4.9",
+          "vite": "^6.0.0 || ^7.0.0 || ^8.0.0"
+        },
+        "peerDependenciesMeta": {
+          "msw": {
+            "optional": true
+          },
+          "vite": {
+            "optional": true
+          }
+        },
+        "license": "MIT",
+        "funding": "https://opencollective.com/vitest",
+        "scripts": {
+          "dev": "rollup -c --watch",
+          "build": "premove dist && rollup -c"
+        }
+      }
+    },
+    {
+      "url": "https://registry.npmjs.org/%40vitest%2Fspy/5.0.3",
+      "package": "@vitest/spy",
+      "metadata": {
+        "name": "@vitest/spy",
+        "version": "5.0.3",
+        "dist": {
+          "shasum": "9f1024c35e0bb5ab54169da00b5b743e061f72b4",
+          "tarball": "https://registry.npmjs.org/@vitest/spy/-/spy-5.0.3.tgz",
+          "fileCount": 6,
+          "integrity": "sha512-XhFysQTB8AZ+P4gMi+Lpo99vg2AZi0qKpaB9yXQl37+CaMEAPO3iH/wGVnSyL5MPERiLezpqTVtrR6UZH5GCXg==",
+          "signatures": [
+            {
+              "sig": "MEUCIQC8SGa9FL5QNn2GYyZI0Wpz0y7gmo/w4AZaN9sVXmu78wIgB1P9hCS+gUJXrIqak7AsD/2MD5rRvIeaCuy8Kl8+QEQ=",
+              "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+            }
+          ],
+          "attestations": {
+            "url": "https://registry.npmjs.org/-/npm/v1/attestations/@vitest%2fspy@5.0.3",
+            "provenance": {
+              "predicateType": "https://slsa.dev/provenance/v1"
+            }
+          },
+          "unpackedSize": 40721
+        },
+        "license": "MIT",
+        "funding": "https://opencollective.com/vitest",
+        "scripts": {
+          "dev": "rollup -c --watch",
+          "build": "premove dist && rollup -c"
+        }
+      }
+    },
+    {
+      "url": "https://registry.npmjs.org/why-is-node-running/3.2.1",
+      "package": "why-is-node-running",
+      "metadata": {
+        "name": "why-is-node-running",
+        "version": "3.2.1",
+        "dist": {
+          "shasum": "f66f0d61f861e4d3965a7ad63645a953f550830c",
+          "tarball": "https://registry.npmjs.org/why-is-node-running/-/why-is-node-running-3.2.1.tgz",
+          "fileCount": 7,
+          "integrity": "sha512-Tb2FUhB4vUsGQlfSquQLYkApkuPAFQXGFzxWKHHumVz2dK+X1RUm/HnID4+TfIGYJ1kTcwOaCk/buYCEJr6YjQ==",
+          "signatures": [
+            {
+              "sig": "MEUCIQCucuAsjXEuisOncp6M8GGLfLAVs+3ESNFkW9S2diz9zgIgR+Icfb6ioukEdJ3hV6O95OqEhodevNTr01F0xGuDxg4=",
+              "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA"
+            }
+          ],
+          "attestations": {
+            "url": "https://registry.npmjs.org/-/npm/v1/attestations/why-is-node-running@3.2.1",
+            "provenance": {
+              "predicateType": "https://slsa.dev/provenance/v1"
+            }
+          },
+          "unpackedSize": 8564
+        },
+        "engines": {
+          "node": ">=20.11"
+        },
+        "license": "MIT",
+        "bin": {
+          "why-is-node-running": "cli.js"
+        }
+      }
+    }
+  ],
+  "advisories": [
+    {
+      "id": "GHSA-qxg6-89mg-rqv8",
+      "source": "https://github.com/advisories/GHSA-qxg6-89mg-rqv8",
+      "git_blob": "f673cb34b7274725ef9605efeacafd760dffcdf4",
+      "modified": "2026-10-21T19:54:26Z",
+      "published": "2026-10-21T19:54:26Z",
+      "summary": "Vitest: Code injection via unauthenticated manual mock registration",
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "@vitest/mocker"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "5.0.0-beta.1"
+                },
+                {
+                  "fixed": "5.0.3"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "database_specific": {
+        "cwe_ids": [
+          "CWE-116",
+          "CWE-306",
+          "CWE-94"
+        ],
+        "severity": "MODERATE",
+        "github_reviewed": true,
+        "github_reviewed_at": "2026-10-21T19:54:26Z",
+        "nvd_published_at": "2026-10-20T16:17:05Z"
+      }
+    },
+    {
+      "id": "GHSA-xp26-3454-mjgp",
+      "source": "https://github.com/advisories/GHSA-xp26-3454-mjgp",
+      "git_blob": "0ec796e721018eeced41595b5e72b07f7adbcf10",
+      "modified": "2026-10-21T19:48:38Z",
+      "published": "2026-10-21T19:48:38Z",
+      "summary": "Vitest: Windows backslash traversal bypasses the @vitest/mocker redirect allowlist fix",
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "@vitest/mocker"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "5.0.0-rc.2"
+                },
+                {
+                  "fixed": "5.0.3"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "database_specific": {
+        "cwe_ids": [
+          "CWE-22"
+        ],
+        "severity": "MODERATE",
+        "github_reviewed": true,
+        "github_reviewed_at": "2026-10-21T19:48:38Z",
+        "nvd_published_at": "2026-10-20T16:17:05Z"
+      }
+    },
+    {
+      "id": "GHSA-698v-4r3x-3vcv",
+      "source": "https://github.com/advisories/GHSA-698v-4r3x-3vcv",
+      "git_blob": "95e2e2728c7697b3a9f18a0b57ee83146ea62350",
+      "modified": "2026-10-20T18:30:24Z",
+      "published": "2026-10-20T18:30:24Z",
+      "summary": "launch-editor: escapeCmdArgs() omits % escaping on Windows",
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "vite"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "7.0.0"
+                },
+                {
+                  "fixed": "7.3.7"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "database_specific": {
+        "cwe_ids": [
+          "CWE-78"
+        ],
+        "severity": "MODERATE",
+        "github_reviewed": true,
+        "github_reviewed_at": "2026-10-20T18:30:24Z",
+        "nvd_published_at": "2026-10-20T15:17:17Z"
+      }
+    },
+    {
+      "id": "GHSA-r825-w8mm-5pxw",
+      "source": "https://github.com/advisories/GHSA-r825-w8mm-5pxw",
+      "git_blob": "ef41e21e7edcd7bbcd6e3ab0a1ea41466574ad46",
+      "modified": "2026-10-20T19:51:53Z",
+      "published": "2026-10-20T19:51:52Z",
+      "summary": "launch-editor: Editor CLI flag misinterpretation causing arbitrary command execution for some editors",
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "vite"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "7.0.0"
+                },
+                {
+                  "fixed": "7.3.7"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "database_specific": {
+        "cwe_ids": [
+          "CWE-88"
+        ],
+        "severity": "MODERATE",
+        "github_reviewed": true,
+        "github_reviewed_at": "2026-10-20T19:51:52Z",
+        "nvd_published_at": "2026-10-20T15:17:17Z"
+      }
+    },
+    {
+      "id": "GHSA-587h-7wmj-h5pm",
+      "source": "https://github.com/advisories/GHSA-587h-7wmj-h5pm",
+      "git_blob": "081d7815009e4dad2497e47e0f1ae77b22b8a5ab",
+      "modified": "2026-10-20T19:48:25Z",
+      "published": "2026-10-20T19:48:25Z",
+      "summary": "launch-editor: `fs.existsSync()` existence check can be bypassed on Windows",
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "vite"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "7.0.0"
+                },
+                {
+                  "fixed": "7.3.7"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "database_specific": {
+        "cwe_ids": [
+          "CWE-77"
+        ],
+        "severity": "HIGH",
+        "github_reviewed": true,
+        "github_reviewed_at": "2026-10-20T19:48:25Z",
+        "nvd_published_at": "2026-10-20T15:17:17Z"
+      }
+    },
+    {
+      "id": "GHSA-9jrq-w75r-8gcw",
+      "source": "https://github.com/advisories/GHSA-9jrq-w75r-8gcw",
+      "git_blob": "069ffa21450591f6ddc93fea50702931f3bbd3bd",
+      "modified": "2026-10-21T16:48:14Z",
+      "published": "2026-10-21T16:48:14Z",
+      "summary": "Vite: Cross origin script execution through Vite custom middleware",
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "vite"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "7.0.0"
+                },
+                {
+                  "fixed": "7.3.7"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "database_specific": {
+        "cwe_ids": [
+          "CWE-80"
+        ],
+        "severity": "LOW",
+        "github_reviewed": true,
+        "github_reviewed_at": "2026-10-21T16:48:14Z",
+        "nvd_published_at": "2026-10-20T16:17:05Z"
+      }
+    },
+    {
+      "id": "GHSA-rq7h-c2jc-7f22",
+      "source": "https://github.com/advisories/GHSA-rq7h-c2jc-7f22",
+      "git_blob": "5fc2d969ab1b7ad037f7c57173696a3d5f544aa2",
+      "modified": "2026-10-21T16:47:42Z",
+      "published": "2026-10-21T16:47:42Z",
+      "summary": "Vite: Files outside `server.fs.allow` could be served when project paths match system paths on non-Windows machine",
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "vite"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "7.0.0"
+                },
+                {
+                  "fixed": "7.3.7"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "database_specific": {
+        "cwe_ids": [
+          "CWE-22",
+          "CWE-284"
+        ],
+        "severity": "MODERATE",
+        "github_reviewed": true,
+        "github_reviewed_at": "2026-10-21T16:47:42Z",
+        "nvd_published_at": "2026-10-20T16:17:05Z"
+      }
+    }
+  ],
+  "verification_budget": {
+    "status": "CLOSED",
+    "max_lock_graph_validation_commands": 1,
+    "max_registry_audit_commands": 1,
+    "max_audit_seconds": 60,
+    "max_graph_seconds": 30,
+    "package_install_commands": 0,
+    "application_source_changes": 0,
+    "protected_evaluations": 0,
+    "provider_calls": 0,
+    "scientific_runs": 0,
+    "paid_work": 0,
+    "prior_scientific_budgets": "remain closed and unchanged",
+    "lock_graph_validation_commands_used": 1,
+    "registry_audit_commands_used": 1,
+    "lock_graph_wall_seconds": 0.078805639,
+    "registry_audit_wall_seconds": 0.3838561509983265
+  },
+  "retained_environment_failure": "Sandboxed official npm manifest retrieval was denied with Operation not permitted; approved read-only unsandboxed retrieval succeeded. No package installed or code executed.",
+  "verification": {
+    "lock_graph": "lock_graph_receipt.json",
+    "npm_audit": "npm_audit_receipt.json",
+    "fresh_exact_head_hosted_release": "REQUIRED_PENDING",
+    "note": "No node_modules installed; no local application test/build claimed."
+  }
+}

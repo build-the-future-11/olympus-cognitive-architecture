@@ -77,13 +77,18 @@ export function App(): ReactElement {
         if (!controller.signal.aborted) {
           setFoundryStatus(status);
           setModels(registeredModels);
-          setSelectedModel((current) => current || registeredModels[0]?.id || "");
+          setSelectedModel((current) =>
+            registeredModels.some((model) => model.id === current)
+              ? current
+              : registeredModels[0]?.id || ""
+          );
         }
       })
       .catch((caught: unknown) => {
         if (!controller.signal.aborted) {
           setFoundryStatus(null);
           setModels([]);
+          setSelectedModel("");
           setFoundryState({
             error: caught instanceof Error ? caught.message : "Unable to load Foundry state",
             loading: false
@@ -129,9 +134,12 @@ export function App(): ReactElement {
     }
   };
 
+  const selectedModelAvailable =
+    selectedModel.length > 0 && models.some((model) => model.id === selectedModel);
+
   const generate = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    if (!selectedModel || !prompt.trim()) return;
+    if (!selectedModelAvailable || !prompt.trim()) return;
     setGenerating(true);
     setCompletion(null);
     setGenerationError("");
@@ -249,9 +257,19 @@ export function App(): ReactElement {
             <p className="eyebrow">Percy contract</p>
             <h2 id="models-heading">Verified model registry</h2>
           </div>
-          <span>{models.length} available</span>
+          <span>
+            {foundryState.loading
+              ? "Checking registry"
+              : foundryState.error
+                ? "Registry unavailable"
+                : `${models.length} available`}
+          </span>
         </div>
-        {models.length === 0 && !foundryState.loading ? (
+        {foundryState.error ? (
+          <p className="empty-state">
+            Model availability could not be verified. Use Retry above to check again.
+          </p>
+        ) : models.length === 0 && !foundryState.loading ? (
           <p className="empty-state">
             No model has passed promotion gates. Run the verified pipeline above to create the
             bounded infrastructure-verification model.
@@ -293,7 +311,7 @@ export function App(): ReactElement {
             rows={4}
             value={prompt}
           />
-          <button disabled={!selectedModel || !prompt.trim() || generating} type="submit">
+          <button disabled={!selectedModelAvailable || !prompt.trim() || generating} type="submit">
             {generating ? "Generating…" : "Generate through stable API"}
           </button>
         </form>
