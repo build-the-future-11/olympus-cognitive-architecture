@@ -2,8 +2,8 @@
   "schema_version": 1,
   "id": "multi-horizon-dynamics-v3-heavy",
   "date": "2026-10-21",
-  "phase": "RUNNING_PRIVATE_KAGGLE_CPU",
-  "scientific_outcomes_created": false,
+  "phase": "OUTCOME_RECOVERY_BLOCKED_AUTHENTICATION",
+  "scientific_outcomes_created": null,
   "primary_supported": null,
   "question": "Does the unchanged uncertainty-aware residual candidate beat fixed controls under an independently seeded 8x-data, 15x-update confirmatory budget?",
   "falsifiers": [
@@ -66,5 +66,13 @@
     "receipt": "Kaggle Version History displayed heavy frozen v3 confirmatory, Version #2, Save & Run All, Running after 6 minutes; its Edit URL exposed run ID 360794856."
   },
   "predecessor_policy": "V2's negative result is retained and not used for tuning. V3 uses fresh dataset, optimizer, protected, and bootstrap seeds while preserving the hypothesis, models, regimes, thresholds, and analysis.",
-  "claim_boundary": "Heavy bounded synthetic confirmation only; no family identity, target-scale capability, SOTA, deployment, safety, or promotion claim."
+  "claim_boundary": "Heavy bounded synthetic confirmation only; no family identity, target-scale capability, SOTA, deployment, safety, or promotion claim.",
+  "current_execution_status": "UNKNOWN",
+  "outcome_archive_retrieved": false,
+  "access_observation_20261022": {
+    "browser": "Originating connected-browser context unavailable",
+    "api_credentials": "No Kaggle API token or configuration present in this session",
+    "last_retained_observation": "RUNNING on 2026-10-21; not a current status",
+    "duplicate_submission": false
+  }
 }
