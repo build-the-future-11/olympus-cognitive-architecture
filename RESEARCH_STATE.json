@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "Olympus Cognitive Architecture",
   "repository": "build-the-future-11/olympus-cognitive-architecture",
-  "updated_utc": "2026-10-17",
+  "updated_utc": "2026-10-22",
   "current_phase": "DEVELOPMENT_ENGINEERING_HOSTED_VERIFIED_PENDING_DRAFT_REVIEW",
   "scientific_disposition": "NOT_REASSESSED",
   "research_question": "Can the actual SFT trainer continue an unchanged schedule without changing its optimizer trajectory or overwriting prior attempts?",
@@ -172,6 +172,12 @@
       "main_commit": "9bdf374834ce088c91793eb46a8c76fcb4b25a3b",
       "sampling_head": "0409d8f54e20b21e1bfe30c695fba60bc1fe6559",
       "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-22",
+      "kind": "reviewed_pr_integration_preparation",
+      "event": "Prepared a conflict-free union of PR14's three offline audit files with all ten reviewed PR18 files on main dc46b831e2aa88a5e669e1343463dc74ef1270a4. Preserve prior portfolio integration and verification receipts. GitHub rejected PR14 merge with two required checks expected despite its September26 component success; no gate bypass. Fresh combined-source hosted checks remain required.",
+      "scientific_outcomes_created": false
     }
   ],
   "verification": {
@@ -271,7 +277,7 @@
   },
   "active_study_key": "active_development_study",
   "portfolio_integration": {
-    "date": "2026-10-17",
+    "date": "2026-10-22",
     "merged_prs": [
       23,
       24,
@@ -281,19 +287,21 @@
       28
     ],
     "stacked_prs": [
+      14,
       18,
       19,
       20,
       21,
       22
     ],
-    "current_change": "Integrate the fully reviewed provider termination, registry selection/read states and model-bound chat API stack with current main.",
+    "current_change": "Integrate the reviewed bounded offline audit collector with the provider termination, registry selection/read state and model-bound chat API stack on current main.",
     "source_parents": [
-      "3d7a863e25fc12fc48c79968442e36847f65b224",
-      "dc46b831e2aa88a5e669e1343463dc74ef1270a4"
+      "ef5869d130bf1458f6e8f01b706aa43cb9e693c0",
+      "dc46b831e2aa88a5e669e1343463dc74ef1270a4",
+      "bce3710676db156b3572b5dc79d9a8a4d0f9a7b3"
     ],
-    "verification": "Component Python/web release gates passed, including runs 39042391946, 39043431802 and 39043917839. The current-main integration merged cleanly; new-head Python/web release gates remain required before main integration.",
-    "scientific_disposition": "Historical NOT_PROMOTED and all frozen outcomes preserved; no study run or model promotion."
+    "verification": "All component source and tests reviewed. Collector independently passed 26 constructed-fixture tests. Existing exact-head Python/web release runs 36214099700 (PR14) and 39045201663 (PR18) passed; these are historical component evidence only. New combined-head Python/web release checks and independent final review are required before integration. Full local package verification requires Python >=3.14, which is not available in this agent's Python3.12 runtime.",
+    "scientific_disposition": "Historical NOT_PROMOTED and all frozen outcomes preserved; no scientific study, model load, promotion, protected evaluation, paid job or release publication."
   },
   "portfolio_integration_history": [
     {
@@ -308,6 +316,31 @@
       "current_change": "PR25 stable low-temperature reference-model sampling",
       "verification": "Alphabet integration release run39041484835 passed all Python/web steps; fresh sampling integration checks pending.",
       "scientific_disposition": "Historical NOT_PROMOTED and frozen outcomes preserved."
+    },
+    {
+      "date": "2026-10-17",
+      "merged_prs": [
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "stacked_prs": [
+        18,
+        19,
+        20,
+        21,
+        22
+      ],
+      "current_change": "Integrate the fully reviewed provider termination, registry selection/read states and model-bound chat API stack with current main.",
+      "source_parents": [
+        "3d7a863e25fc12fc48c79968442e36847f65b224",
+        "dc46b831e2aa88a5e669e1343463dc74ef1270a4"
+      ],
+      "verification": "Component Python/web release gates passed, including runs 39042391946, 39043431802 and 39043917839. The current-main integration merged cleanly; new-head Python/web release gates remain required before main integration.",
+      "scientific_disposition": "Historical NOT_PROMOTED and all frozen outcomes preserved; no study run or model promotion."
     }
   ]
 }
