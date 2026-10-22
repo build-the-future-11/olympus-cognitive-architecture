@@ -1,0 +1,31 @@
+name: one-time-reviewed-olympus-integration
+
+on:
+  push:
+    branches:
+      - work/olympus-verified-repairs-20261022
+    paths:
+      - '.integration/**'
+      - '.github/workflows/integrate-olympus-20261022.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: one-time-olympus-integration-20261022
+  cancel-in-progress: false
+
+jobs:
+  integrate:
+    if: github.repository == 'build-the-future-11/olympus-cognitive-architecture' && github.ref == 'refs/heads/work/olympus-verified-repairs-20261022'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact authorized source and history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Verify and integrate reviewed code without scientific execution
+        run: python3 .integration/integrate_olympus.py
