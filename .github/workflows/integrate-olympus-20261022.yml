@@ -27,5 +27,25 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: true
-      - name: Verify and integrate reviewed code without scientific execution
-        run: python3 .integration/integrate_olympus.py
+      - name: Integrate content only; workflow edits require the connected GitHub write
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          code = Path('.integration/integrate_olympus.py').read_text()
+          # The runner cannot modify workflows. Verify their proposed bytes, but
+          # restore them before publishing code. Keep this workflow for explicit
+          # connector-side cleanup; do not broaden the token's permissions.
+          changes = {
+              '    run("git", "rm", "--", *HELPERS)': '    run("git", "rm", "--", *HELPERS[:-1])',
+              '    run("git", "add", "--", *sorted(set([*EXPECTED, *extra])))': '    run("git", "restore", "--source=HEAD", "--staged", "--worktree", "--", ".github/workflows/ci.yml", ".github/workflows/release.yml")\n    run("git", "add", "--", *sorted(set([*EXPECTED, *extra])))',
+              'not set(EXPECTED) <= actual': 'not (set(EXPECTED) - {".github/workflows/ci.yml", ".github/workflows/release.yml"}) <= actual',
+              '"exact_reviewed_blob_identities": EXPECTED,': '"exact_reviewed_blob_identities": {p: s for p, s in EXPECTED.items() if not p.startswith(".github/workflows/")},\n        "deferred_workflow_blob_identities": {p: s for p, s in EXPECTED.items() if p.startswith(".github/workflows/")},\n        "workflow_publication": "Connected GitHub write required; runner did not alter workflows",',
+              '"scope": "13 software/CI/source-test files from the recovered repair, with additive canonical-state reconciliation",': '"scope": "11 software/source-test files from the recovered repair, with additive canonical-state reconciliation; two verified workflow changes deferred to the connected GitHub write",',
+          }
+          for before, after in changes.items():
+              if code.count(before) != 1:
+                  raise RuntimeError('Unexpected integration source; refusing transformation')
+              code = code.replace(before, after)
+          exec(compile(code, '.integration/integrate_olympus.py', 'exec'), {'__name__': '__main__'})
+          PY
