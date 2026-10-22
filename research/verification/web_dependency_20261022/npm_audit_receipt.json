@@ -1,0 +1,43 @@
+{
+  "command": [
+    "npm",
+    "audit",
+    "--package-lock-only",
+    "--audit-level=moderate",
+    "--include=dev",
+    "--json",
+    "--ignore-scripts",
+    "--cache",
+    "/workspace/scratch/77a694a954ed/bu1ld_numerical/olympus_dependency_20261022/npm-cache",
+    "--logs-max=0",
+    "--fetch-retries=0",
+    "--fetch-timeout=30000"
+  ],
+  "returncode": 0,
+  "wall_seconds": 0.3838561509983265,
+  "lock_sha256": "1edcf563e320a522961b48a1d4a0dcffb10355bb57b503c4fe5f9b5ce44481cd",
+  "manifest_sha256": "3070e28df0f8bb44624b7120917a9216e215b4a16f73cc3010c55ef7629cac28",
+  "node_modules_installed": false,
+  "stderr": "npm warn Unknown env config \"http-proxy\". This will stop working in the next major version of npm.\nnpm notice\nnpm notice New major version of npm available! 11.9.0 -> 12.2.1\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1\nnpm notice To update run: npm install -g npm@12.2.1\nnpm notice\n",
+  "scope": "Registry audit of complete locked graph including dev dependencies. Does not execute application tests or build.",
+  "audit_metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "dependencies": {
+      "prod": 4,
+      "dev": 195,
+      "optional": 52,
+      "peer": 8,
+      "peerOptional": 0,
+      "total": 198
+    }
+  },
+  "errors": null,
+  "reported_vulnerable_packages": []
+}

@@ -1,0 +1,733 @@
+﻿2026-10-22T11:53:31.8835078Z Current runner version: '2.338.0'
+2026-10-22T11:53:31.8864607Z ##[group]Runner Image Provisioner
+2026-10-22T11:53:31.8865699Z Hosted Compute Agent
+2026-10-22T11:53:31.8866344Z Version: 20261015.610
+2026-10-22T11:53:31.8867100Z Commit: 267fdb4e8bbec4ab5ea31367f3a00d5c480c7656
+2026-10-22T11:53:31.8867923Z Build Date: 2026-10-14T17:06:54Z
+2026-10-22T11:53:31.8868677Z Worker ID: {6b53952d-0849-4960-ab5f-05076200269b}
+2026-10-22T11:53:31.8869829Z Region: westus
+2026-10-22T11:53:31.8870418Z Cloud: Azure
+2026-10-22T11:53:31.8871008Z ##[endgroup]
+2026-10-22T11:53:31.8872736Z ##[group]Operating System
+2026-10-22T11:53:31.8873416Z Ubuntu
+2026-10-22T11:53:31.8874013Z 24.04.5
+2026-10-22T11:53:31.8874611Z LTS
+2026-10-22T11:53:31.8875247Z ##[endgroup]
+2026-10-22T11:53:31.8875858Z ##[group]Runner Image
+2026-10-22T11:53:31.8876486Z Image: ubuntu-24.04
+2026-10-22T11:53:31.8877095Z Version: 20261018.339.1
+2026-10-22T11:53:31.8878482Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261018.339/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-22T11:53:31.8880495Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261018.339
+2026-10-22T11:53:31.8881539Z ##[endgroup]
+2026-10-22T11:53:31.8882723Z ##[group]GITHUB_TOKEN Permissions
+2026-10-22T11:53:31.8885078Z Contents: read
+2026-10-22T11:53:31.8885685Z Metadata: read
+2026-10-22T11:53:31.8886382Z ##[endgroup]
+2026-10-22T11:53:31.8888735Z Secret source: Actions
+2026-10-22T11:53:31.8890392Z Cache mode: write
+2026-10-22T11:53:31.8891193Z Prepare workflow directory
+2026-10-22T11:53:31.9549534Z Prepare all required actions
+2026-10-22T11:53:31.9601344Z Getting action download info
+2026-10-22T11:53:32.3012038Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-22T11:53:32.4189536Z Download action repository 'actions/setup-node@820762786026740c76f36085b0efc47a31fe5020' (SHA:820762786026740c76f36085b0efc47a31fe5020)
+2026-10-22T11:53:32.6513561Z Complete job name: web
+2026-10-22T11:53:32.7467057Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-22T11:53:32.7468409Z with:
+2026-10-22T11:53:32.7469367Z   ref: 2a1050a4c854237616ac0f912569ce46a7dd78c6
+2026-10-22T11:53:32.7469997Z   persist-credentials: false
+2026-10-22T11:53:32.7470655Z   repository: build-the-future-11/olympus-cognitive-architecture
+2026-10-22T11:53:32.7474947Z   token: ***
+2026-10-22T11:53:32.7475392Z   ssh-strict: true
+2026-10-22T11:53:32.7475832Z   ssh-user: git
+2026-10-22T11:53:32.7476264Z   clean: true
+2026-10-22T11:53:32.7476713Z   sparse-checkout-cone-mode: true
+2026-10-22T11:53:32.7477250Z   fetch-depth: 1
+2026-10-22T11:53:32.7477687Z   fetch-tags: false
+2026-10-22T11:53:32.7478162Z   show-progress: true
+2026-10-22T11:53:32.7478612Z   lfs: false
+2026-10-22T11:53:32.7479347Z   submodules: false
+2026-10-22T11:53:32.7479819Z   set-safe-directory: true
+2026-10-22T11:53:32.7480356Z   allow-unsafe-pr-checkout: false
+2026-10-22T11:53:32.7481355Z env:
+2026-10-22T11:53:32.7481991Z   EXPECTED_SOURCE_SHA: 2a1050a4c854237616ac0f912569ce46a7dd78c6
+2026-10-22T11:53:32.7482655Z ##[endgroup]
+2026-10-22T11:53:32.8629469Z Syncing repository: build-the-future-11/olympus-cognitive-architecture
+2026-10-22T11:53:32.8633051Z ##[group]Getting Git version info
+2026-10-22T11:53:32.8634893Z Working directory is '/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture'
+2026-10-22T11:53:32.8650174Z [command]/usr/bin/git version
+2026-10-22T11:53:32.8804391Z git version 2.55.0
+2026-10-22T11:53:32.8836183Z ##[endgroup]
+2026-10-22T11:53:32.8847299Z Temporarily overriding HOME='/home/runner/work/_temp/bf0f5f0a-4e73-429a-9de6-631dd0795fda' before making global git config changes
+2026-10-22T11:53:32.8850454Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-22T11:53:32.8862147Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+2026-10-22T11:53:32.8929973Z Deleting the contents of '/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture'
+2026-10-22T11:53:32.8933552Z ##[group]Determining repository object format
+2026-10-22T11:53:32.8935629Z ##[endgroup]
+2026-10-22T11:53:32.8937009Z ##[group]Initializing the repository
+2026-10-22T11:53:32.8942587Z [command]/usr/bin/git init /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+2026-10-22T11:53:32.9109092Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-22T11:53:32.9111162Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-22T11:53:32.9113329Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-22T11:53:32.9114895Z hint: call:
+2026-10-22T11:53:32.9115669Z hint:
+2026-10-22T11:53:32.9116596Z hint: 	git config --global init.defaultBranch <name>
+2026-10-22T11:53:32.9117702Z hint:
+2026-10-22T11:53:32.9119039Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-22T11:53:32.9121033Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-22T11:53:32.9122527Z hint:
+2026-10-22T11:53:32.9123262Z hint: 	git branch -m <name>
+2026-10-22T11:53:32.9124112Z hint:
+2026-10-22T11:53:32.9124869Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-22T11:53:32.9126588Z Initialized empty Git repository in /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/
+2026-10-22T11:53:32.9140460Z [command]/usr/bin/git remote add origin https://github.com/build-the-future-11/olympus-cognitive-architecture
+2026-10-22T11:53:32.9209500Z ##[endgroup]
+2026-10-22T11:53:32.9210890Z ##[group]Disabling automatic garbage collection
+2026-10-22T11:53:32.9214270Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-22T11:53:32.9261686Z ##[endgroup]
+2026-10-22T11:53:32.9263042Z ##[group]Setting up auth
+2026-10-22T11:53:32.9263953Z Removing SSH command configuration
+2026-10-22T11:53:32.9269622Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-22T11:53:32.9320900Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-22T11:53:32.9813913Z Removing HTTP extra header
+2026-10-22T11:53:32.9821215Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-22T11:53:32.9875997Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-22T11:53:33.0173536Z Removing includeIf entries pointing to credentials config files
+2026-10-22T11:53:33.0179296Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-22T11:53:33.0228495Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-22T11:53:33.0509136Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-6ecfd05a-691f-44c2-9852-e59cae72221c.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-22T11:53:33.0565016Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path /home/runner/work/_temp/git-credentials-6ecfd05a-691f-44c2-9852-e59cae72221c.config
+2026-10-22T11:53:33.0616131Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-6ecfd05a-691f-44c2-9852-e59cae72221c.config
+2026-10-22T11:53:33.0673174Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-6ecfd05a-691f-44c2-9852-e59cae72221c.config
+2026-10-22T11:53:33.0728622Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-6ecfd05a-691f-44c2-9852-e59cae72221c.config
+2026-10-22T11:53:33.0786491Z ##[endgroup]
+2026-10-22T11:53:33.0787974Z ##[group]Fetching the repository
+2026-10-22T11:53:33.0790312Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 2a1050a4c854237616ac0f912569ce46a7dd78c6
+2026-10-22T11:53:33.6349155Z From https://github.com/build-the-future-11/olympus-cognitive-architecture
+2026-10-22T11:53:33.6351366Z  * branch            2a1050a4c854237616ac0f912569ce46a7dd78c6 -> FETCH_HEAD
+2026-10-22T11:53:33.6358752Z [command]/usr/bin/git rev-parse --verify --quiet 2a1050a4c854237616ac0f912569ce46a7dd78c6^{object}
+2026-10-22T11:53:33.6406812Z 2a1050a4c854237616ac0f912569ce46a7dd78c6
+2026-10-22T11:53:33.6415219Z ##[endgroup]
+2026-10-22T11:53:33.6416836Z ##[group]Determining the checkout info
+2026-10-22T11:53:33.6422481Z ##[endgroup]
+2026-10-22T11:53:33.6423697Z [command]/usr/bin/git sparse-checkout disable
+2026-10-22T11:53:33.6510340Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-22T11:53:33.6571209Z ##[group]Checking out the ref
+2026-10-22T11:53:33.6577137Z [command]/usr/bin/git checkout --progress --force 2a1050a4c854237616ac0f912569ce46a7dd78c6
+2026-10-22T11:53:33.6777309Z Note: switching to '2a1050a4c854237616ac0f912569ce46a7dd78c6'.
+2026-10-22T11:53:33.6778305Z 
+2026-10-22T11:53:33.6779373Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-22T11:53:33.6780913Z changes and commit them, and you can discard any commits you make in this
+2026-10-22T11:53:33.6782377Z state without impacting any branches by switching back to a branch.
+2026-10-22T11:53:33.6783185Z 
+2026-10-22T11:53:33.6783748Z If you want to create a new branch to retain commits you create, you may
+2026-10-22T11:53:33.6785071Z do so (now or later) by using -c with the switch command. Example:
+2026-10-22T11:53:33.6786201Z 
+2026-10-22T11:53:33.6786591Z   git switch -c <new-branch-name>
+2026-10-22T11:53:33.6787245Z 
+2026-10-22T11:53:33.6787609Z Or undo this operation with:
+2026-10-22T11:53:33.6788150Z 
+2026-10-22T11:53:33.6788458Z   git switch -
+2026-10-22T11:53:33.6789200Z 
+2026-10-22T11:53:33.6789909Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-22T11:53:33.6790980Z 
+2026-10-22T11:53:33.6791978Z HEAD is now at 2a1050a Integrate reviewed offline audit and provider contract work on current main
+2026-10-22T11:53:33.6870740Z ##[endgroup]
+2026-10-22T11:53:33.6874506Z [command]/usr/bin/git log -1 --format=%H
+2026-10-22T11:53:33.6917926Z 2a1050a4c854237616ac0f912569ce46a7dd78c6
+2026-10-22T11:53:33.6929222Z ##[group]Removing auth
+2026-10-22T11:53:33.6930259Z Removing SSH command configuration
+2026-10-22T11:53:33.6933476Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-22T11:53:33.6988597Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-22T11:53:33.7295799Z Removing HTTP extra header
+2026-10-22T11:53:33.7298640Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-22T11:53:33.7359832Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-22T11:53:33.7684401Z Removing includeIf entries pointing to credentials config files
+2026-10-22T11:53:33.7689141Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-22T11:53:33.7737623Z includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path
+2026-10-22T11:53:33.7744434Z includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path
+2026-10-22T11:53:33.7750228Z includeif.gitdir:/github/workspace/.git.path
+2026-10-22T11:53:33.7753179Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-22T11:53:33.7760581Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path
+2026-10-22T11:53:33.7814676Z /home/runner/work/_temp/git-credentials-6ecfd05a-691f-44c2-9852-e59cae72221c.config
+2026-10-22T11:53:33.7831529Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-6ecfd05a\-691f\-44c2\-9852\-e59cae72221c\.config
+2026-10-22T11:53:33.7896020Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path
+2026-10-22T11:53:33.7939133Z /home/runner/work/_temp/git-credentials-6ecfd05a-691f-44c2-9852-e59cae72221c.config
+2026-10-22T11:53:33.7963214Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-6ecfd05a\-691f\-44c2\-9852\-e59cae72221c\.config
+2026-10-22T11:53:33.8024760Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-22T11:53:33.8066224Z /github/runner_temp/git-credentials-6ecfd05a-691f-44c2-9852-e59cae72221c.config
+2026-10-22T11:53:33.8076065Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-6ecfd05a\-691f\-44c2\-9852\-e59cae72221c\.config
+2026-10-22T11:53:33.8177887Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-22T11:53:33.8182187Z /github/runner_temp/git-credentials-6ecfd05a-691f-44c2-9852-e59cae72221c.config
+2026-10-22T11:53:33.8199687Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-6ecfd05a\-691f\-44c2\-9852\-e59cae72221c\.config
+2026-10-22T11:53:33.8271234Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-22T11:53:33.8546232Z Removing credentials config '/home/runner/work/_temp/git-credentials-6ecfd05a-691f-44c2-9852-e59cae72221c.config'
+2026-10-22T11:53:33.8555444Z ##[endgroup]
+2026-10-22T11:53:33.8835749Z ##[group]Run test "$(git rev-parse HEAD)" = "${EXPECTED_SOURCE_SHA}"
+2026-10-22T11:53:33.8837913Z [36;1mtest "$(git rev-parse HEAD)" = "${EXPECTED_SOURCE_SHA}"[0m
+2026-10-22T11:53:33.9051070Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-22T11:53:33.9052672Z env:
+2026-10-22T11:53:33.9053863Z   EXPECTED_SOURCE_SHA: 2a1050a4c854237616ac0f912569ce46a7dd78c6
+2026-10-22T11:53:33.9055378Z ##[endgroup]
+2026-10-22T11:53:33.9432752Z ##[group]Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+2026-10-22T11:53:33.9434519Z with:
+2026-10-22T11:53:33.9435461Z   node-version: 22.23.2
+2026-10-22T11:53:33.9436519Z   cache: npm
+2026-10-22T11:53:33.9437760Z   cache-dependency-path: apps/forge-web/package-lock.json
+2026-10-22T11:53:33.9439494Z   check-latest: false
+2026-10-22T11:53:33.9450614Z   token: ***
+2026-10-22T11:53:33.9451649Z   package-manager-cache: true
+2026-10-22T11:53:33.9452803Z env:
+2026-10-22T11:53:33.9454019Z   EXPECTED_SOURCE_SHA: 2a1050a4c854237616ac0f912569ce46a7dd78c6
+2026-10-22T11:53:33.9455566Z ##[endgroup]
+2026-10-22T11:53:34.0829832Z Attempting to download 22.23.2...
+2026-10-22T11:53:35.1341510Z Acquiring 22.23.2 - x64 from https://github.com/actions/node-versions/releases/download/22.23.2-30508424155/node-22.23.2-linux-x64.tar.gz
+2026-10-22T11:53:35.6062860Z Extracting ...
+2026-10-22T11:53:35.6226498Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/3e0dc040-1056-4107-b8b2-1de9a9c1a6e5 -f /home/runner/work/_temp/fbb002a2-fec3-48cc-8f4c-131293321a7e
+2026-10-22T11:53:36.9179534Z Adding to the cache ...
+2026-10-22T11:53:38.9873029Z ##[group]Environment details
+2026-10-22T11:53:39.2841124Z node: v22.23.2
+2026-10-22T11:53:39.2841732Z npm: 10.9.8
+2026-10-22T11:53:39.2842133Z yarn: 1.22.22
+2026-10-22T11:53:39.2843087Z ##[endgroup]
+2026-10-22T11:53:39.2864966Z [command]/opt/hostedtoolcache/node/22.23.2/x64/bin/npm config get cache
+2026-10-22T11:53:39.4003489Z /home/runner/.npm
+2026-10-22T11:53:39.6897372Z Cache hit for: node-cache-Linux-x64-npm-fb4e3338faf186b68ab9adb778f9cc5fc0abfe8a75b8dc9ccea12767414c7f74
+2026-10-22T11:53:40.9889699Z Received 4913746 of 21690962 (22.7%), 4.7 MBs/sec
+2026-10-22T11:53:41.2677670Z Received 21690962 of 21690962 (100.0%), 16.2 MBs/sec
+2026-10-22T11:53:41.2678518Z Cache Size: ~21 MB (21690962 B)
+2026-10-22T11:53:41.2709007Z [command]/usr/bin/tar -xf /home/runner/work/_temp/233e6b0d-709c-4641-96db-5a460b1c546e/cache.tzst -P -C /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture --use-compress-program unzstd
+2026-10-22T11:53:41.3501300Z Cache restored successfully
+2026-10-22T11:53:41.3519116Z Cache restored from key: node-cache-Linux-x64-npm-fb4e3338faf186b68ab9adb778f9cc5fc0abfe8a75b8dc9ccea12767414c7f74
+2026-10-22T11:53:41.3778330Z ##[group]Run npm ci
+2026-10-22T11:53:41.3778743Z [36;1mnpm ci[0m
+2026-10-22T11:53:41.3841000Z shell: /usr/bin/bash -e {0}
+2026-10-22T11:53:41.3841350Z env:
+2026-10-22T11:53:41.3841664Z   EXPECTED_SOURCE_SHA: 2a1050a4c854237616ac0f912569ce46a7dd78c6
+2026-10-22T11:53:41.3842048Z ##[endgroup]
+2026-10-22T11:53:44.3576516Z 
+2026-10-22T11:53:44.3588454Z added 151 packages, and audited 152 packages in 3s
+2026-10-22T11:53:44.3589384Z 
+2026-10-22T11:53:44.3589702Z 22 packages are looking for funding
+2026-10-22T11:53:44.3590220Z   run `npm fund` for details
+2026-10-22T11:53:44.3730828Z 
+2026-10-22T11:53:44.3731799Z 3 vulnerabilities (2 moderate, 1 high)
+2026-10-22T11:53:44.3732560Z 
+2026-10-22T11:53:44.3732840Z To address all issues, run:
+2026-10-22T11:53:44.3733292Z   npm audit fix
+2026-10-22T11:53:44.3733593Z 
+2026-10-22T11:53:44.3733788Z Run `npm audit` for details.
+2026-10-22T11:53:44.4358261Z ##[group]Run npm test
+2026-10-22T11:53:44.4358595Z [36;1mnpm test[0m
+2026-10-22T11:53:44.4416074Z shell: /usr/bin/bash -e {0}
+2026-10-22T11:53:44.4416501Z env:
+2026-10-22T11:53:44.4416876Z   EXPECTED_SOURCE_SHA: 2a1050a4c854237616ac0f912569ce46a7dd78c6
+2026-10-22T11:53:44.4417317Z ##[endgroup]
+2026-10-22T11:53:44.5646543Z 
+2026-10-22T11:53:44.5647876Z > forge-web@0.2.0 test
+2026-10-22T11:53:44.5648501Z > vitest run && node review-tests/api-contracts.cjs
+2026-10-22T11:53:44.5649074Z 
+2026-10-22T11:53:44.8712182Z 
+2026-10-22T11:53:44.8714904Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/apps/forge-web[39m
+2026-10-22T11:53:44.8716097Z 
+2026-10-22T11:53:47.2791821Z  [32m✓[39m src/App.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 908[2mms[22m[39m
+2026-10-22T11:53:47.2871088Z    [32m✓[39m App [2m(2)[22m
+2026-10-22T11:53:47.2921042Z      [33m[2m✓[22m[39m renders only live API state and executes real controls[33m 715[2mms[22m[39m
+2026-10-22T11:53:48.0850562Z  [32m✓[39m src/model-registry-state.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1710[2mms[22m[39m
+2026-10-22T11:53:48.0877890Z    [32m✓[39m registry availability evidence [2m(6)[22m
+2026-10-22T11:53:48.0879934Z      [33m[2m✓[22m[39m does not present a failed /api/v1/models read as an empty registry[33m 538[2mms[22m[39m
+2026-10-22T11:53:48.0881827Z      [33m[2m✓[22m[39m moves from known models through a failed refresh to recovered models[33m 306[2mms[22m[39m
+2026-10-22T11:53:48.0883555Z      [33m[2m✓[22m[39m does not announce an empty registry while a retry is pending[33m 315[2mms[22m[39m
+2026-10-22T11:53:48.1694891Z  [32m✓[39m src/model-registry-selection.review.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 1793[2mms[22m[39m
+2026-10-22T11:53:48.1697594Z    [32m✓[39m exact-source model registry admission review [2m(8)[22m
+2026-10-22T11:53:48.1699613Z      [33m[2m✓[22m[39m does not submit from a registry with empty model IDs[33m 592[2mms[22m[39m
+2026-10-22T11:53:48.4483968Z  [32m✓[39m src/api.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+2026-10-22T11:53:48.4530190Z 
+2026-10-22T11:53:48.4551389Z [2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+2026-10-22T11:53:48.4552931Z [2m      Tests [22m [1m[32m20 passed[39m[22m[90m (20)[39m
+2026-10-22T11:53:48.4554054Z [2m   Start at [22m 11:53:44
+2026-10-22T11:53:48.4555486Z [2m   Duration [22m 3.57s[2m (tests 47%, environment 33%, transform 8%, import 7%, setup 4%)[22m
+2026-10-22T11:53:48.4556438Z 
+2026-10-22T11:53:48.4557769Z [2mEnvironment [22m [33mjsdom was created 4 times[39m[2m · 3.10s total, 33% of tracked time[22m
+2026-10-22T11:53:48.4560556Z [2m            [22m [2mcreate it once per worker with [22m[33mpool: 'vmThreads'[39m[2m (keeps per-file isolation) or [22m[33misolate: false[39m[2m (shares it across files)[22m
+2026-10-22T11:53:48.4563032Z [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-environments[22m
+2026-10-22T11:53:48.4563955Z 
+2026-10-22T11:53:49.5240497Z TAP version 13
+2026-10-22T11:53:49.5250067Z # Subtest: offline Foundry API contracts
+2026-10-22T11:53:49.5250930Z     # Subtest: status: preserves a valid backend response
+2026-10-22T11:53:49.5252000Z     ok 1 - status: preserves a valid backend response
+2026-10-22T11:53:49.5252855Z       ---
+2026-10-22T11:53:49.5274257Z       duration_ms: 29.730718
+2026-10-22T11:53:49.5274814Z       type: 'test'
+2026-10-22T11:53:49.5275391Z       ...
+2026-10-22T11:53:49.5275945Z     # Subtest: status: preserves verified empty counts
+2026-10-22T11:53:49.5276720Z     ok 2 - status: preserves verified empty counts
+2026-10-22T11:53:49.5277292Z       ---
+2026-10-22T11:53:49.5277721Z       duration_ms: 0.398284
+2026-10-22T11:53:49.5278200Z       type: 'test'
+2026-10-22T11:53:49.5278575Z       ...
+2026-10-22T11:53:49.5279343Z     # Subtest: status: rejects datasets=-1
+2026-10-22T11:53:49.5280527Z     ok 3 - status: rejects datasets=-1
+2026-10-22T11:53:49.5281007Z       ---
+2026-10-22T11:53:49.5281315Z       duration_ms: 0.830852
+2026-10-22T11:53:49.5281659Z       type: 'test'
+2026-10-22T11:53:49.5281944Z       ...
+2026-10-22T11:53:49.5282351Z     # Subtest: status: rejects datasets=0.5
+2026-10-22T11:53:49.5282983Z     ok 4 - status: rejects datasets=0.5
+2026-10-22T11:53:49.5283516Z       ---
+2026-10-22T11:53:49.5283890Z       duration_ms: 0.360684
+2026-10-22T11:53:49.5284337Z       type: 'test'
+2026-10-22T11:53:49.5284733Z       ...
+2026-10-22T11:53:49.5285272Z     # Subtest: status: rejects datasets=9007199254740992
+2026-10-22T11:53:49.5286042Z     ok 5 - status: rejects datasets=9007199254740992
+2026-10-22T11:53:49.5286620Z       ---
+2026-10-22T11:53:49.5287038Z       duration_ms: 0.429092
+2026-10-22T11:53:49.5287495Z       type: 'test'
+2026-10-22T11:53:49.5287877Z       ...
+2026-10-22T11:53:49.5288352Z     # Subtest: status: rejects experiments=-1
+2026-10-22T11:53:49.5289288Z     ok 6 - status: rejects experiments=-1
+2026-10-22T11:53:49.5289829Z       ---
+2026-10-22T11:53:49.5290213Z       duration_ms: 0.396571
+2026-10-22T11:53:49.5290660Z       type: 'test'
+2026-10-22T11:53:49.5291051Z       ...
+2026-10-22T11:53:49.5291544Z     # Subtest: status: rejects experiments=0.5
+2026-10-22T11:53:49.5292223Z     ok 7 - status: rejects experiments=0.5
+2026-10-22T11:53:49.5292760Z       ---
+2026-10-22T11:53:49.5293144Z       duration_ms: 0.322092
+2026-10-22T11:53:49.5293601Z       type: 'test'
+2026-10-22T11:53:49.5293981Z       ...
+2026-10-22T11:53:49.5294516Z     # Subtest: status: rejects experiments=9007199254740992
+2026-10-22T11:53:49.5295304Z     ok 8 - status: rejects experiments=9007199254740992
+2026-10-22T11:53:49.5295898Z       ---
+2026-10-22T11:53:49.5296270Z       duration_ms: 0.485988
+2026-10-22T11:53:49.5297098Z       type: 'test'
+2026-10-22T11:53:49.5297485Z       ...
+2026-10-22T11:53:49.5297973Z     # Subtest: status: rejects checkpoints=-1
+2026-10-22T11:53:49.5298638Z     ok 9 - status: rejects checkpoints=-1
+2026-10-22T11:53:49.5309103Z       ---
+2026-10-22T11:53:49.5309648Z       duration_ms: 1.266266
+2026-10-22T11:53:49.5310122Z       type: 'test'
+2026-10-22T11:53:49.5310501Z       ...
+2026-10-22T11:53:49.5310991Z     # Subtest: status: rejects checkpoints=0.5
+2026-10-22T11:53:49.5311664Z     ok 10 - status: rejects checkpoints=0.5
+2026-10-22T11:53:49.5312199Z       ---
+2026-10-22T11:53:49.5312532Z       duration_ms: 0.766402
+2026-10-22T11:53:49.5312954Z       type: 'test'
+2026-10-22T11:53:49.5313330Z       ...
+2026-10-22T11:53:49.5313856Z     # Subtest: status: rejects checkpoints=9007199254740992
+2026-10-22T11:53:49.5314633Z     ok 11 - status: rejects checkpoints=9007199254740992
+2026-10-22T11:53:49.5315240Z       ---
+2026-10-22T11:53:49.5315658Z       duration_ms: 0.442857
+2026-10-22T11:53:49.5316250Z       type: 'test'
+2026-10-22T11:53:49.5316629Z       ...
+2026-10-22T11:53:49.5317093Z     # Subtest: status: rejects evaluations=-1
+2026-10-22T11:53:49.5317746Z     ok 12 - status: rejects evaluations=-1
+2026-10-22T11:53:49.5318268Z       ---
+2026-10-22T11:53:49.5318649Z       duration_ms: 0.362197
+2026-10-22T11:53:49.5319368Z       type: 'test'
+2026-10-22T11:53:49.5319803Z       ...
+2026-10-22T11:53:49.5320248Z     # Subtest: status: rejects evaluations=0.5
+2026-10-22T11:53:49.5320882Z     ok 13 - status: rejects evaluations=0.5
+2026-10-22T11:53:49.5321420Z       ---
+2026-10-22T11:53:49.5321789Z       duration_ms: 0.248825
+2026-10-22T11:53:49.5322256Z       type: 'test'
+2026-10-22T11:53:49.5322635Z       ...
+2026-10-22T11:53:49.5323208Z     # Subtest: status: rejects evaluations=9007199254740992
+2026-10-22T11:53:49.5324010Z     ok 14 - status: rejects evaluations=9007199254740992
+2026-10-22T11:53:49.5324591Z       ---
+2026-10-22T11:53:49.5324991Z       duration_ms: 0.241301
+2026-10-22T11:53:49.5327738Z       type: 'test'
+2026-10-22T11:53:49.5374666Z       ...
+2026-10-22T11:53:49.5375172Z     # Subtest: status: rejects models=-1
+2026-10-22T11:53:49.5376152Z     ok 15 - status: rejects models=-1
+2026-10-22T11:53:49.5376569Z       ---
+2026-10-22T11:53:49.5376914Z       duration_ms: 0.222767
+2026-10-22T11:53:49.5377328Z       type: 'test'
+2026-10-22T11:53:49.5377688Z       ...
+2026-10-22T11:53:49.5378070Z     # Subtest: status: rejects models=0.5
+2026-10-22T11:53:49.5378573Z     ok 16 - status: rejects models=0.5
+2026-10-22T11:53:49.5379238Z       ---
+2026-10-22T11:53:49.5379572Z       duration_ms: 0.226092
+2026-10-22T11:53:49.5379975Z       type: 'test'
+2026-10-22T11:53:49.5380316Z       ...
+2026-10-22T11:53:49.5380726Z     # Subtest: status: rejects models=9007199254740992
+2026-10-22T11:53:49.5381383Z     ok 17 - status: rejects models=9007199254740992
+2026-10-22T11:53:49.5381878Z       ---
+2026-10-22T11:53:49.5382202Z       duration_ms: 0.251199
+2026-10-22T11:53:49.5382591Z       type: 'test'
+2026-10-22T11:53:49.5382906Z       ...
+2026-10-22T11:53:49.5383424Z     # Subtest: status: rejects evidence_events=-1
+2026-10-22T11:53:49.5384126Z     ok 18 - status: rejects evidence_events=-1
+2026-10-22T11:53:49.5384641Z       ---
+2026-10-22T11:53:49.5384985Z       duration_ms: 0.232013
+2026-10-22T11:53:49.5385420Z       type: 'test'
+2026-10-22T11:53:49.5385761Z       ...
+2026-10-22T11:53:49.5386236Z     # Subtest: status: rejects evidence_events=0.5
+2026-10-22T11:53:49.5386934Z     ok 19 - status: rejects evidence_events=0.5
+2026-10-22T11:53:49.5387488Z       ---
+2026-10-22T11:53:49.5387873Z       duration_ms: 0.223228
+2026-10-22T11:53:49.5388386Z       type: 'test'
+2026-10-22T11:53:49.5389059Z       ...
+2026-10-22T11:53:49.5389656Z     # Subtest: status: rejects evidence_events=9007199254740992
+2026-10-22T11:53:49.5390490Z     ok 20 - status: rejects evidence_events=9007199254740992
+2026-10-22T11:53:49.5391181Z       ---
+2026-10-22T11:53:49.5391554Z       duration_ms: 0.372997
+2026-10-22T11:53:49.5392639Z       type: 'test'
+2026-10-22T11:53:49.5393030Z       ...
+2026-10-22T11:53:49.5393623Z     # Subtest: status: rejects root null with the domain error
+2026-10-22T11:53:49.5394501Z     ok 21 - status: rejects root null with the domain error
+2026-10-22T11:53:49.5395084Z       ---
+2026-10-22T11:53:49.5395468Z       duration_ms: 0.221724
+2026-10-22T11:53:49.5395909Z       type: 'test'
+2026-10-22T11:53:49.5396288Z       ...
+2026-10-22T11:53:49.5396867Z     # Subtest: status: rejects root [] with the domain error
+2026-10-22T11:53:49.5397631Z     ok 22 - status: rejects root [] with the domain error
+2026-10-22T11:53:49.5398230Z       ---
+2026-10-22T11:53:49.5398622Z       duration_ms: 0.524871
+2026-10-22T11:53:49.5403124Z       type: 'test'
+2026-10-22T11:53:49.5403528Z       ...
+2026-10-22T11:53:49.5404067Z     # Subtest: status: rejects root 7 with the domain error
+2026-10-22T11:53:49.5404844Z     ok 23 - status: rejects root 7 with the domain error
+2026-10-22T11:53:49.5405441Z       ---
+2026-10-22T11:53:49.5405843Z       duration_ms: 0.250017
+2026-10-22T11:53:49.5406294Z       type: 'test'
+2026-10-22T11:53:49.5406649Z       ...
+2026-10-22T11:53:49.5407276Z     # Subtest: status: rejects root "ok" with the domain error
+2026-10-22T11:53:49.5408097Z     ok 24 - status: rejects root "ok" with the domain error
+2026-10-22T11:53:49.5408686Z       ---
+2026-10-22T11:53:49.5409447Z       duration_ms: 0.230671
+2026-10-22T11:53:49.5409939Z       type: 'test'
+2026-10-22T11:53:49.5410307Z       ...
+2026-10-22T11:53:49.5410877Z     # Subtest: registry: rejects root null with the domain error
+2026-10-22T11:53:49.5411703Z     ok 25 - registry: rejects root null with the domain error
+2026-10-22T11:53:49.5412287Z       ---
+2026-10-22T11:53:49.5412653Z       duration_ms: 0.504202
+2026-10-22T11:53:49.5413103Z       type: 'test'
+2026-10-22T11:53:49.5413485Z       ...
+2026-10-22T11:53:49.5414027Z     # Subtest: registry: rejects root [] with the domain error
+2026-10-22T11:53:49.5414788Z     ok 26 - registry: rejects root [] with the domain error
+2026-10-22T11:53:49.5415403Z       ---
+2026-10-22T11:53:49.5415772Z       duration_ms: 0.300521
+2026-10-22T11:53:49.5416208Z       type: 'test'
+2026-10-22T11:53:49.5416620Z       ...
+2026-10-22T11:53:49.5417629Z     # Subtest: registry: rejects root 7 with the domain error
+2026-10-22T11:53:49.5418418Z     ok 27 - registry: rejects root 7 with the domain error
+2026-10-22T11:53:49.5419277Z       ---
+2026-10-22T11:53:49.5419684Z       duration_ms: 0.310952
+2026-10-22T11:53:49.5420128Z       type: 'test'
+2026-10-22T11:53:49.5420553Z       ...
+2026-10-22T11:53:49.5421204Z     # Subtest: registry: rejects root "ok" with the domain error
+2026-10-22T11:53:49.5422041Z     ok 28 - registry: rejects root "ok" with the domain error
+2026-10-22T11:53:49.5422653Z       ---
+2026-10-22T11:53:49.5423021Z       duration_ms: 0.318024
+2026-10-22T11:53:49.5423454Z       type: 'test'
+2026-10-22T11:53:49.5423827Z       ...
+2026-10-22T11:53:49.5424415Z     # Subtest: provider: rejects root null with the domain error
+2026-10-22T11:53:49.5425316Z     ok 29 - provider: rejects root null with the domain error
+2026-10-22T11:53:49.5425891Z       ---
+2026-10-22T11:53:49.5426260Z       duration_ms: 0.382585
+2026-10-22T11:53:49.5426716Z       type: 'test'
+2026-10-22T11:53:49.5427102Z       ...
+2026-10-22T11:53:49.5427651Z     # Subtest: provider: rejects root [] with the domain error
+2026-10-22T11:53:49.5428439Z     ok 30 - provider: rejects root [] with the domain error
+2026-10-22T11:53:49.5430213Z       ---
+2026-10-22T11:53:49.5430606Z       duration_ms: 1.362656
+2026-10-22T11:53:49.5431061Z       type: 'test'
+2026-10-22T11:53:49.5431439Z       ...
+2026-10-22T11:53:49.5431997Z     # Subtest: provider: rejects root 7 with the domain error
+2026-10-22T11:53:49.5432817Z     ok 31 - provider: rejects root 7 with the domain error
+2026-10-22T11:53:49.5433381Z       ---
+2026-10-22T11:53:49.5433750Z       duration_ms: 0.26207
+2026-10-22T11:53:49.5434196Z       type: 'test'
+2026-10-22T11:53:49.5434574Z       ...
+2026-10-22T11:53:49.5435556Z     # Subtest: provider: rejects root "ok" with the domain error
+2026-10-22T11:53:49.5436388Z     ok 32 - provider: rejects root "ok" with the domain error
+2026-10-22T11:53:49.5437012Z       ---
+2026-10-22T11:53:49.5437398Z       duration_ms: 0.249647
+2026-10-22T11:53:49.5437835Z       type: 'test'
+2026-10-22T11:53:49.5438253Z       ...
+2026-10-22T11:53:49.5439165Z     # Subtest: registry: preserves two distinct model identities
+2026-10-22T11:53:49.5440036Z     ok 33 - registry: preserves two distinct model identities
+2026-10-22T11:53:49.5440639Z       ---
+2026-10-22T11:53:49.5440997Z       duration_ms: 0.521705
+2026-10-22T11:53:49.5441445Z       type: 'test'
+2026-10-22T11:53:49.5441815Z       ...
+2026-10-22T11:53:49.5442342Z     # Subtest: registry: preserves a successful empty list
+2026-10-22T11:53:49.5443105Z     ok 34 - registry: preserves a successful empty list
+2026-10-22T11:53:49.5443686Z       ---
+2026-10-22T11:53:49.5444057Z       duration_ms: 0.248785
+2026-10-22T11:53:49.5444521Z       type: 'test'
+2026-10-22T11:53:49.5444915Z       ...
+2026-10-22T11:53:49.5445407Z     # Subtest: registry: rejects duplicate identities
+2026-10-22T11:53:49.5446113Z     ok 35 - registry: rejects duplicate identities
+2026-10-22T11:53:49.5446739Z       ---
+2026-10-22T11:53:49.5447100Z       duration_ms: 0.373658
+2026-10-22T11:53:49.5447532Z       type: 'test'
+2026-10-22T11:53:49.5447912Z       ...
+2026-10-22T11:53:49.5448372Z     # Subtest: registry: rejects blank identity ""
+2026-10-22T11:53:49.5449253Z     ok 36 - registry: rejects blank identity ""
+2026-10-22T11:53:49.5449803Z       ---
+2026-10-22T11:53:49.5450166Z       duration_ms: 0.270074
+2026-10-22T11:53:49.5450605Z       type: 'test'
+2026-10-22T11:53:49.5450980Z       ...
+2026-10-22T11:53:49.5451546Z     # Subtest: registry: rejects blank identity "   "
+2026-10-22T11:53:49.5452234Z     ok 37 - registry: rejects blank identity "   "
+2026-10-22T11:53:49.5452776Z       ---
+2026-10-22T11:53:49.5453141Z       duration_ms: 0.260266
+2026-10-22T11:53:49.5453603Z       type: 'test'
+2026-10-22T11:53:49.5453962Z       ...
+2026-10-22T11:53:49.5454479Z     # Subtest: provider: preserves successful availability
+2026-10-22T11:53:49.5455603Z     ok 38 - provider: preserves successful availability
+2026-10-22T11:53:49.5456245Z       ---
+2026-10-22T11:53:49.5456616Z       duration_ms: 0.282969
+2026-10-22T11:53:49.5457050Z       type: 'test'
+2026-10-22T11:53:49.5457413Z       ...
+2026-10-22T11:53:49.5457954Z     # Subtest: provider: preserves an empty successful list
+2026-10-22T11:53:49.5458748Z     ok 39 - provider: preserves an empty successful list
+2026-10-22T11:53:49.5459852Z       ---
+2026-10-22T11:53:49.5460221Z       duration_ms: 0.244086
+2026-10-22T11:53:49.5460657Z       type: 'test'
+2026-10-22T11:53:49.5461039Z       ...
+2026-10-22T11:53:49.5461566Z     # Subtest: chat: preserves backend finish reason stop
+2026-10-22T11:53:49.5462308Z     ok 40 - chat: preserves backend finish reason stop
+2026-10-22T11:53:49.5462855Z       ---
+2026-10-22T11:53:49.5463218Z       duration_ms: 0.557322
+2026-10-22T11:53:49.5463669Z       type: 'test'
+2026-10-22T11:53:49.5464045Z       ...
+2026-10-22T11:53:49.5464571Z     # Subtest: chat: preserves backend finish reason length
+2026-10-22T11:53:49.5465333Z     ok 41 - chat: preserves backend finish reason length
+2026-10-22T11:53:49.5465905Z       ---
+2026-10-22T11:53:49.5466275Z       duration_ms: 0.419404
+2026-10-22T11:53:49.5466718Z       type: 'test'
+2026-10-22T11:53:49.5467087Z       ...
+2026-10-22T11:53:49.5467628Z     # Subtest: chat: preserves a legitimate empty completion
+2026-10-22T11:53:49.5468395Z     ok 42 - chat: preserves a legitimate empty completion
+2026-10-22T11:53:49.5469214Z       ---
+2026-10-22T11:53:49.5469573Z       duration_ms: 0.220122
+2026-10-22T11:53:49.5470020Z       type: 'test'
+2026-10-22T11:53:49.5470380Z       ...
+2026-10-22T11:53:49.5470806Z     # Subtest: chat: rejects wrong model
+2026-10-22T11:53:49.5471376Z     ok 43 - chat: rejects wrong model
+2026-10-22T11:53:49.5471833Z       ---
+2026-10-22T11:53:49.5472505Z       duration_ms: 0.309559
+2026-10-22T11:53:49.5472914Z       type: 'test'
+2026-10-22T11:53:49.5473257Z       ...
+2026-10-22T11:53:49.5473686Z     # Subtest: chat: rejects blank receipt id
+2026-10-22T11:53:49.5474272Z     ok 44 - chat: rejects blank receipt id
+2026-10-22T11:53:49.5474747Z       ---
+2026-10-22T11:53:49.5475090Z       duration_ms: 0.254466
+2026-10-22T11:53:49.5475490Z       type: 'test'
+2026-10-22T11:53:49.5475830Z       ...
+2026-10-22T11:53:49.5476285Z     # Subtest: chat: rejects missing finish reason
+2026-10-22T11:53:49.5476916Z     ok 45 - chat: rejects missing finish reason
+2026-10-22T11:53:49.5477523Z       ---
+2026-10-22T11:53:49.5477883Z       duration_ms: 0.355424
+2026-10-22T11:53:49.5478327Z       type: 'test'
+2026-10-22T11:53:49.5478702Z       ...
+2026-10-22T11:53:49.5479423Z     # Subtest: chat: rejects null finish reason
+2026-10-22T11:53:49.5480089Z     ok 46 - chat: rejects null finish reason
+2026-10-22T11:53:49.5480588Z       ---
+2026-10-22T11:53:49.5480946Z       duration_ms: 0.386703
+2026-10-22T11:53:49.5481405Z       type: 'test'
+2026-10-22T11:53:49.5481768Z       ...
+2026-10-22T11:53:49.5482251Z     # Subtest: chat: rejects unknown finish reason
+2026-10-22T11:53:49.5482916Z     ok 47 - chat: rejects unknown finish reason
+2026-10-22T11:53:49.5483463Z       ---
+2026-10-22T11:53:49.5483826Z       duration_ms: 0.390439
+2026-10-22T11:53:49.5484262Z       type: 'test'
+2026-10-22T11:53:49.5484607Z       ...
+2026-10-22T11:53:49.5485036Z     # Subtest: chat: rejects missing choice index
+2026-10-22T11:53:49.5485668Z     ok 48 - chat: rejects missing choice index
+2026-10-22T11:53:49.5486152Z       ---
+2026-10-22T11:53:49.5486479Z       duration_ms: 0.56718
+2026-10-22T11:53:49.5486868Z       type: 'test'
+2026-10-22T11:53:49.5487196Z       ...
+2026-10-22T11:53:49.5487640Z     # Subtest: chat: rejects wrong choice index
+2026-10-22T11:53:49.5488267Z     ok 49 - chat: rejects wrong choice index
+2026-10-22T11:53:49.5489028Z       ---
+2026-10-22T11:53:49.5489413Z       duration_ms: 0.426678
+2026-10-22T11:53:49.5489849Z       type: 'test'
+2026-10-22T11:53:49.5490215Z       ...
+2026-10-22T11:53:49.5490710Z     # Subtest: chat: rejects extra unexpected choice
+2026-10-22T11:53:49.5491796Z     ok 50 - chat: rejects extra unexpected choice
+2026-10-22T11:53:49.5492351Z       ---
+2026-10-22T11:53:49.5492701Z       duration_ms: 0.329516
+2026-10-22T11:53:49.5493111Z       type: 'test'
+2026-10-22T11:53:49.5493462Z       ...
+2026-10-22T11:53:49.5493955Z     # Subtest: chat: rejects inconsistent usage total
+2026-10-22T11:53:49.5494607Z     ok 51 - chat: rejects inconsistent usage total
+2026-10-22T11:53:49.5495132Z       ---
+2026-10-22T11:53:49.5495473Z       duration_ms: 0.372667
+2026-10-22T11:53:49.5495886Z       type: 'test'
+2026-10-22T11:53:49.5496272Z       ...
+2026-10-22T11:53:49.5496692Z     # Subtest: chat: rejects wrong usage unit
+2026-10-22T11:53:49.5497285Z     ok 52 - chat: rejects wrong usage unit
+2026-10-22T11:53:49.5497756Z       ---
+2026-10-22T11:53:49.5498100Z       duration_ms: 0.269654
+2026-10-22T11:53:49.5498538Z       type: 'test'
+2026-10-22T11:53:49.5499227Z       ...
+2026-10-22T11:53:49.5499651Z     # Subtest: chat: rejects missing evidence
+2026-10-22T11:53:49.5500246Z     ok 53 - chat: rejects missing evidence
+2026-10-22T11:53:49.5500741Z       ---
+2026-10-22T11:53:49.5501080Z       duration_ms: 0.238015
+2026-10-22T11:53:49.5501513Z       type: 'test'
+2026-10-22T11:53:49.5501867Z       ...
+2026-10-22T11:53:49.5502309Z     # Subtest: chat: rejects non-assistant message
+2026-10-22T11:53:49.5502937Z     ok 54 - chat: rejects non-assistant message
+2026-10-22T11:53:49.5503443Z       ---
+2026-10-22T11:53:49.5503776Z       duration_ms: 0.250278
+2026-10-22T11:53:49.5504190Z       type: 'test'
+2026-10-22T11:53:49.5504542Z       ...
+2026-10-22T11:53:49.5504987Z     # Subtest: chat: rejects prompt_tokens=-1
+2026-10-22T11:53:49.5505585Z     ok 55 - chat: rejects prompt_tokens=-1
+2026-10-22T11:53:49.5506067Z       ---
+2026-10-22T11:53:49.5506412Z       duration_ms: 0.257752
+2026-10-22T11:53:49.5507173Z       type: 'test'
+2026-10-22T11:53:49.5507520Z       ...
+2026-10-22T11:53:49.5507975Z     # Subtest: chat: rejects prompt_tokens=0.5
+2026-10-22T11:53:49.5508608Z     ok 56 - chat: rejects prompt_tokens=0.5
+2026-10-22T11:53:49.5509404Z       ---
+2026-10-22T11:53:49.5509769Z       duration_ms: 0.221093
+2026-10-22T11:53:49.5510238Z       type: 'test'
+2026-10-22T11:53:49.5510590Z       ...
+2026-10-22T11:53:49.5511099Z     # Subtest: chat: rejects prompt_tokens=9007199254740992
+2026-10-22T11:53:49.5511854Z     ok 57 - chat: rejects prompt_tokens=9007199254740992
+2026-10-22T11:53:49.5512402Z       ---
+2026-10-22T11:53:49.5512760Z       duration_ms: 0.220061
+2026-10-22T11:53:49.5513187Z       type: 'test'
+2026-10-22T11:53:49.5513539Z       ...
+2026-10-22T11:53:49.5514000Z     # Subtest: chat: rejects completion_tokens=-1
+2026-10-22T11:53:49.5514644Z     ok 58 - chat: rejects completion_tokens=-1
+2026-10-22T11:53:49.5515165Z       ---
+2026-10-22T11:53:49.5515521Z       duration_ms: 0.224329
+2026-10-22T11:53:49.5515952Z       type: 'test'
+2026-10-22T11:53:49.5516311Z       ...
+2026-10-22T11:53:49.5516818Z     # Subtest: chat: rejects completion_tokens=0.5
+2026-10-22T11:53:49.5517472Z     ok 59 - chat: rejects completion_tokens=0.5
+2026-10-22T11:53:49.5517983Z       ---
+2026-10-22T11:53:49.5518326Z       duration_ms: 0.259956
+2026-10-22T11:53:49.5518735Z       type: 'test'
+2026-10-22T11:53:49.5519346Z       ...
+2026-10-22T11:53:49.5519940Z     # Subtest: chat: rejects completion_tokens=9007199254740992
+2026-10-22T11:53:49.5520698Z     ok 60 - chat: rejects completion_tokens=9007199254740992
+2026-10-22T11:53:49.5521255Z       ---
+2026-10-22T11:53:49.5521611Z       duration_ms: 0.225822
+2026-10-22T11:53:49.5522024Z       type: 'test'
+2026-10-22T11:53:49.5522382Z       ...
+2026-10-22T11:53:49.5522801Z     # Subtest: chat: rejects total_tokens=-1
+2026-10-22T11:53:49.5523363Z     ok 61 - chat: rejects total_tokens=-1
+2026-10-22T11:53:49.5523824Z       ---
+2026-10-22T11:53:49.5524258Z       duration_ms: 1.309587
+2026-10-22T11:53:49.5524652Z       type: 'test'
+2026-10-22T11:53:49.5524974Z       ...
+2026-10-22T11:53:49.5525366Z     # Subtest: chat: rejects total_tokens=0.5
+2026-10-22T11:53:49.5526272Z     ok 62 - chat: rejects total_tokens=0.5
+2026-10-22T11:53:49.5526705Z       ---
+2026-10-22T11:53:49.5527038Z       duration_ms: 0.418722
+2026-10-22T11:53:49.5527416Z       type: 'test'
+2026-10-22T11:53:49.5527785Z       ...
+2026-10-22T11:53:49.5528229Z     # Subtest: chat: rejects total_tokens=9007199254740992
+2026-10-22T11:53:49.5529120Z     ok 63 - chat: rejects total_tokens=9007199254740992
+2026-10-22T11:53:49.5529618Z       ---
+2026-10-22T11:53:49.5529943Z       duration_ms: 0.299009
+2026-10-22T11:53:49.5530997Z       type: 'test'
+2026-10-22T11:53:49.5531328Z       ...
+2026-10-22T11:53:49.5531728Z     # Subtest: demo: preserves finite confidence
+2026-10-22T11:53:49.5532311Z     ok 64 - demo: preserves finite confidence
+2026-10-22T11:53:49.5532762Z       ---
+2026-10-22T11:53:49.5533076Z       duration_ms: 0.628113
+2026-10-22T11:53:49.5533462Z       type: 'test'
+2026-10-22T11:53:49.5533771Z       ...
+2026-10-22T11:53:49.5534193Z     # Subtest: demo: rejects JSON numeric overflow
+2026-10-22T11:53:49.5534783Z     ok 65 - demo: rejects JSON numeric overflow
+2026-10-22T11:53:49.5535242Z       ---
+2026-10-22T11:53:49.5535572Z       duration_ms: 0.298838
+2026-10-22T11:53:49.5535943Z       type: 'test'
+2026-10-22T11:53:49.5536316Z       ...
+2026-10-22T11:53:49.5536832Z     # Subtest: transport: preserves useful provider error details
+2026-10-22T11:53:49.5537589Z     ok 66 - transport: preserves useful provider error details
+2026-10-22T11:53:49.5538118Z       ---
+2026-10-22T11:53:49.5538432Z       duration_ms: 0.330578
+2026-10-22T11:53:49.5539052Z       type: 'test'
+2026-10-22T11:53:49.5539376Z       ...
+2026-10-22T11:53:49.5539807Z     # Subtest: transport: handles null error payload
+2026-10-22T11:53:49.5540431Z     ok 67 - transport: handles null error payload
+2026-10-22T11:53:49.5540899Z       ---
+2026-10-22T11:53:49.5541209Z       duration_ms: 0.404857
+2026-10-22T11:53:49.5541975Z       type: 'test'
+2026-10-22T11:53:49.5542292Z       ...
+2026-10-22T11:53:49.5542818Z     # Subtest: transport: does not retry a failed generation mutation
+2026-10-22T11:53:49.5543625Z     ok 68 - transport: does not retry a failed generation mutation
+2026-10-22T11:53:49.5544184Z       ---
+2026-10-22T11:53:49.5544505Z       duration_ms: 0.325638
+2026-10-22T11:53:49.5544927Z       type: 'test'
+2026-10-22T11:53:49.5545260Z       ...
+2026-10-22T11:53:49.5545831Z     # Subtest: transport: preserves caller cancellation and does not retry
+2026-10-22T11:53:49.5546707Z     ok 69 - transport: preserves caller cancellation and does not retry
+2026-10-22T11:53:49.5547309Z       ---
+2026-10-22T11:53:49.5547625Z       duration_ms: 0.4764
+2026-10-22T11:53:49.5547995Z       type: 'test'
+2026-10-22T11:53:49.5548332Z       ...
+2026-10-22T11:53:49.5548637Z     1..69
+2026-10-22T11:53:49.5549284Z ok 1 - offline Foundry API contracts
+2026-10-22T11:53:49.5549718Z   ---
+2026-10-22T11:53:49.5550058Z   duration_ms: 64.4646
+2026-10-22T11:53:49.5550400Z   type: 'test'
+2026-10-22T11:53:49.5550721Z   ...
+2026-10-22T11:53:49.5608772Z 1..1
+2026-10-22T11:53:49.5609410Z # tests 70
+2026-10-22T11:53:49.5610119Z # suites 0
+2026-10-22T11:53:49.5610552Z # pass 70
+2026-10-22T11:53:49.5610927Z # fail 0
+2026-10-22T11:53:49.5611297Z # cancelled 0
+2026-10-22T11:53:49.5611705Z # skipped 0
+2026-10-22T11:53:49.5612082Z # todo 0
+2026-10-22T11:53:49.5612489Z # duration_ms 106.888684
+2026-10-22T11:53:49.5846344Z ##[group]Run npm audit --audit-level=moderate
+2026-10-22T11:53:49.5846752Z [36;1mnpm audit --audit-level=moderate[0m
+2026-10-22T11:53:49.5924115Z shell: /usr/bin/bash -e {0}
+2026-10-22T11:53:49.5924596Z env:
+2026-10-22T11:53:49.5925068Z   EXPECTED_SOURCE_SHA: 2a1050a4c854237616ac0f912569ce46a7dd78c6
+2026-10-22T11:53:49.5925663Z ##[endgroup]
+2026-10-22T11:53:50.2170752Z # npm audit report
+2026-10-22T11:53:50.2187867Z 
+2026-10-22T11:53:50.2210536Z @vitest/mocker  5.0.0-beta.1 - 5.0.2
+2026-10-22T11:53:50.2211242Z Severity: moderate
+2026-10-22T11:53:50.2212491Z Vitest: Code injection via unauthenticated manual mock registration - https://github.com/advisories/GHSA-qxg6-89mg-rqv8
+2026-10-22T11:53:50.2214624Z Vitest: Windows backslash traversal bypasses the @vitest/mocker redirect allowlist fix - https://github.com/advisories/GHSA-xp26-3454-mjgp
+2026-10-22T11:53:50.2215954Z fix available via `npm audit fix`
+2026-10-22T11:53:50.2216518Z node_modules/@vitest/mocker
+2026-10-22T11:53:50.2217123Z   vitest  5.0.0-beta.1 - 5.0.2
+2026-10-22T11:53:50.2217741Z   Depends on vulnerable versions of @vitest/mocker
+2026-10-22T11:53:50.2218343Z   node_modules/vitest
+2026-10-22T11:53:50.2218597Z 
+2026-10-22T11:53:50.2219003Z vite  7.0.0 - 7.3.6
+2026-10-22T11:53:50.2219391Z Severity: high
+2026-10-22T11:53:50.2220451Z launch-editor: escapeCmdArgs() omits % escaping on Windows - https://github.com/advisories/GHSA-698v-4r3x-3vcv
+2026-10-22T11:53:50.2222493Z launch-editor: Editor CLI flag misinterpretation causing arbitrary command execution for some editors - https://github.com/advisories/GHSA-r825-w8mm-5pxw
+2026-10-22T11:53:50.2223864Z launch-editor: `fs.existsSync()` existence check can be bypassed on Windows - https://github.com/advisories/GHSA-587h-7wmj-h5pm
+2026-10-22T11:53:50.2225100Z Vite: Cross origin script execution through Vite custom middleware - https://github.com/advisories/GHSA-9jrq-w75r-8gcw
+2026-10-22T11:53:50.2226293Z Vite: Files outside `server.fs.allow` could be served when project paths match system paths on non-Windows machine - https://github.com/advisories/GHSA-rq7h-c2jc-7f22
+2026-10-22T11:53:50.2227044Z fix available via `npm audit fix`
+2026-10-22T11:53:50.2227314Z node_modules/vite
+2026-10-22T11:53:50.2227453Z 
+2026-10-22T11:53:50.2227617Z 3 vulnerabilities (2 moderate, 1 high)
+2026-10-22T11:53:50.2227816Z 
+2026-10-22T11:53:50.2227927Z To address all issues, run:
+2026-10-22T11:53:50.2228178Z   npm audit fix
+2026-10-22T11:53:50.2344000Z ##[error]Process completed with exit code 1.
+2026-10-22T11:53:50.2523235Z Post job cleanup.
+2026-10-22T11:53:50.3682791Z [command]/usr/bin/git version
+2026-10-22T11:53:50.3750897Z git version 2.55.0
+2026-10-22T11:53:50.3804163Z Temporarily overriding HOME='/home/runner/work/_temp/ab2011f3-d864-40fb-aece-76d7ee3cfccf' before making global git config changes
+2026-10-22T11:53:50.3810873Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-22T11:53:50.3813859Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+2026-10-22T11:53:50.3945305Z Removing SSH command configuration
+2026-10-22T11:53:50.3970663Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-22T11:53:50.4014096Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-22T11:53:50.4549542Z Removing HTTP extra header
+2026-10-22T11:53:50.4568046Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-22T11:53:50.4644591Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-22T11:53:50.5204428Z Removing includeIf entries pointing to credentials config files
+2026-10-22T11:53:50.5206038Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-22T11:53:50.5311121Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-22T11:53:50.5922956Z Cleaning up orphan processes
