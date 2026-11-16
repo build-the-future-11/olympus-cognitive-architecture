@@ -1,0 +1,72 @@
+{
+  "summary_sha256": "03787ffabafc694dd84985faf199ab90d4bf4b20a6073f227e1e0fa277d03d36",
+  "verified_sha256": "256c53388c8980469f714d31f445b042b380f1f4457c1cf813d2d5a3d95c092a",
+  "json_aggregation_and_hashes": "PASS",
+  "independent_checkpoint_replay": false,
+  "diagnostics": {
+    "clean": {
+      "mean_alpha": 0.44104469418525694,
+      "rescues": 0,
+      "harms": 0,
+      "examples": 10240,
+      "prediction_changes": 0
+    },
+    "corrupted": {
+      "mean_alpha": 0.6968839108943939,
+      "rescues": 130,
+      "harms": 68,
+      "examples": 10240,
+      "prediction_changes": 215
+    },
+    "known_shift": {
+      "mean_alpha": 0.6093947112560272,
+      "rescues": 0,
+      "harms": 0,
+      "examples": 10240,
+      "prediction_changes": 0
+    },
+    "composite_shift": {
+      "mean_alpha": 0.6757778644561767,
+      "rescues": 9,
+      "harms": 22,
+      "examples": 10240,
+      "prediction_changes": 31
+    }
+  },
+  "references": {
+    "semantic": 10
+  },
+  "controls": {
+    "direct_erm": 5,
+    "direct_robust": 4,
+    "constant_robust": 1
+  },
+  "development_seconds": [
+    22.388746712,
+    22.923777624999985,
+    22.348671845999974,
+    22.256181976000008,
+    22.502387999999996,
+    22.383852410999992,
+    22.577859834999998,
+    22.317973569999992,
+    22.49263552699999,
+    22.462720681000008
+  ],
+  "parameters": {
+    "anchored_erm": 3873,
+    "anchored_robust": 3873,
+    "anchored_robust_no_penalty": 3873,
+    "constant_erm": 3768,
+    "constant_robust": 3768,
+    "direct_erm": 3767,
+    "direct_robust": 3767
+  },
+  "clusters": [
+    0.0,
+    0.0009765625,
+    0.00146484375,
+    0.0009765625,
+    -0.00732421875
+  ]
+}

@@ -1,0 +1,270 @@
+{
+  "checkpoint_sha256": "8d62055ad636a869e9c36efbaeae0fc22ffdb053585064e67e7cb9f110b726ba",
+  "dataset": 20267500,
+  "freeze_sha256": "5778e9f1413200830e9a6c4009189dbef2f1883678319a4fa6c55d3a70457351",
+  "metrics": {
+    "anchored_erm": {
+      "accuracy": 1.0,
+      "brier": 0.012731057591736317,
+      "ece": 0.08046869892859831,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.3716525733470917,
+      "nll": 0.08535552024841309,
+      "selective_accuracy_50": 1.0
+    },
+    "anchored_robust": {
+      "accuracy": 1.0,
+      "brier": 0.012646457180380821,
+      "ece": 0.08034807781223208,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.565098762512207,
+      "nll": 0.08520974218845367,
+      "selective_accuracy_50": 1.0
+    },
+    "anchored_robust_no_penalty": {
+      "accuracy": 1.0,
+      "brier": 0.012581614777445793,
+      "ece": 0.08012960600899532,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.6799001693725586,
+      "nll": 0.08497251570224762,
+      "selective_accuracy_50": 1.0
+    },
+    "constant_erm": {
+      "accuracy": 1.0,
+      "brier": 0.013234714977443218,
+      "ece": 0.08177553297718987,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.11775005608797073,
+      "nll": 0.08685313910245895,
+      "selective_accuracy_50": 1.0
+    },
+    "constant_robust": {
+      "accuracy": 1.0,
+      "brier": 0.013267246074974537,
+      "ece": 0.08198261633515358,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 0.12310289591550827,
+      "nll": 0.08707697689533234,
+      "selective_accuracy_50": 1.0
+    },
+    "direct_erm": {
+      "accuracy": 1.0,
+      "brier": 0.012025079689919949,
+      "ece": 0.07738114963285625,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 1.0,
+      "nll": 0.08200014382600784,
+      "selective_accuracy_50": 1.0
+    },
+    "direct_robust": {
+      "accuracy": 1.0,
+      "brier": 0.012368357740342617,
+      "ece": 0.07926294801291078,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "mean_alpha": 1.0,
+      "nll": 0.08403728157281876,
+      "selective_accuracy_50": 1.0
+    },
+    "expert_0": {
+      "accuracy": 0.744140625,
+      "brier": 0.273630827665329,
+      "ece": 0.07998759276233613,
+      "intervention": {
+        "accuracy_delta": -0.255859375,
+        "examples": 1024,
+        "harms": 262,
+        "prediction_changes": 262,
+        "rescues": 0
+      },
+      "nll": 0.555835485458374,
+      "selective_accuracy_50": 1.0
+    },
+    "expert_1": {
+      "accuracy": 0.73828125,
+      "brier": 0.2821362018585205,
+      "ece": 0.09611006238264963,
+      "intervention": {
+        "accuracy_delta": -0.26171875,
+        "examples": 1024,
+        "harms": 268,
+        "prediction_changes": 268,
+        "rescues": 0
+      },
+      "nll": 0.5707634091377258,
+      "selective_accuracy_50": 1.0
+    },
+    "expert_2": {
+      "accuracy": 0.744140625,
+      "brier": 0.27167755365371704,
+      "ece": 0.0747955203987658,
+      "intervention": {
+        "accuracy_delta": -0.255859375,
+        "examples": 1024,
+        "harms": 262,
+        "prediction_changes": 262,
+        "rescues": 0
+      },
+      "nll": 0.5444200038909912,
+      "selective_accuracy_50": 1.0
+    },
+    "expert_3": {
+      "accuracy": 0.873046875,
+      "brier": 0.19470086693763733,
+      "ece": 0.16513283795211464,
+      "intervention": {
+        "accuracy_delta": -0.126953125,
+        "examples": 1024,
+        "harms": 130,
+        "prediction_changes": 130,
+        "rescues": 0
+      },
+      "nll": 0.4802165627479553,
+      "selective_accuracy_50": 1.0
+    },
+    "expert_4": {
+      "accuracy": 0.75,
+      "brier": 0.2627065181732178,
+      "ece": 0.0872979152482003,
+      "intervention": {
+        "accuracy_delta": -0.25,
+        "examples": 1024,
+        "harms": 256,
+        "prediction_changes": 256,
+        "rescues": 0
+      },
+      "nll": 0.5299224853515625,
+      "selective_accuracy_50": 1.0
+    },
+    "fixed": {
+      "accuracy": 1.0,
+      "brier": 0.1576227992773056,
+      "ece": 0.29065282084047794,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.37978029251098633,
+      "selective_accuracy_50": 1.0
+    },
+    "reference": {
+      "accuracy": 1.0,
+      "brier": 0.013441610150039196,
+      "ece": 0.0823299121693708,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.08748384565114975,
+      "selective_accuracy_50": 1.0
+    },
+    "selected_control": {
+      "accuracy": 1.0,
+      "brier": 0.013267246074974537,
+      "ece": 0.08198261633515358,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.08707697689533234,
+      "selective_accuracy_50": 1.0
+    },
+    "semantic": {
+      "accuracy": 1.0,
+      "brier": 0.013441610150039196,
+      "ece": 0.0823299121693708,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.08748384565114975,
+      "selective_accuracy_50": 1.0
+    },
+    "uniform": {
+      "accuracy": 0.9990234375,
+      "brier": 0.17737096548080444,
+      "ece": 0.2984487507492304,
+      "intervention": {
+        "accuracy_delta": -0.0009765625,
+        "examples": 1024,
+        "harms": 1,
+        "prediction_changes": 1,
+        "rescues": 0
+      },
+      "nll": 0.4072924852371216,
+      "selective_accuracy_50": 1.0
+    }
+  },
+  "prediction_sha256": "59fa8cb9211abe7ce270e203ac68b2e8f9ab3a84069bc4c94cde1ed69aa9d368",
+  "regime": "known_shift",
+  "tensor_hashes": {
+    "actions": "d92b5dc4a7f3eb3f880c8765fb1ef9748da8d1846ff389438bd6d8b86b24c819",
+    "allowed_transitions": "3431383721510cf1c211de027cf958c183e16db5fabb6b230eb284c85e196aa9",
+    "component_quality": "04ddad6e24eb0a9ff5bba1206fa8c14af6bb631c8b6885a4f720360664fd4f91",
+    "corruption_status": "0db223a034923394f57c6df3288c683a1777eb8b7b40160725bfe995f2385f63",
+    "decision_targets": "f88216fe93c08cf434b35a2b006784a9dd60d0270e6ca50857bd7f41a03de34d",
+    "domain_ids": "363460c3ea28df6c54f54e09b37434ea07bf950b13b3cfb8277dced57a5f9867",
+    "image": "35e1c3b4304b582a521aed76a60b34be8b0f89a5e9598415926a5edeefb457cf",
+    "next_state_targets": "db9db8e1e872b54197f888d78dd25cd21ec12375a6707f60649939f075df44ff",
+    "risk_score": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+    "source_ids": "f8615bb78b88d976fc0432108a1fd92bb9ea7ec5f4fc02c7132af570f14b0ee8",
+    "states": "118ad37f56fa08e573a7cdb2d211576142e5edea40da47c02092629d1641edec",
+    "tokens": "6b4fa14c7bdd178b3ec26aaa23406297afb2ebce11abe3feb24f85166a724f39",
+    "transition_targets": "2e9802d4e4f836221ce75d8085e9ae1a8dc5111c1cafead10d0ecc165b5b81ac"
+  },
+  "training_seed": 20267602
+}

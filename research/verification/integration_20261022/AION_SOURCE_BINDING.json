@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "study_id": "aion-executor-v1",
+  "phase": "CORE_TORCH_FREE_TESTED_SURFACE_INTEGRATION_RESOURCE_BLOCKED",
+  "kind": "source_binding_only_pending_hosted_tests",
+  "source_sha256": {
+    "olympus/evaluation/aion_executor.py": "0eb01c5a947885ceabcc96604ba29ec2a039d7115485cca43c5ccdfb23f6e352",
+    "olympus/api.py": "d9f480a382938f89114d13ad3f79906e8ba8b7ab4f491aec5b0ed26b87619cd3",
+    "olympus/cli.py": "50ea9e941840437629a6de5010d00715c98a3880de24cdf6fc9458310b4af041",
+    "tests/test_aion_executor.py": "cb0a44094ef85f93d131e9b7e9cfb343ccbe67068c54b89c21b833b43bf91fe6",
+    "tests/test_forge_and_api.py": "5fca21c702fefcf03832d13e1a0cbcee23d6291af278657fd3485d241141acc1",
+    "tests/test_cli.py": "0bf0c9b526804e81fc0f77d0427b7548048045f02f7e42a2c361778b22b946eb",
+    "apps/forge-web/src/api.ts": "6bb8820f4409aa9da77712a90fc3183ea317ccabdfc18773ae37ef87e869e310",
+    "apps/forge-web/src/api.test.ts": "f183cf9330797bebdec321649d894dd5fa4f62cc220de5b3771a76d1b77b0b73",
+    "apps/forge-web/src/App.tsx": "d5afde935b35d70105a7ba64ccb42de433347d631162995b83da63f4e61e2407",
+    "apps/forge-web/src/App.test.tsx": "eff1cf03bd6bd549b51e4e745cab8c66008e18d9bc81201b80eadc9b2420a12f",
+    "apps/forge-web/README.md": "3ced02574314f4b462ff91c2b1ca39a9eae405f99b35f70f4cdab751820be59a",
+    "docs/aion-executor.md": "4b66049e7f53822f0dc0efaea8bf6cba5c6c21c62d69d94741639679d60af1b1",
+    "docs/olympus-system.md": "3af165602437536043636590d56b8bbe4a2f8534fd4cc3b9492e091c98fbd08d"
+  },
+  "prior_receipt": "research/AION_EXECUTOR_ENGINEERING_20261021.json",
+  "prior_receipt_sha256": "9f22e1c4529a841325ec7ed8884a236afca33221f4ca9d43daf53bd572975040",
+  "change": "List literals in the deterministic CLI fixture become equivalent tuple literals; executor logic is unchanged.",
+  "new_test_pass_claim": false,
+  "scientific_outcomes_created": false
+}

@@ -1,0 +1,12 @@
+{
+  "run_url": "https://github.com/build-the-future-11/olympus-cognitive-architecture/actions/runs/39552083459",
+  "artifact_id": 12323613129,
+  "archive_sha256": "77919e4f02d226ce804984f12c9e81359a27b33d441536a1610a91d305ebb6e5",
+  "archive_bytes": 13000239,
+  "source_commit": "18a70523d2039803b9aeb2b8dcad2c8e27026589",
+  "scientific_source_hashes_match_current": true,
+  "raw_retention": "campaign-evidence.zip contains full checkpoints and prediction tensors; unpacked JSON retained alongside",
+  "platform": "Free GitHub CPU",
+  "scientific_runs": 1,
+  "independent_retraining": false
+}

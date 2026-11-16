@@ -2,6 +2,7 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import type { ReactElement } from "react";
 
 import {
+  AionDryRun,
   ChatCompletion,
   DemoRecord,
   fetchDemos,
@@ -13,6 +14,7 @@ import {
   FoundryVerification,
   generateWithFoundry,
   OllamaHealth,
+  runAionDryRun,
   runFoundryVerification
 } from "./api";
 import "./styles.css";
@@ -41,6 +43,9 @@ export function App(): ReactElement {
   const [completion, setCompletion] = useState<ChatCompletion | null>(null);
   const [generating, setGenerating] = useState<boolean>(false);
   const [generationError, setGenerationError] = useState<string>("");
+  const [aionTrace, setAionTrace] = useState<AionDryRun | null>(null);
+  const [aionRunning, setAionRunning] = useState<boolean>(false);
+  const [aionError, setAionError] = useState<string>("");
 
   const reload = useCallback(() => setReloadToken((value) => value + 1), []);
 
@@ -141,6 +146,19 @@ export function App(): ReactElement {
       setGenerationError(caught instanceof Error ? caught.message : "Generation failed");
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const runAionPolicy = async (): Promise<void> => {
+    setAionRunning(true);
+    setAionTrace(null);
+    setAionError("");
+    try {
+      setAionTrace(await runAionDryRun());
+    } catch (caught: unknown) {
+      setAionError(caught instanceof Error ? caught.message : "Aion policy check failed");
+    } finally {
+      setAionRunning(false);
     }
   };
 
@@ -309,6 +327,38 @@ export function App(): ReactElement {
             <small>
               {completion.model} · {completion.usage.completion_tokens} {completion.usage.unit}
             </small>
+          </article>
+        ) : null}
+      </section>
+
+      <section aria-labelledby="aion-heading" className="panel">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Governed execution</p>
+            <h2 id="aion-heading">Aion host-policy boundary</h2>
+          </div>
+          <span>A policy fixture</span>
+        </div>
+        <p>
+          The model may request a transition. The host still validates authority and budget before
+          any registered action can run. This fixture requests a forbidden publish transition.
+        </p>
+        <button disabled={aionRunning} onClick={() => void runAionPolicy()} type="button">
+          {aionRunning ? "Checking policy…" : "Run Aion policy fixture"}
+        </button>
+        {aionError ? <p className="inline-error" role="alert">{aionError}</p> : null}
+        {aionTrace ? (
+          <article className="receipt" aria-live="polite">
+            <div className="card-header">
+              <h3>Replayable policy trace</h3>
+              <span data-status={aionTrace.trace.status === "stopped" ? "passed" : "failed"}>
+                {aionTrace.trace.status}
+              </span>
+            </div>
+            <p>
+              {aionTrace.trace.action} · {aionTrace.trace.stop_reason.replace(/_/g, " ")}
+            </p>
+            <small>Tool authority granted: {String(aionTrace.tool_authority_granted)}</small>
           </article>
         ) : null}
       </section>

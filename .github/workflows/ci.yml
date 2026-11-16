@@ -41,6 +41,8 @@ jobs:
           enable-cache: true
       - name: Verify and install locked Python environment
         run: uv sync --locked --all-extras
+      - name: Verify immutable submitted research artifacts
+        run: sha256sum --check research/verification/ci_20261022/frozen-artifacts.sha256
       - name: Lint
         run: uv run --locked python -m ruff check .
       - name: Type check

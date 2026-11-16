@@ -4,6 +4,7 @@ import {
   fetchDemos,
   fetchFoundryStatus,
   generateWithFoundry,
+  runAionDryRun,
   runFoundryVerification
 } from "./api";
 
@@ -117,5 +118,16 @@ describe("fetchDemos", () => {
         body: expect.stringContaining("verified-model")
       })
     );
+  });
+
+  it("rejects malformed Aion policy traces", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ status: "AION_HOST_POLICY_DRY_RUN_NOT_TOOL_EXECUTION" }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      })
+    );
+
+    await expect(runAionDryRun()).rejects.toThrow("invalid Aion policy trace");
   });
 });

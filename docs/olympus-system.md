@@ -47,6 +47,12 @@ STOP, `decision_available` becomes false and the exposed decision logits are
 zeroed. The raw logits remain available for training and audit, never as an
 execution authorization.
 
+The host-side [Aion executor](aion-executor.md) is the separate boundary between
+that requested transition and any registered action. It rechecks legality and
+affordability, emits a replayable receipt, and turns every forced, explicit,
+illegal, unaffordable, or unregistered request into STOP without invoking a
+callback. The API and web-console routes expose a simulated dry run only.
+
 Family-to-centroid disagreement feeds a separately supervised intrinsic-risk
 head. Intrinsic risk combines with host risk as
 `1 - (1 - host) * (1 - intrinsic)`, so learned state can raise but never lower

@@ -82,6 +82,27 @@ def test_api_endpoints() -> None:
     assert run_response.status_code == 200
     assert "output" in run_response.json()["outputs"]
 
+    aion = _request(
+        "POST",
+        "/aion/dry-run",
+        {
+            "plan": {
+                "policy_id": "api-fixture-v1",
+                "transitions": ["inspect", "publish", "STOP"],
+                "legal_transitions": [True, False, True],
+                "transition_costs": [1.0, 3.0, 0.0],
+                "remaining_budget": 2.0,
+                "stop_stage": 2,
+            },
+            "decision": {"selected_stage": 1, "forced_stop": False},
+            "registered_actions": ["inspect", "publish"],
+        },
+    )
+    assert aion.status_code == 200
+    assert aion.json()["status"] == "AION_HOST_POLICY_DRY_RUN_NOT_TOOL_EXECUTION"
+    assert aion.json()["trace"]["status"] == "stopped"
+    assert aion.json()["trace"]["stop_reason"] == "selected_transition_illegal"
+
 
 def test_stateful_api_routes_enforce_configured_token(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("OLYMPUS_API_TOKEN", "test-secret")

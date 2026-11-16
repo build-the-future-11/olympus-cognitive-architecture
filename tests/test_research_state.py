@@ -126,18 +126,41 @@ def test_canonical_research_status_audit_is_fail_closed_and_non_promotional() ->
     assert status.engineering_studies[1].study_id == "flagship-engineering-v2"
     assert status.engineering_studies[1].source_verification == "historical_receipt"
     assert status.engineering_studies[2].study_id == "decision-dossier-replay-v1"
-    assert status.engineering_studies[2].source_verification == "current_files"
+    assert status.engineering_studies[2].source_verification == "historical_receipt"
+    assert status.engineering_studies[3].study_id == "aion-executor-v1"
+    assert status.engineering_studies[3].source_verification == "current_files"
 
 
-def test_research_status_rejects_current_dossier_source_drift(tmp_path: Path) -> None:
+def test_research_status_rejects_current_aion_source_drift(tmp_path: Path) -> None:
     target = _copy_status_fixture(tmp_path)
     audit_research_state(target)
-    source = target / "olympus/evaluation/decision_dossiers.py"
+    source = target / "olympus/evaluation/aion_executor.py"
     source.write_text(source.read_text() + "\n# changed after receipt\n")
     with pytest.raises(
         ResearchStateError,
-        match="source hash mismatch: olympus/evaluation/decision_dossiers.py",
+        match="source hash mismatch: olympus/evaluation/aion_executor.py",
     ):
+        audit_research_state(target)
+
+
+def test_research_status_pins_historical_dossier_receipt_without_claiming_current_source(
+    tmp_path: Path,
+) -> None:
+    target = _copy_status_fixture(tmp_path)
+    source = target / "olympus/evaluation/decision_dossiers.py"
+    source.write_text(source.read_text() + "\n# later implementation revision\n")
+    status = audit_research_state(target)
+    dossier = next(
+        study for study in status.engineering_studies
+        if study.study_id == "decision-dossier-replay-v1"
+    )
+    assert dossier.source_verification == "historical_receipt"
+
+    receipt_path = target / dossier.receipt
+    receipt = _read(receipt_path)
+    receipt["unexpected_post_hoc_edit"] = True
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+    with pytest.raises(ResearchStateError, match="historical receipt hash mismatch"):
         audit_research_state(target)
 
 

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "study_id": "faithful-dynamics-engineering-v1",
+  "phase": "ARTIFICIAL_COMPONENT_CHECKS_PASSED_HOSTED_VALIDATION_PENDING",
+  "source_sha256": {
+    "olympus/models/faithful_dynamics.py": "27d7968a3dfd8a1b27f2fb0be8bc97d1bd4b29ed5eedd32029948d25e9022922",
+    "tests/test_faithful_dynamics.py": "ad044c9cc4972be6cd8efd8e60e1818a46494213eaf05b2009172714c46a0e9d",
+    "docs/faithful-dynamics.md": "582ea2ee71c72b0562e6b3d5c3979ca2115a0df33e071a5f28602079b087e597"
+  },
+  "local_component_verification": {
+    "passed": 37,
+    "failed": 0,
+    "deselected": 1,
+    "seconds": 10.58,
+    "runtime": "Python 3.13.5; Torch 2.10.0+cpu; not the project Python 3.14 locked environment",
+    "command": "PYTHONPATH=. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_faithful_dynamics.py -k 'not reference_arithmetic'",
+    "deselection_reason": "The complete frozen v2 runner was unavailable in the isolated local snapshot; the unchanged test is retained for hosted execution.",
+    "whole_application_installation": false
+  },
+  "full_hosted_validation": "NOT_YET_OBSERVED",
+  "scientific_outcomes_created": false
+}

@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import secrets
 import threading
-from collections.abc import AsyncIterator, Iterator
+from collections.abc import AsyncIterator, Callable, Iterator
 from contextlib import asynccontextmanager
 from functools import lru_cache
 from pathlib import Path
@@ -25,6 +25,13 @@ from olympus.demos import (
     run_representation_demo,
     run_retrodiction_demo,
     run_transform_demo,
+)
+from olympus.evaluation.aion_executor import (
+    AionExecutionDecision,
+    AionExecutionPlan,
+    HostActionRegistry,
+    execute_aion_decision,
+    verify_aion_trace,
 )
 from olympus.forge.compiler import NaturalLanguageBehaviorCompiler
 from olympus.forge.runtime import ForgeRuntime
@@ -70,6 +77,14 @@ class OllamaGenerateRequest(ApiRequest):
     max_tokens: int = Field(default=256, ge=1, le=4_096)
     context_tokens: int = Field(default=2_048, ge=256, le=131_072)
     temperature: float = Field(default=0.0, ge=0.0, le=2.0)
+
+
+class AionDryRunRequest(ApiRequest):
+    """A no-side-effect check of host policy enforcement for an Aion decision."""
+
+    plan: AionExecutionPlan
+    decision: AionExecutionDecision
+    registered_actions: list[str] = Field(default_factory=list, max_length=256)
 
 
 compiler = NaturalLanguageBehaviorCompiler()
@@ -210,6 +225,39 @@ def run_behavior(request: RunRequest, _admission: WorkloadAdmission) -> dict[str
             }
             for event in result.events
         ],
+    }
+
+
+@app.post("/aion/dry-run")
+def aion_dry_run(request: AionDryRunRequest) -> dict[str, object]:
+    """Return a replayable policy trace without exposing a real tool callback."""
+
+    registered = set(request.registered_actions)
+
+    def simulated(action: str) -> dict[str, str]:
+        return {"status": "simulated", "action": action}
+
+    def handler_for(action: str) -> Callable[[], dict[str, str]]:
+        def handler() -> dict[str, str]:
+            return simulated(action)
+
+        return handler
+
+    registry = HostActionRegistry(
+        {action: handler_for(action) for action in registered}
+    )
+    trace = execute_aion_decision(request.plan, request.decision, registry)
+    verify_aion_trace(
+        request.plan,
+        request.decision,
+        trace,
+        registered_actions=registered,
+    )
+    return {
+        "status": "AION_HOST_POLICY_DRY_RUN_NOT_TOOL_EXECUTION",
+        "trace": trace.model_dump(mode="json"),
+        "trace_sha256": trace.digest(),
+        "tool_authority_granted": False,
     }
 
 

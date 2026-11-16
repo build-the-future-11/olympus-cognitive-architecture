@@ -1,0 +1,270 @@
+{
+  "checkpoint_sha256": "22c3b4c20466b8ef7641cba7aecd6d1147c8478d907a3d8de01ba6ad8dfbc5aa",
+  "dataset": 20267200,
+  "freeze_sha256": "5778e9f1413200830e9a6c4009189dbef2f1883678319a4fa6c55d3a70457351",
+  "metrics": {
+    "anchored_erm": {
+      "accuracy": 0.9365234375,
+      "brier": 0.09023798257112503,
+      "ece": 0.05715686900657602,
+      "intervention": {
+        "accuracy_delta": 0.005859375,
+        "examples": 1024,
+        "harms": 1,
+        "prediction_changes": 8,
+        "rescues": 7
+      },
+      "mean_alpha": 0.6592552661895752,
+      "nll": 0.20041221380233765,
+      "selective_accuracy_50": 0.998046875
+    },
+    "anchored_robust": {
+      "accuracy": 0.9384765625,
+      "brier": 0.08810684829950333,
+      "ece": 0.05866942330612801,
+      "intervention": {
+        "accuracy_delta": 0.0078125,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 8,
+        "rescues": 8
+      },
+      "mean_alpha": 0.7636780738830566,
+      "nll": 0.19653251767158508,
+      "selective_accuracy_50": 0.998046875
+    },
+    "anchored_robust_no_penalty": {
+      "accuracy": 0.9384765625,
+      "brier": 0.08917397260665894,
+      "ece": 0.05834584776312113,
+      "intervention": {
+        "accuracy_delta": 0.0078125,
+        "examples": 1024,
+        "harms": 2,
+        "prediction_changes": 12,
+        "rescues": 10
+      },
+      "mean_alpha": 0.8167892694473267,
+      "nll": 0.19772647321224213,
+      "selective_accuracy_50": 0.998046875
+    },
+    "constant_erm": {
+      "accuracy": 0.9326171875,
+      "brier": 0.09877372533082962,
+      "ece": 0.0640812253113836,
+      "intervention": {
+        "accuracy_delta": 0.001953125,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 2,
+        "rescues": 2
+      },
+      "mean_alpha": 0.11734186857938766,
+      "nll": 0.21707656979560852,
+      "selective_accuracy_50": 0.998046875
+    },
+    "constant_robust": {
+      "accuracy": 0.9326171875,
+      "brier": 0.09846271574497223,
+      "ece": 0.06252812768798321,
+      "intervention": {
+        "accuracy_delta": 0.001953125,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 2,
+        "rescues": 2
+      },
+      "mean_alpha": 0.12505005300045013,
+      "nll": 0.21640826761722565,
+      "selective_accuracy_50": 0.998046875
+    },
+    "direct_erm": {
+      "accuracy": 0.9345703125,
+      "brier": 0.08841770142316818,
+      "ece": 0.05747973363031633,
+      "intervention": {
+        "accuracy_delta": 0.00390625,
+        "examples": 1024,
+        "harms": 4,
+        "prediction_changes": 13,
+        "rescues": 8
+      },
+      "mean_alpha": 1.0,
+      "nll": 0.19535455107688904,
+      "selective_accuracy_50": 0.998046875
+    },
+    "direct_robust": {
+      "accuracy": 0.9384765625,
+      "brier": 0.08862562477588654,
+      "ece": 0.057826166856102645,
+      "intervention": {
+        "accuracy_delta": 0.0078125,
+        "examples": 1024,
+        "harms": 2,
+        "prediction_changes": 12,
+        "rescues": 10
+      },
+      "mean_alpha": 1.0,
+      "nll": 0.19608570635318756,
+      "selective_accuracy_50": 0.998046875
+    },
+    "expert_0": {
+      "accuracy": 0.509765625,
+      "brier": 0.5832670331001282,
+      "ece": 0.12801839574240148,
+      "intervention": {
+        "accuracy_delta": -0.4208984375,
+        "examples": 1024,
+        "harms": 438,
+        "prediction_changes": 463,
+        "rescues": 7
+      },
+      "nll": 1.1942179203033447,
+      "selective_accuracy_50": 0.751953125
+    },
+    "expert_1": {
+      "accuracy": 0.4951171875,
+      "brier": 0.5880133509635925,
+      "ece": 0.1398011150304228,
+      "intervention": {
+        "accuracy_delta": -0.435546875,
+        "examples": 1024,
+        "harms": 455,
+        "prediction_changes": 481,
+        "rescues": 9
+      },
+      "nll": 1.2329366207122803,
+      "selective_accuracy_50": 0.736328125
+    },
+    "expert_2": {
+      "accuracy": 0.4912109375,
+      "brier": 0.5806119441986084,
+      "ece": 0.1305104170460254,
+      "intervention": {
+        "accuracy_delta": -0.439453125,
+        "examples": 1024,
+        "harms": 456,
+        "prediction_changes": 482,
+        "rescues": 6
+      },
+      "nll": 1.1840863227844238,
+      "selective_accuracy_50": 0.759765625
+    },
+    "expert_3": {
+      "accuracy": 0.6923828125,
+      "brier": 0.37868252396583557,
+      "ece": 0.09747564699500799,
+      "intervention": {
+        "accuracy_delta": -0.23828125,
+        "examples": 1024,
+        "harms": 247,
+        "prediction_changes": 250,
+        "rescues": 3
+      },
+      "nll": 0.774709939956665,
+      "selective_accuracy_50": 0.974609375
+    },
+    "expert_4": {
+      "accuracy": 0.509765625,
+      "brier": 0.610087513923645,
+      "ece": 0.1572745889716316,
+      "intervention": {
+        "accuracy_delta": -0.4208984375,
+        "examples": 1024,
+        "harms": 453,
+        "prediction_changes": 509,
+        "rescues": 22
+      },
+      "nll": 1.2610383033752441,
+      "selective_accuracy_50": 0.751953125
+    },
+    "fixed": {
+      "accuracy": 0.830078125,
+      "brier": 0.37646105885505676,
+      "ece": 0.2742847146000713,
+      "intervention": {
+        "accuracy_delta": -0.1005859375,
+        "examples": 1024,
+        "harms": 107,
+        "prediction_changes": 117,
+        "rescues": 4
+      },
+      "nll": 0.7285022139549255,
+      "selective_accuracy_50": 0.91015625
+    },
+    "reference": {
+      "accuracy": 0.9306640625,
+      "brier": 0.10112550854682922,
+      "ece": 0.06686540198279545,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.22143928706645966,
+      "selective_accuracy_50": 0.998046875
+    },
+    "selected_control": {
+      "accuracy": 0.9345703125,
+      "brier": 0.08841770142316818,
+      "ece": 0.05747973363031633,
+      "intervention": {
+        "accuracy_delta": 0.00390625,
+        "examples": 1024,
+        "harms": 4,
+        "prediction_changes": 13,
+        "rescues": 8
+      },
+      "nll": 0.19535455107688904,
+      "selective_accuracy_50": 0.998046875
+    },
+    "semantic": {
+      "accuracy": 0.9306640625,
+      "brier": 0.10112550854682922,
+      "ece": 0.06686540198279545,
+      "intervention": {
+        "accuracy_delta": 0.0,
+        "examples": 1024,
+        "harms": 0,
+        "prediction_changes": 0,
+        "rescues": 0
+      },
+      "nll": 0.22143928706645966,
+      "selective_accuracy_50": 0.998046875
+    },
+    "uniform": {
+      "accuracy": 0.7919921875,
+      "brier": 0.40965989232063293,
+      "ece": 0.25167325139045715,
+      "intervention": {
+        "accuracy_delta": -0.138671875,
+        "examples": 1024,
+        "harms": 146,
+        "prediction_changes": 158,
+        "rescues": 4
+      },
+      "nll": 0.7828414440155029,
+      "selective_accuracy_50": 0.859375
+    }
+  },
+  "prediction_sha256": "48d8d594349156052072284961813aaa94a6fb1559af1fe3dceee644d383af5d",
+  "regime": "corrupted",
+  "tensor_hashes": {
+    "actions": "a95f140b4d7194da08a43de8273f9e777cbe5073387e914435ea191c4e93f80f",
+    "allowed_transitions": "3431383721510cf1c211de027cf958c183e16db5fabb6b230eb284c85e196aa9",
+    "component_quality": "4a6e3585a3ed9abc0cf57b08d5b29f92ad3f07b855ccf3a863e7119344543f99",
+    "corruption_status": "ff7a1d7c775160bb1da44ed5670fac29826e373171d221df62727837050de9a9",
+    "decision_targets": "f8f374710b97a98151797155ba75745cbc54e78b9a5e4f60565620aba2bf4401",
+    "domain_ids": "a1f60c5febd19f53d52eddeb4f0d1b24ae5fc2aec212e88081a7ba6a26500230",
+    "image": "4a6e44fcb396b443c3b8b668e3ebfd040a4908f5022c3847fe09393bf200477f",
+    "next_state_targets": "93c74f0f3ecf8f293478f2bea5e27f1e40c66f2530d14bfb0a47097183ab63b9",
+    "risk_score": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+    "source_ids": "c93e8ddd42dfa76b5f121571159e8eea6ab8c974367404349fe63912751e9cde",
+    "states": "1bb4c811f258217154e6d001f05129acbae561084039d3649480b7baf068574a",
+    "tokens": "8b10ad43933084247def59625c61513e605bc0a0a695563eed5beb521f7366ab",
+    "transition_targets": "c1159035a1a8bcadf6df10a3ceef739aed817f45edcf1511a93028d6b0dbab9d"
+  },
+  "training_seed": 20267602
+}

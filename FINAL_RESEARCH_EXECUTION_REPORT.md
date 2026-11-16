@@ -157,3 +157,28 @@ attachments, or the likely user document/workspace locations searched on
 2026-10-20.  The verified manuscript therefore still uses its recorded plain
 `article` layout.  Substituting an unrelated style file would not satisfy that
 request and would invalidate the existing release hashes.
+
+## 2026-10-21 scientific execution addendum
+
+After explicit authorization for full scientific execution, a new bounded
+multi-horizon synthetic protocol was frozen before protected generation. The
+first private Kaggle CPU execution, run 360757510, completed but had Internet
+enabled. Its negative output is preserved as
+`INVALID_CONFIGURATION_RETAINED`; it is not accepted scientific evidence.
+
+A fresh v2 successor retained the same hypothesis, models, thresholds, and
+analysis while using disjoint seeds and a fail-closed pre-Torch network probe.
+Private Kaggle run 360759516 completed on free CPU with Internet off in 51.1
+platform seconds. It produced all 18 fits and 72 expected protected rows.
+Independent verification matched the 23-entry manifest, all 18 checkpoint
+hashes, denominators, aggregate means, 10,000-sample paired bootstrap interval,
+and terminal decision.
+
+The primary hypothesis was not supported. In the shifted worst regime, the
+uncertainty-aware residual candidate had 1.635224 times the horizon-8 MSE of the
+best learned control, and the paired delta CI95 was [0.00243693, 0.00464508].
+The clean nonregression and interval-coverage gates passed, but the four gates
+were conjunctive. No retuning, promotion, target-scale capability claim, or
+change to a predecessor outcome follows from this negative result. The raw
+archive, verifier receipt, frozen source/protocol, and complete ledger are under
+`research/multi_horizon_dynamics_v2/`.

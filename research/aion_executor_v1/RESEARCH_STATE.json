@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "study_id": "aion-executor-v1",
+  "date": "2026-10-21",
+  "phase": "CORE_TORCH_FREE_TESTED_SURFACE_INTEGRATION_RESOURCE_BLOCKED",
+  "question": "Can host-side execution enforce Aion transition legality, affordability, registration, and STOP without granting model output authority over callbacks?",
+  "hypothesis": "A deterministic executor that derives every outcome from an immutable host plan and callback registry rejects all stop-triggering requests without invoking a callback and produces traces that can be verified without re-execution.",
+  "falsifier": "A forced, explicit, illegal, unaffordable, or unregistered request invokes a callback; an executed trace is accepted when its action, cost, budget, or plan binding differs from host inputs; or a replay requires invoking the original callback.",
+  "scope": "Artificial engineering fixtures and no-side-effect API/web dry runs only; no LLM capability claim, protected evaluation, real tool operation, scientific training, model promotion, paid compute, or external communication.",
+  "receipt": "research/AION_EXECUTOR_ENGINEERING_20261021.json",
+  "numerical_status": "NOT_APPLICABLE_TO_CORE_TESTS; SURFACE_TESTS_RESOURCE_BLOCKED_BEFORE_TORCH_IMPORT",
+  "verification": {
+    "focused_executor_pytest": "PASS_15",
+    "ruff_changed_core": "PASS",
+    "mypy_changed_core": "PASS",
+    "surface_integration": "NOT_RUN_RESOURCE_ADMISSION_REFUSED"
+  },
+  "history": [
+    {
+      "date": "2026-10-21",
+      "event": "Initial Torch-free executor and API, CLI and web fixtures implemented; nine focused tests passed while surface tests were resource-blocked."
+    },
+    {
+      "date": "2026-10-21",
+      "event": "Adversarial correction bound traces to immutable plans, full decisions and registered-action snapshots; rejected non-finite economics and inconsistent trace fields; removed all callback invocation from offline verification. Twelve focused tests, Ruff and strict MyPy passed. Surface integration remains resource-blocked."
+    },
+    {
+      "date": "2026-10-21",
+      "event": "Added an immutable multi-step execution ledger that binds the complete requested decision sequence, carries budget between traces, records ignored post-STOP requests, and rejects discontinuous or nonterminal STOP chains. Fifteen focused tests, Ruff and strict MyPy passed."
+    }
+  ],
+  "scientific_training_epochs": 0,
+  "protected_evaluations": 0,
+  "external_downloads": 0,
+  "paid_jobs": 0,
+  "promotion_authorized": false,
+  "scientific_outcomes_created": false
+}

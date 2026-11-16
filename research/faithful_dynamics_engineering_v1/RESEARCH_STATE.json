@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "id": "faithful-dynamics-engineering-v1",
+  "phase": "ARTIFICIAL_COMPONENT_CHECKS_PASSED_HOSTED_VALIDATION_PENDING",
+  "question": "Does detached variance training with disjoint optimizers and clipping preserve the mean-only optimizer trajectory?",
+  "falsifier": "Any mean gradient or mean AdamW state differs under identical initialization, batches and execution conditions.",
+  "scientific_training_epochs": 0,
+  "protected_evaluations": 0,
+  "external_downloads": 0,
+  "paid_jobs": 0,
+  "promotion_authorized": false,
+  "claim_boundary": "Artificial engineering invariance only; no new scientific efficacy, calibration, novelty or target-scale claim."
+}

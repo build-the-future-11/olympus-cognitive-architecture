@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "multi-horizon-dynamics-v1",
+  "date": "2026-10-21",
+  "phase": "INVALID_CONFIGURATION_RETAINED",
+  "scientific_outcomes_created": true,
+  "primary_supported": null,
+  "observed_primary_supported": false,
+  "invalid_reason": "Kaggle run 360757510 used Internet on, violating the frozen Internet-off requirement. Its negative metrics are retained but are not accepted scientific evidence.",
+  "question": "Can an uncertainty-aware recurrent residual model improve horizon-8 synthetic dynamics prediction under clean, corrupted-observation, and shifted-dynamics regimes?",
+  "falsifiers": [
+    "Worst-regime horizon-8 MSE is not at least 10 percent below the best learned control.",
+    "The paired dataset-cluster bootstrap interval is not entirely below zero.",
+    "Clean horizon-8 MSE regresses by more than 0.02 versus the residual control.",
+    "Empirical 90 percent coverage differs from nominal by more than 0.10.",
+    "Any source mismatch, seed overlap, non-finite value, missing denominator, resource refusal, timeout, or post-freeze change occurs."
+  ],
+  "budget": {
+    "platform": "Kaggle free CPU",
+    "paid_compute": false,
+    "internet": false,
+    "max_wall_seconds": 3600,
+    "learned_fits": 18,
+    "protected_learned_evaluations": 54,
+    "bootstrap_samples": 10000
+  },
+  "protected_boundary": "Protected data is generated only after source/protocol freeze and after all learned checkpoints are written.",
+  "source_identity": {
+    "runner_sha256": "54e8bd230c12344fda1b5bf6934c74be271d1d021b7a42ab11a1fa7555159107",
+    "protocol_sha256": "69d5a0a3e78c88a12df49dab30d771fb7a2b7d8b06bda6274a1889aeb7fa8521",
+    "notebook_sha256": "259c4d7620ab9710a894440d295681466ee46171908f40502466ff1366420564"
+  },
+  "artifacts": {
+    "protocol": "research/multi_horizon_dynamics_v1/PROTOCOL.md",
+    "notebook": "research/multi_horizon_dynamics_v1/multi_horizon_dynamics_v1.ipynb",
+    "runner": "scripts/run_multi_horizon_dynamics_v1.py",
+    "builder": "scripts/build_multi_horizon_dynamics_notebook.py",
+    "tests": "tests/test_multi_horizon_dynamics_v1.py",
+    "verifier": "scripts/verify_multi_horizon_dynamics_v1.py",
+    "verification": "research/multi_horizon_dynamics_v1/KAGGLE_RUN_360757510_VERIFICATION.json",
+    "downloaded_archive": "research/multi_horizon_dynamics_v1/kaggle-run-360757510-results.zip",
+    "extracted_evidence": "research/multi_horizon_dynamics_v1/kaggle_run_360757510"
+  },
+  "hosted_run": {
+    "platform": "Kaggle",
+    "run_id": 360757510,
+    "url": "https://www.kaggle.com/code/ryangomez010/multi-horizon-dynamics-v1",
+    "visibility": "PRIVATE",
+    "accelerator": "NONE_CPU",
+    "platform_status": "SUCCESS_59_4_SECONDS",
+    "runner_elapsed_seconds": 38.099981985,
+    "internet": true,
+    "archive_sha256": "867ec15b96f0cfb7ca6176a9aea746651b4adcc37c3212fd6c13744e6bf6b8e2",
+    "verification_receipt_sha256": "9d2e4484491da82e8c05b263946ad9e7d1c2e58a1448e160a3df503193bed557",
+    "observed_disposition": "COMPLETED_NEGATIVE_BUT_INVALID"
+  },
+  "predecessor_policy": "All completed studies and outcomes are unchanged; no prior protected evidence is reused.",
+  "claim_boundary": "Fresh bounded synthetic dynamics only; no family identity, target-scale capability, SOTA, deployment, safety, or promotion claim."
+}

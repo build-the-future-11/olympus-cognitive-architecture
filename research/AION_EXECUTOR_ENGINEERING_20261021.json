@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "study_id": "aion-executor-v1",
+  "date": "2026-10-21",
+  "kind": "bounded_llm_architecture_engineering",
+  "phase": "CORE_TORCH_FREE_TESTED_SURFACE_INTEGRATION_RESOURCE_BLOCKED",
+  "status": "CORE_TORCH_FREE_TESTED_SURFACE_INTEGRATION_RESOURCE_BLOCKED",
+  "implementation": "AionExecutionPlan binds immutable host policy, legal stages, finite costs, finite budget and zero-cost STOP. AionExecutionDecision is treated as an immutable untrusted selection. HostActionRegistry snapshots the only callbacks. The executor returns STOP without invoking a callback for forced, explicit, illegal, unaffordable or unregistered requests. Traces bind plan, full-decision and registered-action-set SHA-256 identities; offline verification rederives enforcement without invoking any callback. AionExecutionLedger binds a complete requested decision sequence, carries budget continuously, records consumed requests and makes STOP terminal across the chain.",
+  "surface_scope": {
+    "core": "implemented and focused-tested",
+    "cli": "implemented artificial fixture",
+    "api": "implemented simulated dry run with no real callback",
+    "web": "implemented simulated forbidden-transition fixture",
+    "real_tool_authority": false
+  },
+  "source_sha256": {
+    "olympus/evaluation/aion_executor.py": "0eb01c5a947885ceabcc96604ba29ec2a039d7115485cca43c5ccdfb23f6e352",
+    "olympus/api.py": "d9f480a382938f89114d13ad3f79906e8ba8b7ab4f491aec5b0ed26b87619cd3",
+    "olympus/cli.py": "5687ef5b20c77b11359c2086116afede363cdcafe0b6fd44e7c992ffe69ca4e8",
+    "tests/test_aion_executor.py": "cb0a44094ef85f93d131e9b7e9cfb343ccbe67068c54b89c21b833b43bf91fe6",
+    "tests/test_forge_and_api.py": "5fca21c702fefcf03832d13e1a0cbcee23d6291af278657fd3485d241141acc1",
+    "tests/test_cli.py": "0bf0c9b526804e81fc0f77d0427b7548048045f02f7e42a2c361778b22b946eb",
+    "apps/forge-web/src/api.ts": "6bb8820f4409aa9da77712a90fc3183ea317ccabdfc18773ae37ef87e869e310",
+    "apps/forge-web/src/api.test.ts": "f183cf9330797bebdec321649d894dd5fa4f62cc220de5b3771a76d1b77b0b73",
+    "apps/forge-web/src/App.tsx": "d5afde935b35d70105a7ba64ccb42de433347d631162995b83da63f4e61e2407",
+    "apps/forge-web/src/App.test.tsx": "eff1cf03bd6bd549b51e4e745cab8c66008e18d9bc81201b80eadc9b2420a12f",
+    "apps/forge-web/README.md": "3ced02574314f4b462ff91c2b1ca39a9eae405f99b35f70f4cdab751820be59a",
+    "docs/aion-executor.md": "4b66049e7f53822f0dc0efaea8bf6cba5c6c21c62d69d94741639679d60af1b1",
+    "docs/olympus-system.md": "3af165602437536043636590d56b8bbe4a2f8534fd4cc3b9492e091c98fbd08d"
+  },
+  "verification": {
+    "focused_executor_pytest": "PASS_15",
+    "ruff_changed_python": "PASS",
+    "mypy_changed_python": "PASS",
+    "git_diff_check": "PASS",
+    "receipt_source_hashes": "PASS_13",
+    "canonical_research_state_audit": "PASS",
+    "api_cli_web_tests": "NOT_RUN_RESOURCE_ADMISSION_REFUSED",
+    "web_typescript_tests": "NOT_RUN_RESOURCE_ADMISSION_REFUSED"
+  },
+  "resource_refusals": [
+    {
+      "stage": "initial_surface_integration",
+      "guard": "512 MiB free-memory floor and no rising pageouts before Torch import",
+      "free_bytes": [61816832],
+      "pageouts": [163762],
+      "note": "Surface test modules import Torch through the existing API/CLI graph, so they were not started."
+    },
+    {
+      "stage": "post_adversarial_hardening_surface_integration",
+      "guard": "512 MiB free-memory floor and no rising pageouts before Torch import",
+      "free_bytes": [61210624, 114589696],
+      "pageouts": [210822, 210822],
+      "note": "Free memory remained below the unchanged floor. No API, CLI, web, Torch, scientific or optimizer workload was launched."
+    }
+  ],
+  "revision_history": [
+    "Initial executor implementation passed nine focused Torch-free tests; surface integration was resource-blocked.",
+    "Adversarial correction added immutable state, finite-only economics, full decision and registry binding, immutable registry snapshots, stricter trace consistency and callback-free offline verification; twelve focused tests passed.",
+    "Multi-step correction added complete decision-sequence binding, continuous budget propagation, consumed/requested counts and terminal STOP verification; fifteen focused tests passed."
+  ],
+  "scientific_training_epochs": 0,
+  "protected_evaluations": 0,
+  "external_downloads": 0,
+  "paid_jobs": 0,
+  "promotion_authorized": false,
+  "scientific_outcomes_created": false
+}

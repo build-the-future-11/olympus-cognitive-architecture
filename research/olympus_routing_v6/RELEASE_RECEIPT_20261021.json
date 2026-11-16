@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-21",
+  "scientific_disposition": "NEGATIVE",
+  "scientific_commit": "18a70523d2039803b9aeb2b8dcad2c8e27026589",
+  "validated_code_commit": "d0cae48dbf8cb0c3c8e62ca4a9db38058ea3b48e",
+  "full_release_gate": "https://github.com/build-the-future-11/olympus-cognitive-architecture/actions/runs/39553045858",
+  "paper_pages": 10,
+  "visual_review": "All ten pages inspected; final changed pages rechecked; no clipping or overlap",
+  "independent_review": "Source, mathematics, provenance and independent arithmetic; no independent retraining",
+  "predecessor_files_unchanged": 38,
+  "style_sha256": "08cbf7d94d1460e4002c29768c3d576f8c716e3ac173d3ead34e526d865fb59d",
+  "submitted_to_arxiv": false,
+  "license": "Existing proprietary terms retained",
+  "artifact_sha256": {
+    "output/pdf/olympus-conservative-routing-v6.pdf": "3f9aeb7cbb8a4a0132a8003efd10219bebe2872f7f65c1bf859632b4c4dbdb5f",
+    "output/pdf/olympus-conservative-routing-v6-arxiv.tar.gz": "14e0ae756f080da733443ad6eddf78f90d4683f082ab1c9ef0379847dd983d18",
+    "research/olympus_routing_v6/campaign-evidence.zip": "77919e4f02d226ce804984f12c9e81359a27b33d441536a1610a91d305ebb6e5",
+    "research/olympus_routing_v6/EVIDENCE_RECEIPT.json": "7d87a2ddb7e71ab3c27968e93c60913d359f4a1604af215b6bb4c4b79925c20d",
+    "research/olympus_routing_v6/INDEPENDENT_REVIEW.json": "c43d2dcccb58229eb2d9901517bce2cccecda96e9a84df25a23f89d232dfea8c"
+  }
+}

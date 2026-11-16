@@ -1,0 +1,122 @@
+{"time": 1792562043.6310894, "phase": "admitted", "local": {"platform": "Linux", "extra_macos_guard": "NOT_APPLICABLE"}, "memory": {"total_bytes": 16766410752, "available_bytes": 15521341440, "swap_total_bytes": 3221221376, "swap_used_bytes": 0, "swap_fraction": 0.0, "process_peak_rss_bytes": 35299328}}
+{"time": 1792562046.1041381, "phase": "bank_step", "step": 0, "seed": 20267601}
+{"time": 1792562047.7017455, "phase": "bank_step", "step": 50, "seed": 20267601}
+{"time": 1792562049.3071527, "phase": "bank_step", "step": 100, "seed": 20267601}
+{"time": 1792562050.8789837, "phase": "bank_step", "step": 150, "seed": 20267601}
+{"time": 1792562052.445705, "phase": "bank_step", "step": 200, "seed": 20267601}
+{"time": 1792562054.0151348, "phase": "bank_step", "step": 0, "seed": 20267701}
+{"time": 1792562055.5781717, "phase": "bank_step", "step": 50, "seed": 20267701}
+{"time": 1792562057.140785, "phase": "bank_step", "step": 100, "seed": 20267701}
+{"time": 1792562058.6937525, "phase": "bank_step", "step": 150, "seed": 20267701}
+{"time": 1792562060.2694387, "phase": "bank_step", "step": 200, "seed": 20267701}
+{"time": 1792562068.4856856, "phase": "development_cell_complete", "dataset": 20267100, "seed": 20267601, "control": "direct_erm"}
+{"time": 1792562068.5722091, "phase": "bank_step", "step": 0, "seed": 20267602}
+{"time": 1792562070.1502545, "phase": "bank_step", "step": 50, "seed": 20267602}
+{"time": 1792562071.7096565, "phase": "bank_step", "step": 100, "seed": 20267602}
+{"time": 1792562073.2660835, "phase": "bank_step", "step": 150, "seed": 20267602}
+{"time": 1792562074.8322308, "phase": "bank_step", "step": 200, "seed": 20267602}
+{"time": 1792562076.398287, "phase": "bank_step", "step": 0, "seed": 20267702}
+{"time": 1792562077.9517858, "phase": "bank_step", "step": 50, "seed": 20267702}
+{"time": 1792562079.5062175, "phase": "bank_step", "step": 100, "seed": 20267702}
+{"time": 1792562081.055467, "phase": "bank_step", "step": 150, "seed": 20267702}
+{"time": 1792562082.6186361, "phase": "bank_step", "step": 200, "seed": 20267702}
+{"time": 1792562090.7457242, "phase": "development_cell_complete", "dataset": 20267100, "seed": 20267602, "control": "direct_robust"}
+{"time": 1792562090.8321822, "phase": "bank_step", "step": 0, "seed": 20267601}
+{"time": 1792562092.4475865, "phase": "bank_step", "step": 50, "seed": 20267601}
+{"time": 1792562094.0196884, "phase": "bank_step", "step": 100, "seed": 20267601}
+{"time": 1792562095.5864875, "phase": "bank_step", "step": 150, "seed": 20267601}
+{"time": 1792562097.14783, "phase": "bank_step", "step": 200, "seed": 20267601}
+{"time": 1792562098.7203817, "phase": "bank_step", "step": 0, "seed": 20267701}
+{"time": 1792562100.2852774, "phase": "bank_step", "step": 50, "seed": 20267701}
+{"time": 1792562101.852496, "phase": "bank_step", "step": 100, "seed": 20267701}
+{"time": 1792562103.4595187, "phase": "bank_step", "step": 150, "seed": 20267701}
+{"time": 1792562105.0262973, "phase": "bank_step", "step": 200, "seed": 20267701}
+{"time": 1792562113.1334376, "phase": "development_cell_complete", "dataset": 20267200, "seed": 20267601, "control": "direct_robust"}
+{"time": 1792562113.2175345, "phase": "bank_step", "step": 0, "seed": 20267602}
+{"time": 1792562114.7755759, "phase": "bank_step", "step": 50, "seed": 20267602}
+{"time": 1792562116.335523, "phase": "bank_step", "step": 100, "seed": 20267602}
+{"time": 1792562117.8988185, "phase": "bank_step", "step": 150, "seed": 20267602}
+{"time": 1792562119.4550688, "phase": "bank_step", "step": 200, "seed": 20267602}
+{"time": 1792562121.0337343, "phase": "bank_step", "step": 0, "seed": 20267702}
+{"time": 1792562122.603435, "phase": "bank_step", "step": 50, "seed": 20267702}
+{"time": 1792562124.1672413, "phase": "bank_step", "step": 100, "seed": 20267702}
+{"time": 1792562125.7273777, "phase": "bank_step", "step": 150, "seed": 20267702}
+{"time": 1792562127.3507717, "phase": "bank_step", "step": 200, "seed": 20267702}
+{"time": 1792562135.5260804, "phase": "development_cell_complete", "dataset": 20267200, "seed": 20267602, "control": "direct_erm"}
+{"time": 1792562135.6111403, "phase": "bank_step", "step": 0, "seed": 20267601}
+{"time": 1792562137.2331643, "phase": "bank_step", "step": 50, "seed": 20267601}
+{"time": 1792562138.853791, "phase": "bank_step", "step": 100, "seed": 20267601}
+{"time": 1792562140.476426, "phase": "bank_step", "step": 150, "seed": 20267601}
+{"time": 1792562142.0935867, "phase": "bank_step", "step": 200, "seed": 20267601}
+{"time": 1792562143.7052257, "phase": "bank_step", "step": 0, "seed": 20267701}
+{"time": 1792562145.3311298, "phase": "bank_step", "step": 50, "seed": 20267701}
+{"time": 1792562146.9772196, "phase": "bank_step", "step": 100, "seed": 20267701}
+{"time": 1792562148.6525571, "phase": "bank_step", "step": 150, "seed": 20267701}
+{"time": 1792562150.2771163, "phase": "bank_step", "step": 200, "seed": 20267701}
+{"time": 1792562158.4537797, "phase": "development_cell_complete", "dataset": 20267300, "seed": 20267601, "control": "direct_erm"}
+{"time": 1792562158.5399313, "phase": "bank_step", "step": 0, "seed": 20267602}
+{"time": 1792562160.1392963, "phase": "bank_step", "step": 50, "seed": 20267602}
+{"time": 1792562161.7242064, "phase": "bank_step", "step": 100, "seed": 20267602}
+{"time": 1792562163.373948, "phase": "bank_step", "step": 150, "seed": 20267602}
+{"time": 1792562165.0203097, "phase": "bank_step", "step": 200, "seed": 20267602}
+{"time": 1792562166.598656, "phase": "bank_step", "step": 0, "seed": 20267702}
+{"time": 1792562168.1592424, "phase": "bank_step", "step": 50, "seed": 20267702}
+{"time": 1792562169.727698, "phase": "bank_step", "step": 100, "seed": 20267702}
+{"time": 1792562171.2833138, "phase": "bank_step", "step": 150, "seed": 20267702}
+{"time": 1792562172.860058, "phase": "bank_step", "step": 200, "seed": 20267702}
+{"time": 1792562181.0355628, "phase": "development_cell_complete", "dataset": 20267300, "seed": 20267602, "control": "direct_erm"}
+{"time": 1792562181.1199698, "phase": "bank_step", "step": 0, "seed": 20267601}
+{"time": 1792562182.6847615, "phase": "bank_step", "step": 50, "seed": 20267601}
+{"time": 1792562184.2508981, "phase": "bank_step", "step": 100, "seed": 20267601}
+{"time": 1792562185.8091218, "phase": "bank_step", "step": 150, "seed": 20267601}
+{"time": 1792562187.370472, "phase": "bank_step", "step": 200, "seed": 20267601}
+{"time": 1792562188.9437299, "phase": "bank_step", "step": 0, "seed": 20267701}
+{"time": 1792562190.5091932, "phase": "bank_step", "step": 50, "seed": 20267701}
+{"time": 1792562192.0933785, "phase": "bank_step", "step": 100, "seed": 20267701}
+{"time": 1792562193.6776865, "phase": "bank_step", "step": 150, "seed": 20267701}
+{"time": 1792562195.2748902, "phase": "bank_step", "step": 200, "seed": 20267701}
+{"time": 1792562203.357499, "phase": "development_cell_complete", "dataset": 20267400, "seed": 20267601, "control": "direct_erm"}
+{"time": 1792562203.4422386, "phase": "bank_step", "step": 0, "seed": 20267602}
+{"time": 1792562205.003115, "phase": "bank_step", "step": 50, "seed": 20267602}
+{"time": 1792562206.5667312, "phase": "bank_step", "step": 100, "seed": 20267602}
+{"time": 1792562208.137611, "phase": "bank_step", "step": 150, "seed": 20267602}
+{"time": 1792562209.7677102, "phase": "bank_step", "step": 200, "seed": 20267602}
+{"time": 1792562211.3812103, "phase": "bank_step", "step": 0, "seed": 20267702}
+{"time": 1792562212.942475, "phase": "bank_step", "step": 50, "seed": 20267702}
+{"time": 1792562214.506137, "phase": "bank_step", "step": 100, "seed": 20267702}
+{"time": 1792562216.066374, "phase": "bank_step", "step": 150, "seed": 20267702}
+{"time": 1792562217.6246674, "phase": "bank_step", "step": 200, "seed": 20267702}
+{"time": 1792562225.7100246, "phase": "development_cell_complete", "dataset": 20267400, "seed": 20267602, "control": "direct_robust"}
+{"time": 1792562225.7933793, "phase": "bank_step", "step": 0, "seed": 20267601}
+{"time": 1792562227.3474066, "phase": "bank_step", "step": 50, "seed": 20267601}
+{"time": 1792562228.8961892, "phase": "bank_step", "step": 100, "seed": 20267601}
+{"time": 1792562230.4548502, "phase": "bank_step", "step": 150, "seed": 20267601}
+{"time": 1792562232.0156138, "phase": "bank_step", "step": 200, "seed": 20267601}
+{"time": 1792562233.5802596, "phase": "bank_step", "step": 0, "seed": 20267701}
+{"time": 1792562235.1610067, "phase": "bank_step", "step": 50, "seed": 20267701}
+{"time": 1792562236.7392538, "phase": "bank_step", "step": 100, "seed": 20267701}
+{"time": 1792562238.3041584, "phase": "bank_step", "step": 150, "seed": 20267701}
+{"time": 1792562239.9653647, "phase": "bank_step", "step": 200, "seed": 20267701}
+{"time": 1792562248.2163365, "phase": "development_cell_complete", "dataset": 20267500, "seed": 20267601, "control": "direct_robust"}
+{"time": 1792562248.3033504, "phase": "bank_step", "step": 0, "seed": 20267602}
+{"time": 1792562249.9433134, "phase": "bank_step", "step": 50, "seed": 20267602}
+{"time": 1792562251.5776896, "phase": "bank_step", "step": 100, "seed": 20267602}
+{"time": 1792562253.1758842, "phase": "bank_step", "step": 150, "seed": 20267602}
+{"time": 1792562254.7635345, "phase": "bank_step", "step": 200, "seed": 20267602}
+{"time": 1792562256.32855, "phase": "bank_step", "step": 0, "seed": 20267702}
+{"time": 1792562257.8734775, "phase": "bank_step", "step": 50, "seed": 20267702}
+{"time": 1792562259.4218137, "phase": "bank_step", "step": 100, "seed": 20267702}
+{"time": 1792562261.041346, "phase": "bank_step", "step": 150, "seed": 20267702}
+{"time": 1792562262.611937, "phase": "bank_step", "step": 200, "seed": 20267702}
+{"time": 1792562270.6830466, "phase": "development_cell_complete", "dataset": 20267500, "seed": 20267602, "control": "constant_robust"}
+{"time": 1792562271.8232946, "phase": "protected_cell_complete", "cell": "d20267100-s20267601"}
+{"time": 1792562272.8786156, "phase": "protected_cell_complete", "cell": "d20267100-s20267602"}
+{"time": 1792562273.94021, "phase": "protected_cell_complete", "cell": "d20267200-s20267601"}
+{"time": 1792562274.9917204, "phase": "protected_cell_complete", "cell": "d20267200-s20267602"}
+{"time": 1792562276.0464742, "phase": "protected_cell_complete", "cell": "d20267300-s20267601"}
+{"time": 1792562277.10776, "phase": "protected_cell_complete", "cell": "d20267300-s20267602"}
+{"time": 1792562278.164178, "phase": "protected_cell_complete", "cell": "d20267400-s20267601"}
+{"time": 1792562279.2185757, "phase": "protected_cell_complete", "cell": "d20267400-s20267602"}
+{"time": 1792562280.2715278, "phase": "protected_cell_complete", "cell": "d20267500-s20267601"}
+{"time": 1792562281.3241231, "phase": "protected_cell_complete", "cell": "d20267500-s20267602"}
+{"time": 1792562292.075226, "phase": "completed", "elapsed_seconds": 248.57103692099997}

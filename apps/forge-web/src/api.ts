@@ -57,6 +57,18 @@ export type ChatCompletion = {
   evidence: Record<string, unknown>;
 };
 
+export type AionDryRun = {
+  status: "AION_HOST_POLICY_DRY_RUN_NOT_TOOL_EXECUTION";
+  trace: {
+    status: "completed" | "handler_failed" | "stopped";
+    stop_reason: string;
+    action: string;
+    action_executed: boolean;
+  };
+  trace_sha256: string;
+  tool_authority_granted: false;
+};
+
 export type OllamaHealth = {
   status: string;
   provider: string;
@@ -199,6 +211,40 @@ export async function runFoundryVerification(): Promise<FoundryVerification> {
     throw new Error("The API returned an invalid Foundry verification receipt");
   }
   return payload as FoundryVerification;
+}
+
+export async function runAionDryRun(): Promise<AionDryRun> {
+  const payload: unknown = await (
+    await apiFetch("/api/aion/dry-run", {
+      method: "POST",
+      body: JSON.stringify({
+        plan: {
+          policy_id: "forge-web-aion-fixture-v1",
+          transitions: ["inspect", "publish", "STOP"],
+          legal_transitions: [true, false, true],
+          transition_costs: [1, 3, 0],
+          remaining_budget: 2,
+          stop_stage: 2
+        },
+        decision: { selected_stage: 1, forced_stop: false },
+        registered_actions: ["inspect", "publish"]
+      })
+    })
+  ).json();
+  if (
+    !isObject(payload) ||
+    payload.status !== "AION_HOST_POLICY_DRY_RUN_NOT_TOOL_EXECUTION" ||
+    !isObject(payload.trace) ||
+    !["completed", "handler_failed", "stopped"].includes(String(payload.trace.status)) ||
+    typeof payload.trace.stop_reason !== "string" ||
+    typeof payload.trace.action !== "string" ||
+    typeof payload.trace.action_executed !== "boolean" ||
+    typeof payload.trace_sha256 !== "string" ||
+    payload.tool_authority_granted !== false
+  ) {
+    throw new Error("The API returned an invalid Aion policy trace");
+  }
+  return payload as AionDryRun;
 }
 
 export async function generateWithFoundry(

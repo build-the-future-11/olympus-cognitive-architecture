@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "id": "multi-horizon-dynamics-v2",
+  "date": "2026-10-21",
+  "phase": "COMPLETED_NEGATIVE_VERIFIED",
+  "scientific_outcomes_created": true,
+  "primary_supported": false,
+  "question": "Can an uncertainty-aware recurrent residual model improve horizon-8 synthetic dynamics prediction under clean, corrupted-observation, and shifted-dynamics regimes?",
+  "falsifiers": [
+    "Worst-regime horizon-8 MSE is not at least 10 percent below the best learned control.",
+    "The paired dataset-cluster bootstrap interval is not entirely below zero.",
+    "Clean horizon-8 MSE regresses by more than 0.02 versus the residual control.",
+    "Empirical 90 percent coverage differs from nominal by more than 0.10.",
+    "Any source mismatch, seed overlap, non-finite value, missing denominator, resource refusal, timeout, enabled outbound Internet, or post-freeze change occurs."
+  ],
+  "budget": {
+    "platform": "Kaggle free CPU",
+    "paid_compute": false,
+    "internet": false,
+    "max_wall_seconds": 3600,
+    "learned_fits": 18,
+    "protected_learned_evaluations": 54,
+    "bootstrap_samples": 10000
+  },
+  "protected_boundary": "Fresh v2 protected seeds are generated only after source/protocol/network freeze and after all learned checkpoints are written.",
+  "source_identity": {
+    "runner_sha256": "45a0375eb5297e8d3071487b61ee44df194f765e4254e9cd1cacc2be6844b636",
+    "protocol_sha256": "6b8723fd4d3b9219cb7c951be0cb8a87024efd64e98f8df3c2c3275b2c560adc",
+    "notebook_sha256": "6f112013533e16b17ca5203fe4ec6cdd7046b497ab00ed5ce856f88b58c81d9f"
+  },
+  "artifacts": {
+    "protocol": "research/multi_horizon_dynamics_v2/PROTOCOL.md",
+    "notebook": "research/multi_horizon_dynamics_v2/multi_horizon_dynamics_v2.ipynb",
+    "runner": "scripts/run_multi_horizon_dynamics_v2.py",
+    "builder": "scripts/build_multi_horizon_dynamics_v2_notebook.py",
+    "tests": "tests/test_multi_horizon_dynamics_v1.py",
+    "verifier": "scripts/verify_multi_horizon_dynamics_v1.py",
+    "verification": "research/multi_horizon_dynamics_v2/KAGGLE_RUN_360759516_VERIFICATION.json",
+    "downloaded_archive": "research/multi_horizon_dynamics_v2/kaggle-run-360759516-results.zip",
+    "extracted_evidence": "research/multi_horizon_dynamics_v2/kaggle_run_360759516"
+  },
+  "hosted_run": {
+    "platform": "Kaggle",
+    "run_id": 360759516,
+    "url": "https://www.kaggle.com/code/ryangomez010/multi-horizon-dynamics-v2?scriptVersionId=360759516",
+    "visibility": "PRIVATE",
+    "accelerator": "NONE_CPU",
+    "internet": false,
+    "internet_preflight": {
+      "internet_disabled": true,
+      "probe": "1.1.1.1:443",
+      "refusal": "TimeoutError"
+    },
+    "platform_status": "SUCCESS_51_1_SECONDS",
+    "runner_elapsed_seconds": 33.45293700399998,
+    "archive_sha256": "e41fd8c6180f911f710254205761071b15d7e0a581ab9471fa452195a788ff56",
+    "verification_receipt_sha256": "d9476320e7807dfb55337cd7996372e35cc9cd1213145d2a76797c990c4993e6"
+  },
+  "result": {
+    "status": "COMPLETED_NEGATIVE",
+    "worst_regime": "shifted",
+    "best_learned_control": "residual",
+    "worst_regime_horizon8_ratio": 1.635224033477085,
+    "paired_delta_ci95": [
+      0.002436927519738674,
+      0.004645083099603653
+    ],
+    "clean_horizon8_regression": 0.002716761907019342,
+    "coverage90": 0.8582763671875,
+    "fits": 18,
+    "protected_rows": 72,
+    "verified": true,
+    "promotion_authorized": false
+  },
+  "predecessor_policy": "Run 360757510 is preserved as invalid because Internet was enabled. V2 uses fresh dataset, optimizer, and bootstrap seeds; no v1 outcome changed the unchanged hypothesis, models, thresholds, or analysis.",
+  "claim_boundary": "Fresh bounded synthetic dynamics only; no family identity, target-scale capability, SOTA, deployment, safety, or promotion claim."
+}

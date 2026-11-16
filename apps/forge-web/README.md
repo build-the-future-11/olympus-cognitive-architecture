@@ -30,6 +30,11 @@ verification artifact and is explicitly labeled as neither Hermes nor a
 reasoning model. Ollama discovery is displayed separately from successful model
 generation.
 
+The **Aion host-policy boundary** fixture sends a deliberately forbidden
+transition to `POST /api/aion/dry-run`. The response is a replayable STOP trace;
+the API does not expose any real tool callback, filesystem, shell, network, or
+publication action.
+
 ## Production build
 
 ```bash

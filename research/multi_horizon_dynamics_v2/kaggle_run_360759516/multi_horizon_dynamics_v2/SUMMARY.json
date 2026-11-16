@@ -1,0 +1,85 @@
+{
+  "best_learned_control": "residual",
+  "claim_boundary": "fresh bounded synthetic dynamics only",
+  "criteria": {
+    "clean_h8_regression": 0.002716761907019342,
+    "coverage90": 0.8582763671875,
+    "paired_delta_ci95": [
+      0.002436927519738674,
+      0.004645083099603653
+    ],
+    "worst_regime_ratio": 1.635224033477085
+  },
+  "elapsed_seconds": 33.45293700399998,
+  "environment": {
+    "platform": "Linux-6.18.48+-x86_64-with-glibc2.39",
+    "python": "3.13.15 (main, Aug  6 2026, 11:06:22) [GCC 13.3.0]",
+    "torch": "2.11.0+cpu"
+  },
+  "fits": 18,
+  "means": {
+    "direct": {
+      "clean": {
+        "horizon8_mse": 0.0007896113578074923,
+        "mean_mse": 0.0007697581895627081
+      },
+      "corrupted": {
+        "horizon8_mse": 0.0011731328947159152,
+        "mean_mse": 0.003395551349967718
+      },
+      "shifted": {
+        "horizon8_mse": 0.005656007211655378,
+        "mean_mse": 0.0060539514136811095
+      }
+    },
+    "persistence": {
+      "clean": {
+        "horizon8_mse": 0.14783731599648794,
+        "mean_mse": 0.09410579999287923
+      },
+      "corrupted": {
+        "horizon8_mse": 0.13931275407473245,
+        "mean_mse": 0.08931676546732585
+      },
+      "shifted": {
+        "horizon8_mse": 0.07913914074500401,
+        "mean_mse": 0.06247364232937495
+      }
+    },
+    "residual": {
+      "clean": {
+        "horizon8_mse": 0.0010039832268375903,
+        "mean_mse": 0.0008124994734923044
+      },
+      "corrupted": {
+        "horizon8_mse": 0.004810854482154052,
+        "mean_mse": 0.022990982979536057
+      },
+      "shifted": {
+        "horizon8_mse": 0.005219291662797332,
+        "mean_mse": 0.003916410186017553
+      }
+    },
+    "uncertainty_residual": {
+      "clean": {
+        "horizon8_mse": 0.003720745133856932,
+        "mean_mse": 0.002401320127925525
+      },
+      "corrupted": {
+        "horizon8_mse": 0.008278711698949337,
+        "mean_mse": 0.024226697782675426
+      },
+      "shifted": {
+        "horizon8_mse": 0.008534711164732775,
+        "mean_mse": 0.005501082167029381
+      }
+    }
+  },
+  "primary_supported": false,
+  "promotion_authorized": false,
+  "protected_rows": 72,
+  "protocol_sha256": "6b8723fd4d3b9219cb7c951be0cb8a87024efd64e98f8df3c2c3275b2c560adc",
+  "source_sha256": "45a0375eb5297e8d3071487b61ee44df194f765e4254e9cd1cacc2be6844b636",
+  "status": "COMPLETED_NEGATIVE",
+  "worst_regime": "shifted"
+}

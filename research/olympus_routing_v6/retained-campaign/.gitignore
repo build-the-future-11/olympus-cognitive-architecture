@@ -1,0 +1,2 @@
+# Exact raw tensors are retained in ../campaign-evidence.zip.
+*.pt

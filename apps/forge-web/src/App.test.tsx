@@ -73,6 +73,22 @@ function responseFor(url: string, method = "GET"): Response {
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
   }
+  if (url === "/api/aion/dry-run" && method === "POST") {
+    return new Response(
+      JSON.stringify({
+        status: "AION_HOST_POLICY_DRY_RUN_NOT_TOOL_EXECUTION",
+        trace: {
+          status: "stopped",
+          stop_reason: "selected_transition_illegal",
+          action: "STOP",
+          action_executed: false
+        },
+        trace_sha256: "b".repeat(64),
+        tool_authority_granted: false
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  }
   if (url === "/api/v1/chat/completions" && method === "POST") {
     return new Response(
       JSON.stringify({
@@ -114,6 +130,10 @@ describe("App", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Generate through stable API" }));
     expect(await screen.findByText("verified output")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Run Aion policy fixture" }));
+    expect(await screen.findByText(/selected transition illegal/i)).toBeInTheDocument();
+    expect(screen.getByText(/tool authority granted: false/i)).toBeInTheDocument();
   });
 
   it("shows a retryable demo error without inventing result state", async () => {

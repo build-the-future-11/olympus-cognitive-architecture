@@ -1,0 +1,6 @@
+{
+  "checkpoint_prediction_replay": "EXACT",
+  "independent_retraining": false,
+  "raw_reports_recomputed": 40,
+  "status": "PASS"
+}

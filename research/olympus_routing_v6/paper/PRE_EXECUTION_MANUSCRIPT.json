@@ -1,0 +1,13 @@
+{
+  "stage": "PRE_SCIENTIFIC_EXECUTION",
+  "date": "2026-10-21",
+  "protocol": "olympus-routing-v6.0.2",
+  "files": {
+    "main.tex": "8220d55e48da133d53fe3db83fcf74d3dc112ea2afc77575a55c2a7739a86ef9",
+    "methods.tex": "0e4a68b74cec0a36d3c667578cb8a8b33b61132f48fafe8c9f3bcb680e6dcc9b",
+    "abstract.tex": "553e08bf06dd1038b00d062a2569d3afdd96afd7628e77d4dc93f26570053caa",
+    "results.tex": "fe59b85fd852f3c6e4c2926b75a58627bf02e012f008a3628304fc7aa4c249ff",
+    "references.bib": "b6e8d1255ca489a474cf3ad89ab92df1765116058fcc3f9726f35265925090b6",
+    "arxiv.sty": "08cbf7d94d1460e4002c29768c3d576f8c716e3ac173d3ead34e526d865fb59d"
+  }
+}
