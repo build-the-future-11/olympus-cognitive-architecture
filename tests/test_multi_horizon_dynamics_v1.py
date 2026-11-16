@@ -27,21 +27,31 @@ SOURCE_V3 = ROOT / "scripts/run_multi_horizon_dynamics_v3_heavy.py"
 PROTOCOL_PATH_V3 = ROOT / "research/multi_horizon_dynamics_v3_heavy/PROTOCOL.md"
 
 
+def _integers(value: object) -> tuple[int, ...]:
+    assert isinstance(value, (list, dict))
+    values = value.values() if isinstance(value, dict) else value
+    integers: list[int] = []
+    for item in values:
+        assert isinstance(item, int) and not isinstance(item, bool)
+        integers.append(item)
+    return tuple(integers)
+
+
 def test_frozen_protocol_has_disjoint_data_seeds_and_finite_budget() -> None:
     training = {
         seed + offset
-        for seed in PROTOCOL["dataset_seeds"]
+        for seed in _integers(PROTOCOL["dataset_seeds"])
         for offset in (1, 2)
     }
     protected = {
         seed + offset
-        for seed in PROTOCOL["dataset_seeds"]
-        for offset in PROTOCOL["protected_offsets"].values()
+        for seed in _integers(PROTOCOL["dataset_seeds"])
+        for offset in _integers(PROTOCOL["protected_offsets"])
     }
 
     assert training.isdisjoint(protected)
-    assert len(PROTOCOL["dataset_seeds"]) == 3
-    assert len(PROTOCOL["optimizer_seeds"]) == 2
+    assert len(_integers(PROTOCOL["dataset_seeds"])) == 3
+    assert len(_integers(PROTOCOL["optimizer_seeds"])) == 2
     assert PROTOCOL["max_wall_seconds"] == 3_600
     assert PROTOCOL["paid_compute"] is False
     assert PROTOCOL["promotion_authorized"] is False
@@ -68,8 +78,12 @@ def test_prospective_artifacts_do_not_claim_family_identity() -> None:
 def test_v2_uses_fresh_seeds_and_fails_closed_when_internet_is_enabled(
     tmp_path: Path,
 ) -> None:
-    assert set(PROTOCOL["dataset_seeds"]).isdisjoint(PROTOCOL_V2["dataset_seeds"])
-    assert set(PROTOCOL["optimizer_seeds"]).isdisjoint(PROTOCOL_V2["optimizer_seeds"])
+    assert set(_integers(PROTOCOL["dataset_seeds"])).isdisjoint(
+        _integers(PROTOCOL_V2["dataset_seeds"])
+    )
+    assert set(_integers(PROTOCOL["optimizer_seeds"])).isdisjoint(
+        _integers(PROTOCOL_V2["optimizer_seeds"])
+    )
     with patch(
         "scripts.run_multi_horizon_dynamics_v2.socket.create_connection",
         side_effect=OSError("blocked"),
@@ -97,26 +111,26 @@ def test_v3_heavy_freeze_is_disjoint_scaled_and_exactly_embedded(
     tmp_path: Path,
 ) -> None:
     prior_dataset_seeds = {
-        *PROTOCOL["dataset_seeds"],
-        *PROTOCOL_V2["dataset_seeds"],
+        *_integers(PROTOCOL["dataset_seeds"]),
+        *_integers(PROTOCOL_V2["dataset_seeds"]),
     }
     prior_optimizer_seeds = {
-        *PROTOCOL["optimizer_seeds"],
-        *PROTOCOL_V2["optimizer_seeds"],
+        *_integers(PROTOCOL["optimizer_seeds"]),
+        *_integers(PROTOCOL_V2["optimizer_seeds"]),
     }
     training = {
         seed + offset
-        for seed in PROTOCOL_V3["dataset_seeds"]
+        for seed in _integers(PROTOCOL_V3["dataset_seeds"])
         for offset in (1, 2)
     }
     protected = {
         seed + offset
-        for seed in PROTOCOL_V3["dataset_seeds"]
-        for offset in PROTOCOL_V3["protected_offsets"].values()
+        for seed in _integers(PROTOCOL_V3["dataset_seeds"])
+        for offset in _integers(PROTOCOL_V3["protected_offsets"])
     }
 
-    assert set(PROTOCOL_V3["dataset_seeds"]).isdisjoint(prior_dataset_seeds)
-    assert set(PROTOCOL_V3["optimizer_seeds"]).isdisjoint(prior_optimizer_seeds)
+    assert set(_integers(PROTOCOL_V3["dataset_seeds"])).isdisjoint(prior_dataset_seeds)
+    assert set(_integers(PROTOCOL_V3["optimizer_seeds"])).isdisjoint(prior_optimizer_seeds)
     assert training.isdisjoint(protected)
     assert PROTOCOL_V3["train_examples"] == 4_096
     assert PROTOCOL_V3["development_examples"] == 1_024

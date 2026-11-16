@@ -2,18 +2,18 @@
   "schema_version": 1,
   "project": "Olympus Cognitive Architecture",
   "repository": "build-the-future-11/olympus-cognitive-architecture",
-  "updated_utc": "2026-10-21",
+  "updated_utc": "2026-10-22",
   "software": {
     "version": "0.2.0",
     "maturity": "ALPHA",
     "base_commit": "348c2da03cee9d75b2d594ae56bd3464120421ff",
-    "working_tree": "MULTI_HORIZON_DYNAMICS_V3_HEAVY_RUNNING_PRIVATE_KAGGLE_CPU",
+    "working_tree": "REVIEW_BRANCH_REPAIR_PENDING_EXACT_HOSTED_VALIDATION",
     "release_ready": false,
     "production_ready": false,
     "model_promoted": false
   },
-  "current_phase": "MULTI_HORIZON_DYNAMICS_V3_HEAVY_RUNNING_PRIVATE_KAGGLE_CPU",
-  "active_scientific_disposition": "V3_HEAVY_CONFIRMATORY_RUNNING_NOT_EVALUATED",
+  "current_phase": "V3_OUTCOME_RECOVERY_BLOCKED_ENGINEERING_REPAIR_VALIDATION",
+  "active_scientific_disposition": "V3_OUTCOME_UNKNOWN_PENDING_AUTHENTICATED_RETRIEVAL",
   "scientific_disposition": "NEGATIVE_WITHIN_FROZEN_V6_SCOPE",
   "research_question": "Can example-dependent conservative correction beat strong development-selected routing controls under a reserved synthetic shift?",
   "scientific_objective": "Bounded synthetic conservative stacking study; no target-scale or full-family capability claim",
@@ -116,7 +116,32 @@
     "research/multi_horizon_dynamics_v1/multi_horizon_dynamics_v1.ipynb",
     "research/multi_horizon_dynamics_v1/KAGGLE_RUN_360757510_VERIFICATION.json",
     "research/multi_horizon_dynamics_v1/kaggle-run-360757510-results.zip",
-    "research/multi_horizon_dynamics_v1/kaggle_run_360757510",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/FIT_REPORTS.json",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/MANIFEST.json",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/PROTECTED_ADMISSION.json",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/PROTECTED_ROWS.json",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/SCIENTIFIC_FREEZE.json",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/SUMMARY.json",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267100-20267601-direct.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267100-20267601-residual.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267100-20267601-uncertainty_residual.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267100-20267602-direct.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267100-20267602-residual.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267100-20267602-uncertainty_residual.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267200-20267601-direct.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267200-20267601-residual.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267200-20267601-uncertainty_residual.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267200-20267602-direct.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267200-20267602-residual.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267200-20267602-uncertainty_residual.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267300-20267601-direct.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267300-20267601-residual.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267300-20267601-uncertainty_residual.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267300-20267602-direct.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267300-20267602-residual.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_dynamics_v1/checkpoints/20267300-20267602-uncertainty_residual.pt",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_frozen_source/research/multi_horizon_dynamics_v1/PROTOCOL.md",
+    "research/multi_horizon_dynamics_v1/kaggle_run_360757510/multi_horizon_frozen_source/scripts/run_multi_horizon_dynamics_v1.py",
     "scripts/run_multi_horizon_dynamics_v1.py",
     "scripts/build_multi_horizon_dynamics_notebook.py",
     "scripts/verify_multi_horizon_dynamics_v1.py",
@@ -125,7 +150,32 @@
     "research/multi_horizon_dynamics_v2/multi_horizon_dynamics_v2.ipynb",
     "research/multi_horizon_dynamics_v2/KAGGLE_RUN_360759516_VERIFICATION.json",
     "research/multi_horizon_dynamics_v2/kaggle-run-360759516-results.zip",
-    "research/multi_horizon_dynamics_v2/kaggle_run_360759516",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/FIT_REPORTS.json",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/MANIFEST.json",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/PROTECTED_ADMISSION.json",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/PROTECTED_ROWS.json",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/SCIENTIFIC_FREEZE.json",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/SUMMARY.json",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268100-20268601-direct.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268100-20268601-residual.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268100-20268601-uncertainty_residual.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268100-20268602-direct.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268100-20268602-residual.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268100-20268602-uncertainty_residual.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268200-20268601-direct.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268200-20268601-residual.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268200-20268601-uncertainty_residual.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268200-20268602-direct.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268200-20268602-residual.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268200-20268602-uncertainty_residual.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268300-20268601-direct.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268300-20268601-residual.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268300-20268601-uncertainty_residual.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268300-20268602-direct.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268300-20268602-residual.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_dynamics_v2/checkpoints/20268300-20268602-uncertainty_residual.pt",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_frozen_source/research/multi_horizon_dynamics_v2/PROTOCOL.md",
+    "research/multi_horizon_dynamics_v2/kaggle_run_360759516/multi_horizon_frozen_source/scripts/run_multi_horizon_dynamics_v2.py",
     "scripts/run_multi_horizon_dynamics_v2.py",
     "scripts/build_multi_horizon_dynamics_v2_notebook.py",
     "research/multi_horizon_dynamics_v3_heavy/PROTOCOL.md",
@@ -133,7 +183,18 @@
     "research/multi_horizon_dynamics_v3_heavy/multi_horizon_dynamics_v3_heavy.ipynb",
     "scripts/run_multi_horizon_dynamics_v3_heavy.py",
     "scripts/build_multi_horizon_dynamics_v3_heavy_notebook.py",
-    "tests/test_multi_horizon_dynamics_v1.py"
+    "tests/test_multi_horizon_dynamics_v1.py",
+    "research/verification/integration_20261022/PREVIOUS_ROOT_STATE.json",
+    "research/verification/integration_20261022/PREVIOUS_V3_STATE.json",
+    "research/verification/integration_20261022/AION_SOURCE_BINDING.json",
+    "research/verification/integration_20261022/INTEGRATION_RECEIPT.json",
+    "research/faithful_dynamics_engineering_v1/RESEARCH_STATE.json",
+    "research/faithful_dynamics_engineering_v1/RECEIPT.json",
+    "olympus/models/faithful_dynamics.py",
+    "tests/test_faithful_dynamics.py",
+    "docs/faithful-dynamics.md",
+    "research/verification/ci_20261022/README.md",
+    "research/verification/ci_20261022/frozen-artifacts.sha256"
   ],
   "claims": [
     {
@@ -600,6 +661,14 @@
       "event": "Submitted the exact frozen multi-horizon-dynamics-v3-heavy self-contained notebook to a private free Kaggle CPU session with no accelerator and Internet disabled. Kaggle Version History visibly reported heavy frozen v3 confirmatory Version #2 as Running after six minutes, and its Edit URL exposed hosted run ID 360794856. The imported render-only Version #1 is separately retained as run 360793869. No protected outcome or completion claim exists yet.",
       "record": "research/multi_horizon_dynamics_v3_heavy/RESEARCH_STATE.json",
       "scientific_outcomes_created": false
+    },
+    {
+      "date": "2026-10-22",
+      "event": "Reviewed software repair integrated on isolated branch; exact-head CI pending",
+      "record": "research/verification/integration_20261022/INTEGRATION_RECEIPT.json",
+      "source_base_commit": "a50cad27c66a788c83fe93db63b522559c9e15dd",
+      "scientific_outcomes_created": false,
+      "limits": "No production deployment, fresh scientific training, protected evaluation, favorable rerun, paper submission or model promotion. Existing v3 run outcome is unknown."
     }
   ],
   "verification": {
@@ -627,7 +696,12 @@
     "hosted_release_url": "https://github.com/build-the-future-11/olympus-cognitive-architecture/actions/runs/38026180950",
     "hosted_python": "3.14.8",
     "hosted_tests_passed": 194,
-    "hosted_branch_coverage_percent": 87.4
+    "hosted_branch_coverage_percent": 87.4,
+    "integration_20261022": {
+      "receipt": "research/verification/integration_20261022/INTEGRATION_RECEIPT.json",
+      "scope": "Software and metadata repair; hosted acceptance pending",
+      "fresh_local_component_passes": 37
+    }
   },
   "active_engineering_revision": {
     "phase": "LOCALLY_AND_HOSTED_VERIFIED_PENDING_INTEGRATION",
@@ -781,7 +855,7 @@
     },
     {
       "id": "multi-horizon-dynamics-v3-heavy",
-      "phase": "RUNNING_PRIVATE_KAGGLE_CPU",
+      "phase": "OUTCOME_RECOVERY_BLOCKED_AUTHENTICATION",
       "primary_supported": null,
       "path": "research/multi_horizon_dynamics_v3_heavy/RESEARCH_STATE.json"
     }
@@ -815,7 +889,14 @@
       "id": "aion-executor-v1",
       "phase": "CORE_TORCH_FREE_TESTED_SURFACE_INTEGRATION_RESOURCE_BLOCKED",
       "path": "research/aion_executor_v1/RESEARCH_STATE.json",
-      "receipt": "research/AION_EXECUTOR_ENGINEERING_20261021.json",
+      "receipt": "research/verification/integration_20261022/AION_SOURCE_BINDING.json",
+      "source_verification": "current_files"
+    },
+    {
+      "id": "faithful-dynamics-engineering-v1",
+      "phase": "ARTIFICIAL_COMPONENT_CHECKS_PASSED_HOSTED_VALIDATION_PENDING",
+      "path": "research/faithful_dynamics_engineering_v1/RESEARCH_STATE.json",
+      "receipt": "research/faithful_dynamics_engineering_v1/RECEIPT.json",
       "source_verification": "current_files"
     }
   ],
@@ -857,9 +938,9 @@
     "state": "research/multi_horizon_dynamics_v3_heavy/RESEARCH_STATE.json",
     "protocol": "research/multi_horizon_dynamics_v3_heavy/PROTOCOL.md",
     "notebook": "research/multi_horizon_dynamics_v3_heavy/multi_horizon_dynamics_v3_heavy.ipynb",
-    "status": "RUNNING_PRIVATE_KAGGLE_CPU",
+    "status": "OUTCOME_RECOVERY_BLOCKED_AUTHENTICATION",
     "primary_supported": null,
-    "scientific_outcomes_created": false,
+    "scientific_outcomes_created": null,
     "hosted_submission": {
       "notebook_url": "https://www.kaggle.com/code/ryangomez010/multi-horizon-dynamics-v3-heavy",
       "import_run_id": 360793869,
@@ -876,7 +957,9 @@
       "status": "COMPLETED_NEGATIVE_VERIFIED",
       "hosted_run_id": 360759516,
       "verification": "research/multi_horizon_dynamics_v2/KAGGLE_RUN_360759516_VERIFICATION.json"
-    }
+    },
+    "current_execution_status": "UNKNOWN",
+    "outcome_archive_retrieved": false
   },
   "routing_v6_publication": {
     "phase": "COMPLETE_RESEARCH_ARTIFACT_NOT_SUBMITTED",
