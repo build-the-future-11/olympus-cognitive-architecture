@@ -1,0 +1,42 @@
+{
+  "variant": "int8",
+  "artifact_relative_path": "int8/model-int8.pt",
+  "artifact_sha256": "b349581edafef235a517f66102a4f46035b42bd81fed48e492a6a172c032025a",
+  "artifact_bytes": 49493,
+  "parameter_bytes": 138112,
+  "buffer_bytes": 0,
+  "parameter_dtypes": [
+    "torch.float32"
+  ],
+  "rss_before_load_bytes": 266702848,
+  "rss_after_load_bytes": 272809984,
+  "rss_load_delta_bytes": 6107136,
+  "rss_after_forward_bytes": 282824704,
+  "process_peak_before_load_bytes": 266436608,
+  "process_peak_after_forward_bytes": 282566656,
+  "load_ms": 6.523448,
+  "forward_samples_ms": [
+    0.41925,
+    0.289096,
+    0.20345,
+    0.186957,
+    0.264784,
+    0.189338,
+    0.172908
+  ],
+  "forward_median_ms": 0.20345,
+  "input_tokens": 64,
+  "input_token_ids_sha256": "0e58501d48eab7cf91bd3ca6bdae8d80eec18a11def399acaa4291cc3ffdb9e2",
+  "output_shape": [
+    1,
+    64,
+    260
+  ],
+  "output_finite": true,
+  "torch_version": "2.11.0+cpu",
+  "torch_threads": 1,
+  "torch_interop_threads": 1,
+  "python": "3.14.7",
+  "pid": 23,
+  "trial": 0
+}

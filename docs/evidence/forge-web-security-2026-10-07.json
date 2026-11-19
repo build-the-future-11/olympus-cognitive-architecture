@@ -1,0 +1,61 @@
+{
+  "audit": {
+    "command": [
+      "npm",
+      "audit",
+      "--audit-level=moderate",
+      "--json"
+    ],
+    "exit_code": 0,
+    "metadata": {
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "dependencies": {
+        "prod": 4,
+        "dev": 197,
+        "optional": 52,
+        "peer": 8,
+        "peerOptional": 0,
+        "total": 200
+      }
+    }
+  },
+  "test": {
+    "command": [
+      "npm",
+      "test"
+    ],
+    "exit_code": 0
+  },
+  "build": {
+    "command": ["npm", "run", "build"],
+    "exit_code": 0,
+    "result": "TypeScript and Vite production build passed"
+  },
+  "date_utc": "2026-10-07",
+  "scope": "Existing forge-web dependency audit gate repair; quantization probe files unchanged",
+  "advisory": "https://github.com/advisories/GHSA-68fv-2mgg-jv7q",
+  "package": "source-map-js",
+  "previous_version": "1.2.1",
+  "patched_version": "1.2.2",
+  "change": "Only the existing transitive lockfile entry changed; parent dependency ranges already accept the patch",
+  "node": "v24.19.0",
+  "npm": "11.9.0",
+  "tests_passed": 6,
+  "test_files_passed": 2,
+  "audit_gate_unchanged": true,
+  "original_ci_failure": {
+    "head": "2d30d692bbd38a509d9ef1b06c365f985b96102c",
+    "workflow_url": "https://github.com/build-the-future-11/olympus-cognitive-architecture/actions/runs/37645078180",
+    "job_id": 112873624594,
+    "gate": "npm audit --audit-level=moderate",
+    "finding": "One high-severity source-map-js advisory",
+    "python_release_job": "passed"
+  }
+}

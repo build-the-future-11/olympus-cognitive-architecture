@@ -1,0 +1,51 @@
+{
+  "schema": "olympus-source-integration-review-v1",
+  "reviewed_at_utc": "2026-11-19T11:48:03.315136+00:00",
+  "original_pr": 17,
+  "original_head": "bad68e9d95753f5068733c58f31ba864778aacc7",
+  "current_main": "e4f0944cce4524a2454193bdfeb3f785631b14c0",
+  "original_base": "88cc23517e758e4fcd48d5bf08e269973a36f125",
+  "review_scope": "All38changed path identities, all active source/test/probe and Markdown documentation; binary artifacts verified by exact Git/blob and retained SHA256 identities, not loaded as models or reexecuted. All prior source/protocol/results remain unchanged.",
+  "original_historical_checks": {
+    "run": 37657742730,
+    "status": "success",
+    "qualification": "Original standalone head only; not current integration."
+  },
+  "local_verification": {
+    "git_blobs_verified": 56,
+    "retained_artifact_sha256_verified": 13,
+    "retained_source_sha256_verified": 5,
+    "isolated_trials_verified": 9,
+    "all_recorded_trial_and_cross_trial_medians_recomputed": true,
+    "source_compilation": "PASS",
+    "fake_clock_tests": {
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "pytest_seconds": 0.04,
+      "runtime": "Python3.12/pytest9.1.1",
+      "scope": "Original test_foundry_latency only; no Torch import or model invocation."
+    }
+  },
+  "composition": {
+    "retained_candidate_blob_files": 36,
+    "keep_current_main_lock": "710dcffa3aa0ca9f4acf2097b06788fdac1f6d08",
+    "main_lock_reason": "Already includes the attributed source-map-js1.2.2 fix plus newer Vite/Vitest security corrections; do not roll these back.",
+    "merged_runtime_file": "olympus/foundry/quantization.py",
+    "preserved_main_semantics": [
+      "load_verified_dataset snapshot consumption before writing outputs",
+      "Exact checkpoint/dataset manifest identity gate",
+      "Checkpoint version/configuration admission",
+      "Training loss normalization in both evaluations and report",
+      "All current continuation, model, data, API and web source"
+    ]
+  },
+  "retained_measurement_source": "Original measurements remain bound to originalheadbad68e9d and its retained source hashes. Current integrated runtime is not presented as their producer; no timings or scientific results were rerun or rewritten.",
+  "scientific_execution": false,
+  "model_promotion": false,
+  "paid_compute": false,
+  "release_publication": false,
+  "required_acceptance": "Unchanged exact-final-head release-gate: Python3.14 lint/types/full branch coverage/Foundry fixtures/audit/build, and web locked install/tests/moderate audit/build. Tag-only publish-release is not triggered.",
+  "combined_quantization_sha256": "93a9a0ce4b7d1df53ccd28ad30eed8edddde8df52b4e34e00ee10807c74c8233",
+  "combined_quantization_git_blob": "0b7f5bab809c9cef6a2f4a5309d256d6dd364995"
+}

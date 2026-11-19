@@ -1,0 +1,27 @@
+{
+  "schema": "olympus.quantization_validation.v1",
+  "as_of": "2026-10-07",
+  "base_commit": "88cc23517e758e4fcd48d5bf08e269973a36f125",
+  "source_sha256": {
+    "olympus/foundry/latency.py": "c8d805e1d1a27ddfb35b7ce9d2f92b77c9d2c246bb290be93be8cc6f18830d08",
+    "olympus/foundry/quantization.py": "71800804256f4e6a386439042642a70685e041af4b1baf2983e94d46cfd0e9eb",
+    "tests/test_foundry_latency.py": "243736fa3d8f7775006243a93a4694ec6430e70f6d9dc0aeab0ff01a7b1c1fa5",
+    "tests/test_deep_foundry.py": "a3c6e59df2bf6f4fd3b1652e42169303af2f95daff2e37e85a91188eb98e50eb",
+    "scripts/quantization_timing_probe.py": "0cff1db93c34c0171d4e01cd46b189ccb0db09a826eaadf086b098b5f756cecb"
+  },
+  "validation": {
+    "python": "3.14.7",
+    "torch": "2.11.0+cpu",
+    "pytest_passed": 169,
+    "pytest_failed": 0,
+    "branch_aware_coverage_percent": 87.45,
+    "required_coverage_percent": 85,
+    "mypy": "passed:78 source files; clean task cache",
+    "ruff": "passed",
+    "native_probe": "Executed; 13 generated artifact hashes and 5 source hashes match"
+  },
+  "scope": "quantized storage and repeated fixed-context CPU timing on existing36-record synthetic engineering fixture",
+  "integer_inference_kernels_used": false,
+  "model_promotion_authorized": false,
+  "scientific_superiority_claim_authorized": false
+}
