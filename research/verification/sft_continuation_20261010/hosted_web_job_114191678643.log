@@ -1,0 +1,274 @@
+2026-10-10T10:22:30.8828155Z Current runner version: '2.337.0'
+2026-10-10T10:22:30.8852490Z ##[group]Runner Image Provisioner
+2026-10-10T10:22:30.8853348Z Hosted Compute Agent
+2026-10-10T10:22:30.8853892Z Version: 20261002.596
+2026-10-10T10:22:30.8854464Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-10T10:22:30.8855298Z Build Date: 2026-10-02T22:28:27Z
+2026-10-10T10:22:30.8855935Z Worker ID: {4f910b57-1e13-4b79-98ec-449fb1cd16d7}
+2026-10-10T10:22:30.8856560Z Region: westus3
+2026-10-10T10:22:30.8857095Z Cloud: Azure
+2026-10-10T10:22:30.8857571Z ##[endgroup]
+2026-10-10T10:22:30.8859006Z ##[group]Operating System
+2026-10-10T10:22:30.8859564Z Ubuntu
+2026-10-10T10:22:30.8860025Z 24.04.5
+2026-10-10T10:22:30.8860540Z LTS
+2026-10-10T10:22:30.8861021Z ##[endgroup]
+2026-10-10T10:22:30.8861537Z ##[group]Runner Image
+2026-10-10T10:22:30.8862105Z Image: ubuntu-24.04
+2026-10-10T10:22:30.8862642Z Version: 20261004.327.1
+2026-10-10T10:22:30.8863811Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-10T10:22:30.8865540Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-10T10:22:30.8866436Z ##[endgroup]
+2026-10-10T10:22:30.8867465Z ##[group]GITHUB_TOKEN Permissions
+2026-10-10T10:22:30.8869326Z Contents: read
+2026-10-10T10:22:30.8869869Z Metadata: read
+2026-10-10T10:22:30.8870492Z ##[endgroup]
+2026-10-10T10:22:30.8872864Z Secret source: Actions
+2026-10-10T10:22:30.8873764Z Cache mode: write
+2026-10-10T10:22:30.8874388Z Prepare workflow directory
+2026-10-10T10:22:30.9382595Z Prepare all required actions
+2026-10-10T10:22:30.9431650Z Getting action download info
+2026-10-10T10:22:31.2389417Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-10T10:22:31.3088184Z Download action repository 'actions/setup-node@820762786026740c76f36085b0efc47a31fe5020' (SHA:820762786026740c76f36085b0efc47a31fe5020)
+2026-10-10T10:22:31.4549162Z Complete job name: web
+2026-10-10T10:22:31.5297538Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-10T10:22:31.5298457Z with:
+2026-10-10T10:22:31.5298898Z   ref: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:31.5299449Z   persist-credentials: false
+2026-10-10T10:22:31.5300040Z   repository: build-the-future-11/olympus-cognitive-architecture
+2026-10-10T10:22:31.5303725Z   token: ***
+2026-10-10T10:22:31.5304128Z   ssh-strict: true
+2026-10-10T10:22:31.5304534Z   ssh-user: git
+2026-10-10T10:22:31.5304926Z   clean: true
+2026-10-10T10:22:31.5305508Z   sparse-checkout-cone-mode: true
+2026-10-10T10:22:31.5306002Z   fetch-depth: 1
+2026-10-10T10:22:31.5306429Z   fetch-tags: false
+2026-10-10T10:22:31.5306860Z   show-progress: true
+2026-10-10T10:22:31.5307279Z   lfs: false
+2026-10-10T10:22:31.5307678Z   submodules: false
+2026-10-10T10:22:31.5308105Z   set-safe-directory: true
+2026-10-10T10:22:31.5308584Z   allow-unsafe-pr-checkout: false
+2026-10-10T10:22:31.5309270Z env:
+2026-10-10T10:22:31.5309857Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:31.5310467Z ##[endgroup]
+2026-10-10T10:22:31.6292838Z Syncing repository: build-the-future-11/olympus-cognitive-architecture
+2026-10-10T10:22:31.6296164Z ##[group]Getting Git version info
+2026-10-10T10:22:31.6297744Z Working directory is '/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture'
+2026-10-10T10:22:31.6299916Z [command]/usr/bin/git version
+2026-10-10T10:22:31.6366607Z git version 2.55.0
+2026-10-10T10:22:31.6397035Z ##[endgroup]
+2026-10-10T10:22:31.6408536Z Temporarily overriding HOME='/home/runner/work/_temp/b3ede720-9ba2-4ebc-96bb-011cc9f48b68' before making global git config changes
+2026-10-10T10:22:31.6410574Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T10:22:31.6416287Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+2026-10-10T10:22:31.6470261Z Deleting the contents of '/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture'
+2026-10-10T10:22:31.6472893Z ##[group]Determining repository object format
+2026-10-10T10:22:31.6474568Z ##[endgroup]
+2026-10-10T10:22:31.6476078Z ##[group]Initializing the repository
+2026-10-10T10:22:31.6478497Z [command]/usr/bin/git init /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+2026-10-10T10:22:31.6566407Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-10T10:22:31.6568173Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-10T10:22:31.6569728Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-10T10:22:31.6571197Z hint: call:
+2026-10-10T10:22:31.6572262Z hint:
+2026-10-10T10:22:31.6573429Z hint: 	git config --global init.defaultBranch <name>
+2026-10-10T10:22:31.6574662Z hint:
+2026-10-10T10:22:31.6576097Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-10T10:22:31.6577900Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-10T10:22:31.6579411Z hint:
+2026-10-10T10:22:31.6580351Z hint: 	git branch -m <name>
+2026-10-10T10:22:31.6581311Z hint:
+2026-10-10T10:22:31.6582310Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-10T10:22:31.6584663Z Initialized empty Git repository in /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/
+2026-10-10T10:22:31.6589639Z [command]/usr/bin/git remote add origin https://github.com/build-the-future-11/olympus-cognitive-architecture
+2026-10-10T10:22:31.6622143Z ##[endgroup]
+2026-10-10T10:22:31.6626965Z ##[group]Disabling automatic garbage collection
+2026-10-10T10:22:31.6628106Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-10T10:22:31.6652934Z ##[endgroup]
+2026-10-10T10:22:31.6654041Z ##[group]Setting up auth
+2026-10-10T10:22:31.6654939Z Removing SSH command configuration
+2026-10-10T10:22:31.6662567Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T10:22:31.6700708Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-10T10:22:31.7004940Z Removing HTTP extra header
+2026-10-10T10:22:31.7006870Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T10:22:31.7029872Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-10T10:22:31.7218644Z Removing includeIf entries pointing to credentials config files
+2026-10-10T10:22:31.7223915Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T10:22:31.7251924Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-10T10:22:31.7420978Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-6827ef6d-d78a-47fb-82fe-28305d687c48.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-10T10:22:31.7453359Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path /home/runner/work/_temp/git-credentials-6827ef6d-d78a-47fb-82fe-28305d687c48.config
+2026-10-10T10:22:31.7481433Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-6827ef6d-d78a-47fb-82fe-28305d687c48.config
+2026-10-10T10:22:31.7510013Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-6827ef6d-d78a-47fb-82fe-28305d687c48.config
+2026-10-10T10:22:31.7536706Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-6827ef6d-d78a-47fb-82fe-28305d687c48.config
+2026-10-10T10:22:31.7560490Z ##[endgroup]
+2026-10-10T10:22:31.7561684Z ##[group]Fetching the repository
+2026-10-10T10:22:31.7568283Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:32.3674644Z From https://github.com/build-the-future-11/olympus-cognitive-architecture
+2026-10-10T10:22:32.3675877Z  * branch            7eb82b96632561f7cb0c670c0116fe774e7a1797 -> FETCH_HEAD
+2026-10-10T10:22:32.3682993Z [command]/usr/bin/git rev-parse --verify --quiet 7eb82b96632561f7cb0c670c0116fe774e7a1797^{object}
+2026-10-10T10:22:32.3704993Z 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:32.3708852Z ##[endgroup]
+2026-10-10T10:22:32.3709772Z ##[group]Determining the checkout info
+2026-10-10T10:22:32.3710699Z ##[endgroup]
+2026-10-10T10:22:32.3715365Z [command]/usr/bin/git sparse-checkout disable
+2026-10-10T10:22:32.3759669Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-10T10:22:32.3786090Z ##[group]Checking out the ref
+2026-10-10T10:22:32.3790635Z [command]/usr/bin/git checkout --progress --force 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:32.3901317Z Note: switching to '7eb82b96632561f7cb0c670c0116fe774e7a1797'.
+2026-10-10T10:22:32.3901899Z 
+2026-10-10T10:22:32.3902327Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-10T10:22:32.3903256Z changes and commit them, and you can discard any commits you make in this
+2026-10-10T10:22:32.3904393Z state without impacting any branches by switching back to a branch.
+2026-10-10T10:22:32.3905918Z 
+2026-10-10T10:22:32.3906498Z If you want to create a new branch to retain commits you create, you may
+2026-10-10T10:22:32.3907766Z do so (now or later) by using -c with the switch command. Example:
+2026-10-10T10:22:32.3908545Z 
+2026-10-10T10:22:32.3908882Z   git switch -c <new-branch-name>
+2026-10-10T10:22:32.3909278Z 
+2026-10-10T10:22:32.3909489Z Or undo this operation with:
+2026-10-10T10:22:32.3909819Z 
+2026-10-10T10:22:32.3910026Z   git switch -
+2026-10-10T10:22:32.3910283Z 
+2026-10-10T10:22:32.3910706Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-10T10:22:32.3911243Z 
+2026-10-10T10:22:32.3911641Z HEAD is now at 7eb82b9 Preserve exact SFT continuation and failed attempt history
+2026-10-10T10:22:32.3913685Z ##[endgroup]
+2026-10-10T10:22:32.3947654Z [command]/usr/bin/git log -1 --format=%H
+2026-10-10T10:22:32.3970650Z 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:32.3981116Z ##[group]Removing auth
+2026-10-10T10:22:32.3982110Z Removing SSH command configuration
+2026-10-10T10:22:32.3986073Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T10:22:32.4014913Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-10T10:22:32.4191124Z Removing HTTP extra header
+2026-10-10T10:22:32.4197567Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T10:22:32.4225761Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-10T10:22:32.4395712Z Removing includeIf entries pointing to credentials config files
+2026-10-10T10:22:32.4398715Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T10:22:32.4423221Z includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path
+2026-10-10T10:22:32.4425586Z includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path
+2026-10-10T10:22:32.4427348Z includeif.gitdir:/github/workspace/.git.path
+2026-10-10T10:22:32.4428012Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-10T10:22:32.4430461Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path
+2026-10-10T10:22:32.4450657Z /home/runner/work/_temp/git-credentials-6827ef6d-d78a-47fb-82fe-28305d687c48.config
+2026-10-10T10:22:32.4460801Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-6827ef6d\-d78a\-47fb\-82fe\-28305d687c48\.config
+2026-10-10T10:22:32.4493491Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path
+2026-10-10T10:22:32.4512966Z /home/runner/work/_temp/git-credentials-6827ef6d-d78a-47fb-82fe-28305d687c48.config
+2026-10-10T10:22:32.4521608Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-6827ef6d\-d78a\-47fb\-82fe\-28305d687c48\.config
+2026-10-10T10:22:32.4551388Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-10T10:22:32.4570115Z /github/runner_temp/git-credentials-6827ef6d-d78a-47fb-82fe-28305d687c48.config
+2026-10-10T10:22:32.4577502Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-6827ef6d\-d78a\-47fb\-82fe\-28305d687c48\.config
+2026-10-10T10:22:32.4639979Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-10T10:22:32.4681371Z /github/runner_temp/git-credentials-6827ef6d-d78a-47fb-82fe-28305d687c48.config
+2026-10-10T10:22:32.4690086Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-6827ef6d\-d78a\-47fb\-82fe\-28305d687c48\.config
+2026-10-10T10:22:32.4712106Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-10T10:22:32.4881493Z Removing credentials config '/home/runner/work/_temp/git-credentials-6827ef6d-d78a-47fb-82fe-28305d687c48.config'
+2026-10-10T10:22:32.4889760Z ##[endgroup]
+2026-10-10T10:22:32.5071893Z ##[group]Run test "$(git rev-parse HEAD)" = "${EXPECTED_SOURCE_SHA}"
+2026-10-10T10:22:32.5072820Z [36;1mtest "$(git rev-parse HEAD)" = "${EXPECTED_SOURCE_SHA}"[0m
+2026-10-10T10:22:32.5258761Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-10T10:22:32.5259508Z env:
+2026-10-10T10:22:32.5260056Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:32.5260691Z ##[endgroup]
+2026-10-10T10:22:32.5537312Z ##[group]Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+2026-10-10T10:22:32.5538039Z with:
+2026-10-10T10:22:32.5538436Z   node-version: 22.23.2
+2026-10-10T10:22:32.5538878Z   cache: npm
+2026-10-10T10:22:32.5539418Z   cache-dependency-path: apps/forge-web/package-lock.json
+2026-10-10T10:22:32.5540047Z   check-latest: false
+2026-10-10T10:22:32.5543531Z   token: ***
+2026-10-10T10:22:32.5543964Z   package-manager-cache: true
+2026-10-10T10:22:32.5544436Z env:
+2026-10-10T10:22:32.5544939Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:32.5545710Z ##[endgroup]
+2026-10-10T10:22:32.6744727Z Attempting to download 22.23.2...
+2026-10-10T10:22:33.6952717Z Acquiring 22.23.2 - x64 from https://github.com/actions/node-versions/releases/download/22.23.2-30508424155/node-22.23.2-linux-x64.tar.gz
+2026-10-10T10:22:34.2632249Z Extracting ...
+2026-10-10T10:22:34.2734780Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/117dbab2-c2fc-41ce-ad68-1a759b014144 -f /home/runner/work/_temp/1d044944-7f33-4cad-8f89-c1f0fff64f5d
+2026-10-10T10:22:35.4364103Z Adding to the cache ...
+2026-10-10T10:22:37.0324298Z ##[group]Environment details
+2026-10-10T10:22:37.2513956Z node: v22.23.2
+2026-10-10T10:22:37.2514385Z npm: 10.9.8
+2026-10-10T10:22:37.2514635Z yarn: 1.22.22
+2026-10-10T10:22:37.2515388Z ##[endgroup]
+2026-10-10T10:22:37.2533909Z [command]/opt/hostedtoolcache/node/22.23.2/x64/bin/npm config get cache
+2026-10-10T10:22:37.3408880Z /home/runner/.npm
+2026-10-10T10:22:37.5457414Z npm cache is not found
+2026-10-10T10:22:37.5624985Z ##[group]Run npm ci
+2026-10-10T10:22:37.5625476Z [36;1mnpm ci[0m
+2026-10-10T10:22:37.5668332Z shell: /usr/bin/bash -e {0}
+2026-10-10T10:22:37.5668628Z env:
+2026-10-10T10:22:37.5668907Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:37.5669238Z ##[endgroup]
+2026-10-10T10:22:40.1915886Z 
+2026-10-10T10:22:40.1926150Z added 151 packages, and audited 152 packages in 3s
+2026-10-10T10:22:40.1926764Z 
+2026-10-10T10:22:40.1927106Z 22 packages are looking for funding
+2026-10-10T10:22:40.1927637Z   run `npm fund` for details
+2026-10-10T10:22:40.1930407Z 
+2026-10-10T10:22:40.1930886Z found 0 vulnerabilities
+2026-10-10T10:22:40.2203570Z ##[group]Run npm test
+2026-10-10T10:22:40.2203829Z [36;1mnpm test[0m
+2026-10-10T10:22:40.2241560Z shell: /usr/bin/bash -e {0}
+2026-10-10T10:22:40.2241833Z env:
+2026-10-10T10:22:40.2242125Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:40.2242459Z ##[endgroup]
+2026-10-10T10:22:40.3173485Z 
+2026-10-10T10:22:40.3174624Z > forge-web@0.2.0 test
+2026-10-10T10:22:40.3175861Z > vitest run
+2026-10-10T10:22:40.3176357Z 
+2026-10-10T10:22:40.5859220Z 
+2026-10-10T10:22:40.5887827Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture/apps/forge-web[39m
+2026-10-10T10:22:40.5915923Z 
+2026-10-10T10:22:41.4457226Z  [32m✓[39m src/api.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+2026-10-10T10:22:41.9138317Z  [32m✓[39m src/App.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 337[2mms[22m[39m
+2026-10-10T10:22:41.9169656Z 
+2026-10-10T10:22:41.9175001Z [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+2026-10-10T10:22:41.9175958Z [2m      Tests [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+2026-10-10T10:22:41.9176562Z [2m   Start at [22m 10:22:40
+2026-10-10T10:22:41.9187003Z [2m   Duration [22m 1.32s[2m (environment 53%, tests 18%, transform 13%, import 9%, setup 6%, worker 1%)[22m
+2026-10-10T10:22:41.9205517Z 
+2026-10-10T10:22:41.9428961Z ##[group]Run npm audit --audit-level=moderate
+2026-10-10T10:22:41.9429306Z [36;1mnpm audit --audit-level=moderate[0m
+2026-10-10T10:22:41.9467158Z shell: /usr/bin/bash -e {0}
+2026-10-10T10:22:41.9467426Z env:
+2026-10-10T10:22:41.9467700Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:41.9468031Z ##[endgroup]
+2026-10-10T10:22:42.3102588Z found 0 vulnerabilities
+2026-10-10T10:22:42.3189143Z ##[group]Run npm run build
+2026-10-10T10:22:42.3189412Z [36;1mnpm run build[0m
+2026-10-10T10:22:42.3226050Z shell: /usr/bin/bash -e {0}
+2026-10-10T10:22:42.3226319Z env:
+2026-10-10T10:22:42.3226592Z   EXPECTED_SOURCE_SHA: 7eb82b96632561f7cb0c670c0116fe774e7a1797
+2026-10-10T10:22:42.3226925Z ##[endgroup]
+2026-10-10T10:22:42.4170609Z 
+2026-10-10T10:22:42.4171170Z > forge-web@0.2.0 build
+2026-10-10T10:22:42.4171610Z > tsc -b && vite build
+2026-10-10T10:22:44.1442176Z 
+2026-10-10T10:22:44.1443546Z [36mvite v7.3.6 [32mbuilding client environment for production...[36m[39m
+2026-10-10T10:22:44.2049558Z transforming...
+2026-10-10T10:22:44.9019653Z [32m✓[39m 30 modules transformed.
+2026-10-10T10:22:45.0320197Z rendering chunks...
+2026-10-10T10:22:45.0383166Z computing gzip size...
+2026-10-10T10:22:45.0453854Z [2mdist/[22m[32mindex.html                 [39m[1m[2m  0.40 kB[22m[1m[22m[2m │ gzip:  0.27 kB[22m
+2026-10-10T10:22:45.0454797Z [2mdist/[22m[2massets/[22m[35mindex-DX7xzyZm.css  [39m[1m[2m  3.48 kB[22m[1m[22m[2m │ gzip:  1.34 kB[22m
+2026-10-10T10:22:45.0456040Z [2mdist/[22m[2massets/[22m[36mindex-BstsNUX_.js   [39m[1m[2m205.42 kB[22m[1m[22m[2m │ gzip: 64.11 kB[22m
+2026-10-10T10:22:45.0456895Z [32m✓ built in 874ms[39m
+2026-10-10T10:22:45.0744151Z Post job cleanup.
+2026-10-10T10:22:45.1977546Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture --files-from manifest.txt --use-compress-program zstdmt
+2026-10-10T10:22:46.4109150Z Sent 21690547 of 21690547 (100.0%), 23.6 MBs/sec
+2026-10-10T10:22:46.6426177Z Cache saved with the key: node-cache-Linux-x64-npm-fb4e3338faf186b68ab9adb778f9cc5fc0abfe8a75b8dc9ccea12767414c7f74
+2026-10-10T10:22:46.6552798Z Post job cleanup.
+2026-10-10T10:22:46.7373504Z [command]/usr/bin/git version
+2026-10-10T10:22:46.7430622Z git version 2.55.0
+2026-10-10T10:22:46.7472449Z Temporarily overriding HOME='/home/runner/work/_temp/7a511d45-26af-4376-824b-9a301395a226' before making global git config changes
+2026-10-10T10:22:46.7473488Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T10:22:46.7479398Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/olympus-cognitive-architecture/olympus-cognitive-architecture
+2026-10-10T10:22:46.7507588Z Removing SSH command configuration
+2026-10-10T10:22:46.7515049Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T10:22:46.7547276Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-10T10:22:46.7754846Z Removing HTTP extra header
+2026-10-10T10:22:46.7756167Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T10:22:46.7809323Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-10T10:22:46.7981859Z Removing includeIf entries pointing to credentials config files
+2026-10-10T10:22:46.7989526Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T10:22:46.8018281Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-10T10:22:46.8379522Z Cleaning up orphan processes

@@ -1,0 +1,155 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+__ test_quantization_rejects_unbound_dataset_before_creating_artifacts[None] ___
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-391/test_quantization_rejects_unbo0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc870ca9e20>
+identity = None
+
+    @pytest.mark.parametrize("identity", [None, "0" * 64])
+    def test_quantization_rejects_unbound_dataset_before_creating_artifacts(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, identity: str | None,
+    ) -> None:
+        source = Path(__file__).resolve().parents[1] / "datasets/hermes-smoke/source.jsonl"
+        prepared = tmp_path / "dataset"
+        manifest = prepare_instruction_dataset(source, prepared)
+        assert identity != manifest.manifest_sha256
+        config = sft.SFTConfig(model=sft.TinyModelConfig(width=16, layers=1, heads=4))
+        model = sft.TinyCausalLM(config.model)
+        checkpoint: dict[str, Any] = {
+            "schema_version": 2,
+            "loss_normalization": config.loss_normalization,
+            "training_config": config.model_dump(mode="json"),
+        }
+        if identity is not None:
+            checkpoint["dataset_manifest_sha256"] = identity
+        monkeypatch.setattr(quantization, "_model_from_checkpoint", lambda *_: (model, checkpoint))
+    
+        def no_weight_publication(*args: Any, **kwargs: Any) -> None:
+            pytest.fail("unbound data reached weight publication before dataset admission")
+    
+        monkeypatch.setattr(quantization, "_atomic_torch_save", no_weight_publication)
+        output = tmp_path / "quantized"
+        with pytest.raises(ValueError, match="dataset hashes do not match"):
+>           quantization.quantize_checkpoint(
+                tmp_path / "fixture.pt", prepared / "manifest.json", output, bits=8,
+            )
+
+tests/test_quantization_dataset_binding.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+olympus/foundry/quantization.py:170: in quantize_checkpoint
+    _atomic_torch_save(float_path, source.state_dict())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (PosixPath('/tmp/pytest-of-root/pytest-391/test_quantization_rejects_unbo0/quantized/float32-model.pt'), OrderedDict({...1, -0.0200,  ...,  0.1729,  0.1450, -0.0228],
+        [ 0.0967, -0.0956, -0.1295,  ..., -0.0081, -0.1668,  0.0341]])}))
+kwargs = {}
+
+    def no_weight_publication(*args: Any, **kwargs: Any) -> None:
+>       pytest.fail("unbound data reached weight publication before dataset admission")
+E       Failed: unbound data reached weight publication before dataset admission
+
+tests/test_quantization_dataset_binding.py:34: Failed
+_ test_quantization_rejects_unbound_dataset_before_creating_artifacts[0000000000000000000000000000000000000000000000000000000000000000] _
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-391/test_quantization_rejects_unbo1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc870cef800>
+identity = '0000000000000000000000000000000000000000000000000000000000000000'
+
+    @pytest.mark.parametrize("identity", [None, "0" * 64])
+    def test_quantization_rejects_unbound_dataset_before_creating_artifacts(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, identity: str | None,
+    ) -> None:
+        source = Path(__file__).resolve().parents[1] / "datasets/hermes-smoke/source.jsonl"
+        prepared = tmp_path / "dataset"
+        manifest = prepare_instruction_dataset(source, prepared)
+        assert identity != manifest.manifest_sha256
+        config = sft.SFTConfig(model=sft.TinyModelConfig(width=16, layers=1, heads=4))
+        model = sft.TinyCausalLM(config.model)
+        checkpoint: dict[str, Any] = {
+            "schema_version": 2,
+            "loss_normalization": config.loss_normalization,
+            "training_config": config.model_dump(mode="json"),
+        }
+        if identity is not None:
+            checkpoint["dataset_manifest_sha256"] = identity
+        monkeypatch.setattr(quantization, "_model_from_checkpoint", lambda *_: (model, checkpoint))
+    
+        def no_weight_publication(*args: Any, **kwargs: Any) -> None:
+            pytest.fail("unbound data reached weight publication before dataset admission")
+    
+        monkeypatch.setattr(quantization, "_atomic_torch_save", no_weight_publication)
+        output = tmp_path / "quantized"
+        with pytest.raises(ValueError, match="dataset hashes do not match"):
+>           quantization.quantize_checkpoint(
+                tmp_path / "fixture.pt", prepared / "manifest.json", output, bits=8,
+            )
+
+tests/test_quantization_dataset_binding.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+olympus/foundry/quantization.py:170: in quantize_checkpoint
+    _atomic_torch_save(float_path, source.state_dict())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (PosixPath('/tmp/pytest-of-root/pytest-391/test_quantization_rejects_unbo1/quantized/float32-model.pt'), OrderedDict({...6, -0.1088,  ...,  0.0196,  0.0650, -0.2489],
+        [-0.1193, -0.2481, -0.1429,  ...,  0.2314, -0.0565, -0.0198]])}))
+kwargs = {}
+
+    def no_weight_publication(*args: Any, **kwargs: Any) -> None:
+>       pytest.fail("unbound data reached weight publication before dataset admission")
+E       Failed: unbound data reached weight publication before dataset admission
+
+tests/test_quantization_dataset_binding.py:34: Failed
+__________ test_corrupt_dataset_is_rejected_before_creating_artifacts __________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-391/test_corrupt_dataset_is_reject0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc870ced100>
+
+    def test_corrupt_dataset_is_rejected_before_creating_artifacts(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        source = Path(__file__).resolve().parents[1] / "datasets/hermes-smoke/source.jsonl"
+        prepared = tmp_path / "dataset"
+        manifest = prepare_instruction_dataset(source, prepared)
+        descriptor = next(split for split in manifest.splits if split.name == "test")
+        (prepared / descriptor.path).write_text("corrupted artificial data\n", encoding="utf-8")
+        config = sft.SFTConfig(model=sft.TinyModelConfig(width=16, layers=1, heads=4))
+        model = sft.TinyCausalLM(config.model)
+        checkpoint: dict[str, Any] = {
+            "schema_version": 2,
+            "loss_normalization": config.loss_normalization,
+            "training_config": config.model_dump(mode="json"),
+            "dataset_manifest_sha256": manifest.manifest_sha256,
+        }
+        monkeypatch.setattr(quantization, "_model_from_checkpoint", lambda *_: (model, checkpoint))
+    
+        def no_weight_publication(*args: Any, **kwargs: Any) -> None:
+            pytest.fail("corrupt data reached weight publication before dataset admission")
+    
+        monkeypatch.setattr(quantization, "_atomic_torch_save", no_weight_publication)
+        output = tmp_path / "quantized"
+        with pytest.raises(ValueError, match="hash"):
+>           quantization.quantize_checkpoint(
+                tmp_path / "fixture.pt", prepared / "manifest.json", output, bits=8,
+            )
+
+tests/test_quantization_dataset_binding.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+olympus/foundry/quantization.py:170: in quantize_checkpoint
+    _atomic_torch_save(float_path, source.state_dict())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (PosixPath('/tmp/pytest-of-root/pytest-391/test_corrupt_dataset_is_reject0/quantized/float32-model.pt'), OrderedDict({...6,  0.0962,  ...,  0.1112,  0.2259, -0.0780],
+        [-0.0087,  0.0810,  0.0423,  ..., -0.0221,  0.1325, -0.0758]])}))
+kwargs = {}
+
+    def no_weight_publication(*args: Any, **kwargs: Any) -> None:
+>       pytest.fail("corrupt data reached weight publication before dataset admission")
+E       Failed: corrupt data reached weight publication before dataset admission
+
+tests/test_quantization_dataset_binding.py:64: Failed
+=========================== short test summary info ============================
+FAILED tests/test_quantization_dataset_binding.py::test_quantization_rejects_unbound_dataset_before_creating_artifacts[None]
+FAILED tests/test_quantization_dataset_binding.py::test_quantization_rejects_unbound_dataset_before_creating_artifacts[0000000000000000000000000000000000000000000000000000000000000000]
+FAILED tests/test_quantization_dataset_binding.py::test_corrupt_dataset_is_rejected_before_creating_artifacts
+3 failed in 3.86s

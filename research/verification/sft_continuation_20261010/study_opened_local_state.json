@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "project": "Olympus Cognitive Architecture",
+  "repository": "build-the-future-11/olympus-cognitive-architecture",
+  "updated_utc": "2026-10-10",
+  "current_phase": "DEVELOPMENT_ENGINEERING_IN_PROGRESS",
+  "scientific_disposition": "NOT_REASSESSED",
+  "research_question": "Can the Foundry preserve the identity and provenance of the actual records consumed by training and evaluation under changes to dataset files?",
+  "scientific_objective": "Reliable, inspectable research infrastructure; this engineering study makes no model capability claim.",
+  "hypothesis": "Consuming the exact parsed record snapshot whose bytes passed the complete manifest contract removes the split-file reread provenance defect.",
+  "intended_contribution": "One verified in-memory dataset snapshot shared by SFT, held-out evaluation, and quantization consumers.",
+  "falsifier": "A consumer uses replacement or missing-file content after verification, or valid unchanged records and identities change.",
+  "scope": {
+    "included": [
+      "Dataset verification and consumption",
+      "Artificial regression fixtures",
+      "Exact source-bound local tests and hosted release checks"
+    ],
+    "excluded": [
+      "Scientific training",
+      "Hermes base selection",
+      "Model promotion",
+      "Held-out capability reevaluation",
+      "Parameter or architecture changes",
+      "Prior-run replacement"
+    ]
+  },
+  "development_budget": {
+    "engineering_hypotheses": 1,
+    "scientific_training_epochs": 0,
+    "protected_evaluations": 0,
+    "external_dataset_downloads": 0
+  },
+  "compute_budget": {
+    "local_device": "CPU",
+    "paid_jobs": 0,
+    "large_model_runs": 0,
+    "per_test_command_timeout_seconds": 120
+  },
+  "protected_evaluation_boundary": "The dated prior model ledgers and retained experiments remain unchanged. Artificial unit tests do not authorize capability evaluation or promotion.",
+  "source_basis": {
+    "base_pr": 23,
+    "base_branch": "codex/olympus-dataset-contract-20261010-b805",
+    "base_commit": "c37066fa5c349eaca0acf43b0e9a57306fdf42ec",
+    "base_tree": "b9bf5fd77e430fd1686301b7b7513850df6743e5"
+  },
+  "datasets": {
+    "development": "New artificial 36-record unit fixtures",
+    "protected": "No protected data accessed by this change"
+  },
+  "artifacts": [
+    "research/REALITY_LEDGER.md",
+    "OLYMPUS_MODEL_FOUNDRY_LEDGER.md",
+    "docs/dataset-reverification-20261010.md",
+    "tests/test_dataset_consumer_snapshot.py",
+    "docs/dataset-consumer-snapshot-20261010.md",
+    "research/DATASET_CONSUMER_SNAPSHOT_20261010.json"
+  ],
+  "claims": [
+    {
+      "claim": "The historical deep smoke checkpoint failed capability promotion gates.",
+      "status": "PRESERVED_PRIOR_FINDING",
+      "evidence": "research/REALITY_LEDGER.md"
+    },
+    {
+      "claim": "The proposed snapshot repair preserves the identity of consumed records.",
+      "status": "SUPPORTED_BY_BOUNDED_ENGINEERING_REGRESSION",
+      "evidence": "research/DATASET_CONSUMER_SNAPSHOT_20261010.json"
+    }
+  ],
+  "decisions": [
+    "Stack on the reviewed dataset-contract PR; do not rewrite its branch.",
+    "Preserve the existing manifest verifier return type.",
+    "Treat data identity fixes as engineering behavior, not evidence of model capability."
+  ],
+  "failures": [
+    "Existing consumers verify split bytes and then reread files without binding the later content to those hashes.",
+    "The prior recorded transformer had zero exact task and tool completion; no Hermes model was promoted."
+  ],
+  "history_policy": "Append revisions and failures with source identities. Preserve dated predecessor ledgers and frozen outcomes. Prior history is referenced without claiming to reconstruct missing events.",
+  "history": [
+    {
+      "date": "2026-08-21",
+      "event": "Prior observed model and runtime findings retained verbatim in research/REALITY_LEDGER.md and OLYMPUS_MODEL_FOUNDRY_LEDGER.md."
+    },
+    {
+      "date": "2026-10-10",
+      "event": "PR23 adds whole-manifest content verification and single-read source preparation; preserved as the parent."
+    },
+    {
+      "date": "2026-10-10",
+      "event": "Initialized this canonical state before implementing a distinct dataset-consumer source-binding repair."
+    },
+    {
+      "date": "2026-10-10",
+      "event": "Confirmed 10 consumer failures and 5 unchanged controls on PR23; implemented one verified-record snapshot and passed 34 focused tests. Hosted complete release validation remains required."
+    },
+    {
+      "date": "2026-10-10",
+      "event": "Published PR27 code snapshot fef543387eb0b5d612f8ad9a5452530ac3f7ca4f passed the full Python3.14 and web release gate. Independent source review found no blocker; reviewer did not independently rerun tests. This metadata update leaves the tested implementation and test source hashes unchanged."
+    },
+    {
+      "date": "2026-10-10",
+      "event": "Opened separate bounded continuation-v3 engineering study before modifying the runner. Integrated PR26 objective and PR27 verified record snapshot locally through a clean three-way merge; prior studies and model findings remain unchanged."
+    }
+  ],
+  "verification": {
+    "local_tests_passed": 34,
+    "new_regression_cases": 15,
+    "baseline_failed_cases": 10,
+    "full_release_status": "PASSED_FOR_VALIDATED_CODE_SNAPSHOT",
+    "independent_review": {
+      "date": "2026-10-10",
+      "reviewer": "Independent parent research agent",
+      "status": "NO_BLOCKING_FINDINGS",
+      "validated_source_commit": "fef543387eb0b5d612f8ad9a5452530ac3f7ca4f",
+      "scope": [
+        "Same-byte hash verification and parsed-record binding",
+        "All complete-dataset checks before returning",
+        "Evaluation, SFT and quantization consume verified records",
+        "Compatibility verifier return type",
+        "Release of unused split dictionaries"
+      ],
+      "independent_test_rerun": false,
+      "limit": "Source review only; full integration evidence comes from the hosted Python3.14.8 release gate."
+    },
+    "research_complete": false,
+    "validated_source_commit": "fef543387eb0b5d612f8ad9a5452530ac3f7ca4f",
+    "hosted_release_url": "https://github.com/build-the-future-11/olympus-cognitive-architecture/actions/runs/38026180950",
+    "hosted_python": "3.14.8",
+    "hosted_tests_passed": 194,
+    "hosted_branch_coverage_percent": 87.4
+  },
+  "active_development_study": {
+    "id": "sft-continuation-v3-20261010",
+    "question": "Does splitting an identical artificial training schedule across an epoch checkpoint preserve the uninterrupted optimizer trajectory and its recorded identities?",
+    "hypothesis": "Restoring stochastic RNG state and enforcing the exact non-epoch configuration removes resume divergence and mislabeled checkpoints.",
+    "falsifiers": [
+      "Any saved model or optimizer tensor differs between uninterrupted and resumed CPU dropout training.",
+      "A mismatched continuation configuration is admitted.",
+      "A later run changes an earlier attempt or parent checkpoint."
+    ],
+    "source_basis": {
+      "dataset_snapshot_pr": 27,
+      "dataset_snapshot_head": "cbc54b95970891e54d658c085ead03714396aa13",
+      "token_objective_pr": 26,
+      "token_objective_head": "2519ef345da556d210a1cb0f705077a835b6f8e6"
+    },
+    "development_budget": {
+      "artificial_records": 36,
+      "max_epochs_per_tiny_job": 3,
+      "max_sequence_tokens": 128,
+      "max_model_width": 32,
+      "protected_runs": 0,
+      "external_data_downloads": 0,
+      "paid_jobs": 0
+    },
+    "scope": "Artificial CPU mechanism tests and complete existing engineering suite; no family promotion, external-base training, or protected capability evidence.",
+    "status": "BASELINE_WITNESS_PENDING"
+  }
+}

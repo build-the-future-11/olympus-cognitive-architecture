@@ -1,0 +1,27 @@
+............................................F...............             [100%]
+=================================== FAILURES ===================================
+___ test_short_window_is_not_scaled_down_even_when_answer_lengths_are_equal ____
+
+manifest_path = PosixPath('/tmp/pytest-of-root/pytest-405/sft-token-dataset0/manifest.json')
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-405/test_short_window_is_not_scale0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f809d3f7fb0>
+
+    def test_short_window_is_not_scaled_down_even_when_answer_lengths_are_equal(
+        manifest_path: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        # Use the existing category selection control on a fixed fixture. Both
+        # selected answers have 46 supervised targets, so this isolates the short
+        # window defect from unequal-answer weighting without changing any data.
+        examples = [json.loads(line) for line in SOURCE.read_text().splitlines()]
+        weights = {item["category"]: float(item["category"] in {"extraction", "agent_behavior"})
+                   for item in examples}
+        config = small_config(category_mix_weights=weights, gradient_accumulation_steps=5)
+        manifest = verify_dataset_manifest(manifest_path)
+>       rows = sft._encode_examples(sft._load_examples(manifest, "train", manifest_path.parent), config)
+                                    ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'olympus.foundry.sft' has no attribute '_load_examples'. Did you mean: '_encode_examples'?
+
+tests/test_sft_token_normalization.py:191: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_sft_token_normalization.py::test_short_window_is_not_scaled_down_even_when_answer_lengths_are_equal
+1 failed, 59 passed in 9.51s

@@ -12,14 +12,15 @@ import torch
 from pydantic import Field
 
 from olympus.core.schemas import StrictModel
-from olympus.foundry.data_pipeline import InstructionExample, verify_dataset_manifest
+from olympus.foundry.data_pipeline import load_verified_dataset
 from olympus.foundry.latency import measure_paired_latency
 from olympus.foundry.resources import memory_snapshot
 from olympus.foundry.sft import (
     ByteTokenizer,
-    SFTConfig,
+    LossNormalization,
     TinyCausalLM,
     TinyModelConfig,
+    _checkpoint_training_config,
     _encode_examples,
     _model_from_checkpoint,
     _pack_nibbles,
@@ -87,6 +88,7 @@ class QuantizationReport(StrictModel):
     tool_exact_match_rate: float = Field(ge=0.0, le=1.0)
     peak_rss_bytes: int = Field(ge=0)
     passed_quality_gate: bool
+    loss_normalization: LossNormalization = "legacy_batch_mean_v1"
     inference_execution: str = "legacy_unspecified"
     latency_benchmark: dict[str, Any] | None = None
 
@@ -189,9 +191,14 @@ def quantize_checkpoint(
     if isinstance(bits, bool) or not isinstance(bits, int) or bits not in (4, 8):
         raise ValueError("quantization bits must be 4 or 8")
     source, checkpoint = _model_from_checkpoint(checkpoint_path, torch.device("cpu"))
-    training = SFTConfig.model_validate(checkpoint["training_config"])
+    training = _checkpoint_training_config(checkpoint)
     if training.mode != "full":
         raise ValueError("post-training quantization currently requires a merged full checkpoint")
+    manifest, examples_by_split = load_verified_dataset(manifest_path)
+    if checkpoint.get("dataset_manifest_sha256") != manifest.manifest_sha256:
+        raise ValueError("checkpoint and quantization dataset hashes do not match")
+    examples = examples_by_split["test"]
+    del examples_by_split
     output_root.mkdir(parents=True, exist_ok=True)
     float_path = output_root / "float32-model.pt"
     _atomic_torch_save(float_path, source.state_dict())
@@ -214,20 +221,14 @@ def quantize_checkpoint(
     quantized = load_quantized_model(artifact)
     startup_ms = (time.perf_counter() - start) * 1_000
 
-    manifest = verify_dataset_manifest(manifest_path)
-    test_descriptor = next(split for split in manifest.splits if split.name == "test")
-    test_path = Path(test_descriptor.path)
-    if not test_path.is_absolute():
-        test_path = manifest_path.parent / test_path
-    examples = [
-        InstructionExample.model_validate_json(line)
-        for line in test_path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
     eval_config = training.model_copy(update={"pack_sequences": False})
     rows = _encode_examples(examples, eval_config)
-    source_loss = evaluate_loss(source, rows, device=torch.device("cpu"))
-    quantized_loss = evaluate_loss(quantized, rows, device=torch.device("cpu"))
+    source_loss = evaluate_loss(
+        source, rows, device=torch.device("cpu"), normalization=training.loss_normalization
+    )
+    quantized_loss = evaluate_loss(
+        quantized, rows, device=torch.device("cpu"), normalization=training.loss_normalization
+    )
     prompt = "List the safe steps before starting a memory-heavy local model workload."
     latency_benchmark = _paired_forward_latency(source, quantized, prompt)
     tool_examples = [item for item in examples if item.category in {"tool_use", "agent_behavior"}]
@@ -248,6 +249,7 @@ def quantize_checkpoint(
     loss_change = (quantized_loss - source_loss) / max(source_loss, 1e-12)
     report = QuantizationReport(
         schema_version=2,
+        loss_normalization=training.loss_normalization,
         format=f"olympus-symmetric-int{bits}-v1",
         bits=bits,
         source_checkpoint_sha256=_sha256(checkpoint_path),

@@ -1,0 +1,40 @@
+{
+  "reviewer": "root independent review",
+  "status": "PASS",
+  "source_sha256": "6cd3d7b33002f6c4ff69137e42f4985bbeb6c9d907e37acab470b5089c643d27",
+  "source_unchanged_during_execution": true,
+  "checks": [
+    {
+      "check": "independent legacy-objective dropout continuation",
+      "status": "PASS",
+      "scope": "bitwise model/optimizer/RNG/metrics; earlier checkpoint preserved"
+    },
+    {
+      "check": "nonfinite_model",
+      "status": "REJECTED_BEFORE_ATTEMPT",
+      "error": "checkpoint model state must contain only finite values"
+    },
+    {
+      "check": "fractional_epochs",
+      "status": "REJECTED_BEFORE_ATTEMPT",
+      "error": "checkpoint completed_epochs must be an exact nonnegative integer"
+    },
+    {
+      "check": "boolean_steps",
+      "status": "REJECTED_BEFORE_ATTEMPT",
+      "error": "checkpoint optimizer_steps must be an exact nonnegative integer"
+    },
+    {
+      "check": "epochs_above_saved_schedule",
+      "status": "REJECTED_BEFORE_ATTEMPT",
+      "error": "checkpoint completed_epochs exceeds its saved epoch schedule"
+    },
+    {
+      "check": "nonfinite_optimizer",
+      "status": "REJECTED_BEFORE_ATTEMPT",
+      "error": "checkpoint optimizer state must contain only finite values"
+    }
+  ],
+  "scope": "Real CPU Foundry modules using namespace-only import harness; artificial data; no API integration, GPU or scientific efficacy claim.",
+  "prior_failures": "root_review_findings.json retains the earlier NaN COMPLETED and fractional epoch admission witnesses."
+}

@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-10",
+  "classification": "DEVELOPMENT_ENGINEERING",
+  "parent_commit": "c37066fa5c349eaca0acf43b0e9a57306fdf42ec",
+  "observation": "Consumers reread mutable split files after successful manifest verification.",
+  "cause": "Verified records were discarded; the later read had no hash binding.",
+  "change": "Return and consume one verified record snapshot, preserving all complete-dataset checks.",
+  "predicted_consequence": "Replacement or deletion after the verified read cannot change the records consumed under that manifest identity.",
+  "discriminating_experiment": "Alter artificial train, validation, or test files immediately after bytes are returned to the real verifier; inspect the actual evaluation or encoding consumer boundary before any training/scoring.",
+  "before": {
+    "failed": 10,
+    "passed_unchanged_controls": 5
+  },
+  "after": {
+    "new_cases_passed": 15,
+    "existing_manifest_cases_passed": 19,
+    "total_passed": 34
+  },
+  "source_sha256": {
+    "olympus/foundry/data_pipeline.py": "782a443e233c5bbd8b96cbe4758e44b92498c2f581bdadd41fea5ba2c05b4d24",
+    "olympus/foundry/eval_suite.py": "c0c1e505c605859314c0d3274b67cf970c842afc78b8fb82cbb6e4388dc75884",
+    "olympus/foundry/sft.py": "caf14181c365f147d0038e8645e341f4483d079bf93a1b26cca970ae3bf2b138",
+    "olympus/foundry/quantization.py": "09a9ec964f6c1a7559b2932dba95d3a21e1ce39322e16bf3d64b7c1aa9a547ab",
+    "tests/test_dataset_consumer_snapshot.py": "2f0efcc795e7777bf57d61cbf634abb1da202d5ea76fc84e43541fd530db63f8"
+  },
+  "local_log_sha256": {
+    "olympus-before.log": "429d7c12be1733b58ec87cf7a5152e48e78fc6531b986b10f8415ef2902a3bf3",
+    "olympus-after.log": "20379fa2300417ea14f41f2a82233b7284cc0b326b39bfdc84d34f95faac1c74"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "torch": "2.14.1+cpu",
+    "pydantic": "2.13.5",
+    "device": "CPU"
+  },
+  "validation": [
+    "Exact-module isolated pytest: 34 passed",
+    "Ruff changed code and tests: passed",
+    "Strict Mypy with silent imports on changed code and tests: passed",
+    "Package Python3.14 and full release gate: required hosted validation",
+    "Full Python3.14 and web release gate subsequently passed at the explicitly recorded source commit."
+  ],
+  "limits": [
+    "The full package environment is unavailable locally.",
+    "No scientific fit, task score, promoted model, or protected outcome is created.",
+    "The old dated ledgers remain unchanged.",
+    "PR26 token-loss normalization is a separate change and is not included."
+  ],
+  "reproduction": "docs/dataset-consumer-snapshot-20261010.md",
+  "scientific_claim": "None beyond the bounded dataset-consumption invariant.",
+  "followup_review": {
+    "date": "2026-10-10",
+    "reviewer": "Independent parent research agent",
+    "status": "NO_BLOCKING_FINDINGS",
+    "validated_source_commit": "fef543387eb0b5d612f8ad9a5452530ac3f7ca4f",
+    "scope": [
+      "Same-byte hash verification and parsed-record binding",
+      "All complete-dataset checks before returning",
+      "Evaluation, SFT and quantization consume verified records",
+      "Compatibility verifier return type",
+      "Release of unused split dictionaries"
+    ],
+    "independent_test_rerun": false,
+    "limit": "Source review only; full integration evidence comes from the hosted Python3.14.8 release gate."
+  },
+  "hosted_verification": {
+    "source_commit": "fef543387eb0b5d612f8ad9a5452530ac3f7ca4f",
+    "url": "https://github.com/build-the-future-11/olympus-cognitive-architecture/actions/runs/38026180950",
+    "conclusion": "success",
+    "python": "3.14.8",
+    "tests_passed": 194,
+    "branch_coverage_percent": 87.4,
+    "strict_typecheck_files": 78,
+    "checks": [
+      "Exact source binding",
+      "Full Python tests",
+      "Strict type check",
+      "Ruff",
+      "Golden path",
+      "Dependency audits",
+      "Package build and metadata",
+      "Bundled corpus",
+      "Web tests and build"
+    ]
+  }
+}

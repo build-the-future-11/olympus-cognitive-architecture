@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "node": "v24.19.0",
+  "npm": "11.9.0",
+  "package_entries": 199,
+  "dependency_edges_checked": 303,
+  "invalid_edges": [],
+  "registry_manifests_verified": 5,
+  "hosted_node": "22.23.2",
+  "node_modules_installed": false,
+  "runtime_source_changed": false,
+  "wall_seconds": 0.078805639
+}

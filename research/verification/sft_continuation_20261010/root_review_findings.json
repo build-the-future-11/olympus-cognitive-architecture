@@ -1,0 +1,22 @@
+{
+  "reviewer": "root independent code/trajectory review",
+  "source_sha256": "a6869189ed26e937485d6156b0403d8a8c919292a8bee1fff2373f9527c5ac0b",
+  "scope": "Actual CPU Foundry training via namespace-only harness; no API or service import test, artificial data only",
+  "findings": [
+    {
+      "check": "legacy-objective dropout continuation, independent seed/batching",
+      "status": "PASS"
+    },
+    {
+      "check": "nonfinite resumed model",
+      "status": "ACCEPTED_NONFINITE",
+      "attempt_status": "COMPLETED",
+      "final_loss_repr": "nan"
+    },
+    {
+      "check": "fractional completed_epochs",
+      "status": "ACCEPTED",
+      "completed_epochs": 2
+    }
+  ]
+}
