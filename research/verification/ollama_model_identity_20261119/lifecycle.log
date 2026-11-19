@@ -1,0 +1,100 @@
+{
+  "dataset": {
+    "dataset_id": "foundry-verification-corpus",
+    "version": "1.0.0",
+    "sha256": "6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab",
+    "materialized_path": "/workspace/scratch/410f57c78a61/repos/olympus-cognitive-architecture/artifacts/verification-20261119/datasets/foundry-verification-corpus/1.0.0-6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab.txt",
+    "source": "repository://olympus/foundry/foundry_verification.txt",
+    "owner": "BU1LD Olympus",
+    "license": "LicenseRef-Proprietary",
+    "provenance": "Deterministic repository-owned synthetic corpus written specifically to verify Foundry infrastructure; it is not capability-training data.",
+    "privacy_classification": "internal",
+    "synthetic": true,
+    "generator": "Human-authored deterministic Foundry verification fixture v1",
+    "byte_count": 674,
+    "character_count": 674,
+    "created_at": "2026-11-19T10:20:14.829810+00:00"
+  },
+  "experiment": {
+    "experiment_id": "FND_20261119T102014833804",
+    "hypothesis": "A trained character-bigram model will outperform a frozen uniform baseline on held-out transitions from the structured verification corpus.",
+    "model_family": "FoundryVerificationBigram",
+    "dataset_id": "foundry-verification-corpus",
+    "dataset_version": "1.0.0",
+    "dataset_sha256": "6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab",
+    "seed": 7,
+    "config": {
+      "model_type": "character-bigram",
+      "train_fraction": 0.8,
+      "smoothing": 0.25,
+      "training_characters": 539,
+      "evaluation_characters": 136
+    },
+    "code_commit": "e4f0944cce4524a2454193bdfeb3f785631b14c0+dirty",
+    "hardware": {
+      "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+      "machine": "x86_64",
+      "python": "3.14.10",
+      "processor": "unknown"
+    },
+    "status": "VERIFIED",
+    "failure_reason": null,
+    "created_at": "2026-11-19T10:20:14.833804+00:00",
+    "updated_at": "2026-11-19T10:20:14.938689+00:00"
+  },
+  "checkpoint": {
+    "checkpoint_id": "ckpt_d9d2000d512d2e23",
+    "experiment_id": "FND_20261119T102014833804",
+    "sha256": "d9d2000d512d2e238c5a43eb4da7754570dcd9575199209346f5195f93990a4d",
+    "path": "/workspace/scratch/410f57c78a61/repos/olympus-cognitive-architecture/artifacts/verification-20261119/checkpoints/ckpt_d9d2000d512d2e23.json",
+    "format": "olympus-character-bigram-v1",
+    "byte_count": 1718,
+    "metrics": {
+      "negative_log_likelihood": 1.7720865936513397,
+      "perplexity": 5.883116236103429,
+      "top1_accuracy": 0.3940520446096654,
+      "evaluated_transitions": 538.0
+    },
+    "created_at": "2026-11-19T10:20:14.896671+00:00"
+  },
+  "evaluation": {
+    "evaluation_id": "eval_6efc36587c37f9f7",
+    "checkpoint_id": "ckpt_d9d2000d512d2e23",
+    "suite": "held-out-character-model-v1",
+    "dataset_sha256": "6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab",
+    "baseline_metrics": {
+      "negative_log_likelihood": 3.1780538303479458,
+      "perplexity": 24.0,
+      "top1_accuracy": 0.041666666666666664,
+      "evaluated_transitions": 135.0
+    },
+    "candidate_metrics": {
+      "negative_log_likelihood": 1.9001575710987069,
+      "perplexity": 6.686948029017607,
+      "top1_accuracy": 0.3925925925925926,
+      "evaluated_transitions": 135.0
+    },
+    "passed": true,
+    "decision": "Candidate beat the frozen uniform baseline on held-out negative log-likelihood and perplexity.",
+    "created_at": "2026-11-19T10:20:14.915047+00:00"
+  },
+  "model": {
+    "model_id": "foundry-verification-bigram-d9d2000d",
+    "family": "FoundryVerificationBigram",
+    "version": "d9d2000d512d",
+    "checkpoint_id": "ckpt_d9d2000d512d2e23",
+    "status": "VERIFIED",
+    "runtime": "olympus-character-bigram-v1",
+    "capabilities": [
+      "text-generation",
+      "foundry-lifecycle-verification"
+    ],
+    "intended_use": "Low-cost verification of the Olympus dataset, experiment, checkpoint, evaluation, export, registry, and serving lifecycle.",
+    "limitations": [
+      "Character bigram model; not an assistant or reasoning model.",
+      "Must not be presented as Hermes or as evidence of frontier capability."
+    ],
+    "created_at": "2026-11-19T10:20:14.935589+00:00"
+  },
+  "export_path": "/workspace/scratch/410f57c78a61/repos/olympus-cognitive-architecture/artifacts/verification-20261119/exports/ckpt_d9d2000d512d2e23/model.json"
+}

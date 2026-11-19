@@ -11,6 +11,7 @@ from olympus.foundry.ollama import OllamaClient
 
 def _client(completion: dict[str, object]) -> OllamaClient:
     payload = {
+        "model": "local-test-model",
         "message": {"role": "assistant", "content": "Partial answer: café"},
         "eval_count": 8,
         **completion,

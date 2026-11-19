@@ -8,6 +8,12 @@ import httpx
 from olympus.foundry.schemas import GenerationResult
 
 
+def _model_identity(model: str) -> str:
+    # Ollama's documented default tag is latest. A registry host can itself
+    # contain a port, so only the final path component determines tag presence.
+    return model if ":" in model.rsplit("/", 1)[-1] else f"{model}:latest"
+
+
 @dataclass(slots=True)
 class OllamaClient:
     base_url: str = "http://127.0.0.1:11434"
@@ -99,6 +105,15 @@ class OllamaClient:
         done_reason = payload.get("done_reason")
         if not isinstance(done_reason, str) or done_reason not in ("stop", "length"):
             raise ValueError("Ollama chat response has an unsupported done_reason")
+        provider_model = payload.get("model")
+        if (
+            not isinstance(provider_model, str)
+            or not provider_model
+            or provider_model != provider_model.strip()
+        ):
+            raise ValueError("Ollama chat response model is missing or malformed")
+        if _model_identity(provider_model) != _model_identity(model):
+            raise ValueError("Ollama chat response model does not match the requested model")
         content = message["content"]
         return GenerationResult(
             model=model,
@@ -108,6 +123,8 @@ class OllamaClient:
             generated_characters=len(content),
             evidence={
                 "provider": "ollama",
+                "requested_model": model,
+                "provider_model": provider_model,
                 "done_reason": payload.get("done_reason"),
                 "total_duration_ns": payload.get("total_duration"),
                 "eval_count": payload.get("eval_count"),

@@ -1,0 +1,13 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "--cov=olympus",
+    "--cov-branch",
+    "--cov-report=term-missing",
+    "-q"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 57.92500329017639
+}

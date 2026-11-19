@@ -1,0 +1,679 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                                           [100%]
+=================================== FAILURES ===================================
+_ test_generation_rejects_missing_malformed_or_different_model_identity[response_fields0] _
+
+response_fields = {}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_generation_rejects_missing_malformed_or_different_model_identity(
+        response_fields: dict[str, object],
+    ) -> None:
+>       with pytest.raises(ValueError, match="Ollama chat response model"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_ollama_model_identity.py:50: Failed
+_ test_generation_rejects_missing_malformed_or_different_model_identity[response_fields1] _
+
+response_fields = {'model': None}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_generation_rejects_missing_malformed_or_different_model_identity(
+        response_fields: dict[str, object],
+    ) -> None:
+>       with pytest.raises(ValueError, match="Ollama chat response model"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_ollama_model_identity.py:50: Failed
+_ test_generation_rejects_missing_malformed_or_different_model_identity[response_fields2] _
+
+response_fields = {'model': ''}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_generation_rejects_missing_malformed_or_different_model_identity(
+        response_fields: dict[str, object],
+    ) -> None:
+>       with pytest.raises(ValueError, match="Ollama chat response model"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_ollama_model_identity.py:50: Failed
+_ test_generation_rejects_missing_malformed_or_different_model_identity[response_fields3] _
+
+response_fields = {'model': ' '}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_generation_rejects_missing_malformed_or_different_model_identity(
+        response_fields: dict[str, object],
+    ) -> None:
+>       with pytest.raises(ValueError, match="Ollama chat response model"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_ollama_model_identity.py:50: Failed
+_ test_generation_rejects_missing_malformed_or_different_model_identity[response_fields4] _
+
+response_fields = {'model': True}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_generation_rejects_missing_malformed_or_different_model_identity(
+        response_fields: dict[str, object],
+    ) -> None:
+>       with pytest.raises(ValueError, match="Ollama chat response model"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_ollama_model_identity.py:50: Failed
+_ test_generation_rejects_missing_malformed_or_different_model_identity[response_fields5] _
+
+response_fields = {'model': 1}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_generation_rejects_missing_malformed_or_different_model_identity(
+        response_fields: dict[str, object],
+    ) -> None:
+>       with pytest.raises(ValueError, match="Ollama chat response model"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_ollama_model_identity.py:50: Failed
+_ test_generation_rejects_missing_malformed_or_different_model_identity[response_fields6] _
+
+response_fields = {'model': []}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_generation_rejects_missing_malformed_or_different_model_identity(
+        response_fields: dict[str, object],
+    ) -> None:
+>       with pytest.raises(ValueError, match="Ollama chat response model"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_ollama_model_identity.py:50: Failed
+_ test_generation_rejects_missing_malformed_or_different_model_identity[response_fields7] _
+
+response_fields = {'model': {}}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_generation_rejects_missing_malformed_or_different_model_identity(
+        response_fields: dict[str, object],
+    ) -> None:
+>       with pytest.raises(ValueError, match="Ollama chat response model"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_ollama_model_identity.py:50: Failed
+_ test_generation_rejects_missing_malformed_or_different_model_identity[response_fields8] _
+
+response_fields = {'model': 'different-model:latest'}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_generation_rejects_missing_malformed_or_different_model_identity(
+        response_fields: dict[str, object],
+    ) -> None:
+>       with pytest.raises(ValueError, match="Ollama chat response model"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_ollama_model_identity.py:50: Failed
+_ test_generation_rejects_missing_malformed_or_different_model_identity[response_fields9] _
+
+response_fields = {'model': 'local-test-model:other-tag'}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_generation_rejects_missing_malformed_or_different_model_identity(
+        response_fields: dict[str, object],
+    ) -> None:
+>       with pytest.raises(ValueError, match="Ollama chat response model"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_ollama_model_identity.py:50: Failed
+_ test_generation_rejects_missing_malformed_or_different_model_identity[response_fields10] _
+
+response_fields = {'model': 'another-namespace/local-test-model:latest'}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_generation_rejects_missing_malformed_or_different_model_identity(
+        response_fields: dict[str, object],
+    ) -> None:
+>       with pytest.raises(ValueError, match="Ollama chat response model"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_ollama_model_identity.py:50: Failed
+_ test_generation_rejects_missing_malformed_or_different_model_identity[response_fields11] _
+
+response_fields = {'model': ' local-test-model:latest'}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_generation_rejects_missing_malformed_or_different_model_identity(
+        response_fields: dict[str, object],
+    ) -> None:
+>       with pytest.raises(ValueError, match="Ollama chat response model"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_ollama_model_identity.py:50: Failed
+_ test_generation_retains_requested_and_provider_model_identity[local-test-model-local-test-model] _
+
+requested_model = 'local-test-model', provider_model = 'local-test-model'
+
+    @pytest.mark.parametrize(
+        ("requested_model", "provider_model"),
+        [
+            ("local-test-model", "local-test-model"),
+            ("local-test-model", "local-test-model:latest"),
+            ("local-test-model:latest", "local-test-model"),
+            ("namespace/local-test-model:v1", "namespace/local-test-model:v1"),
+            ("localhost:5000/team/model", "localhost:5000/team/model:latest"),
+        ],
+    )
+    def test_generation_retains_requested_and_provider_model_identity(
+        requested_model: str, provider_model: str
+    ) -> None:
+        result = _client(requested_model, {"model": provider_model}).generate(
+            model=requested_model, prompt="Verify the provider receipt"
+        )
+        assert result.model == requested_model
+>       assert result.evidence["requested_model"] == requested_model
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'requested_model'
+
+tests/test_ollama_model_identity.py:73: KeyError
+_ test_generation_retains_requested_and_provider_model_identity[local-test-model-local-test-model:latest] _
+
+requested_model = 'local-test-model', provider_model = 'local-test-model:latest'
+
+    @pytest.mark.parametrize(
+        ("requested_model", "provider_model"),
+        [
+            ("local-test-model", "local-test-model"),
+            ("local-test-model", "local-test-model:latest"),
+            ("local-test-model:latest", "local-test-model"),
+            ("namespace/local-test-model:v1", "namespace/local-test-model:v1"),
+            ("localhost:5000/team/model", "localhost:5000/team/model:latest"),
+        ],
+    )
+    def test_generation_retains_requested_and_provider_model_identity(
+        requested_model: str, provider_model: str
+    ) -> None:
+        result = _client(requested_model, {"model": provider_model}).generate(
+            model=requested_model, prompt="Verify the provider receipt"
+        )
+        assert result.model == requested_model
+>       assert result.evidence["requested_model"] == requested_model
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'requested_model'
+
+tests/test_ollama_model_identity.py:73: KeyError
+_ test_generation_retains_requested_and_provider_model_identity[local-test-model:latest-local-test-model] _
+
+requested_model = 'local-test-model:latest', provider_model = 'local-test-model'
+
+    @pytest.mark.parametrize(
+        ("requested_model", "provider_model"),
+        [
+            ("local-test-model", "local-test-model"),
+            ("local-test-model", "local-test-model:latest"),
+            ("local-test-model:latest", "local-test-model"),
+            ("namespace/local-test-model:v1", "namespace/local-test-model:v1"),
+            ("localhost:5000/team/model", "localhost:5000/team/model:latest"),
+        ],
+    )
+    def test_generation_retains_requested_and_provider_model_identity(
+        requested_model: str, provider_model: str
+    ) -> None:
+        result = _client(requested_model, {"model": provider_model}).generate(
+            model=requested_model, prompt="Verify the provider receipt"
+        )
+        assert result.model == requested_model
+>       assert result.evidence["requested_model"] == requested_model
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'requested_model'
+
+tests/test_ollama_model_identity.py:73: KeyError
+_ test_generation_retains_requested_and_provider_model_identity[namespace/local-test-model:v1-namespace/local-test-model:v1] _
+
+requested_model = 'namespace/local-test-model:v1'
+provider_model = 'namespace/local-test-model:v1'
+
+    @pytest.mark.parametrize(
+        ("requested_model", "provider_model"),
+        [
+            ("local-test-model", "local-test-model"),
+            ("local-test-model", "local-test-model:latest"),
+            ("local-test-model:latest", "local-test-model"),
+            ("namespace/local-test-model:v1", "namespace/local-test-model:v1"),
+            ("localhost:5000/team/model", "localhost:5000/team/model:latest"),
+        ],
+    )
+    def test_generation_retains_requested_and_provider_model_identity(
+        requested_model: str, provider_model: str
+    ) -> None:
+        result = _client(requested_model, {"model": provider_model}).generate(
+            model=requested_model, prompt="Verify the provider receipt"
+        )
+        assert result.model == requested_model
+>       assert result.evidence["requested_model"] == requested_model
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'requested_model'
+
+tests/test_ollama_model_identity.py:73: KeyError
+_ test_generation_retains_requested_and_provider_model_identity[localhost:5000/team/model-localhost:5000/team/model:latest] _
+
+requested_model = 'localhost:5000/team/model'
+provider_model = 'localhost:5000/team/model:latest'
+
+    @pytest.mark.parametrize(
+        ("requested_model", "provider_model"),
+        [
+            ("local-test-model", "local-test-model"),
+            ("local-test-model", "local-test-model:latest"),
+            ("local-test-model:latest", "local-test-model"),
+            ("namespace/local-test-model:v1", "namespace/local-test-model:v1"),
+            ("localhost:5000/team/model", "localhost:5000/team/model:latest"),
+        ],
+    )
+    def test_generation_retains_requested_and_provider_model_identity(
+        requested_model: str, provider_model: str
+    ) -> None:
+        result = _client(requested_model, {"model": provider_model}).generate(
+            model=requested_model, prompt="Verify the provider receipt"
+        )
+        assert result.model == requested_model
+>       assert result.evidence["requested_model"] == requested_model
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'requested_model'
+
+tests/test_ollama_model_identity.py:73: KeyError
+_ test_api_returns_provider_error_without_relabeling_a_response[response_fields0] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92c032ba80>
+response_fields = {}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_api_returns_provider_error_without_relabeling_a_response(
+        monkeypatch: pytest.MonkeyPatch,
+        response_fields: dict[str, object],
+    ) -> None:
+        client = _client("local-test-model", response_fields)
+        overrides = app.dependency_overrides.copy()
+        overrides[get_ollama_client] = lambda: client
+        monkeypatch.setattr(app, "dependency_overrides", overrides)
+    
+        async def request() -> httpx.Response:
+            transport = httpx.ASGITransport(app=app)
+            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as api:
+                return await api.post(
+                    "/foundry/providers/ollama/generate",
+                    json={"model": "local-test-model", "prompt": "Verify the provider receipt"},
+                )
+    
+        response = asyncio.run(request())
+>       assert response.status_code == 503
+E       assert 200 == 503
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_ollama_model_identity.py:98: AssertionError
+_ test_api_returns_provider_error_without_relabeling_a_response[response_fields1] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92c032b950>
+response_fields = {'model': None}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_api_returns_provider_error_without_relabeling_a_response(
+        monkeypatch: pytest.MonkeyPatch,
+        response_fields: dict[str, object],
+    ) -> None:
+        client = _client("local-test-model", response_fields)
+        overrides = app.dependency_overrides.copy()
+        overrides[get_ollama_client] = lambda: client
+        monkeypatch.setattr(app, "dependency_overrides", overrides)
+    
+        async def request() -> httpx.Response:
+            transport = httpx.ASGITransport(app=app)
+            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as api:
+                return await api.post(
+                    "/foundry/providers/ollama/generate",
+                    json={"model": "local-test-model", "prompt": "Verify the provider receipt"},
+                )
+    
+        response = asyncio.run(request())
+>       assert response.status_code == 503
+E       assert 200 == 503
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_ollama_model_identity.py:98: AssertionError
+_ test_api_returns_provider_error_without_relabeling_a_response[response_fields2] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92c027da30>
+response_fields = {'model': ''}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_api_returns_provider_error_without_relabeling_a_response(
+        monkeypatch: pytest.MonkeyPatch,
+        response_fields: dict[str, object],
+    ) -> None:
+        client = _client("local-test-model", response_fields)
+        overrides = app.dependency_overrides.copy()
+        overrides[get_ollama_client] = lambda: client
+        monkeypatch.setattr(app, "dependency_overrides", overrides)
+    
+        async def request() -> httpx.Response:
+            transport = httpx.ASGITransport(app=app)
+            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as api:
+                return await api.post(
+                    "/foundry/providers/ollama/generate",
+                    json={"model": "local-test-model", "prompt": "Verify the provider receipt"},
+                )
+    
+        response = asyncio.run(request())
+>       assert response.status_code == 503
+E       assert 200 == 503
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_ollama_model_identity.py:98: AssertionError
+_ test_api_returns_provider_error_without_relabeling_a_response[response_fields3] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92c034bbd0>
+response_fields = {'model': ' '}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_api_returns_provider_error_without_relabeling_a_response(
+        monkeypatch: pytest.MonkeyPatch,
+        response_fields: dict[str, object],
+    ) -> None:
+        client = _client("local-test-model", response_fields)
+        overrides = app.dependency_overrides.copy()
+        overrides[get_ollama_client] = lambda: client
+        monkeypatch.setattr(app, "dependency_overrides", overrides)
+    
+        async def request() -> httpx.Response:
+            transport = httpx.ASGITransport(app=app)
+            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as api:
+                return await api.post(
+                    "/foundry/providers/ollama/generate",
+                    json={"model": "local-test-model", "prompt": "Verify the provider receipt"},
+                )
+    
+        response = asyncio.run(request())
+>       assert response.status_code == 503
+E       assert 200 == 503
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_ollama_model_identity.py:98: AssertionError
+_ test_api_returns_provider_error_without_relabeling_a_response[response_fields4] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92c016de10>
+response_fields = {'model': True}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_api_returns_provider_error_without_relabeling_a_response(
+        monkeypatch: pytest.MonkeyPatch,
+        response_fields: dict[str, object],
+    ) -> None:
+        client = _client("local-test-model", response_fields)
+        overrides = app.dependency_overrides.copy()
+        overrides[get_ollama_client] = lambda: client
+        monkeypatch.setattr(app, "dependency_overrides", overrides)
+    
+        async def request() -> httpx.Response:
+            transport = httpx.ASGITransport(app=app)
+            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as api:
+                return await api.post(
+                    "/foundry/providers/ollama/generate",
+                    json={"model": "local-test-model", "prompt": "Verify the provider receipt"},
+                )
+    
+        response = asyncio.run(request())
+>       assert response.status_code == 503
+E       assert 200 == 503
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_ollama_model_identity.py:98: AssertionError
+_ test_api_returns_provider_error_without_relabeling_a_response[response_fields5] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92c015c950>
+response_fields = {'model': 1}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_api_returns_provider_error_without_relabeling_a_response(
+        monkeypatch: pytest.MonkeyPatch,
+        response_fields: dict[str, object],
+    ) -> None:
+        client = _client("local-test-model", response_fields)
+        overrides = app.dependency_overrides.copy()
+        overrides[get_ollama_client] = lambda: client
+        monkeypatch.setattr(app, "dependency_overrides", overrides)
+    
+        async def request() -> httpx.Response:
+            transport = httpx.ASGITransport(app=app)
+            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as api:
+                return await api.post(
+                    "/foundry/providers/ollama/generate",
+                    json={"model": "local-test-model", "prompt": "Verify the provider receipt"},
+                )
+    
+        response = asyncio.run(request())
+>       assert response.status_code == 503
+E       assert 200 == 503
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_ollama_model_identity.py:98: AssertionError
+_ test_api_returns_provider_error_without_relabeling_a_response[response_fields6] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92c015dc50>
+response_fields = {'model': []}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_api_returns_provider_error_without_relabeling_a_response(
+        monkeypatch: pytest.MonkeyPatch,
+        response_fields: dict[str, object],
+    ) -> None:
+        client = _client("local-test-model", response_fields)
+        overrides = app.dependency_overrides.copy()
+        overrides[get_ollama_client] = lambda: client
+        monkeypatch.setattr(app, "dependency_overrides", overrides)
+    
+        async def request() -> httpx.Response:
+            transport = httpx.ASGITransport(app=app)
+            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as api:
+                return await api.post(
+                    "/foundry/providers/ollama/generate",
+                    json={"model": "local-test-model", "prompt": "Verify the provider receipt"},
+                )
+    
+        response = asyncio.run(request())
+>       assert response.status_code == 503
+E       assert 200 == 503
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_ollama_model_identity.py:98: AssertionError
+_ test_api_returns_provider_error_without_relabeling_a_response[response_fields7] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92c01715e0>
+response_fields = {'model': {}}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_api_returns_provider_error_without_relabeling_a_response(
+        monkeypatch: pytest.MonkeyPatch,
+        response_fields: dict[str, object],
+    ) -> None:
+        client = _client("local-test-model", response_fields)
+        overrides = app.dependency_overrides.copy()
+        overrides[get_ollama_client] = lambda: client
+        monkeypatch.setattr(app, "dependency_overrides", overrides)
+    
+        async def request() -> httpx.Response:
+            transport = httpx.ASGITransport(app=app)
+            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as api:
+                return await api.post(
+                    "/foundry/providers/ollama/generate",
+                    json={"model": "local-test-model", "prompt": "Verify the provider receipt"},
+                )
+    
+        response = asyncio.run(request())
+>       assert response.status_code == 503
+E       assert 200 == 503
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_ollama_model_identity.py:98: AssertionError
+_ test_api_returns_provider_error_without_relabeling_a_response[response_fields8] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92c363fc50>
+response_fields = {'model': 'different-model:latest'}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_api_returns_provider_error_without_relabeling_a_response(
+        monkeypatch: pytest.MonkeyPatch,
+        response_fields: dict[str, object],
+    ) -> None:
+        client = _client("local-test-model", response_fields)
+        overrides = app.dependency_overrides.copy()
+        overrides[get_ollama_client] = lambda: client
+        monkeypatch.setattr(app, "dependency_overrides", overrides)
+    
+        async def request() -> httpx.Response:
+            transport = httpx.ASGITransport(app=app)
+            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as api:
+                return await api.post(
+                    "/foundry/providers/ollama/generate",
+                    json={"model": "local-test-model", "prompt": "Verify the provider receipt"},
+                )
+    
+        response = asyncio.run(request())
+>       assert response.status_code == 503
+E       assert 200 == 503
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_ollama_model_identity.py:98: AssertionError
+_ test_api_returns_provider_error_without_relabeling_a_response[response_fields9] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92c0283a10>
+response_fields = {'model': 'local-test-model:other-tag'}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_api_returns_provider_error_without_relabeling_a_response(
+        monkeypatch: pytest.MonkeyPatch,
+        response_fields: dict[str, object],
+    ) -> None:
+        client = _client("local-test-model", response_fields)
+        overrides = app.dependency_overrides.copy()
+        overrides[get_ollama_client] = lambda: client
+        monkeypatch.setattr(app, "dependency_overrides", overrides)
+    
+        async def request() -> httpx.Response:
+            transport = httpx.ASGITransport(app=app)
+            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as api:
+                return await api.post(
+                    "/foundry/providers/ollama/generate",
+                    json={"model": "local-test-model", "prompt": "Verify the provider receipt"},
+                )
+    
+        response = asyncio.run(request())
+>       assert response.status_code == 503
+E       assert 200 == 503
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_ollama_model_identity.py:98: AssertionError
+_ test_api_returns_provider_error_without_relabeling_a_response[response_fields10] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92c0281d30>
+response_fields = {'model': 'another-namespace/local-test-model:latest'}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_api_returns_provider_error_without_relabeling_a_response(
+        monkeypatch: pytest.MonkeyPatch,
+        response_fields: dict[str, object],
+    ) -> None:
+        client = _client("local-test-model", response_fields)
+        overrides = app.dependency_overrides.copy()
+        overrides[get_ollama_client] = lambda: client
+        monkeypatch.setattr(app, "dependency_overrides", overrides)
+    
+        async def request() -> httpx.Response:
+            transport = httpx.ASGITransport(app=app)
+            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as api:
+                return await api.post(
+                    "/foundry/providers/ollama/generate",
+                    json={"model": "local-test-model", "prompt": "Verify the provider receipt"},
+                )
+    
+        response = asyncio.run(request())
+>       assert response.status_code == 503
+E       assert 200 == 503
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_ollama_model_identity.py:98: AssertionError
+_ test_api_returns_provider_error_without_relabeling_a_response[response_fields11] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92c39c5300>
+response_fields = {'model': ' local-test-model:latest'}
+
+    @pytest.mark.parametrize("response_fields", INVALID_MODEL_FIELDS)
+    def test_api_returns_provider_error_without_relabeling_a_response(
+        monkeypatch: pytest.MonkeyPatch,
+        response_fields: dict[str, object],
+    ) -> None:
+        client = _client("local-test-model", response_fields)
+        overrides = app.dependency_overrides.copy()
+        overrides[get_ollama_client] = lambda: client
+        monkeypatch.setattr(app, "dependency_overrides", overrides)
+    
+        async def request() -> httpx.Response:
+            transport = httpx.ASGITransport(app=app)
+            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as api:
+                return await api.post(
+                    "/foundry/providers/ollama/generate",
+                    json={"model": "local-test-model", "prompt": "Verify the provider receipt"},
+                )
+    
+        response = asyncio.run(request())
+>       assert response.status_code == 503
+E       assert 200 == 503
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_ollama_model_identity.py:98: AssertionError
+___________ test_generation_does_not_equate_distinct_registry_hosts ____________
+
+    def test_generation_does_not_equate_distinct_registry_hosts() -> None:
+        requested_model = "registry-a:5000/team/model:latest"
+>       with pytest.raises(ValueError, match="Ollama chat response model"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_ollama_model_identity.py:106: Failed
+=========================== short test summary info ============================
+FAILED tests/test_ollama_model_identity.py::test_generation_rejects_missing_malformed_or_different_model_identity[response_fields0]
+FAILED tests/test_ollama_model_identity.py::test_generation_rejects_missing_malformed_or_different_model_identity[response_fields1]
+FAILED tests/test_ollama_model_identity.py::test_generation_rejects_missing_malformed_or_different_model_identity[response_fields2]
+FAILED tests/test_ollama_model_identity.py::test_generation_rejects_missing_malformed_or_different_model_identity[response_fields3]
+FAILED tests/test_ollama_model_identity.py::test_generation_rejects_missing_malformed_or_different_model_identity[response_fields4]
+FAILED tests/test_ollama_model_identity.py::test_generation_rejects_missing_malformed_or_different_model_identity[response_fields5]
+FAILED tests/test_ollama_model_identity.py::test_generation_rejects_missing_malformed_or_different_model_identity[response_fields6]
+FAILED tests/test_ollama_model_identity.py::test_generation_rejects_missing_malformed_or_different_model_identity[response_fields7]
+FAILED tests/test_ollama_model_identity.py::test_generation_rejects_missing_malformed_or_different_model_identity[response_fields8]
+FAILED tests/test_ollama_model_identity.py::test_generation_rejects_missing_malformed_or_different_model_identity[response_fields9]
+FAILED tests/test_ollama_model_identity.py::test_generation_rejects_missing_malformed_or_different_model_identity[response_fields10]
+FAILED tests/test_ollama_model_identity.py::test_generation_rejects_missing_malformed_or_different_model_identity[response_fields11]
+FAILED tests/test_ollama_model_identity.py::test_generation_retains_requested_and_provider_model_identity[local-test-model-local-test-model]
+FAILED tests/test_ollama_model_identity.py::test_generation_retains_requested_and_provider_model_identity[local-test-model-local-test-model:latest]
+FAILED tests/test_ollama_model_identity.py::test_generation_retains_requested_and_provider_model_identity[local-test-model:latest-local-test-model]
+FAILED tests/test_ollama_model_identity.py::test_generation_retains_requested_and_provider_model_identity[namespace/local-test-model:v1-namespace/local-test-model:v1]
+FAILED tests/test_ollama_model_identity.py::test_generation_retains_requested_and_provider_model_identity[localhost:5000/team/model-localhost:5000/team/model:latest]
+FAILED tests/test_ollama_model_identity.py::test_api_returns_provider_error_without_relabeling_a_response[response_fields0]
+FAILED tests/test_ollama_model_identity.py::test_api_returns_provider_error_without_relabeling_a_response[response_fields1]
+FAILED tests/test_ollama_model_identity.py::test_api_returns_provider_error_without_relabeling_a_response[response_fields2]
+FAILED tests/test_ollama_model_identity.py::test_api_returns_provider_error_without_relabeling_a_response[response_fields3]
+FAILED tests/test_ollama_model_identity.py::test_api_returns_provider_error_without_relabeling_a_response[response_fields4]
+FAILED tests/test_ollama_model_identity.py::test_api_returns_provider_error_without_relabeling_a_response[response_fields5]
+FAILED tests/test_ollama_model_identity.py::test_api_returns_provider_error_without_relabeling_a_response[response_fields6]
+FAILED tests/test_ollama_model_identity.py::test_api_returns_provider_error_without_relabeling_a_response[response_fields7]
+FAILED tests/test_ollama_model_identity.py::test_api_returns_provider_error_without_relabeling_a_response[response_fields8]
+FAILED tests/test_ollama_model_identity.py::test_api_returns_provider_error_without_relabeling_a_response[response_fields9]
+FAILED tests/test_ollama_model_identity.py::test_api_returns_provider_error_without_relabeling_a_response[response_fields10]
+FAILED tests/test_ollama_model_identity.py::test_api_returns_provider_error_without_relabeling_a_response[response_fields11]
+FAILED tests/test_ollama_model_identity.py::test_generation_does_not_equate_distinct_registry_hosts
+30 failed in 8.88s

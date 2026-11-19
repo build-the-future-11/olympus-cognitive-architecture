@@ -1,0 +1,11 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "mypy",
+    "olympus",
+    "tests"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 46.39865040779114
+}

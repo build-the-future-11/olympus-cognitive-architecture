@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_ollama_model_identity.py"
+  ],
+  "exit_code": 1,
+  "wall_seconds": 11.216195821762085,
+  "purpose": "Pre-fix artificial model-identity admission regression"
+}

@@ -1,0 +1,11 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "ruff",
+    "check",
+    "."
+  ],
+  "exit_code": 0,
+  "wall_seconds": 0.10857558250427246
+}

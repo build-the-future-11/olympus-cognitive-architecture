@@ -1,0 +1,75 @@
+{
+  "study_id": "ollama-model-identity-20261119",
+  "source_base_commit": "e4f0944cce4524a2454193bdfeb3f785631b14c0",
+  "local_branch": "research/20261119-foundry-audit",
+  "source_sha256": {
+    "olympus/foundry/ollama.py": "853be14201ae273a14f89eb808c0ae12071c7ffb92f9845bbe8c77d596a2b37e",
+    "tests/test_ollama_model_identity.py": "a5b0b35f9b51a4eacc02df795ef706aaad25108d2fa84e44540aab254031bdc6",
+    "tests/test_foundry.py": "cad56f8836386f83c2f11d8eee58687c5338fe9130e63aa79a461ef49778fd87",
+    "tests/test_ollama_completion_receipts.py": "1e9155fbd4e1f87357a1008ce910aefe035c71235668843ec60b6ebe38653caa"
+  },
+  "baseline": {
+    "new_cases_failed": 30,
+    "invalid_identity_refusals_failed": 25,
+    "evidence_controls_failed": 5,
+    "log": "baseline.log"
+  },
+  "focused": {
+    "passed": 63,
+    "pytest_seconds": 5.35,
+    "log": "focused.log"
+  },
+  "full_python": {
+    "passed": 378,
+    "pytest_seconds": 48.84,
+    "branch_enabled_coverage_percent": 87.47,
+    "coverage_gate_percent": 85,
+    "log": "full_python.log"
+  },
+  "lint": {
+    "status": "PASS",
+    "log": "lint.log"
+  },
+  "types": {
+    "status": "PASS",
+    "files": 87,
+    "log": "types.log"
+  },
+  "lifecycle": {
+    "status": "PASS",
+    "experiment_id": "FND_20261119T102014833804",
+    "checkpoint_id": "ckpt_d9d2000d512d2e23",
+    "checkpoint_sha256": "d9d2000d512d2e238c5a43eb4da7754570dcd9575199209346f5195f93990a4d",
+    "evaluation_id": "eval_6efc36587c37f9f7",
+    "dataset_sha256": "6f4823e0503426bda11aa4bffe8357963f3bc97a62ea40c2b69700af166a8eab",
+    "log": "lifecycle.log",
+    "reopened_registry_log": "lifecycle_status.log",
+    "classification": "synthetic infrastructure verification; no model capability claim"
+  },
+  "independence": "Self-executed normal runtime checks; separate independent review pending",
+  "base_hosted_release": {
+    "id": 39776856344,
+    "head_sha": "e4f0944cce4524a2454193bdfeb3f785631b14c0",
+    "conclusion": "success",
+    "url": "https://github.com/build-the-future-11/olympus-cognitive-architecture/actions/runs/39776856344"
+  },
+  "not_run": [
+    "live Ollama generation",
+    "GPU validation",
+    "web suite on this patch",
+    "new hosted release",
+    "protected scientific evaluation"
+  ],
+  "research_complete": false,
+  "conference_ready": false,
+  "remote_mutations_at_validation": [],
+  "development_branch_workflow_review": {
+    "workflow_files": [
+      ".github/workflows/ci.yml",
+      ".github/workflows/release.yml"
+    ],
+    "ci_triggers": "push to main or pull_request",
+    "release_triggers": "push of v* tags",
+    "new_development_branch_push": "No declared workflow or deployment trigger; no PR or tag created."
+  }
+}

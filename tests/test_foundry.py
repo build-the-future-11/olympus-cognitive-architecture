@@ -233,6 +233,7 @@ def test_ollama_client_validates_and_generates() -> None:
         return httpx.Response(
             200,
             json={
+                "model": "qwen3:8b",
                 "message": {"role": "assistant", "content": "OLYMPUS_LOCAL_MODEL_OK"},
                 "done": True,
                 "done_reason": "stop",

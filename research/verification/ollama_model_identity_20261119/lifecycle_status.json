@@ -1,0 +1,13 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "olympus.cli",
+    "foundry",
+    "status",
+    "--root",
+    "artifacts/verification-20261119"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 10.103154420852661
+}
